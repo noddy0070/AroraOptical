@@ -5,6 +5,8 @@ import Product from "./pages/Product/Product";
 import Blog from "./pages/Home/Blog";
 import FeeEyeTest from "./pages/Home/FreeEyeTest";
 import AboutUS from "./pages/Home/AboutUs";
+import Signup from "./pages/Auth/SignUp";
+import Signin from "./pages/Auth/SignIn";
 
 export default function App() {
   return <BrowserRouter>
@@ -14,7 +16,8 @@ export default function App() {
       <Route path="/blog" element={<Blog />} />
       <Route path="/free-eye-test" element={<FeeEyeTest />} />
       <Route path="/about-us" element={<AboutUS />} />
-
+      <Route path='/signup' element={<Signup />} />
+      <Route path='/signin' element={<Signin />} />
 
     </Routes>
 
