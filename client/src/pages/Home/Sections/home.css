@@ -1,0 +1,12 @@
+/* Customize slick-track for flex alignment */
+.slick-track {
+    display: flex !important;
+    align-items: center;
+  }
+  
+.slick-slide {
+    padding: 0 4vw; /* 64px on each side for a total of 128px between slides */
+    box-sizing: border-box; /* Ensures padding is included in width */
+  }
+
+  

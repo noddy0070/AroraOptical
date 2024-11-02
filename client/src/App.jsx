@@ -2,9 +2,9 @@ import {BrowserRouter,Routes, Route} from "react-router-dom";
 
 import Home from "./pages/Home/Home";
 import Product from "./pages/Product/Product";
-import Blog from "./pages/Home/Blog";
-import FeeEyeTest from "./pages/Home/FreeEyeTest";
-import AboutUS from "./pages/Home/AboutUs";
+import Blog from "./pages/Home/Sections/Blog";
+import FeeEyeTest from "./pages/Home/Sections/FreeEyeTest";
+import AboutUS from "./pages/Home/Sections/AboutUs";
 import Signup from "./pages/Auth/SignUp";
 import Signin from "./pages/Auth/SignIn";
 

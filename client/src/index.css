@@ -2,3 +2,111 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+      display: none; /* Safari and Chrome */
+  }
+  .hide-scrollbar {
+      -ms-overflow-style: none; /* Internet Explorer and Edge */
+      scrollbar-width: none; /* Firefox */
+  }
+}
+
+/* Dye Line font */
+@font-face {
+  font-family: 'DyeLine';
+  src: url('./assets/fonts/dyeLine/DyeLineRegular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'DyeLine';
+  src: url('./assets/fonts/dyeLine/DyeLineUltraLight.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'DyeLine';
+  src: url('./assets/fonts/dyeLine/DyeLineLight.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'DyeLine';
+  src: url('./assets/fonts/dyeLine/DyeLineMedium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'DyeLine';
+  src: url('./assets/fonts/dyeLine/DyeLineBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+/* Roboto font */
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/fonts/Roboto/Roboto-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/fonts/Roboto/Roboto-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/fonts/Roboto/Roboto-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/fonts/Roboto/Roboto-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+
+body {
+  font-size: 18px; /* Default font size */
+}
+
+@media (max-width: 1024px) {
+  body {
+      font-size: 16px; /* Smaller font size for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+      font-size: 14px; /* Smaller font size for tablets and phones */
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+      font-size: 12px; /* Even smaller for mobile devices */
+  }
+}
