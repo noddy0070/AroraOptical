@@ -1,5 +1,6 @@
 import {BrowserRouter,Routes, Route} from "react-router-dom";
-
+import PrimaryNavbar from './components/PrimaryNavbar.jsx'
+import SecondaryNavbar from './components/SecondaryNavbar.jsx'
 import Home from "./pages/Home/Home";
 import Product from "./pages/Product/Product";
 import Blog from "./pages/Home/Sections/Blog";
@@ -10,6 +11,9 @@ import Signin from "./pages/Auth/SignIn";
 
 export default function App() {
   return <BrowserRouter>
+    <PrimaryNavbar/>
+    <SecondaryNavbar  />
+
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/product" element={<Product />} />

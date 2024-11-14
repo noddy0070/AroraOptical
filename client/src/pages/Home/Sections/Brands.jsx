@@ -46,7 +46,7 @@ export default function Brands() {
           };
 
     return(
-        <div className="h-[17.5vw] bg-green-200 overflow-hidden mx-[-32px] flex justify-center items-center">
+        <div className="h-[17.5vw] overflow-hidden mx-[-32px] flex justify-center items-center">
         <Slider className="w-full"  ref={slider} {...settings}>
            
         {logosData.map((logo, index) => (

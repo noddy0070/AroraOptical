@@ -1,13 +1,13 @@
 import React from 'react';
 import ArrowNorthEast from "../assets/images/ArrowNorthEast.png";
-export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnSize }) => {
+export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnSize,padding }) => {
     return (
         <button
             onClick={onClick}
             style={{
                 width: `${btnSize}vw`,
                 height: `${btnSize}vw`,
-                padding: '0.85vw',
+                padding: `${padding}vw`,
             }}
             className={`bg-darkslategrey text-white flex justify-center items-center rounded-full ${className}`}
         >
@@ -29,7 +29,7 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
             height: `${btnHeight}vw`,
             borderRadius: `${btnRadius}vw`
         }}       >
-        <span className="text-[1rem] text-center font-roboto "> {btnTitle}</span>
+        <span className="text-regularText text-center font-roboto p-[.1vw]"> {btnTitle}</span>
       </button>
     );
   };
