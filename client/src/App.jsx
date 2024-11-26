@@ -8,6 +8,7 @@ import FeeEyeTest from "./pages/Home/Sections/FreeEyeTest";
 import AboutUS from "./pages/Home/Sections/AboutUs";
 import Signup from "./pages/Auth/SignUp";
 import Signin from "./pages/Auth/SignIn";
+import Shop from "./pages/Shop/shop.jsx";
 
 export default function App() {
   return <BrowserRouter>
@@ -22,6 +23,7 @@ export default function App() {
       <Route path="/about-us" element={<AboutUS />} />
       <Route path='/signup' element={<Signup />} />
       <Route path='/signin' element={<Signin />} />
+      <Route path='/shop' element={<Shop/>} />
 
     </Routes>
 

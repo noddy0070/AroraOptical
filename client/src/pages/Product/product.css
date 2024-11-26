@@ -1,0 +1,23 @@
+
+.list-roman-left {
+    list-style-type:disc; /* or upper-roman for uppercase numerals */
+    padding-left: 1.5vw; /* Adjust as needed for alignment */
+    margin-left: 0;
+  }
+  .list-roman-left li {
+    padding-left: 0.15vw; /* Adjust to align text with numerals */
+  }
+  
+.content{
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0,1,0,1);
+  }
+  
+  .content.show{
+    height: auto;
+    max-height: 9999px;
+    transition: all 0.4s cubic-bezier(1,0,1,0);
+  
+  }
+  

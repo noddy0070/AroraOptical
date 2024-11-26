@@ -13,7 +13,7 @@ const testimonials = [
 ]
 export default function Testimonial(){
     return (
-        <div className='py-[7vw] px-[4vw]b flex flex-row gap-[1.5vw] w-full h-[60.8125vw]  '>
+        <div className='py-[7vw] px-[4vw] flex flex-row gap-[1.5vw] w-full h-[60.8125vw]  '>
              <div className='relative w-[46.6875vw] h-[46.8125] overflow-hidden rounded-[3.125vw]'>
                 <img className='h-full w-full relative' src={categoryPlaceholder}></img>
                 <div className='absolute top-0 shape-div2'>
