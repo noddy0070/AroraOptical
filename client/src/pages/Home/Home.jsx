@@ -8,9 +8,11 @@ import FreeEyeTest from './Sections/FreeEyeTest';
 import Guide from './Sections/Guide';
 import Blog from './Sections/Blog';
 import Testimonial from './Sections/Testimonial';
+import Banner from '../../components/Banner';
 export default function Home() {
     return(
-        <div className=' pt-[2.25vw] overflow-hidden px-[2vw]'>
+        <div className='relative pt-[2.25vw] overflow-hidden px-[2vw]'>
+            <Banner/>
             <HeroSection/>
             <Categories/>
             <Discover/>
