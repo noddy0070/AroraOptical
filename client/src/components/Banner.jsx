@@ -12,7 +12,7 @@ export default function Banner() {
                         Medium Length banner heading goes here</span><br />
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     </p>
-                    <button className="px-[1.25vw] py-[.5vw] bg-black rounded-[1vw]">
+                    <button className="px-[1.25vw] py-[.5vw] bg-black rounded-[2.3125vw]">
                         Buy Now
                     </button>
                     </div>

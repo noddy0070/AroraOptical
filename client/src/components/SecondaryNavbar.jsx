@@ -126,12 +126,12 @@ export default function SecondaryNavbar () {
           }
         }}/>
               </div>
-              <img className='w-[1.75vw] h-[1.75vw]' src={WishListIcon}/>
-              <img className='w-[1.75vw] h-[1.75vw]' src={CartIcon}/>
-              <img className='w-[2vw] h-[2vw]' src={profilePlaceholder}/>
-              <button  className="text-regularText focus:outline-none hover:text-gray-500">
-          Login/Sign Up
-        </button>
+        <img className='w-[1.75vw] h-[1.75vw]' src={WishListIcon}/>
+        <img className='w-[1.75vw] h-[1.75vw]' src={CartIcon}/>
+        <div className='flex flex-row gap-[.5vw]'>
+          <img className='w-[2vw] h-[2vw]' src={profilePlaceholder}/>
+          <button  className=" text-regularText focus:outline-none hover:text-gray-500"> Login/Sign Up </button>
+        </div>
               
         </div>
         </div>

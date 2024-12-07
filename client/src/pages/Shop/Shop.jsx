@@ -1,94 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import placeholder from '../../assets/images/CategoryPlaceholder.png';
-import productPlaceholder from '../../assets/images/productPlaceholder.png';
 import { IconButton } from '../../components/button';
+import {product} from '../../data/product.jsx'
 import Item from './item';
 
-const product=[
-    {
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },
-    {
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },
-    {
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },
-    {
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },{
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },{
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },{
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },{
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },{
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },{
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },{
-        image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-        comapny:"RayBan",
-        rating:"3.5 • 10",
-        title:"Junior new wayfarer",
-        price:"₹12,690.00",
-        colour:"100/71 - Black"
-    },
 
-
-]
 
 const sortOptions=[
     'Price: Low to High',

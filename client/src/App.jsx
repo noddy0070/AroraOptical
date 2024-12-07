@@ -9,6 +9,8 @@ import AboutUS from "./pages/Home/Sections/AboutUs";
 import Signup from "./pages/Auth/SignUp";
 import Signin from "./pages/Auth/SignIn";
 import Shop from "./pages/Shop/shop.jsx";
+import Settings from "./pages/Settings/Setting.jsx";
+import Cart from "./pages/Product/Cart.jsx";
 
 export default function App() {
   return <BrowserRouter>
@@ -24,6 +26,9 @@ export default function App() {
       <Route path='/signup' element={<Signup />} />
       <Route path='/signin' element={<Signin />} />
       <Route path='/shop' element={<Shop/>} />
+      <Route path='/settings' element={<Settings/>} />
+      <Route path='/cart' element={<Cart/>}/>
+      <Route path='*' element={<h1>Not Found</h1>} />
 
     </Routes>
 
