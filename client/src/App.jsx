@@ -1,4 +1,5 @@
-import {BrowserRouter,Routes, Route} from "react-router-dom";
+import {BrowserRouter,Routes, Route,useLocation } from "react-router-dom";
+import {useDispatch,useSelector} from "react-redux";
 import PrimaryNavbar from './components/PrimaryNavbar.jsx'
 import SecondaryNavbar from './components/SecondaryNavbar.jsx'
 import Home from "./pages/Home/Home";
@@ -12,10 +13,29 @@ import Shop from "./pages/Shop/shop.jsx";
 import Settings from "./pages/Settings/Setting.jsx";
 import Cart from "./pages/Product/Cart.jsx";
 
+
+
+const Layout = () => {
+  const location = useLocation();
+  const hideNavbars = ['/signin', '/signup']; // Routes to hide navbars
+
+  return (
+    <>
+      {!hideNavbars.includes(location.pathname) && (
+        <>
+          <PrimaryNavbar />
+          <SecondaryNavbar />
+        </>
+      )}
+    </>
+  );
+};
+
+
 export default function App() {
+  
   return <BrowserRouter>
-    <PrimaryNavbar/>
-    <SecondaryNavbar  />
+     <Layout />
 
     <Routes>
       <Route path="/" element={<Home />} />

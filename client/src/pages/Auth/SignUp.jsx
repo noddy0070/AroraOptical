@@ -1,22 +1,27 @@
-import React from 'react';
 import {useState} from 'react';
 import {Link,useNavigate} from "react-router-dom";
 import axios from "axios";
+import React from 'react';
+import aroraOpticalLogo from '../../assets/images/AroraOpticalLogo.png';
+import placeholder from '../../assets/images/CategoryPlaceholder.png';
 
 
 export default function SignUp(){
     const [formData,setFormData]=useState({});
     const [error,setError]=useState(null);
     const [loading,setLoading]=useState(false);
+    const [otp, setOtp] = useState("");
+    const [step, setStep] = useState(1);
     const navigate=useNavigate();
 
     console.log(formData);
-    const handleSubmit=async(e)=>{
+
+    const sendOTP=async(e)=>{
         e.preventDefault();
         setLoading(true);
 
         try{
-            const res = await axios.post(`http://localhost:3000/api/auth/signup`, formData, {
+            const res = await axios.post(`http://localhost:3000/api/auth/sendOTP`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -30,36 +35,114 @@ export default function SignUp(){
             }
             setError(null);
             setLoading(false);
-            navigate('/signin');
+            setStep(2);
         }catch(error){
             setError(error.message);
             setLoading(false);
         }
         
-        
+    }
+
+    const verifyOTP=async(e)=>{
+        e.preventDefault();
+        setLoading(true);
+
+        try{
+            const res = await axios.post(`http://localhost:3000/api/auth/verifyOTP`, formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data=await res.data;
+            
+            if(data.success===false){
+                setError(data.message);
+                setLoading(false);
+                return;
+            }
+            setError(null);
+            setLoading(false);
+            navigate('/');
+        }catch(error){
+            setError(error.message);
+            setLoading(false);
+        }
     }
     
     const handleChange=(e)=>{
         setFormData({...formData,[e.target.id]:e.target.value});
     }
 
+   
+    
+    console.log(formData.number);
+
     return (
        <div className='p-[4vw]'>
-        <h1 className='text-3xl text-center font-semibold '>Sign Up</h1>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-4 justify-center'>
-            <input className='border p-3 rounded-lg' id='username'  type="text" placeholder="Username" onChange={handleChange}/>
-            <input className='border p-3 rounded-lg' id='email' type="email" placeholder="Email" onChange={handleChange}/>
-            <input className='border p-3 rounded-lg' id='password' type="password" placeholder="Password" onChange={handleChange}/>
-            <button disabled={loading} className='border p-3 rounded-lg'  type="submit">{loading?"loading":"Sign Up"}</button>
+        <div className='flex flex-row  h-[48.4375vw]'>
+            <div className='px-[4vw]  w-[47.375vw]'>
+                <div className='flex flex-col   h-full  justify-center  gap-[3vw]'>
+                    <img className=' w-[3.6875vw] h-[2.625vw]' src={aroraOpticalLogo}/>
+                    {step==1?<div className='h-[37.1875vw] w-[30vw] mx-auto '>
+                        <h3 className='font-dyeLine text-[2.5vw] text-center mb-[1.5vw] font-bold'>
+                            Sign Up
+                        </h3>
+                        <p className='font-roboto text-[1.125vw] text-center leading-[150%] mb-[2vw]'>
+                            Login to your own world of eyewear
+                        </p>
+                        <div className='flex flex-col gap-[1.5vw]'>
+                        <form onSubmit={sendOTP} className='flex flex-col gap-[1vw] justify-center font-roboto text-[1rem]'>
+                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='name' type="text" placeholder="Name" onChange={handleChange}/>
+                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='surname' type="text" placeholder="Surname" onChange={handleChange}/>
+                            {/* <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='Surname' type="text" placeholder="Surname" onChange={handleChange}/> */}
+                            {/* <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='Surname' type="text" placeholder="Surname" onChange={handleChange}/> */}
+
+                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='number' placeholder="Phone Number" onChange={handleChange}/>
+                            
+                        </form>
+                        <button disabled={loading} className='border p-[.75vw] h-[vw] rounded-[2vw] bg-black text-white' onClick={sendOTP}  >{loading?"loading":"Send OTP"}</button>
+                            <div className="w-full my-[1vw] relative border-black border-t-[1px] border-solid box-border h-[0.063vw]" />
+                         
+                        {error && <p className='text-red-500'>{error}</p>}
+                            <div className='font-roboto text-[1rem] '>
+                                <p className='text-center leading-[150%]'>Already have an account? <Link to='/signin' ><span className='underline'>SignIn</span></Link></p>
+                            </div>
+                        </div>
+
+                       
+                    </div>:
+                    <div className='h-[37.1875vw] w-[30vw] mx-auto'>
+                        <h3 className='font-dyeLine text-[2.5vw] text-center mb-[1.5vw] font-bold'>
+                            Verify OTP
+                        </h3>
+                        <p className='font-roboto text-[1.125vw] text-center leading-[150%] mb-[2vw]'>
+                            Login to your own world of eyewear
+                        </p>
+                        <div className='flex flex-col gap-[1.5vw]'>
+                        <form onSubmit={verifyOTP} className='flex flex-col gap-[1vw] justify-center font-roboto text-[1rem]'>
+                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='otp' placeholder="otp" onChange={handleChange}/>
+                            
+                        </form>
+                        <button disabled={loading} className='border p-[.75vw] h-[vw] rounded-[2vw] bg-black text-white' onClick={verifyOTP}  >{loading?"loading":"Send OTP"}</button>
+                            <div className="w-full my-[1vw] relative border-black border-t-[1px] border-solid box-border h-[0.063vw]" />
+                         
+                        {error && <p className='text-red-500'>{error}</p>}
+                            <div className='font-roboto text-[1rem] '>
+                                <p className='text-center leading-[150%]'>Already have an account? <Link to='/signin' ><span className='underline'>SignIn</span></Link></p>
+                            </div>
+                        </div>
+
+                        </div>}
+                </div>
             
-        </form>
-        {error && <p className='text-red-500'>{error}</p>}
-        <div>
-            <p>Have an account?</p>
-            <Link to='/signin'>
-            <span className='text-blue-500'> SignIn</span>
-            </Link>
+            </div>
+            <div className='w-[44.625vw] h-full rounded-[1.25vw] overflow-hidden'>
+                <img className='h-full w-full' src={placeholder}></img>
+            </div>
+
         </div>
+        
+        
        </div>
     );
 };

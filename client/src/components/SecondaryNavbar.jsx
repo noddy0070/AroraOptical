@@ -1,4 +1,5 @@
 import React, { useRef,useState } from 'react';
+import {Link} from 'react-router-dom';
 import profilePlaceholder from '../assets/images/profilePlaceholder.png';
 import CartIcon from '../assets/images/icons/CartIcon.svg'
 import WishListIcon from '../assets/images/icons/WishlistIcon.svg'
@@ -128,9 +129,13 @@ export default function SecondaryNavbar () {
               </div>
         <img className='w-[1.75vw] h-[1.75vw]' src={WishListIcon}/>
         <img className='w-[1.75vw] h-[1.75vw]' src={CartIcon}/>
-        <div className='flex flex-row gap-[.5vw]'>
+
+        <div className='flex flex-row gap-[.5vw] items-center'>
           <img className='w-[2vw] h-[2vw]' src={profilePlaceholder}/>
+          <Link to='/signin'>
           <button  className=" text-regularText focus:outline-none hover:text-gray-500"> Login/Sign Up </button>
+
+          </Link>
         </div>
               
         </div>
