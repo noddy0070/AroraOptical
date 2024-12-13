@@ -82,7 +82,8 @@ export default function SignUp(){
         <div className='flex flex-row  h-[48.4375vw]'>
             <div className='px-[4vw]  w-[47.375vw]'>
                 <div className='flex flex-col   h-full  justify-center  gap-[3vw]'>
-                    <img className=' w-[3.6875vw] h-[2.625vw]' src={aroraOpticalLogo}/>
+                <Link to='/' >
+                    <img className='cursor-pointer w-[3.6875vw] h-[2.625vw]' src={aroraOpticalLogo}/></Link>
                     {step==1?<div className='h-[37.1875vw] w-[30vw] mx-auto '>
                         <h3 className='font-dyeLine text-[2.5vw] text-center mb-[1.5vw] font-bold'>
                             Sign Up

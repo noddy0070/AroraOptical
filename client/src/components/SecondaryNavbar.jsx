@@ -26,17 +26,33 @@ export default function SecondaryNavbar () {
         <div id='shopBtn'>
               <button className="relative text-regularText group py-[.75vw]  focus:outline-none hover:underline hover:text-gray-500">
                 Shop
-                <div className="absolute left-0 mt-[.5vw] text-black hidden w-48   bg-white border border-gray-200 shadow-lg rounded-md group-hover:block">
-                <ul className="py-0 p">
-                  <li className="px-0 py-2 hover:bg-gray-100">
-                    <a href="#category1">Category 1</a>
+                <div className="absolute left-0 mt-[.5vw] text-black hidden w-48     bg-white border border-gray-200 shadow-lg rounded-md group-hover:block">
+                <ul className="py-0 text-left">
+                  <Link to='/shop/eyeglasses/all'>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <a href="#category1">Eyeglasses</a>
                   </li>
-                  <li className="px-0 py-2 hover:bg-gray-100">
-                    <a href="#category2">Category 2</a>
+                  </Link>
+                  <Link to='/shop/sunglasses/all'>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <a href="#category2">Sunglasses</a>
                   </li>
-                  <li className="px-0 py-2 hover:bg-gray-100">
-                    <a href="#category3">Category 3</a>
+                  </Link>
+                  <Link to='/shop/contact-lenses/all'>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <a href="#category3">Contact Lenses</a>
                   </li>
+                  </Link>
+                  <Link to='/shop/computer-glasses/all'>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <a href="#category3">Computer Glases</a>
+                  </li>
+                  </Link>
+                  <Link to='/shop/accessories/all'>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <a href="#category3">Accessories</a>
+                  </li>
+                  </Link>
                 </ul>
               </div>
               </button>

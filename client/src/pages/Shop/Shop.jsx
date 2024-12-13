@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IconButton } from '../../components/button';
 import {product} from '../../data/product.jsx'
 import Item from './item';
+import Filters from '../../components/Filters.jsx';
 
 
 
@@ -13,7 +14,7 @@ const sortOptions=[
 ]
 
 
-export default function Shop() {
+export default function Shop({category,audience}) {
     const [selectedSort, setSelectedSorts] = useState([]);
     const [hoveredSort, setHoveredSort] = useState(null);
     const [isHovered, setIsHovered] = useState(false);
@@ -33,24 +34,32 @@ export default function Shop() {
       };
     // console.log(isHovered)
     // console.log(selectedSort)
+
+    function formatCategoryName(category) {
+        return category
+            .split('-') // Split on hyphens
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+            .join(' '); // Join words with a space
+    }
+    console.log(audience)
     return (
     <div className='mx-[2vw] '>
         <div className='relative rounded-[1.875vw] w-full border-black border-[1px] h-[25.25vw]'>
         <img alt='hi' className='relative rounded-[1.875vw] hide-scrollbar w-full h-[25.25vw]'></img>
         <IconButton className='absolute right-[4vw] top-[3vw]'  btnSize={3.0625} padding={.85} iconWidth={2.1875}/>
         </div>  
-        <h3 className='text-h3Text font-dyeLine font-bold leading-[120%] text-center py-[4vw]'>Sunglasses for Men</h3>
+        <h3 className='text-h3Text font-dyeLine font-bold leading-[120%] text-center py-[4vw]'>{formatCategoryName(category)} for {audience}</h3>
         <div className='flex flex-row'>
             <div className='w-[24.1875vw] pr-[1vw] flex flex-col gap-[1.5vw]'>
                 <div className='flex flex-row'>
                     <h6 className='font-roboto font-bold text-h5Text'>
-                        Filters
+                       Filters
                     </h6>
                     <button className='leading-[150%] font-roboto text-regularText ml-auto'>
                         Clear All
                     </button>
                 </div>
-
+                <Filters category={category} audienceShop={audience}/>
             </div>
 
         <div className='grid grid-cols-2 md:grid-cols-3 gap-[1vw] '>
