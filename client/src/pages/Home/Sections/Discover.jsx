@@ -1,7 +1,12 @@
-import React from 'react';
+import React,{useState} from 'react';
 import categoryPlaceholder from '../../../assets/images/categoryPlaceholder.png';
 import { IconButton } from '../../../components/button';
+import DiscoverMain1 from '../../../assets/images/homePage/DiscoverMain1.png';
+import DiscoverMain2 from '../../../assets/images/homePage/DiscoverMain2.png';
+import DiscoverMain3 from '../../../assets/images/homePage/DiscoverMain3.png';
 export default function Discover(){
+    const [hovered, setHovered] = useState(1);
+    const [selected, setSelected] = useState(false);
     return (
         <div className=' pl-[4vw] py-[7vw] h-[48.25vw] flex flex-row gap-[1vw]'>
             <div className='relative w-[41.625vw]'> 
@@ -45,12 +50,79 @@ export default function Discover(){
                     
                 </div>
             </div>
-            <div className='w-[35.625vw] h-[34.25vw] overflow-hidden rounded-[3.125vw]'>
-                <img className='h-full w-full' src={categoryPlaceholder} alt="placeholder"></img>
-            </div>
-            <div className='w-[12.875vw] h-[34.25vw] overflow-hidden rounded-[3.125vw]'>
-                <img className='h-full w-full' src={categoryPlaceholder} alt="placeholder"></img>
-            </div>            
+            <div className="flex gap-[1vw] w-[49.5vw] rounded-[3.125vw] overflow-hidden">
+                {/* First Div */}
+                <div
+    className={`relative transition-all duration-500 ${
+        !selected
+            ? hovered == 2
+                ? "w-[12.875vw]"
+                : "w-[35.625vw]"
+            : "w-[0vw]"
+    } h-[34.25vw] overflow-hidden rounded-[3.125vw]`}
+>
+    {/* Gradient Overlay */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none"></div>
+
+    {/* Image */}
+    <img
+        className="h-full w-full object-cover"
+        src={DiscoverMain1}
+        alt="placeholder"
+    />
+</div>
+
+
+                {/* Second Div */}
+                <div
+    onMouseEnter={() => setHovered(2)}
+    onMouseLeave={() => setHovered(1)}
+    onClick={() => setSelected(!selected)}
+    className={`relative transition-all duration-500 ${
+        !selected
+            ? hovered == 2
+                ? "w-[35.625vw]"
+                : " w-[12.875vw] "
+            : hovered == 3
+            ? "w-[12.875vw]"
+            : "w-[35.625vw]"
+    } h-[34.25vw] overflow-hidden rounded-[3.125vw]`}
+>
+    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none"></div>
+    <img
+        className="h-full w-full object-cover cursor-pointer"
+        src={DiscoverMain2}
+        alt="placeholder"
+    />
+</div>
+
+<div
+    onMouseEnter={() => setHovered(3)}
+    onMouseLeave={() => setHovered(0)}
+    className={`relative transition-all duration-500 ${
+        selected
+            ? hovered == 3
+                ? "w-[35.625vw]"
+                : "w-[12.875vw]"
+            : "w-[0vw]"
+    } h-[34.25vw] overflow-hidden rounded-[3.125vw]`}
+>
+    {/* Gradient Overlay */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/0 pointer-events-none"></div>
+
+    {/* Image */}
+    <img
+        className="h-full w-full object-cover"
+        src={DiscoverMain3}
+        alt="placeholder"
+    />
+</div>
+
+
+
+                
+                </div>
+         
         </div>
     );
 };

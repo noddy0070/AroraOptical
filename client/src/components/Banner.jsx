@@ -8,7 +8,7 @@ export default function Banner() {
                 <div className="flex flex-row font-roboto items-center text-white text-regularText justify-center h-full gap-[1.5vw]">
                     <div className="flex flex-row gap-[1.5vw] w-full justify-center">
                     <p className="leading-[150%]">
-                        <span className="font-semibold">
+                        <span className="font-medium">
                         Medium Length banner heading goes here</span><br />
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     </p>

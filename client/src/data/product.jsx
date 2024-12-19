@@ -7,7 +7,8 @@ export const  product=[
         rating:"3.5 • 10",
         title:"Junior new wayfarer",
         price:"₹12,690.00",
-        colour:"100/71 - Black"
+        colour:"100/71 - Black",
+        
     },
     {
         image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
