@@ -4,6 +4,8 @@ import { IconButton } from '../../../components/button';
 import DiscoverMain1 from '../../../assets/images/homePage/DiscoverMain1.png';
 import DiscoverMain2 from '../../../assets/images/homePage/DiscoverMain2.png';
 import DiscoverMain3 from '../../../assets/images/homePage/DiscoverMain3.png';
+import DiscoverSide1 from '../../../assets/images/homePage/DiscoverSide1.png';
+import DiscoverSide2 from '../../../assets/images/homePage/DiscoverSide2.png';
 export default function Discover(){
     const [hovered, setHovered] = useState(1);
     const [selected, setSelected] = useState(false);
@@ -21,9 +23,9 @@ export default function Discover(){
                 </span>
                 <div className='absolute flex flex-row gap-[1.5vw] bottom-0 md:pt-[1vw]  h-[18.75vw]     '>
                     <div className='relative w-[16.125vw] h-[18.75vw] rounded-[1.1vw] overflow-hidden'>
-                        <img className='w-full h-full' src={categoryPlaceholder}/>
+                        <img className='w-full h-full' src={DiscoverSide1}/>
                         <IconButton btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[.75vw] top-[.75vw]'/>
-                        <div className='absolute bottom-[.75vw] left-[.75vw] w-[15.125vw]'>
+                        <div className='absolute bottom-[.75vw] text-white left-[.75vw] w-[15.125vw]'>
                             <h6 className='mb-[1vw] leading-[120%] font-dyeLine font-bold text-h6Text'>
                                 Global Brands
                             </h6>
@@ -35,9 +37,9 @@ export default function Discover(){
                     </div>
 
                     <div className='relative w-[16.125vw] h-[18.75vw] rounded-[1.1vw] overflow-hidden'>
-                        <img className='w-full h-full' src={categoryPlaceholder}/>
+                        <img className='w-full h-full' src={DiscoverSide2}/>
                         <IconButton btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[.75vw] top-[.75vw]'/>
-                        <div className='absolute    bottom-[.75vw] left-[.75vw] w-[15.125vw]'>
+                        <div className='absolute z-[10] text-white bottom-[.75vw] left-[.75vw] w-[15.125vw]'>
                             <h6 className='mb-[1vw] leading-[120%] font-dyeLine font-bold text-h6Text'>
                                 Stylish Choice
                             </h6>

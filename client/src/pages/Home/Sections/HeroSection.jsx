@@ -21,7 +21,7 @@ export default function HeroSection(){
                 </div>
                 <div className='absolute bottom-0 pb-[3vw]  w-full pr-[4vw] scale-100 '>
                     <div className=' flex flex-row gap-[.1vw] justify-center w-min mx-auto group hover:cursor-pointer hover:scale-105 transition-transform duration-700 '>
-                        <TitleButton  btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25}  btnWidth={16} className= ' group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
+                        <TitleButton  btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25}  btnWidth={16} className= 'group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
                         <IconButton btnSize={4.25} iconWidth={1.875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
                     </div>
                     <p className='text-regularText pt-[.875vw] font-roboto  w-full text-center leading-[150%]'>Learn More</p>

@@ -23,6 +23,11 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
 /* Dye Line font */
 @font-face {
   font-family: 'DyeLine';

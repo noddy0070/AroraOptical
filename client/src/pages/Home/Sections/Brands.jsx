@@ -39,10 +39,12 @@ export default function Brands() {
             slidesToScroll: 1,
             centerMode: true,
             autoplay: true,
-            speed: 2000,
-            autoplaySpeed: 2000,
+            speed: 1000,
+            autoplaySpeed: 1000,
             cssEase: "linear",
             variableWidth: true,
+            pauseOnHover: false,       // Prevent autoplay from stopping on hover
+            pauseOnFocus: false, 
           };
 
     return(
@@ -50,8 +52,9 @@ export default function Brands() {
         <Slider className="w-full"  ref={slider} {...settings}>
            
         {logosData.map((logo, index) => (
-        <div key={index} className="flex justify-center items-center">
+        <div key={index} className="flex relative justify-center items-center">
           <img src={logo.src} alt={logo.alt} className="max-h-full object-contain" style={{height:`${logo.height}vw`}} />
+            
         </div>
       ))}
 

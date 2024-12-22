@@ -3,11 +3,12 @@ import { IconButton, TitleButton } from '../../../components/button';
 import CategoryPlaceholder from '../../../assets/images/CategoryPlaceholder.png';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import TrendingImg from '../../../assets/images/homePage/Trending.png';
 export default function Trending(){
     return (
         <div className=' px-[4vw] py-[7vw] grid h-[57.875vw] grid-cols-2'>
             <div className="relative bg-blue-200 col-span-1 h-full rounded-l-[3.125vw] overflow-hidden">
-    <img className="h-full w-full" src={CategoryPlaceholder} alt="Category Placeholder" />
+    <img className="h-full w-full" src={TrendingImg} alt="Category Placeholder" />
     <ArrowBackIosRoundedIcon className='absolute bottom-[2vw] right-[3.75vw] bg-btngrery rounded-full p-[0.25vw]' style={{ color: 'white', fontSize: "1.875vw" }}></ArrowBackIosRoundedIcon>
     <ArrowForwardIosRoundedIcon className='absolute bottom-[2vw] right-[1.5vw] bg-black rounded-full p-[0.25vw]' style={{ color: 'white', fontSize: "1.875vw" }}></ArrowForwardIosRoundedIcon>
     {/* Gradient Overlay */}
@@ -26,9 +27,9 @@ export default function Trending(){
                     <span className='text-center font-roboto justify-end text-regularText mb-[1vw]'>
                     Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.Norem ipsum dolor sit amet, consectetur 
                     </span>
-                    <div className='flex flex-row justify-center'>
-                        <TitleButton btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16}/>
-                        <IconButton btnSize={4.25} iconWidth={2.1875} padding={0.85}/>
+                    <div className='flex flex-row justify-center group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 gap-[.1vw] '>
+                        <TitleButton btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
+                        <IconButton btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
                     </div>
                 </div>
             </div>

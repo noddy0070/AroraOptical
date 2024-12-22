@@ -1,5 +1,6 @@
 import React from 'react';
 import categoryPlaceholder from '../../../assets/images/categoryPlaceholder.png';
+import EyeTestImg from '../../../assets/images/homePage/EyeTest.png';
 import { IconButton,TitleButton } from '../../../components/button';
 export default function FreeEyeTest(){
     return (
@@ -12,21 +13,21 @@ export default function FreeEyeTest(){
                     <span className='font-roboto text-regularText mb-[2vw]'>
                     Book your free eye test today! Experience the same exceptional service our local customers love—now available nationwide.
                     </span>
-                    <div className='flex flex-row justify-center'>
-                        <TitleButton btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16}/>
-                        <IconButton btnSize={4.25} iconWidth={2.1875} padding={0.85}/>
+                    <div className='flex flex-row w-min gap-[.1vw] group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 '>
+                        <TitleButton btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
+                        <IconButton btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
                     </div>
                 </div>
 
                 <div className='relative w-[28.75vw] h-[28.75vw] rounded-[3.125vw] overflow-hidden'>
-                        <img className='w-full h-full' src={categoryPlaceholder}/>
+                        <img className='w-full h-full' src={EyeTestImg}/>
                         <div className='absolute right-[1.5vw] top-[1.5vw] flex flex-row items-center gap-[.5vw]' >
                             <span className='text-mediumText text-center font-roboto'>
                                 View in Maps
                             </span>
                             <IconButton btnSize={3.0625} iconWidth={2.1875} padding={0.6} className=''/>
                         </div>
-                        <div className='absolute bottom-[1.5vw] left-[1.5vw] w-[15.1875vw]'>
+                        <div className='absolute text-white bottom-[1.5vw] left-[1.5vw] w-[15.1875vw]'>
                             <h3 className='leading-[120%] font-dyeLine font-bold text-h3Text'>
                                 Arora Optical
                             </h3>

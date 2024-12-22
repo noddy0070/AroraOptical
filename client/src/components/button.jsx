@@ -20,7 +20,7 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
 };
 
   
-  export const TitleButton = ({ onClick={}, className = '',btnTitle,btnWidth, btnHeight,btnRadius }) => {
+  export const TitleButton = ({ onClick={}, className = '',btnTitle,btnWidth, btnHeight,btnRadius,className2='' }) => {
     const [isHovered, setIsHovered] = useState(false);
     console.log(isHovered)
     return (
@@ -35,7 +35,7 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <span className={`text-regularText text-center font-roboto p-[.1vw]  ${isHovered?'text-black':'text-white'}  transition-all duration-700`} >
+        <span className={`text-regularText text-center font-roboto p-[.1vw]  ${isHovered?'text-black':'text-white'}   transition-all duration-500 ${className2}`} >
           {btnTitle}
         </span>
       </button>

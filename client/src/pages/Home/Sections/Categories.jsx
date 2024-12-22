@@ -21,14 +21,16 @@ export default function Categories(){
                 <h2 className='text-h2Text  leading-[120%] text-center font-dyeLine font-bold'>Fresh arrivals and new<br/> selections</h2>
             </div>
 
-            <div className="w-full pt-[4vw] pb-[7vw] flex flex-row gap-[1vw] overflow-x-auto hide-scrollbar px-[2vw]">
+            <div className="w-full pt-[4vw] pb-[7vw] flex flex-row gap-[1vw] overflow-x-auto hide-scrollbar scroll-snap-x px-[2vw]">
               {
                 CategoriesData.map((category,index)=>(
-                  <div className=" relative overflow-hidden group min-w-[27.125vw] shadow-[0px_16px_16px_-8px_rgba(12,_12,_13,_0.1),_0px_4px_4px_-4px_rgba(12,_12,_13,_0.05)] hover:shadow-[0px_3.8834950923919678px_9.71px_rgba(0,_0,_0,_0.75)]  h-[31.5625vw] rounded-[2vw] ">
+                  <div className=" relative overflow-hidden group min-w-[27.125vw]  shadow-[0px_16px_16px_-8px_rgba(12,_12,_13,_0.1),_0px_4px_4px_-4px_rgba(12,_12,_13,_0.05)] hover:shadow-[0px_3.8834950923919678px_9.71px_rgba(0,_0,_0,_0.75)]  h-[31.5625vw] rounded-[2vw] ">
                 <img className="w-full h-full rounded-[2vw]  transform group-hover:scale-110 transition-all duration-700"  src={category.src} alt={category.alt} />
 
-                <TitleButton className='absolute bottom-[1vw] left-[1vw]' btnHeight={4.25} btnWidth={10.5} btnRadius={3.125} btnTitle={category.title}/>
-                <IconButton className='absolute top-[1vw] right-[1vw]' btnSize={3.0625} padding={.85} iconWidth={2.1875}/>
+                <TitleButton className='z-[10] absolute bottom-[1vw] left-[1vw]' btnHeight={4.25} btnWidth={10.5} btnRadius={3.125} btnTitle={category.title}/>
+                <IconButton className='z-[10] absolute top-[1vw] right-[1vw]' btnSize={3.0625} padding={.85} iconWidth={2.1875}/>
+                <div className="absolute inset-0 bg-gradient-to-t  transition-opacity duration-500 ease-in-out pointer-events-none group-hover:opacity-0" style={{ background: 'linear-gradient(to top,rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))' }}></div>  
+
               </div>
                 )
               )

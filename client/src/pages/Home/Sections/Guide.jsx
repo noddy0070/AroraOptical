@@ -17,9 +17,9 @@ export default function Guide(){
                         <span className=' font-roboto justify-end text-mediumText mb-[1vw]'>
                             Purchasing eyewear online is simple and convenient. Follow these easy steps to find your perfect pair.
                         </span>
-                        <div className='flex flex-row'>
-                            <TitleButton btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16}/>
-                            <IconButton btnSize={4.25} iconWidth={2.1875} padding={0.85}/>
+                         <div className='flex flex-row justify-center group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 gap-[.1vw] '>
+                            <TitleButton btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
+                            <IconButton btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
                         </div>
                     </div>
                 </div>

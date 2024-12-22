@@ -12,12 +12,13 @@ import Signin from "./pages/Auth/SignIn";
 import Settings from "./pages/Settings/Setting.jsx";
 import Cart from "./pages/Product/Cart.jsx";
 import ShopURL from "./Routes/shopRoutes.jsx";
+import Lens from "./pages/Lens/Lens.jsx";
 
 
 
 const Layout = () => {
   const location = useLocation();
-  const hideNavbars = ['/signin', '/signup']; // Routes to hide navbars
+  const hideNavbars = ['/signin', '/signup','/lens']; // Routes to hide navbars
 
   return (
     <>
@@ -34,7 +35,7 @@ const Layout = () => {
 
 export default function App() {
   
-  return <BrowserRouter>
+  return <div className="h-screen"><BrowserRouter>
      <Layout />
 
     <Routes>
@@ -49,10 +50,11 @@ export default function App() {
       <Route path='/settings' element={<Settings/>} />
       <Route path='/cart' element={<Cart/>}/>
       <Route path='*' element={<h1>Not Found</h1>} />
-
+      <Route path='/lens' element={<Lens/>} />
     </Routes>
 
   </BrowserRouter>
+  </div>
   
 }
 

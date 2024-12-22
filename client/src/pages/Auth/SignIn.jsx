@@ -7,6 +7,7 @@ import { signInFail,signInSuccess,signInStart } from '../../redux/slice/userSlic
 import placeholder from '../../assets/images/CategoryPlaceholder.png';
 import aroraOpticalLogo from '../../assets/images/AroraOpticalLogo.png';
 import phone from '../../assets/images/Phone.png';
+import LoginImg from '../../assets/images/LoginImg.png'
 import google from '../../assets/images/Google.png';
 
 export default function SignIn(){
@@ -63,16 +64,12 @@ export default function SignIn(){
                                         </p>
                                         <div className='flex flex-col gap-[1.5vw]'>
                                         <form onSubmit={handleSubmit} className='flex flex-col gap-[1vw] justify-center font-roboto text-[1rem]'>
-                                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='name' type="text" placeholder="Name" onChange={handleChange}/>
-                                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='surname' type="text" placeholder="Surname" onChange={handleChange}/>
-                                            {/* <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='Surname' type="text" placeholder="Surname" onChange={handleChange}/> */}
-                                            {/* <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='Surname' type="text" placeholder="Surname" onChange={handleChange}/> */}
-                
-                                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='number' placeholder="Phone Number" onChange={handleChange}/>
-                                            
+                                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='email' type="email" placeholder="Email" onChange={handleChange}/>
+                                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='password' type="text" placeholder="Password" onChange={handleChange}/>
+                                            <button disabled={loading} className='border p-[.75vw]  h-[3vw] rounded-[2vw] bg-black text-white' onClick={handleSubmit}  >{loading?"loading":"Login"}</button>
+                                        <div className="w-full my-[1vw] relative border-black border-t-[1px] border-solid box-border " />
                                         </form>
-                                        <button disabled={loading} className='border p-[.75vw] h-[vw] rounded-[2vw] bg-black text-white' onClick={handleSubmit}  >{loading?"loading":"Send OTP"}</button>
-                                            <div className="w-full my-[1vw] relative border-black border-t-[1px] border-solid box-border h-[0.063vw]" />
+                                        <div className='flex flex-row justify-center cursor-pointer shadow-[0px_.125vw_.625vw_rgba(0,_0,_0,_0.25)] items-center gap-[.5vw] py-[.75vw] px-[1.5vw] rounded-[2vw]'><img src={google} className='h-[1.5vw] w-[1.5vw]'/><p className='text-regularText'>Sign in with Google</p></div>
                                          
                                         {error && <p className='text-red-500'>{error}</p>}
                                             <div className='font-roboto text-[1rem] '>
@@ -86,7 +83,7 @@ export default function SignIn(){
             
             </div>
             <div className='w-[44.625vw] h-full rounded-[1.25vw] overflow-hidden'>
-                <img className='h-full w-full' src={placeholder}></img>
+                <img className='h-full w-full' src={LoginImg}></img>
             </div>
 
         </div>

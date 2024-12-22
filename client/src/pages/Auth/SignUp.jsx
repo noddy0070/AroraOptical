@@ -3,6 +3,7 @@ import {Link,useNavigate} from "react-router-dom";
 import axios from "axios";
 import React from 'react';
 import aroraOpticalLogo from '../../assets/images/AroraOpticalLogo.png';
+import LoginImg from '../../assets/images/LoginImg.png'
 import placeholder from '../../assets/images/CategoryPlaceholder.png';
 
 
@@ -16,7 +17,7 @@ export default function SignUp(){
 
     console.log(formData);
 
-    const sendOTP=async(e)=>{
+    const handleSubmit=async(e)=>{
         e.preventDefault();
         setLoading(true);
 
@@ -43,31 +44,6 @@ export default function SignUp(){
         
     }
 
-    const verifyOTP=async(e)=>{
-        e.preventDefault();
-        setLoading(true);
-
-        try{
-            const res = await axios.post(`http://localhost:3000/api/auth/verifyOTP`, formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            const data=await res.data;
-            
-            if(data.success===false){
-                setError(data.message);
-                setLoading(false);
-                return;
-            }
-            setError(null);
-            setLoading(false);
-            navigate('/');
-        }catch(error){
-            setError(error.message);
-            setLoading(false);
-        }
-    }
     
     const handleChange=(e)=>{
         setFormData({...formData,[e.target.id]:e.target.value});
@@ -81,7 +57,7 @@ export default function SignUp(){
        <div className='p-[4vw]'>
         <div className='flex flex-row  h-[48.4375vw]'>
             <div className='px-[4vw]  w-[47.375vw]'>
-                <div className='flex flex-col   h-full  justify-center  gap-[3vw]'>
+                <div className='flex flex-col   h-full    gap-[3vw]'>
                 <Link to='/' >
                     <img className='cursor-pointer w-[3.6875vw] h-[2.625vw]' src={aroraOpticalLogo}/></Link>
                     {step==1?<div className='h-[37.1875vw] w-[30vw] mx-auto '>
@@ -92,16 +68,15 @@ export default function SignUp(){
                             Login to your own world of eyewear
                         </p>
                         <div className='flex flex-col gap-[1.5vw]'>
-                        <form onSubmit={sendOTP} className='flex flex-col gap-[1vw] justify-center font-roboto text-[1rem]'>
+                        <form onSubmit={handleSubmit} className='flex flex-col gap-[1vw] justify-center font-roboto text-regularText'>
                             <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='name' type="text" placeholder="Name" onChange={handleChange}/>
-                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='surname' type="text" placeholder="Surname" onChange={handleChange}/>
-                            {/* <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='Surname' type="text" placeholder="Surname" onChange={handleChange}/> */}
-                            {/* <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='Surname' type="text" placeholder="Surname" onChange={handleChange}/> */}
-
-                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='number' placeholder="Phone Number" onChange={handleChange}/>
+                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='name' type="email" placeholder="Email" onChange={handleChange}/>
+                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='state' type="text" placeholder="State" onChange={handleChange}/>
+                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='city' type="text" placeholder="City" onChange={handleChange}/>
                             
+                            <input className='border-[1.5px] p-[.75vw] border-black w-full placeholder:text-[#505050]' id='password' type="text" placeholder="Password" onChange={handleChange}/>
                         </form>
-                        <button disabled={loading} className='border p-[.75vw] h-[vw] rounded-[2vw] bg-black text-white' onClick={sendOTP}  >{loading?"loading":"Send OTP"}</button>
+                        <button disabled={loading} className='border p-[.75vw] h-[vw] rounded-[2vw] bg-black text-white' onClick={handleSubmit}  >{loading?"loading":"Next"}</button>
                             <div className="w-full my-[1vw] relative border-black border-t-[1px] border-solid box-border h-[0.063vw]" />
                          
                         {error && <p className='text-red-500'>{error}</p>}
@@ -138,7 +113,7 @@ export default function SignUp(){
             
             </div>
             <div className='w-[44.625vw] h-full rounded-[1.25vw] overflow-hidden'>
-                <img className='h-full w-full' src={placeholder}></img>
+                <img className='h-full w-full' src={LoginImg}></img>
             </div>
 
         </div>
