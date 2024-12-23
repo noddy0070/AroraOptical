@@ -1,5 +1,6 @@
 import React,{useState} from 'react';
 import ArrowNorthEast from "../assets/images/ArrowNorthEast.png";
+import cartImg from '../assets/images/lensPage/cart.png';
 export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnSize,padding }) => {
     return (
         <button
@@ -22,7 +23,6 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
   
   export const TitleButton = ({ onClick={}, className = '',btnTitle,btnWidth, btnHeight,btnRadius,className2='' }) => {
     const [isHovered, setIsHovered] = useState(false);
-    console.log(isHovered)
     return (
         <button
         onClick={()=>{onClick}}
@@ -41,3 +41,21 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
       </button>
     );
   };
+
+
+  export const CartButton = ({ onClick=()=>{} }) => {
+    const [isHoveringCartButton, setIsHoveringCartButton] = useState(false);
+      return (
+        <button onClick={onClick} className='flex flex-row gap-[.3125vw] items-center justify-center shadow-[0px_.25vw_.3125vw_rgba(0,_0,_0,_0.4)]   rounded-[4vw]  ml-auto px-[2vw] py-[.75vw] transition-colors transform duration-700'
+                 style={{backgroundColor:isHoveringCartButton? "#f3e9d2":"darkslategrey"}} onMouseEnter={() => setIsHoveringCartButton(true)} onMouseLeave={() => setIsHoveringCartButton(false)}>
+                  <h5 className='text-h5Text font-dyeLine font-bold transition-colors transform duration-500' style={{color:isHoveringCartButton?"black":"#f3e9d2"}}>Move To Cart</h5>
+                  <div className='relative w-[2.25vw] h-[2.25vw]   items-center overflow-hidden '>
+                  <svg className='absolute text-black my-auto mx-auto min-w-[2.25vw] min-h-[2.25vw] transition-all transform duration-500' width="2.25vw" height="2.25vw" viewBox="0 0 47 49" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{left:isHoveringCartButton?"-2.5vw":"0"}}>
+                    <path d="M10.0006 24.5627H38.0006M38.0006 24.5627L24.0006 10.5627M38.0006 24.5627L24.0006 38.5627" stroke="#F3E9D2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <img src={cartImg} className='absolute w-[2.25vw] h-[2.25vw]  my-auto transition-all transform duration-500' style={{left:isHoveringCartButton?"0vw":"2.5vw"}}/>
+                  </div>
+                  
+                </button>
+      )
+  }
