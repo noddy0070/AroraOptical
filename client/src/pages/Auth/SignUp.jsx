@@ -1,10 +1,10 @@
 import {useState} from 'react';
-import {Link,useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import React from 'react';
 import aroraOpticalLogo from '../../assets/images/AroraOpticalLogo.png';
 import LoginImg from '../../assets/images/LoginImg.png'
-import placeholder from '../../assets/images/CategoryPlaceholder.png';
+import { TransitionLink } from '../../Routes/TransitionLink';
 
 
 export default function SignUp(){
@@ -58,8 +58,8 @@ export default function SignUp(){
         <div className='flex flex-row  h-[48.4375vw]'>
             <div className='px-[4vw]  w-[47.375vw]'>
                 <div className='flex flex-col   h-full    gap-[3vw]'>
-                <Link to='/' >
-                    <img className='cursor-pointer w-[3.6875vw] h-[2.625vw]' src={aroraOpticalLogo}/></Link>
+                <TransitionLink to='/' >
+                    <img className='cursor-pointer w-[3.6875vw] h-[2.625vw]' src={aroraOpticalLogo}/></TransitionLink>
                     {step==1?<div className='h-[37.1875vw] w-[30vw] mx-auto '>
                         <h3 className='font-dyeLine text-[2.5vw] text-center mb-[1.5vw] font-bold'>
                             Sign Up
@@ -81,7 +81,7 @@ export default function SignUp(){
                          
                         {error && <p className='text-red-500'>{error}</p>}
                             <div className='font-roboto text-[1rem] '>
-                                <p className='text-center leading-[150%]'>Already have an account? <Link to='/signin' ><span className='underline'>SignIn</span></Link></p>
+                                <p className='text-center leading-[150%]'>Already have an account? <TransitionLink to='/signin' ><span className='underline'>SignIn</span></TransitionLink></p>
                             </div>
                         </div>
 
@@ -104,7 +104,7 @@ export default function SignUp(){
                          
                         {error && <p className='text-red-500'>{error}</p>}
                             <div className='font-roboto text-[1rem] '>
-                                <p className='text-center leading-[150%]'>Already have an account? <Link to='/signin' ><span className='underline'>SignIn</span></Link></p>
+                                <p className='text-center leading-[150%]'>Already have an account? <TransitionLink to='/signin' ><span className='underline'>SignIn</span></TransitionLink></p>
                             </div>
                         </div>
 

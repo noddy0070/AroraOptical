@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
-import categoryPlaceholder from '../../../assets/images/categoryPlaceholder.png';
 import { IconButton } from '../../../components/button';
+import { motion } from "framer-motion";
 import DiscoverMain1 from '../../../assets/images/homePage/DiscoverMain1.png';
 import DiscoverMain2 from '../../../assets/images/homePage/DiscoverMain2.png';
 import DiscoverMain3 from '../../../assets/images/homePage/DiscoverMain3.png';
@@ -9,6 +9,33 @@ import DiscoverSide2 from '../../../assets/images/homePage/DiscoverSide2.png';
 export default function Discover(){
     const [hovered, setHovered] = useState(1);
     const [selected, setSelected] = useState(false);
+
+    
+
+  // Compute width (in vw) based on the index, selected state, and hovered value.
+  const computeWidth = (index) => {
+    // When not selected:
+    // - First Div (index 0): big unless hovered over the middle, then small.
+    // - Second Div (index 1): big when hovered, else small.
+    // - Third Div (index 2): hidden (0vw).
+    if (!selected) {
+      if (index === 0) return hovered === 2 ? "12.875vw" : "35.625vw";
+      if (index === 1) return hovered === 2 ? "35.625vw" : "12.875vw";
+      if (index === 2) return "0vw";
+    }
+    // When selected:
+    // - First Div is hidden.
+    // - Second Div: big unless the third div is hovered.
+    // - Third Div: becomes visible and big when hovered.
+    if (selected) {
+      if (index === 0) return "0vw";
+      if (index === 1) return hovered === 3 ? "12.875vw" : "35.625vw";
+      if (index === 2) return hovered === 3 ? "35.625vw" : "12.875vw";
+    }
+  };
+
+  
+
     return (
         <div className=' pl-[4vw] py-[7vw] h-[48.25vw] flex flex-row gap-[1vw]'>
             <div className='relative w-[41.625vw]'> 
@@ -53,77 +80,44 @@ export default function Discover(){
                 </div>
             </div>
             <div className="flex gap-[1vw] w-[49.5vw] rounded-[3.125vw] overflow-hidden">
-                {/* First Div */}
-                <div
-    className={`relative transition-all duration-500 ${
-        !selected
-            ? hovered == 2
-                ? "w-[12.875vw]"
-                : "w-[35.625vw]"
-            : "w-[0vw]"
-    } h-[34.25vw] overflow-hidden rounded-[3.125vw]`}
->
-    {/* Gradient Overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none"></div>
+      {/* First Div */}
+      <motion.div
+        className="relative h-[34.25vw] overflow-hidden rounded-[3.125vw]"
+        animate={{ width: computeWidth(0) }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        onMouseEnter={() => setHovered(2)}
+        onMouseLeave={() => setHovered(1)}
+      >
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none" />
+        <img className="h-full w-full object-cover" src={DiscoverMain1} alt="placeholder" />
+      </motion.div>
 
-    {/* Image */}
-    <img
-        className="h-full w-full object-cover"
-        src={DiscoverMain1}
-        alt="placeholder"
-    />
-</div>
+      {/* Second Div */}
+      <motion.div
+        className="relative h-[34.25vw] overflow-hidden rounded-[3.125vw] cursor-pointer"
+        animate={{ width: computeWidth(1) }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        onMouseEnter={() => setHovered(2)}
+        onMouseLeave={() => setHovered(1)}
+        onClick={() => setSelected(!selected)}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none" />
+        <img className="h-full w-full object-cover" src={DiscoverMain2} alt="placeholder" />
+      </motion.div>
 
-
-                {/* Second Div */}
-                <div
-    onMouseEnter={() => setHovered(2)}
-    onMouseLeave={() => setHovered(1)}
-    onClick={() => setSelected(!selected)}
-    className={`relative transition-all duration-500 ${
-        !selected
-            ? hovered == 2
-                ? "w-[35.625vw]"
-                : " w-[12.875vw] "
-            : hovered == 3
-            ? "w-[12.875vw]"
-            : "w-[35.625vw]"
-    } h-[34.25vw] overflow-hidden rounded-[3.125vw]`}
->
-    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none"></div>
-    <img
-        className="h-full w-full object-cover cursor-pointer"
-        src={DiscoverMain2}
-        alt="placeholder"
-    />
-</div>
-
-<div
-    onMouseEnter={() => setHovered(3)}
-    onMouseLeave={() => setHovered(0)}
-    className={`relative transition-all duration-500 ${
-        selected
-            ? hovered == 3
-                ? "w-[35.625vw]"
-                : "w-[12.875vw]"
-            : "w-[0vw]"
-    } h-[34.25vw] overflow-hidden rounded-[3.125vw]`}
->
-    {/* Gradient Overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/0 pointer-events-none"></div>
-
-    {/* Image */}
-    <img
-        className="h-full w-full object-cover"
-        src={DiscoverMain3}
-        alt="placeholder"
-    />
-</div>
-
-
-
-                
-                </div>
+      {/* Third Div */}
+      <motion.div
+        className="relative h-[34.25vw] overflow-hidden rounded-[3.125vw]"
+        animate={{ width: computeWidth(2) }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        onMouseEnter={() => setHovered(3)}
+        onMouseLeave={() => setHovered(1)}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/0 pointer-events-none" />
+        <img className="h-full w-full object-cover" src={DiscoverMain3} alt="placeholder" />
+      </motion.div>
+    </div>
          
         </div>
     );

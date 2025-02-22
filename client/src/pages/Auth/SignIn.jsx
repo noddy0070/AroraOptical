@@ -1,14 +1,13 @@
 import React from 'react';
 import {useState} from 'react';
-import {Link,useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {useDispatch,useSelector} from "react-redux";
 import { signInFail,signInSuccess,signInStart } from '../../redux/slice/userSlice';
-import placeholder from '../../assets/images/CategoryPlaceholder.png';
 import aroraOpticalLogo from '../../assets/images/AroraOpticalLogo.png';
-import phone from '../../assets/images/Phone.png';
 import LoginImg from '../../assets/images/LoginImg.png'
 import google from '../../assets/images/Google.png';
+import { TransitionLink } from '../../Routes/TransitionLink';
 
 export default function SignIn(){
     const [formData,setFormData]=useState({});
@@ -53,8 +52,8 @@ export default function SignIn(){
         <div className='flex flex-row  h-[48.4375vw]'>
                 <div className='px-[4vw]  w-[47.375vw]'>
                                 <div className='flex flex-col   h-full  justify-center  gap-[3vw]'>
-                                <Link to='/' >
-                                    <img className='cursor-pointer w-[3.6875vw] h-[2.625vw]' src={aroraOpticalLogo}/></Link>
+                                <TransitionLink to='/' >
+                                    <img className='cursor-pointer w-[3.6875vw] h-[2.625vw]' src={aroraOpticalLogo}/></TransitionLink>
                                     <div className='h-[37.1875vw] w-[30vw] mx-auto '>
                                         <h3 className='font-dyeLine text-[2.5vw] text-center mb-[1.5vw] font-bold'>
                                             Login
@@ -73,7 +72,7 @@ export default function SignIn(){
                                          
                                         {error && <p className='text-red-500'>{error}</p>}
                                             <div className='font-roboto text-[1rem] '>
-                                                <p className='text-center leading-[150%]'>Don't have an account? <Link to='/signup' ><span className='underline'>SignUp</span></Link></p>
+                                                <p className='text-center leading-[150%]'>Don't have an account? <TransitionLink to='/signup' ><span className='underline'>SignUp</span></TransitionLink></p>
                                             </div>
                                         </div>
                 

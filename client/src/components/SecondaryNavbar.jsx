@@ -1,9 +1,9 @@
 import React, { useRef,useState } from 'react';
-import {Link} from 'react-router-dom';
 import profilePlaceholder from '../assets/images/profilePlaceholder.png';
 import CartIcon from '../assets/images/icons/CartIcon.svg'
 import WishListIcon from '../assets/images/icons/WishlistIcon.svg'
 import SearchIcon from '../assets/images/icons/SearchIcon.svg'
+import { TransitionLink } from '../Routes/TransitionLink';
 export default function SecondaryNavbar () {
   const inputRef = useRef(null);
   const [search, setSearch] = useState('');
@@ -28,31 +28,31 @@ export default function SecondaryNavbar () {
                 Shop
                 <div className="absolute left-0 mt-[.5vw] text-black hidden w-48     bg-white border border-gray-200 shadow-lg rounded-md group-hover:block">
                 <ul className="py-0 text-left">
-                  <Link to='/shop/eyeglasses/all'>
+                  <TransitionLink to='/shop/eyeglasses/all'>
                   <li className="px-4 py-2 hover:bg-gray-100">
                     <a href="#category1">Eyeglasses</a>
                   </li>
-                  </Link>
-                  <Link to='/shop/sunglasses/all'>
+                  </TransitionLink>
+                  <TransitionLink to='/shop/sunglasses/all'>
                   <li className="px-4 py-2 hover:bg-gray-100">
                     <a href="#category2">Sunglasses</a>
                   </li>
-                  </Link>
-                  <Link to='/shop/contact-lenses/all'>
+                  </TransitionLink>
+                  <TransitionLink to='/shop/contact-lenses/all'>
                   <li className="px-4 py-2 hover:bg-gray-100">
                     <a href="#category3">Contact Lenses</a>
                   </li>
-                  </Link>
-                  <Link to='/shop/computer-glasses/all'>
+                  </TransitionLink>
+                  <TransitionLink to='/shop/computer-glasses/all'>
                   <li className="px-4 py-2 hover:bg-gray-100">
                     <a href="#category3">Computer Glases</a>
                   </li>
-                  </Link>
-                  <Link to='/shop/accessories/all'>
+                  </TransitionLink>
+                  <TransitionLink to='/shop/accessories/all'>
                   <li className="px-4 py-2 hover:bg-gray-100">
                     <a href="#category3">Accessories</a>
                   </li>
-                  </Link>
+                  </TransitionLink>
                 </ul>
               </div>
               </button>
@@ -144,14 +144,15 @@ export default function SecondaryNavbar () {
         }}/>
               </div>
         <img className='w-[1.75vw] h-[1.75vw]' src={WishListIcon}/>
+        <TransitionLink to='/cart'>
         <img className='w-[1.75vw] h-[1.75vw]' src={CartIcon}/>
-
+        </TransitionLink>
         <div className='flex flex-row gap-[.5vw] items-center'>
           <img className='w-[2vw] h-[2vw]' src={profilePlaceholder}/>
-          <Link to='/lens'>
+          <TransitionLink to='/signup'>
           <button  className=" text-regularText focus:outline-none hover:text-gray-500"> Login/Sign Up </button>
 
-          </Link>
+          </TransitionLink>
         </div>
               
         </div>

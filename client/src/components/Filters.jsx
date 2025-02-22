@@ -1,6 +1,6 @@
 import TickIcon from '../assets/images/icons/tick_icon.png'
-import {Link} from 'react-router-dom';
 import {useState} from 'react';
+import { TransitionLink } from '../Routes/TransitionLink';
 const audienceForFilter={All:'Everyone',Men:"Men",Women:"Women",Kids:"Kids"}
 const brands=['Safflio','Luxotiica','Indian']
 const shapes=['Rectangular','Square','Round','Oval','Aviator','Cat-Eye','Geometric','Hexagonal']
@@ -49,7 +49,7 @@ const size=['Medium(51-54mm)','Small(50mm or less)','Large(55mm or more)']
         <div>
             <div id='audience' className="font-roboto flex flex-col ml-[-2vw] mb-[1.5vw]">
             {Object.keys(audienceForFilter).map((key) => (
-                <Link to={`/shop/${category}/${key.toLowerCase()}`}>
+                <TransitionLink to={`/shop/${category}/${key.toLowerCase()}`}>
                 <div
                     key={key}
                     id={key.toLowerCase()}
@@ -60,7 +60,7 @@ const size=['Medium(51-54mm)','Small(50mm or less)','Large(55mm or more)']
                     <img src={TickIcon} className="w-[1.4vw] h-[1.4vw] ml-auto" />
                     ) : null}
                 </div>
-                </Link>
+                </TransitionLink>
                 ))}
             </div>
             {renderFilterOptions(brands, 'Brands')}

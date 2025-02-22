@@ -59,3 +59,23 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
                 </button>
       )
   }
+  export const TitleButton2 = ({ onClick={}, className = '',btnTitle,btnWidth, btnHeight,btnRadius,className2='' }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    return (
+        <button
+        onClick={()=>{onClick}}
+        className={`group text-white shadow-[0px_.25vw_.375vw_rgba(0,_0,_0,_0.4)] transition-all duration-700 ease-in-out hover:bg-btnHoverColour ${className}`}
+        style={{
+          width: `${btnWidth}vw`,
+          height: `${btnHeight}vw`,
+          borderRadius: `${btnRadius}vw`
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <span className={`text-regularText text-center font-roboto p-[.1vw]  ${isHovered?'text-black':'text-white'}   transition-all duration-500 ${className2}`} >
+          {btnTitle}
+        </span>
+      </button>
+    );
+  };

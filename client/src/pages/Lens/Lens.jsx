@@ -4,13 +4,13 @@ import lensThicknessImg from '../../assets/images/lensPage/lensThickness.png';
 import prescriptionImg from '../../assets/images/lensPage/prescription.png';
 import {useState,useEffect} from 'react';
 import LensType from './LensType';
-import { Link } from 'react-router-dom';
 import LensCoating from './LensCoating';
 import LensThickness from './LensThickness';
 import Prescription from './Prescription';
 import PrescriptionForm from './PrescriptionForm';
 import BlueFilterLens from './BlueFilterLens';
 import LensTint from './LensTint';
+import { TransitionLink } from '../../Routes/TransitionLink';
 
 const lensData=[{id:'lensType',img:lensTypeImg},{id:'lensCoating',img:lensCoatingImg},{id:'lensThickness',img:lensThicknessImg},{id:'prescription',img:prescriptionImg}];
 
@@ -115,7 +115,7 @@ export default function Lens() {
             </div>
 
             <div className="relative  w-[83.8125vw] flex flex-col items-center  ">
-              <Link to="/">
+              <TransitionLink to="/">
               <button className='w-[2.5vw] h-[2.5vw] absolute top-[2.8125vw] right-[2.1875vw] cursor-pointer shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] border-[1px] border-white bg-[#CECECE] rounded-full'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="p-[.5vw] text-white rounded-cross-icon">
@@ -123,7 +123,7 @@ export default function Lens() {
                   <line x1="19" y1="5" x2="5" y2="19" />
                 </svg>
               </button>
-              </Link>
+              </TransitionLink>
 
               <div className="relative w-full mt-[5vw]   h-[28.625vw]">
             <div className="relative  h-[28.625vw]">
