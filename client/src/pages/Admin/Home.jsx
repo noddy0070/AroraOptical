@@ -13,12 +13,12 @@ const data =  [
 const Home=()=>{
 
   return (
-    <div className='w-full px-[3vw] py-[3vw] flex flex-col gap-[2vw]'>
+    <div className='w-full px-[2vw] py-[3vw] flex flex-col gap-[2vw]'>
         <div>
-        <div className="w-[41.1vw] rounded-[1.1vw] shadow-[0px_0.55vw_2.2vw_rgba(51,_38,_174,_0.02)] px-[2vw] py-[2vw] flex flex-col gap-[1vw] bg-white">
+        <div className="w-[62.7vw] rounded-[1.1vw] shadow-[0px_0.55vw_2.2vw_rgba(51,_38,_174,_0.02)] px-[1vw] py-[1vw] flex flex-col gap-[1vw] bg-white">
             <div className="flex flex-row justify-between items-center ">
-                <h6 className="text-h5Text font-roboto font-medium text-[#1C2A53]">Website Traffic</h6>
-                <button className="text-regularText font-roboto font-medium text-[#555F7E]">More →</button>
+                <h6 className="text-h5Text font-roboto font-medium text-[#1C2A53]">Dashboard</h6>
+                <button className="text-regularText font-roboto font-medium text-[#555F7E]">Advanced Report →</button>
             </div>
             <DashboardChart/>
         </div>
@@ -26,7 +26,7 @@ const Home=()=>{
 
         <div className='flex flex-row gap-[2vw]'>
         {/* Cateogries Box In home Page of Admin Panel */}
-        <div className="w-[41.1vw] rounded-[1.1vw] shadow-[0px_0.55vw_2.2vw_rgba(51,_38,_174,_0.02)] px-[2vw] py-[2vw] flex flex-col gap-[1vw] bg-white">
+        <div className="w-[34vw] rounded-[1.1vw] shadow-[0px_0.55vw_2.2vw_rgba(51,_38,_174,_0.02)] px-[2vw] py-[2vw] flex flex-col gap-[1vw] bg-white">
       <div className="flex flex-row justify-between items-center ">
         <h6 className="text-h5Text font-roboto font-medium text-[#1C2A53]">Categories</h6>
         <button className="text-regularText font-roboto font-medium text-[#555F7E]">More →</button>
@@ -79,7 +79,7 @@ const Home=()=>{
         </div>
 
         {/* Cateogries Box In home Page of Admin Panel */}
-        <div className="w-[41.1vw] rounded-[1.1vw] shadow-[0px_0.55vw_2.2vw_rgba(51,_38,_174,_0.02)] px-[2vw] py-[2vw] flex flex-col gap-[1vw] bg-white">
+        <div className="w-[34vw] rounded-[1.1vw] shadow-[0px_0.55vw_2.2vw_rgba(51,_38,_174,_0.02)] px-[2vw] py-[2vw] flex flex-col gap-[1vw] bg-white">
             <div className="flex flex-row justify-between items-center ">
                 <h6 className="text-h5Text font-roboto font-medium text-[#1C2A53]">Website Traffic</h6>
                 <button className="text-regularText font-roboto font-medium text-[#555F7E]">More →</button>

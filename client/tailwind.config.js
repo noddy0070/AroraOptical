@@ -35,6 +35,9 @@ export default {
   			btnHoverColour: '#f3e9d2',
   			ligtgrey: '#f2f2f2',
   			menu_color: '#ffb056',
+			bgCreamWhite:'#f8f8f8',
+			adminFontColor1:"#555F7E",
+			adminInputBoxColor:"#F0F0F0",
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -76,6 +79,9 @@ export default {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
+		boxShadow:{
+			adminShadow: '0px 0.55vw 2.2vw rgba(51, 38, 174, 0.1)',
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

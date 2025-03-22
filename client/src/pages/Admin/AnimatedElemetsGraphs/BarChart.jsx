@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -7,6 +7,7 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  Cell,
 } from "recharts";
 
 const data = [
@@ -26,6 +27,8 @@ const data = [
   { date: "16", value: 4300 },
 ];
 
+const formatNumber = (num) => `$${num.toLocaleString()}`;
+
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
@@ -38,55 +41,44 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
+
 export default function DashboardChart() {
+  const [activeIndex, setActiveIndex] = useState(null); // Track hovered bar index
   return (
-    <div className="w-full p-6 bg-white rounded-2xl shadow-lg">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Dashboard</h2>
-        <a
-          href="#"
-          className="text-sm text-gray-500 hover:text-blue-600 transition"
-        >
-          Advanced Report →
-        </a>
-      </div>
+    <div className="w-full ">
+      
       <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis
-            dataKey="date"
-            tick={{ fontSize: 12, fill: "#6B7280" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            tickFormatter={(value) => `$${value.toLocaleString()}`}
-            tick={{ fontSize: 12, fill: "#6B7280" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Bar
-            dataKey="value"
-            fill="#f97316"
-            radius={[5, 5, 0, 0]}
-            barSize={20}
-          >
-            {data.map((entry, index) => (
-              <rect
-                key={index}
-                x={0}
-                y={0}
-                width={20}
-                height={entry.value}
-                className={
-                  entry.date === "04" ? "fill-red-500" : "fill-orange-500"
-                }
-              />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+      <BarChart data={data} margin={{ top: 20, right: 20, left: 20, bottom: 30 }}>
+        <XAxis
+          dataKey="date"
+          tick={{ fontSize: 12, fill: "#6B7280" }}
+          axisLine={false}
+          tickLine={false}
+        />
+        <YAxis
+          tickFormatter={formatNumber}
+          tick={{ fontSize: 12, fill: "#6B7280" }}
+          axisLine={false}
+          tickLine={false}
+        />
+        <Tooltip content={<CustomTooltip />} cursor={false} />
+        <Bar
+          dataKey="value"
+          barSize={6}
+          radius={[5, 5, 0, 0]}
+          onMouseLeave={() => setActiveIndex(null)}
+        >
+          {data.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={activeIndex === index ? "#FF0000" : "#FF8901"} // Red on hover, orange by default
+              onMouseEnter={() => setActiveIndex(index)} // Change active index on hover
+              
+            />
+          ))}
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
     </div>
   );
 }

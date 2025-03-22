@@ -1,71 +1,54 @@
-import React, { useState } from 'react'
+import React from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { HomeIcon, UserIcon, LayoutIcon, ShoppingIcon, TrendingIcon, SearchIcon } from './Icons';
 
-//Importing Pages
-import Home from './Home'
-import Layout from './Layout';
-import Shopping from './Shopping';
-import User from './User';
-import Trending from './Trending';
-import Search from './Search';
-import Book from './Book'
-import Gift from './Gift';
-
-
-//Importing Icons
-import {HomeIcon,UserIcon,LayoutIcon,ShoppingIcon, TrendingIcon, SearchIcon, BookIcon, GiftIcon} from './Icons'
 const DashBoard = () => {
-    const [activeButton,setActiveButton]=useState('home');
-    
-    const pages = {
-        'home': <Home/>,
-        'layout': <Layout/>,
-        'shopping': <Shopping/>,
-        'user': <User/>,
-        'trending': <Trending/>,
-        'search':<Search/>,
-        'book':<Book/>,
-        'gift':<Gift/>
-    }
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const buttons = [
-        { id: "home", icon: HomeIcon },
-        { id: "layout", icon: LayoutIcon },
-        { id: "shopping", icon: ShoppingIcon },
-        { id: "user", icon: UserIcon },
-        { id: "trending", icon: TrendingIcon },
-        { id: "search", icon: SearchIcon },
-        { id: "book", icon: BookIcon },
-        { id: "gift", icon: GiftIcon }
+  const buttons = [
+    { id: 'Home', path: ['/Admin/Dashboard'], icon: HomeIcon },
+    { id: 'Products', path: ['/Admin/Dashboard/products','/Admin/Dashboard/add-product'], icon: LayoutIcon },
+    { id: 'Orders', path: ['/Admin/Dashboard/orders'], icon: ShoppingIcon },
+    { id: 'User', path: ['/Admin/Dashboard/user'], icon: UserIcon },
+    { id: 'Analytics', path: ['/Admin/Dashboard/analytics'], icon: TrendingIcon },
+    { id: 'Search', path: ['/Admin/Dashboard/search'], icon: SearchIcon },
+  ];
 
-      ];
-
-    return (
-        <div className="flex">
-            <div className="w-[10vw] min-h-screen bg-darkslategrey flex flex-col items-center gap-[5vw] pt-[2.5vw]">
-                <div>
-                    <h2 className='text-h3Text font-bold font-roboto text-white'>AO</h2>
-                </div>
-                <div className='flex flex-col gap-[1.75vw]'>
-                    {buttons.map(({ id, icon: Icon }) => (
-                        <button
-                        key={id}
-                        onClick={() => setActiveButton(id)}
-                        className={`w-[3.6vw] h-[3.6vw]  flex justify-center items-center rounded-[.5vw] transition-all ${
-                            activeButton === id ? "bg-white" : "bg-menu_color"
-                        }`}
-                        >
-                        <Icon strokeColor={activeButton === id ? "#FF8901" : "white"} />
-                        </button>
-                    ))}
-                </div>
-
-            </div>
-           <div className='w-[90vw] bg-[#F8F8F8]'>
-                {pages[activeButton] || <p className="text-red-500 text-center">Page not found</p>}
-            </div>
+  return (
+    <div className="flex">
+      {/* Sidebar */}
+      <div className="w-[10vw] min-h-screen bg-darkslategrey flex flex-col items-center gap-[5vw] pt-[2.5vw]">
+        <div>
+          <h2 className="text-h3Text font-bold font-roboto text-white">AO</h2>
         </div>
-    )
-}
+        <div className="flex flex-col gap-[1.75vw]">
+          {buttons.map(({ id, path, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => navigate(path[0])}
+              className={`w-[7.5vw] h-[3.6vw] gap-[.5vw] flex justify-start pl-[1vw] items-center rounded-[.5vw] transition-all ${
+                path.includes(location.pathname ) ? 'bg-white' : 'bg-menu_color'
+              }`}
+            >
+              <Icon strokeColor={path.includes(location.pathname ) ? '#FF8901' : 'white'} />
+              <h2
+                className="text-regularText font-semibold font-roboto"
+                style={{ color: path.includes(location.pathname )  ? '#ffb056' : 'white' }}
+              >
+                {id}
+              </h2>
+            </button>
+          ))}
+        </div>
+      </div>
 
+      {/* Right Content Area - Outlet for nested routes */}
+      <div className="w-[90vw] bg-[#F8F8F8]">
+        <Outlet /> {/* This will render the matched child route */}
+      </div>
+    </div>
+  );
+};
 
-export default DashBoard
+export default DashBoard;

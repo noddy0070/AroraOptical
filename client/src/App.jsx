@@ -16,7 +16,13 @@ import Lens from "./pages/Lens/Lens.jsx";
 import Admin from "./pages/Admin/Admin.jsx";
 import React,{useState,useEffect} from "react";
 import DashBoard from "./pages/Admin/Dashboard.jsx";
-
+import Products from "./pages/Admin/Products/Products.jsx";
+import Shopping from "./pages/Admin/Shopping.jsx";
+import User from "./pages/Admin/User.jsx";
+import Trending from "./pages/Admin/Trending.jsx";
+import Search from "./pages/Admin/Search.jsx";
+import Home2 from './pages/Admin/Home.jsx';
+import AddProduct from "./pages/Admin/Products/AddProduct.jsx";
 
 
 const Layout = () => {
@@ -99,7 +105,17 @@ export default function App() {
       <Route path='*' element={<h1>Not Found</h1>} />
       <Route path='/lens' element={<Lens/>} />
       <Route path='/Admin' element={<Admin/>} />
-      <Route path='/Admin/Dashboard' element={<DashBoard/>} />
+      <Route path="/Admin/Dashboard" element={<DashBoard />}>
+            {/* Nested routes go here */}
+            <Route index element={<Home2 />} /> {/* Default route when /Admin/Dashboard is visited */}
+            <Route path="products" element={<Products />} />
+            <Route path="add-product" element={<AddProduct />} />
+            <Route path="orders" element={<Shopping />} />
+            <Route path="user" element={<User />} />
+            <Route path="analytics" element={<Trending />} />
+            <Route path="search" element={<Search />} />
+            <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
+          </Route>
     </Routes>
 
   </BrowserRouter>

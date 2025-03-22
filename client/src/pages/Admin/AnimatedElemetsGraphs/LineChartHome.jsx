@@ -27,6 +27,29 @@ const data = [
   { date: "30", visits: 2800 },
 ];
 
+const formatNumber = (num) => {
+  return num >= 1000 ? `${(num / 1000).toFixed(1)}k` : num.toString();
+};
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        style={{
+          backgroundColor: "#FF8901",
+          borderRadius: ".25vw",
+          padding: ".5vw",
+          color: "#fff",
+          fontWeight: "bold",
+          fontSize: "14px",
+        }}
+      >
+        {formatNumber(payload[0].value)}
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function StoreVisitsChart() {
 
   // Get the 7 most recent dates
@@ -50,15 +73,7 @@ export default function StoreVisitsChart() {
               ticks={recentData.filter((d) => parseInt(d.date) % 2 === 0).map((d) => d.date)}
             />
             <YAxis hide />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#fff",
-                borderRadius: "8px",
-                border: "1px solid #e2e8f0",
-                padding: "8px",
-              }}
-              labelStyle={{ fontSize: "12px" }}
-            />
+            <Tooltip content={<CustomTooltip />} cursor={false} />
             {/* Shadow below the line using duplicated Line component with opacity */}
             <Line
               type="natural"
@@ -68,9 +83,6 @@ export default function StoreVisitsChart() {
               dot={false}
               activeDot={{
                 r: 0,
-                fill: "#ffffff",
-                stroke: "#f97316",
-                strokeWidth: 2,
               }}
               strokeOpacity={0.05} // Shadow effect with lower opacity and thicker stroke
               data={recentData.map((point) => ({ ...point, visits: point.visits - 100 }))} //
@@ -87,7 +99,7 @@ export default function StoreVisitsChart() {
                 r: 6,
                 fill: "#ffffff",
                 stroke: "#f97316",
-                strokeWidth: 2,
+                strokeWidth: 3,
               }}
             />
           </LineChart>
