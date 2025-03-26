@@ -11,7 +11,7 @@ export { default as miumiu } from './MIUMIU.png';
 export { default as prada } from './Prada.png';
 export { default as prada2 } from './Prada2.png';
 export { default as ralphlauren } from './RalphLauren.png';
-export { default as rayban } from './Rayban.png';
+export { default as rayban } from './RayBan.png';
 export { default as sf } from './SF.png';
 export { default as swarovski } from './Swarovski.png';
 export { default as tiffany } from './Tiffany&Co.png';
