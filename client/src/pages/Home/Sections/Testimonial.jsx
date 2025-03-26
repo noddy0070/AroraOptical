@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import categoryPlaceholder from '../../../assets/images/categoryPlaceholder.png';
+import categoryPlaceholder from '../../../assets/images/CategoryPlaceholder.png';
 import blogPlaceholder from '../../../assets/images/blogPlaceholder.png';
 import star from '../../../assets/images/star.png';
 import { IconButton, TitleButton } from '../../../components/button';

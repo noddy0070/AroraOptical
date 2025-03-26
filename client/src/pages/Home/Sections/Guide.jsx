@@ -1,5 +1,5 @@
 import React from 'react';
-import categoryPlaceholder from '../../../assets/images/categoryPlaceholder.png';
+import categoryPlaceholder from '../../../assets/images/CategoryPlaceholder.png';
 import { IconButton, TitleButton } from '../../../components/button';
 export default function Guide(){
     return (

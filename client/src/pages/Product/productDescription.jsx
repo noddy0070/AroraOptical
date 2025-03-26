@@ -1,6 +1,6 @@
 import React,{useState,useRef} from 'react';
 import placeholder from "../../assets/images/CategoryPlaceholder.png";
-import categoryPlaceholder from '../../assets/images/categoryPlaceholder.png';
+import categoryPlaceholder from '../../assets/images/CategoryPlaceholder.png';
 import './product.css';
 import { IconButton } from '../../components/button';
 const product={
