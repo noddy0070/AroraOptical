@@ -78,18 +78,18 @@ export default function Discover(){
     return (
         <div className=' md:pl-[4vw] pb-[6vw] md:pb-[7vw] flex flex-col md:flex-row gap-[4vw] md:gap-[1vw]'>
             <div className='relative   flex flex-row md:flex-col gap-[2vw] md:justify-between  md:h-auto'>
-              <div className='w-[48vw] md:w-[41.625vw]'>
-                <h1 className='font-dyeLine text-regularTextPhone md:text-h3Text  md:leading-[100%] lg:leading-[120%]  font-bold mb-[.5vw] lg:mb-[1.5vw]'>
-                    Discover Our Exclusive Collection of International Eyewear Brands Today!
+              <div className='mx-[4.25vw] md:mx-0 md:w-[41.625vw] text-center md:text-left'>
+                <h1 className='font-dyeLine leading-[120%] text-h6TextPhone md:text-h3Text  md:leading-[120%] lg:leading-[120%]  font-bold mb-[2vw] md:mb-[.5vw] lg:mb-[1.5vw]'>
+                    Discover Our Exclusive <br className='block md:hidden'/>Collection of International <br className='block md:hidden'/>Eyewear Brands Today!
                 </h1>
                 <span className='font-roboto md:text-mediumText hidden lg:block'> 
                 Explore a diverse range of eyewear from top international brands that blend style and quality. Our curated selection ensures you find the perfect pair for any occasion.
                 </span>
-                <span className='font-roboto text-[12px] md:text-mediumText lg:hidden '> 
+                <span className='font-roboto text-[14px] md:text-mediumText lg:hidden '> 
                 Explore a diverse range of eyewear from top international brands that blend style and quality.
                 </span>
                 </div>
-                <div className='w-[45vw] mr-[-5vw] md:mr-0 overflow-x-auto md:w-auto flex flex-row gap-[3.5vw] md:gap-[1.5vw] bottom-0 h-[44.25vw]  md:h-[18.75vw]     '>
+                <div className='hidden md:flex w-[45vw] mr-[-5vw] md:mr-0 overflow-x-auto md:w-auto  flex-row gap-[3.5vw] md:gap-[1.5vw] bottom-0 h-[44.25vw]  md:h-[18.75vw]     '>
                     <div className='relative flex-shrink-0 w-[38.25vw] h-[44.25vw] md:w-[16.125vw] md:h-[18.75vw] rounded-[2.5vw] md:rounded-[1.1vw] overflow-hidden'>
                         <img className='w-full h-full' src={DiscoverSide1}/>
                         <IconButton btnSizePhone={6} iconWidthPhone={14} paddingPhone={1} btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[1.75vw] top-[1.75vw] md:right-[.75vw] md:top-[.75vw]'/>
@@ -126,8 +126,8 @@ export default function Discover(){
         className="relative  h-[62.25vw] md:h-[34.25vw] overflow-hidden rounded-[5.5vw] md:rounded-[3.125vw]"
         animate={{minWidth:screenWidth>768? computeWidth(0):computeWidthPhone(0) }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
-        onMouseEnter={() => setHovered(2)}
-        onMouseLeave={() => setHovered(1)}
+        // onMouseEnter={() => setHovered(2)}
+        // onMouseLeave={() => setHovered(1)}
       >
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none" />

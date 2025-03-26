@@ -1,4 +1,4 @@
-import EyeTestImg from '../../../assets/images/homePage/EyeTest.png';
+import StoreImg from '../../../assets/images/homePage/store.webp';
 import { IconButton,TitleButton } from '../../../components/button';
 export default function FreeEyeTest(){
     return (
@@ -18,7 +18,7 @@ export default function FreeEyeTest(){
                 </div>
 
                 <div className='order-1 md:order-2 relative md:w-[28.75vw] md:h-[28.75vw] rounded-[9.5vw] md:rounded-[3.125vw] overflow-hidden'>
-                        <img className='w-full h-full' src={EyeTestImg}/>
+                        <img className='w-full h-full' src={StoreImg}/>
                         <div className='absolute right-[6vw] top-[6vw] md:right-[1.5vw] md:top-[1.5vw] flex flex-row items-center gap-[1.75vw] md:gap-[.5vw]' >
                             <span className='text-smallTextPhone md:text-mediumText text-center font-roboto'>
                                 View in Maps
