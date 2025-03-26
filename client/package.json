@@ -16,6 +16,7 @@
     "@mui/material": "^6.4.5",
     "@radix-ui/react-progress": "^1.1.2",
     "@react-spring/web": "^9.7.5",
+    "@reduxjs/toolkit": "^2.6.1",
     "clsx": "^2.1.1",
     "firebase": "^11.0.2",
     "framer-motion": "^12.4.7",
