@@ -17,10 +17,11 @@ export default function FreeEyeTest(){
                     </div>
                 </div>
 
-                <div className='order-1 md:order-2 relative md:w-[28.75vw] md:h-[28.75vw] rounded-[9.5vw] md:rounded-[3.125vw] overflow-hidden'>
+                <div  className='order-1 md:order-2 relative md:w-[28.75vw] md:h-[28.75vw] rounded-[9.5vw] md:rounded-[3.125vw] overflow-hidden'>
+                        <a href='https://maps.app.goo.gl/LCz66ym3VdrnA2wH7'>
                         <img className='w-full h-full' src={StoreImg}/>
                         <div className='absolute right-[6vw] top-[6vw] md:right-[1.5vw] md:top-[1.5vw] flex flex-row items-center gap-[1.75vw] md:gap-[.5vw]' >
-                            <span className='text-smallTextPhone md:text-mediumText text-center font-roboto'>
+                            <span className='text-black  text-smallTextPhone md:text-mediumText text-center font-roboto'>
                                 View in Maps
                             </span>
                             <IconButton btnSizePhone={9.5} iconWidthPhone={20} paddingPhone={1} btnSize={3.0625} iconWidth={2.1875} padding={0.6} className=''/>
@@ -34,6 +35,7 @@ export default function FreeEyeTest(){
                             </h6>
 
                         </div>
+                        </a>
                 </div>
                 <div className='order-3 md:order-3 md:w-[28.75vw] flex flex-col    justify-center  md:h-[28.75vw] md:py-[1vw] md:mr-[2.25vw] '>
                     <div className=' '>

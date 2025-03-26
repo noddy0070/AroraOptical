@@ -59,7 +59,7 @@ export default function Blog(){
                 <div  ref={blogRef} className='ChooseBlog py-[7vw] w-full md:w-[61.5vw]  h-full flex flex-row  gap-[5vw] md:gap-[2vw]   hide-scrollbar' onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
                 {
                 BlogData.map((blog,index)=>(
-                  <div   onContextMenu={handleContextMenu} className="select-none pointer-events-none Blog  relative min-w-[63.5vw] shadow-[0px_4px_6px_rgba(0,_0,_0,_0.4)] h-[77.25vw] rounded-[7.5vw]  md:min-w-[27.125vw]  md:h-[31.625vw] md:rounded-[3.125vw] ">
+                  <div   onContextMenu={handleContextMenu} className="select-none  Blog  relative min-w-[63.5vw] shadow-[0px_4px_6px_rgba(0,_0,_0,_0.4)] h-[77.25vw] rounded-[7.5vw]  md:min-w-[27.125vw]  md:h-[31.625vw] md:rounded-[3.125vw] ">
                 <img  className="BlogImage w-full h-full "  src={blog.src} alt={blog.alt} />
                 <div className='absolute bottom-0 w-full h-full rounded-[7.5vw]   md:rounded-[3.125vw]'  style={{
                     background: 'linear-gradient(0deg, rgba(229, 229, 229, 1) 0%, rgba(236, 236, 236, 0) 100%)'}}></div>
