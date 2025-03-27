@@ -7,8 +7,8 @@ import { IconButton, TitleButton } from '../../../components/button';
 
 const BlogData = [
     { src: blog1, alt:"men",title:"Your Guide to Buy Eyewear Online", description:"Purchasing eyewear online is simple and convenient. Follow these easy steps to find your perfect pair."},
-    { src: blog2, alt:"women",title:"Blog title and heading will go here", description:"Purchasing eyewear online is simple and convenient. Follow these easy steps to find your perfect pair."},
-    { src: blog3, alt:"kids",title:"Blog title and heading will go here", description:"Purchasing eyewear online is simple and convenient. Follow these easy steps to find your perfect pair."},
+    { src: blog2, alt:"women",title:"Which Frames Will Look Good on Your Face?", description:"Unlock the secret to flattering eyewear! Discover the best frame shapes based on your face type."},
+    { src: blog3, alt:"kids",title:"How to Select the Right Lenses", description:"Clarity, comfort, and protection—learn how to choose lenses that match your vision and lifestyle needs."},
     
 ]
 
@@ -69,7 +69,7 @@ export default function Blog(){
                     <div className='mb-[3.5vw] md:mb-[1.5vw]'>
 
                         <h6 className=' leading-[150%]  font-medium text-[10px] md:text-smallText'>
-                            Category
+                            Blogs
                         </h6>
                         <h5 className='leading-[140%] font-bold text-[14px] md:text-h5Text'>
                             {blog.title}

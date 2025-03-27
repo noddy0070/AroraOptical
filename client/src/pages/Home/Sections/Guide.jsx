@@ -1,5 +1,5 @@
 import React from 'react';
-import categoryPlaceholder from '../../../assets/images/CategoryPlaceholder.png';
+import stepsPlaceholder from '../../../assets/images/homePage/stepsPlaceholder.webp';
 import { IconButton, TitleButton } from '../../../components/button';
 export default function Guide(){
     return (
@@ -7,7 +7,7 @@ export default function Guide(){
             <div className='h-full w-full flex flex-col gap-[4.75vw]'>
                 <div className='flex flex-col md:flex-row  md:w-[79.75vw] md:h-[28.8125vw] gap-[4.75vw]'>
                     <div className='h-[50vw] rounded-[6vw] md:h-full md:w-[51.25vw] md:rounded-[3.125vw] overflow-hidden'>
-                        <img className='h-full w-full' src={categoryPlaceholder}></img>
+                        <img className='h-full w-full' src={stepsPlaceholder}></img>
                     </div>
                     <div className='flex flex-col md:w-[23.75vw] justify-center text-center md:text-left  gap-[1.5vw] h-full'>
                         
