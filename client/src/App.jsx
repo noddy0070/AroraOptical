@@ -88,7 +88,9 @@ export default function App() {
 
     return () => window.removeEventListener('resize', checkViewportWidth); // Cleanup
   }, []);
-  return <div className="h-screen"><BrowserRouter>
+  return <div className="h-screen">
+    
+    <BrowserRouter>
      <Layout />
 
     <Routes>
