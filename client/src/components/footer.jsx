@@ -1,7 +1,8 @@
+import { TransitionLink } from '@/Routes/TransitionLink';
 import logo from '../assets/images/AroraOpticalLogo.png';
 const Footer=()=>{
     return(
-        <footer className="footer py-[7vw] md:py-[5vw]  md:px-[2vw] font-roboto text-regularTextPhone md:text-regularText flex flex-col md:gap-[5vw] gap-[20vw]">
+        <footer className="px-[5vw]  footer py-[7vw] md:py-[5vw]  md:px-[4vw] font-roboto text-regularTextPhone md:text-regularText flex flex-col md:gap-[5vw] gap-[20vw]">
         <div className="flex flex-col md:flex-row gap-[6vw] md:gap-[1.5vw] ">
             <div className='flex flex-col gap-[6vw] md:gap-[1.5vw]'>
                 <img src={logo} alt='logo' className='mb-[2vw] md:mb-[.5vw] h-[19vw] w-[27vw] md:w-[6.75vw] md:h-[4.75vw]' />
@@ -53,10 +54,20 @@ const Footer=()=>{
             </div>
             
         </div>
-        <div className="flex flex-row gap-[3vw] md:gap-[1.5vw] py-[8vw] md:py-[2vw] underline text-nowrap text-[12px] md:text-smallText border-t-2 border-black">
+        <div className="flex flex-col md:flex-row gap-[3vw] md:gap-[1.5vw] py-[8vw] md:py-[2vw] underline text-nowrap text-[12px] md:text-smallText border-t-2 border-black">
             <span>All rights reserved.</span>
+            <TransitionLink to='/privacy-policy' className="underline">
             <span className="ml-auto">Privacy Policy</span>
-            <span >Terms of Service</span>
+            </TransitionLink>
+            <TransitionLink className="underline" to='/contact-us'>
+            <span >Contact Us</span>
+            </TransitionLink>
+            <TransitionLink to='/refund-policy' className="underline">
+            <span>Cancellation and Refund Policy</span>
+            </TransitionLink>
+            <TransitionLink to='/shipping-policy' className="underline">
+                <span>Shiping and Delivery Policy</span>
+            </TransitionLink>
         </div>
         </footer>
     )

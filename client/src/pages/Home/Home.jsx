@@ -9,7 +9,6 @@ import Guide from './Sections/Guide';
 import Blog from './Sections/Blog';
 import Testimonial from './Sections/Testimonial';
 import Banner from '../../components/Banner';
-import Footer from '@/components/footer';
 export default function Home() {
     return(
         <div className='relative pt-[2.25vw] overflow-hidden px-[5vw] md:px-[2vw]'>
@@ -23,7 +22,6 @@ export default function Home() {
             <Guide/>
             <Blog/>
             <Testimonial/>
-            <Footer/>
         </div>
     )
 }

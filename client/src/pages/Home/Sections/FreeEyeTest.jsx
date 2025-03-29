@@ -12,7 +12,7 @@ export default function FreeEyeTest(){
                     Book your free eye test today! Experience the same exceptional service our local customers love—now available nationwide.
                     </span>
                     <div className='mx-auto md:mx-0 flex flex-row w-min md:mt-[1vw] gap-[.1vw] group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 '>
-                        <TitleButton btnHeightPhone={12.5} btnWidthPhone={47}  btnRadiusPhone={9} btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
+                        <TitleButton btnHeightPhone={12.5} btnWidthPhone={47}  btnRadiusPhone={9} btnTitle={"Book Test"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
                         <IconButton btnSizePhone={12.5} iconWidthPhone={14} paddingPhone={1} btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
                     </div>
                 </div>

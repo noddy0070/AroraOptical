@@ -24,6 +24,8 @@ export const TransitionLink: React.FC<TransitionLinkProps> = ({ to, children }) 
     await sleep(200);
     navigate(to); // Navigate to the target route
     await sleep(200);
+     // Scroll to the top of the next page
+     window.scrollTo(0, 0);
 
     body?.classList.remove("page-transition");
   };

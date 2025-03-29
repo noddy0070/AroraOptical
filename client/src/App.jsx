@@ -23,6 +23,11 @@ import Trending from "./pages/Admin/Trending.jsx";
 import Search from "./pages/Admin/Search.jsx";
 import Home2 from './pages/Admin/Home.jsx';
 import AddProduct from "./pages/Admin/Products/AddProduct.jsx";
+import PrivacyPolicy from "./pages/Policies/PrivacyPolicy.jsx";
+import ContactUs from "./pages/Policies/ContactUs.jsx";
+import RefundPolicy from "./pages/Policies/RefundPolicy.jsx";
+import ShippingPolicy from "./pages/Policies/ShippingPolicy.jsx";
+import Footer from "./components/footer.jsx";
 
 
 const Layout = () => {
@@ -74,6 +79,53 @@ const Layout = () => {
   );
 };
 
+const Layout2 = () => {
+  const location = useLocation();
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  // Routes to hide navbars (exact matches)
+  const hideNavbarsExact = ["/signin", "/signup", "/lens"];
+
+  // Check if current route should hide navbars
+  const shouldHideNavbar =
+    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin");
+
+  useEffect(() => {
+    const checkViewportWidth = () => {
+      setIsMobileView(window.innerWidth < 768);
+    };
+
+    checkViewportWidth(); // Check width on mount
+    window.addEventListener("resize", checkViewportWidth); // Listen for window resize
+
+    return () => window.removeEventListener("resize", checkViewportWidth); // Cleanup
+  }, []);
+
+  const isAdminRoute = location.pathname.includes("/Admin");
+
+  if (isAdminRoute && isMobileView) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 text-center px-4">
+        <div className="bg-white p-8 rounded-lg shadow-lg max-w-md">
+          <h1 className="text-2xl font-bold text-red-500 mb-4">Desktop Access Required</h1>
+          <p className="text-gray-700">
+            This page can only be accessed from a desktop device. Please switch to a device with a larger screen (≥768px).
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {!shouldHideNavbar && (
+        <>
+          <Footer />
+        </>
+      )}
+    </>
+  );
+};
 
 export default function App() {
   const [isMobileView, setIsMobileView] = useState(false);
@@ -117,9 +169,13 @@ export default function App() {
             <Route path="analytics" element={<Trending />} />
             <Route path="search" element={<Search />} />
             <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
-          </Route>
+      </Route>
+      <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
+      <Route path='/contact-us'element={<ContactUs/>}/>
+      <Route path='/refund-policy' element={<RefundPolicy/>}/>
+      <Route path='/shipping-policy' element={<ShippingPolicy/>}/>
     </Routes>
-
+    <Layout2/>
   </BrowserRouter>
   </div>
   
