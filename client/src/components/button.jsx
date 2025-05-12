@@ -42,7 +42,7 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
 };
 
   
-  export const TitleButton = ({ onClick={}, className = '',btnTitle,btnWidth, btnHeight,btnRadius,className2='text-[16px] md:text-regularText', btnWidthPhone,btnHeightPhone,btnRadiusPhone }) => {
+  export const TitleButton = ({ onClick=()=>{}, className = '',btnTitle,btnWidth, btnHeight,btnRadius,className2='text-[16px] md:text-regularText', btnWidthPhone,btnHeightPhone,btnRadiusPhone }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [screenWidth, setScreenWidth] = useState(null);
 
@@ -65,7 +65,7 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
     }, []); // Empty dependency array ensures this runs once on mount
     return (
         <button
-        onClick={()=>{onClick}}
+        onClick={onClick}
         className={`group bg-darkslategrey text-white shadow-[0px_.25vw_.375vw_rgba(0,_0,_0,_0.4)] transition-all duration-700 ease-in-out hover:bg-btnHoverColour ${className}`}
         style={(screenWidth ?? 0) > 768 ?{
           width: `${btnWidth}vw`,

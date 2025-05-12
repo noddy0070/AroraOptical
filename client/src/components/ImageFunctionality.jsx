@@ -104,7 +104,8 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
           public_id: response.data.public_id,
         });
       }
-      setUploadedImages(uploadedImagesList);
+      setUploadedImages((prevImages) => [...prevImages, ...uploadedImagesList]);
+      // setUploadedImages(uploadedImagesList);
       setUploadSuccess('Images uploaded successfully!');
       setSelectedFiles([]); // Clear selected files after upload
     } catch (err) {
@@ -114,12 +115,11 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
       setUploading(false);
     }
   };
-
+// console.log(uploadedImages)
   return (
-    <div className="p-[1vw] bg-white text-black shadow-adminShadow rounded-[.5vw] flex flex-col gap-[1vw]">
-      <h2 className="text-regularText font-bold text-left">Upload Product Images</h2>
-      <div className='grid grid-cols-5 gap-[1vw]'>
-        <div className='col-span-4 flex flex-row gap-[1vw]'>
+    <div className=" bg-white text-black  rounded-[.5vw] flex flex-col gap-[1vw]">
+      <h2 className="text-mediumText font-bold text-left">Upload Images</h2>
+      <div className='flex flex-wrap gap-[1vw]'>
           {uploadedImages.length > 0 && (
             <div>
               <p className="text-smallText text-gray-500 font-bold text-left mb-[.5vw]">Uploaded Images</p>
@@ -129,11 +129,11 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
                     <img
                       src={url}
                       alt={`Uploaded ${index + 1}`}
-                      className="w-[14.25vw] h-[14.25vw] object-cover rounded-[.5vw]"
+                      className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw]"
                     />
                     <button
                       onClick={() => deleteImageFromCloudinary(public_id)}
-                      className="absolute top-1 right-1 text-red-500 font-bold bg-white rounded-full px-2 py-1 shadow"
+                      className="absolute top-1 right-1 text-red-500 font-bold bg-white rounded-full w-[1.5vw] h-[1.5vw] shadow"
                     >
                       ×
                     </button>
@@ -146,17 +146,17 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
           {selectedFiles.length > 0 && (
             <div>
               <p className="text-smallText text-gray-500 font-bold text-left mb-[.5vw]">Preview Images</p>
-              <div className="flex flex-row gap-[1vw]">
+              <div className="flex flex-wrap  gap-[1vw]">
                 {selectedFiles.map((file, index) => (
                   <div key={index} className="relative border-dashed border-2 border-gray-300 rounded-[.5vw]">
                     <img
                       src={URL.createObjectURL(file)}
                       alt="Preview"
-                      className="w-[14.25vw] h-[14.25vw] object-cover rounded-[.5vw]"
+                      className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw]"
                     />
                     <button
                       onClick={() => handleRemoveImage(index)}
-                      className="absolute top-1 right-1 text-red-500 font-bold bg-white rounded-full px-2 py-1 shadow"
+                      className="absolute top-1 right-1 flex items-center justify-center text-red-500 font-bold bg-white rounded-full  w-[1.5vw] h-[1.5vw] shadow"
                     >
                       ×
                     </button>
@@ -165,10 +165,10 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
               </div>
             </div>
           )}
-        </div>
+        
         <div className='col-span-1 items-center justify-center'>
         <p className="text-smallText text-gray-500 font-bold text-left mb-[.5vw]">Upload Images</p>
-        <div className="relative w-[14.25vw] h-[14.25vw] flex flex-col items-center justify-center bg-gray-100 rounded-[.5vw] border-dashed border-2 border-gray-300">
+        <div className="relative w-[16.625vw] h-[14.875vw] flex flex-col items-center justify-center bg-gray-100 rounded-[.5vw] border-dashed border-2 border-gray-300">
           <img 
             src={CollectionSvg} 
             className="w-[5vw] h-[5vw] rounded-[.5vw] mb-[.5vw] object-cover"
@@ -197,6 +197,9 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
       {uploadSuccess && (
         <p className="text-green-600 text-center mt-4 font-medium">{uploadSuccess}</p>
       )}
+      <p className='text-smallText font-roboto '>
+      *You need to add at least 4 images. Pay attention to the quality of the pictures you add, comply with the background color standards. Pictures must be in certain dimensions. Notice that the product shows all the details*
+      </p>
     </div>
   );
 };

@@ -24,7 +24,7 @@ export default function Categories(){
             <div className="w-full  flex flex-row gap-[1.5vw] md:gap-[1vw] overflow-x-auto overflow-y-auto  pt-[4vw]  pb-[6vw] md:pb-[7vw] hide-scrollbar scroll-snap-x px-[5vw] md:px-[2vw]">
               {
                 CategoriesData.map((category,index)=>(
-                  <div className=" relative overflow-hidden group min-w-[43.5vw] md:min-w-[27.125vw]  h-[50vw] rounded-[3vw] md:h-[31.5625vw]  md:rounded-[2vw] shadow-[0px_16px_16px_-8px_rgba(12,_12,_13,_0.1),_0px_4px_4px_-4px_rgba(12,_12,_13,_0.05)] hover:shadow-[0px_3.8834950923919678px_9.71px_rgba(0,_0,_0,_0.75)]  ">
+                  <div key={index} className=" relative overflow-hidden group min-w-[43.5vw] md:min-w-[27.125vw]  h-[50vw] rounded-[3vw] md:h-[31.5625vw]  md:rounded-[2vw] shadow-[0px_16px_16px_-8px_rgba(12,_12,_13,_0.1),_0px_4px_4px_-4px_rgba(12,_12,_13,_0.05)] hover:shadow-[0px_3.8834950923919678px_9.71px_rgba(0,_0,_0,_0.75)]  ">
                 <img className="  w-full h-full rounded-[3vw] md:rounded-[2vw]  transform group-hover:scale-110 transition-all duration-700"  src={category.src} alt={category.alt} />
                 <div className='absolute bottom-0 w-full h-full rounded-[3vw]  md:rounded-[2vw]'/>
                 <TitleButton className2='text-[12px] md:text-regularText' className='z-[10] absolute bottom-[2vw] left-[2vw] md:bottom-[1vw] md:left-[1vw]' btnHeightPhone={8} btnRadiusPhone={6} btnWidthPhone={22} btnHeight={4.25} btnWidth={10.5} btnRadius={3.125} btnTitle={category.title}/>

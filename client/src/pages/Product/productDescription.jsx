@@ -58,7 +58,7 @@ const productImg={
     img:[placeholder,placeholder,placeholder,placeholder,placeholder,placeholder,placeholder]
 }
 
-export default function ProductDescription(){
+export default function ProductDescription({productToDisplay}){
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
@@ -67,6 +67,14 @@ export default function ProductDescription(){
     const [isDetailClicked, setIsDetailClicked] = useState(true);
     const [isShipingClicked, setIsShipingClicked] = useState(true);
     const [isReturnClicked, setIsReturnClicked] = useState(true);
+
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+  
+    const images = productToDisplay.images;
+  
+    const mainImageIndex = hoveredIndex !== null ? hoveredIndex : selectedIndex;
+    const mainImage = images[mainImageIndex];
 
     const handleSizeChange = (event) => {
       setSelectedSize(event.target.value);
@@ -80,19 +88,41 @@ export default function ProductDescription(){
         const value = quantityInputRef.current.value;
         setSelectedQuantity(value); 
       };
+
+      console.log(productToDisplay)
     return (
         <div className='font-roboto text-regularText flex  flex-row lg:px-[2vw] gap-[1.5vw]'>
 
             {/* Product Images */}
             <div className='flex flex-col w-[53.6875vw] gap-[1.5vw]'> 
             <div className='flex flex-row h-[47.75vw]  w-full gap-[1.125vw]'>
-                <div className='flex flex-col h-[46.75vw] overflow-y-auto gap-[1.125vw] hide-scrollbar'>
-                    {productImg.img.map((img,index)=>(
-                            <img key={index} className='h-[7vw] w-[6.875vw] rounded-[0.625vw]' src={img}></img>
-                    ))}
-                    
-                </div>
-                <img className='h-full w-[45.6875vw] rounded-[1.375vw]' src={productImg.imgMain}></img>
+                {/* Thumbnails */}
+                <div className="flex flex-col h-[46.75vw] overflow-y-auto gap-[1.125vw] hide-scrollbar">
+                    {images.map((img, index) => {
+                    // ❗ Only hide the selected image (not hovered)
+
+                    return (
+                        <img
+                                key={index}
+                                src={img}
+                                className={`h-[7vw] w-[6.875vw] rounded-[0.625vw] cursor-pointer ${index==selectedIndex?"border-[4px] border-black":""}`}
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                                onClick={() => setSelectedIndex(index)}
+                                />
+                            );
+                            })}
+                        </div>
+
+            {/* Main Image with smooth transition */}
+            <div className="relative h-full w-[45.6875vw] ml-4 overflow-hidden rounded-[1.375vw]">
+            <img
+                key={mainImage} // ⚠️ important: force re-render on image change
+                src={mainImage}
+                className="h-full w-full rounded-[1.375vw] object-cover transition-all duration-500 ease-in-out opacity-0 animate-fade-in scale-100 hover:scale-105"
+            />
+            </div>
+
                 
                 </div>
 
@@ -104,7 +134,7 @@ export default function ProductDescription(){
 
                 <div className='flex flex-row w-full gap-[1.5vw]'>
                 {buyingOptions.map((option,index)=>(
-                    <div className='relative w-[16.125vw] h-[18.75vw] rounded-[1.1vw] overflow-hidden'>
+                    <div key={index} className='relative w-[16.125vw] h-[18.75vw] rounded-[1.1vw] overflow-hidden'>
                     <img className='w-full h-full' src={option.img}/>
                     <IconButton btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[.75vw] top-[.75vw]'/>
                     <div className='absolute h-[7.5vw]    bottom-[.75vw] left-[.75vw] w-[15.125vw]'>
@@ -131,7 +161,7 @@ export default function ProductDescription(){
 
                 <div className='flex flex-row w-full gap-[1.5vw]'>
                 {lensOptions.map((option,index)=>(
-                    <div className='relative w-[16.125vw] h-[18.75vw] rounded-[1.1vw] overflow-hidden'>
+                    <div key={index} className='relative w-[16.125vw] h-[18.75vw] rounded-[1.1vw] overflow-hidden'>
                     <img className='w-full h-full' src={option.img}/>
                     <IconButton btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[.75vw] top-[.75vw]'/>
                     <div className='absolute h-[7.5vw]    bottom-[.75vw] left-[.75vw] w-[15.125vw]'>
@@ -156,7 +186,7 @@ export default function ProductDescription(){
             <div className='flex flex-col gap-[1.5vw] w-[41.8125vw] lg:w-[37.8125vw] '>
                 {/* Product Details block */}
                 <div>
-                    <h3 className='  font-bold text-h3Text leading-[120%]  ' >{product.name}</h3>
+                    <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelName}</h3>
                     <span className='leading-[150%]'>{product.model}</span>
                     <h5 className='text-h5Text font-bold leading-[140%]'>{product.price}</h5>
                 </div>
@@ -179,7 +209,7 @@ export default function ProductDescription(){
                         <p>{selectedSize || 'Select a size'}</p>
                         <div className="pointer-events-none absolute right-[1vw] transform transition-transform duration-300 rotate-180     " style={{ transform:isHovered? 'rotate(180deg)':'rotate(0deg)' }}  >
                     <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
+                            <path fillRule="evenodd" clipRule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
                             </svg>
                     </div>
                         </div>
@@ -243,7 +273,7 @@ export default function ProductDescription(){
                             <p className='text-mediumText font-bold'>Details</p>
                             <div className="ml-auto cursor-pointer  rotate-180  transform transition-transform duration-300 " style={{ transform:isDetailClicked? 'rotate(180deg)':'rotate(0deg)' }}  >
                             <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
+                            <path fillRule="evenodd" clipRule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
                             </svg>
 
                             </div>
@@ -268,7 +298,7 @@ export default function ProductDescription(){
                             <p className='text-mediumText font-bold'>Shipping</p>
                             <div className="ml-auto cursor-pointer  rotate-180  transform transition-transform duration-300 " style={{ transform:isShipingClicked? 'rotate(180deg)':'rotate(0deg)' }}  >
                             <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
+                            <path fillRule="evenodd" clipRule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
                             </svg>
 
                             </div>
@@ -288,7 +318,7 @@ export default function ProductDescription(){
                             <p className='text-mediumText font-bold'>Returns</p>
                             <div className="ml-auto cursor-pointer  rotate-180  transform transition-transform duration-300 " style={{ transform:isReturnClicked? 'rotate(180deg)':'rotate(0deg)' }}  >
                             <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
+                            <path fillRule="evenodd" clipRule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
                             </svg>
 
                             </div>

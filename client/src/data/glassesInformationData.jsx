@@ -6,10 +6,37 @@ const Shape=['Rectangular','Square','Round','Oval','Aviator','Cat Eye','Geometri
 
 const Colors=[{colorName:'Black',colorCode:'' },{colorName:'Brown',colorCode:'' },{colorName:'Havana',colorCode:'' },{colorName:'Dual Tone',colorCode:'' },{colorName:'Grey',colorCode:'' },{colorName:'Golden',colorCode:'' },]
 
-const Size=['Small (50mm or less)', 'Medium (51 to 54mm)', 'Large (55mm or more)'];
+const Size=['S', 'M', 'L','XL'];
 
-const Categories=['Men','Women','Kids'];
+const Categories=['Sunglasses','Eyeglasses','Contact Lenses','Cases','Lens Wipes','Lens solution','Cleaning cloth','Travelling kit'];
 
-
-
-export {Material,Type,Shape,Colors,Size,Categories};
+const Brand = [
+    "Fossil",
+    "Coach",
+    "Tommy Hilfiger",
+    "Maui Jim",
+    "Calvin Klein",
+    "Perricarden",
+    "Levis",
+    "Ana Hickmann",
+    "Dita Lancier",
+    "Mont Blanc",
+    "Hugo",
+    "Boss",
+    "Armani Exchange",
+    "Burberry",
+    "Dolce And Gabana",
+    "Emporio Armani",
+    "Oakley",
+    "Ferrari",
+    "Jimmy Choo",
+    "Michael Kors",
+    "Miumiu",
+    "Prada",
+    "Ray Ban",
+    "Swarovski",
+    "Versache",
+    "Vogue Eyewear"
+  ];
+  
+export {Material,Type,Shape,Colors,Size,Categories,Brand};

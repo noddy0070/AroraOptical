@@ -1,177 +1,202 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { useNavigate } from "react-router";
-import { Size,Shape,Material,Type,Categories,Colors  } from './../../../data/glassesInformationData'
+import { Size,Shape,Type,Colors  ,Categories,Material,Brand  } from './../../../data/glassesInformationData'
 import ImageUpload from "@/components/ImageFunctionality";
+import axios from "axios";
+
+const defaultForm = {
+  modelName: '',
+  modelValue: '',
+  category: '',
+  gender: '',
+  taxRate: '',
+  hashtags: '',
+  description: '',
+  price: 0,
+  discount: '',      
+  size: [],
+  stock: [],
+  images: [],
+  lensAttributes: [],
+  frameAttributes: [],
+  generalAttributes: [],
+};
+
 
 const AddProduct=()=>{
+  // Variables Declaration
     const navigate=useNavigate()
-    const [uploadedImages, setUploadedImages] = useState([]); // Store objects with URL and public_id
+    const [uploadedImages, setUploadedImages] = useState([]);
+    const [attributes, setAttributes] = useState([]);
+    const [frameAttributes, setFrameAttributes] = useState([]);
+    const [lensAttributes, setLensAttributes] = useState([]);
+    const [generalAttributes, setGeneralAttributes] = useState([]);
+    const [form, setForm] = useState(defaultForm);
 
-    const [form, setForm] = useState({
-        title: '',
-        description: '',
-        category: '',
-        brand: '',
-        regularPrice: '',
-        discountPrice: '',
-        taxRate: '',
-        tags: '',
-        size: [],
-        color: [],
-        shape:'',
-        type:'',
-        material:'',
-        stock: '',
-        weight: '',
-        newCategory: '',
-        newBrand: '',
-        newColor: '',
-        newSize: '',
-      });
 
-    
-    
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
+      // Function used in handleChange to create a map value to store in lens, frame and general Attribute
+      const updateAttributeArray = (prevArray, attrName, value) => {
+        const existingIndex = prevArray.findIndex(attr => attr.name === attrName);
+        const updatedArray = [...prevArray];
+      
+        if (existingIndex !== -1) {
+          updatedArray[existingIndex].value = value;
+        } else {
+          updatedArray.push({ name: attrName, value });
+        }
+      
+        return updatedArray;
       };
-    
-      const handleMultiSelectChange = (e, field) => {
-        const options = Array.from(e.target.selectedOptions, (option) => option.value);
-        setForm({ ...form, [field]: options });
+      
+   
+      // Handles change of data in the form
+      const handleChange = (e, index, attrName) => {
+        const { name, value } = e.target;
+      
+        // For array-based fields like size or stock
+        if (["size", "stock"].includes(name)) {
+          setForm((prevForm) => {
+            const updatedArray = [...prevForm[name]];
+            updatedArray[index] = value;
+            return { ...prevForm, [name]: updatedArray };
+          });
+          return;
+        }
+      
+        // For attribute maps
+        const attributeFields = ["lensAttributes", "frameAttributes", "generalAttributes"];
+        if (attributeFields.includes(name)) {
+          setForm((prevForm) => ({
+            ...prevForm,
+            [name]: updateAttributeArray(prevForm[name], attrName, value)
+          }));
+          return;
+        }
+      
+        // Default input fields
+        setForm((prevForm) => ({ ...prevForm, [name]: value }));
+      };
+      
+
+      
+      // handle submition of form i.e product is added to database
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Started submitting product...")
+      
+        try {
+          const response = await axios.post('http://localhost:3000/api/admin/add-product', form);
+          if (response.status === 200 || response.status === 201) {
+            alert('Product added successfully!');
+            setForm(defaultForm);
+            setUploadedImages([]);
+          } 
+        } catch (error) {
+          console.error('Error submitting product:', error);
+          alert(error.response?.data?.message || 'An error occurred while submitting the product.');
+        }
+        console.log("Finished submitting product...")
+      };
+      
+      // Adds Images to form after addition of every image
+      useEffect(() => {
+        setForm((prev) => ({
+          ...prev,
+          images: uploadedImages.map((image) => image.url), 
+        }));
+      }, [uploadedImages]); 
+
+      // Gets attributes from server to show in add products
+      useEffect(() => {
+        axios.get(`http://localhost:3000/api/admin/get-attributes`)
+        .then((res) => {
+          setAttributes(res.data);
+          distributeAttributes(res.data);
+        })
+        .catch((err) => {
+          console.error('Failed to fetch products:', err);
+        });
+      }, []);
+
+      // Distributes the attribute among all three different variables i.e. lens, frame and general 
+      const distributeAttributes = (attributes) => {
+        const frames = [];
+        const lenses = [];
+        const generals = [];
+      
+        attributes.forEach(attr => {
+          if (attr.attributeType === "Frame") {
+            frames.push(attr);
+          } else if (attr.attributeType === "Lens") {
+            lenses.push(attr);
+          } else if (attr.attributeType === "General") {
+            generals.push(attr);
+          }
+        });
+      
+        setFrameAttributes(frames);
+        setLensAttributes(lenses);
+        setGeneralAttributes(generals);
       };
     
       console.log(form)
+     
+      
 
     return (
-        <div className="w-full px-[2vw] py-[2vw] flex flex-col gap-[2vw] bg-bgCreamWhite">
-                <div className="flex flex-row justify-between px-[1vw] py-[1vw] items-center  shadow-adminShadow rounded-[.5vw] ">
-                    <h2 className="font-bold">Add Products</h2>
-                    <button className="text-regularText font-roboto font-medium " onClick={()=>navigate('/Admin/Dashboard/products')}>Back </button>
+        <div className="w-full px-[2vw] py-[2vw] flex flex-col gap-[1vw] ">
+
+                {/* All Attributes Section */}
+                <div className=" shadow-adminShadow  p-[1vw] ">
+                  {/* Basic Attributes */}
+                  <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
+                    <FormField label="Model Value" name="modelValue" value={form.modelValue} onChange={handleChange} />
+                    <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
+
+                    <div className="grid grid-cols-2 gap-[1vw]">
+                      <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
+                      <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={["Male", "Female", "Other"]} />
+                    </div>
+
+                    <FormField label="Description" name="description" type="textarea" value={form.description} onChange={handleChange} />
+                    <FormField label="Price" name="price" value={form.price} onChange={handleChange} />
+                    <FormField label="Tax Rate" name="taxRate" value={form.taxRate} onChange={handleChange} />
+                    <FormField label="Discount" name="discount" value={form.discount} onChange={handleChange} />
+                    <FormField label="Advertising Hashtags" name="hashtags" value={form.hashtags} onChange={handleChange} />
+                  </div>
+
+                  {/* Frame Attribute */}
+                  <AttributeSection title="Frame Attributes" attributes={frameAttributes}
+                    formKey="frameAttributes" form={form} handleChange={handleChange}/>
+
+                  {/* Lens Attribute */}
+                  <AttributeSection title="Lens Attributes"attributes={lensAttributes} 
+                    formKey="lensAttributes" form={form} handleChange={handleChange}/>
+
+                  {/* General Attribute */}
+                  <AttributeSection title="General Attributes" attributes={generalAttributes}
+                    formKey="generalAttributes" form={form} handleChange={handleChange}/>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-[1vw] font-roboto ">
-                {/* Basic Information */}
-                <div className="col-span-2 bg-white p-[1vw]  shadow-adminShadow rounded-[.5vw] flex flex-col gap-[1vw] ">
-                        <h2 className="text-regularText font-medium">Basic Information</h2>
-                        <div>
-                            <label className="text-[12px] font-bold ">TITLE</label>
-                            <input type="text" name="title" placeholder="type here" value={form.title} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border" />
-                        </div>
-                        <div>
-                            <label className="text-[12px] font-bold ">DESCRIPTION</label>
-                            <textarea name="description" placeholder="type here" value={form.description} onChange={handleChange} className="w-full mt-[4px] h-[7vw] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border " />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-[1vw]">
-                            <div>
-                                <label className="text-[12px] font-bold ">CATEGORY</label>
-                                <select name="category" value={form.category} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border">
-                                <option value="">Select Category</option>
-                                {Categories.map((category) => (
-                                <option key={category} value={category}>{category}</option>
-                                ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="text-[12px] font-bold ">BRANDS</label>
-                                <select name="brand" value={form.brand} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border">
-                                <option value="">Select Brand</option>
-                                <option value="Mans">Mans</option>
-                                <option value="Womans">Womans</option>
-                                <option value="Kids">Kids</option>
-                                </select>
-                            </div>
-
-                        <div>
-                            <label className="text-[12px] font-bold ">REGULAR PRICE</label>
-                            <input type="number" name="regularPrice" placeholder="type here" value={form.regularPrice} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border" />
-                        </div>
-
-                        <div>
-                            <label className="text-[12px] font-bold ">DISCOUNT PRICE</label>
-                            <input type="number" name="discountPrice" placeholder="type here" value={form.discountPrice} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border" />
-                        </div>
-
-                        <div>
-                            <label className="text-[12px] font-bold ">TAX RATE</label>
-                            <input type="number" name="taxRate" placeholder="type here" value={form.taxRate} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border" />
-                        </div>
-
-                        <div>
-                            <label className="text-[12px] font-bold ">STOCK</label>
-                            <input type="number" name="stock" placeholder="type here" value={form.stock} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border" />
-                        </div>
-                        
-                        
-                        </div>
-                        <div>
-                            <label className="text-[12px] font-bold ">TAGS</label>
-                            <textarea name="tags" placeholder="type here" value={form.tags} onChange={handleChange} className="w-full h-[4vw] mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border" />
-                        </div>
-                        
+                  
+                {/*Section Containing Image, Size and Stock Selection  */}
+                <div className="shadow-adminShadow p-[1vw]   rounded-[.5vw]">
+                  
+                <ImageUpload uploadedImages={uploadedImages} setUploadedImages={setUploadedImages} />
+                <div className="grid grid-cols-4 gap-[1vw]">
+                  <ArrayInputField label="Size" name="size" values={form.size} handleChange={handleChange} />
+                  <ArrayInputField label="Stock" name="stock" values={form.stock} handleChange={handleChange} />
                 </div>
 
-        {/* Specification */}
-        <div className="bg-white h-min p-[1vw] shadow-adminShadow rounded-[.5vw] flex flex-col gap-[1vw] ">
-        <h2 className="text-regularText font-medium">Specifications</h2>
+                {/* Button To add stocks fiels */}
+                <button onClick={() => { setForm((prev) => ({ ...prev, size: [...prev.size, ''], stock: [...prev.stock, ''], }));}} className="text-blue-500">
+                  Add Stock 
+                </button>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[12px] font-bold ">SIZE</label>
-              <select multiple value={form.size} onChange={(e) => handleMultiSelectChange(e, 'size')} className="w-full h-[6vw] mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border">
-              {Size.map((size) => (
-                <option key={size} value={size}>{size}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-            <label className="text-[12px] font-bold ">COLOUR</label>
-              <select multiple value={form.color} onChange={(e) => handleMultiSelectChange(e, 'color')} className="w-full h-[6vw] mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border">
-              {Colors.map((color) => (
-                <option key={color.colorName} value={color.colorName}>{color.colorName}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-            <div>
-                <label className="text-[12px] font-bold ">SHAPE</label>
-                <select name="shape" value={form.shape} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border">
-                <option value="">Select Shape</option>
-                {Shape.map((shape) => (
-                <option key={shape} value={shape}>{shape}</option>
-                ))}                
-                </select>
-            </div>
-            <div>
-                <label className="text-[12px] font-bold ">TYPE</label>
-                <select name="type" value={form.type} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border">
-                <option value="">Select Type</option>
-                {Type.map((type) => (
-                <option key={type} value={type}>{type}</option>
-                ))} 
-                </select>
-            </div>
-            <div>
-                <label className="text-[12px] font-bold ">MATERIAL</label>
-                <select name="material" value={form.material} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border">
-                <option value="">Select Material</option>
-                {Material.map((Material) => (
-                <option key={Material} value={Material}>{Material}</option>
-                ))} 
-                </select>
-            </div>
-
-            <div>
-                <label className="text-[12px] font-bold ">WEIGHT</label>
-                <input type="number" name="weight" placeholder="type here" value={form.weight} onChange={handleChange} className="w-full mt-[4px] p-[.5vw] bg-adminInputBoxColor text-[14px] rounded-[.45vw] border" />
-            </div>
-            
-        </div>
+                {/* Button To save Product */}
+                <button onClick={handleSubmit} className={`w-full mt-[1vw] py-2 rounded-lg text-white font-semibold bg-blue-600 hover:bg-blue-700`}>
+                  Save Product
+                </button>
       </div>
-      <ImageUpload uploadedImages={uploadedImages} setUploadedImages={setUploadedImages}/>
 
         </div>
     )
@@ -179,3 +204,71 @@ const AddProduct=()=>{
 
 
 export default AddProduct;
+
+const FormField = ({ label, name, type = "text", value, onChange, placeholder = "Value", options }) => (
+  <div>
+    <label className="text-mediumText font-bold">{label}</label>
+    {options ? (
+      <select name={name} value={value} onChange={onChange}
+        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border" >
+        <option value="">Select {label}</option>
+        {options.map((opt) => (
+          <option key={opt} value={opt}>{opt}</option>
+        ))}
+      </select>
+    ) : type === "textarea" ? (
+      <textarea name={name} placeholder={placeholder} value={value} onChange={onChange}
+        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
+    ) : (
+      <input type={type} name={name} placeholder={placeholder} value={value} onChange={onChange}
+        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
+    )}
+  </div>
+);
+
+const AttributeSection = ({ title, attributes, formKey, form, handleChange }) => {
+  const getAttributeValue = (name) =>
+    form[formKey]?.find((attr) => attr.name === name)?.value || "";
+
+  if (!attributes.length) return null;
+
+  return (
+    <>
+      <h6 className="text-h5Text font-bold mb-[.5vw]">{title}</h6>
+      <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
+        {attributes.map((attribute, index) => (
+          <div key={index} className="gap-[1vw] items-center">
+            <label className="text-mediumText font-bold">{attribute.name}</label>
+            {attribute.attributeValueType === "Single" ? (
+              <input name={formKey} type="text" placeholder="Value" value={getAttributeValue(attribute.name)}
+                onChange={(e) => handleChange(e, index, attribute.name)}
+                className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
+            ) : (
+              <select name={formKey} value={getAttributeValue(attribute.name)}
+                onChange={(e) => handleChange(e, index, attribute.name)} style={{ maxHeight: "12.5vw" }}
+                className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border max-h-[12.5vw] overflow-y-auto">
+                <option value="">Select {attribute.name}</option>
+                {attribute.attributeValues.map((val) => (
+                  <option key={val} value={val}>
+                    {val}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
+
+const ArrayInputField = ({ label, name, values, handleChange }) => (
+  <div className="col-span-1">
+    <label className="text-mediumText font-bold">{label}</label>
+    {values.map((value, index) => (
+      <input key={index} type="text" name={name} value={value || ''} onChange={(e) => handleChange(e, index)}
+        placeholder={`Enter ${label.toLowerCase()}`}
+        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
+    ))}
+  </div>
+);

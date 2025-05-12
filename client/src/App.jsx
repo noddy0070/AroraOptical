@@ -7,7 +7,7 @@ import Product from "./pages/Product/Product";
 import Blog from "./pages/Home/Sections/Blog";
 import FeeEyeTest from "./pages/Home/Sections/FreeEyeTest";
 import Signup from "./pages/Auth/SignUp";
-import Signin from "./pages/Auth/SignIn";
+import Login from "./pages/Auth/Login.jsx"
 // import Shop from "./pages/Shop/shop.jsx";
 import Settings from "./pages/Settings/Setting.jsx";
 import Cart from "./pages/Product/Cart.jsx";
@@ -28,6 +28,7 @@ import ContactUs from "./pages/Policies/ContactUs.jsx";
 import RefundPolicy from "./pages/Policies/RefundPolicy.jsx";
 import ShippingPolicy from "./pages/Policies/ShippingPolicy.jsx";
 import Footer from "./components/footer.jsx";
+import Attributes from "./pages/Admin/Attributes.jsx";
 
 
 const Layout = () => {
@@ -35,7 +36,7 @@ const Layout = () => {
   const [isMobileView, setIsMobileView] = useState(false);
 
   // Routes to hide navbars (exact matches)
-  const hideNavbarsExact = ["/signin", "/signup", "/lens"];
+  const hideNavbarsExact = ["/login", "/signup", "/lens"];
 
   // Check if current route should hide navbars
   const shouldHideNavbar =
@@ -84,7 +85,7 @@ const Layout2 = () => {
   const [isMobileView, setIsMobileView] = useState(false);
 
   // Routes to hide navbars (exact matches)
-  const hideNavbarsExact = ["/signin", "/signup", "/lens"];
+  const hideNavbarsExact = ["/login", "/signup", "/lens"];
 
   // Check if current route should hide navbars
   const shouldHideNavbar =
@@ -128,8 +129,8 @@ const Layout2 = () => {
 };
 
 export default function App() {
+ 
   const [isMobileView, setIsMobileView] = useState(false);
-
   useEffect(() => {
     const checkViewportWidth = () => {
       setIsMobileView(window.innerWidth < 768);
@@ -147,11 +148,11 @@ export default function App() {
 
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/product" element={<Product />} />
+      <Route path="/product/:id" element={<Product />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/free-eye-test" element={<FeeEyeTest />} />
       <Route path='/signup' element={<Signup />} />
-      <Route path='/signin' element={<Signin />} />
+      <Route path='/login' element={<Login />} />
       {/* <Route path='/shop' element={<Shop/>} /> */}
       <Route path='/shop/:category/:audience' element={<ShopURL />}/>
       <Route path='/settings' element={<Settings/>} />
@@ -168,6 +169,7 @@ export default function App() {
             <Route path="user" element={<User />} />
             <Route path="analytics" element={<Trending />} />
             <Route path="search" element={<Search />} />
+            <Route path="attributes" element={<Attributes />} />
             <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
       </Route>
       <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>

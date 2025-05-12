@@ -81,7 +81,7 @@ export default function Testimonial(){
             <div ref={testimonialRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} className='flex flex-col gap-[6vw] md:gap-[2vw] h-[166vw] md:h-[46.8125vw] w-full md:w-[38vw] overflow-y-auto  hide-scrollbar'>
             {
                 testimonials.map((testimonial,index)=>(
-                    <div className={`select-none relative w-full md:w-[38vw]` } >
+                    <div key={index} className={`select-none relative w-full md:w-[38vw]` } >
                         <div className={customTestimonialTextDiv} style={{backgroundColor:index==0?"#1D3240":"#F3E9D2", color:index==0?"white":"black"}}>
                             <div className='flex flex-row gap-[.5vw] md:gap-[.25vw]'>
                                 <img src={star} className='w-[2.5vw] md:w-[1.25vw] h-[2.5vw] md:h-[1.25vw]'></img>

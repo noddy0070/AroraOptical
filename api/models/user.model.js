@@ -1,10 +1,9 @@
 import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
-    username:{
+    name:{
      type: String,
      required: true,
-     unique: true,   
     },
     email:{
         type: String,
@@ -12,10 +11,6 @@ const userSchema = new mongoose.Schema({
         unique: true,
     },
     number:{
-        type: String,
-        required: false,
-    },
-    surname:{
         type: String,
         required: false,
     },
@@ -27,15 +22,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    
-    addrees:{
+    address:{
         type: String,
         required: false,
-    },
-    isAdmin:{
-        type: Boolean,
-        required: true,
-        default: false,
     },
     city:{
         type:String,
@@ -48,9 +37,52 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:false
-    }
+    },
+    googleId:{
+        type:String,
+        default:null
+    },
+    // Cart items: Array of products with quantity
+    cart: [
+        {
+        productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Products', // Reference to the Product model
+            required: true,
+        },
+        quantity: {
+            type: Number,
+            default: 1, // Default quantity is 1
+            required: true,
+        },
+        },
+    ],
     
+    // Wishlist items: Array of product IDs
+    wishlist: [
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Products', // Reference to the Product model
+        },
+    ],
 
+    role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user',
+    },
+    orders: [
+    {
+      orderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order', // Reference to the Order model
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
 },{timestamps: true});
 
 const User = mongoose.model('User', userSchema);

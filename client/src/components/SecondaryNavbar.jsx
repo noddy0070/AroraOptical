@@ -6,10 +6,12 @@ import SearchIcon from '../assets/images/icons/SearchIcon.svg'
 import MenuIcon from "../assets/images/icons/MenuIcon.png"
 import logo from '../assets/images/AroraOpticalLogo.png';
 import { TransitionLink } from '../Routes/TransitionLink';
+import { useSelector } from 'react-redux';
+
 export default function SecondaryNavbar () {
   const inputRef = useRef(null);
   const [search, setSearch] = useState('');
-
+  const {user,isAuthenticated} =useSelector((state)=>state.auth);
   const handleChange = () => {
     const value = inputRef.current.value; // Access the input value through the ref
     setSearch(value); // Update the state with the input value
@@ -126,13 +128,24 @@ export default function SecondaryNavbar () {
               <TransitionLink to='/cart'>
                 <img className='w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw]' src={CartIcon}/>
               </TransitionLink>
-            
+              
+
+              {isAuthenticated?
               <div className='hidden md:flex  flex-row gap-[.5vw] items-center'>
                 <img className='w-[2vw] h-[2vw]' src={profilePlaceholder}/>
+                 <span className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
+                {user.name}
+              </span>
+                </div>:
+                <div className='hidden md:flex  flex-row gap-[.5vw] items-center'>
+                <TransitionLink to='/login'>
+                  <button  className=" text-regularText focus:outline-none hover:text-gray-500"> Login / </button>
+                </TransitionLink>
                 <TransitionLink to='/signup'>
-                  <button  className=" text-regularText focus:outline-none hover:text-gray-500"> Login/Sign Up </button>
+                  <button  className=" text-regularText focus:outline-none hover:text-gray-500"> Sign Up </button>
                 </TransitionLink>
                 </div>
+              }
             </div>
           </div>
               

@@ -1,52 +1,70 @@
 import User from "../models/user.model.js";
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import Twilio  from "twilio";
-
-const client =Twilio("AC59f839ba4ecc99cbda287b33b122b391","a5588afa79c25bd9021a438ae83f52f1");
+import nodemailer from 'nodemailer'
 
 
+let otpStore = {"no":{otp:33,expires:123}}; // Simple in-memory store (use Redis or DB in prod)
 
-export const sendOTP=async (req,res,next)=>{
-    const {number}=req.body;
-    
-    const formatNumber= `+91${number}`;
-    console.log(formatNumber);
-    try{
-        client.verify.v2.services("VAbf9066da9311dd6295bf87e9fb68a8e6").verifications.create({ to: formatNumber, channel: "sms" })
-    .then(() => res.json({ success: true }))
-    }catch(error){
-        console.error("Twilio Error:", error);
-        res.status(500).json({ success: false, error: error.message });
-      }
-}
-
-
-export const verifyOTP=async (req,res,next)=>{
-    console.log("hii")
-    const {number,otp}=req.body;
-    const formatNumber= `+91${number}`;
-    try{
-        client.verify.v2.services("VAbf9066da9311dd6295bf87e9fb68a8e6")
-    .verificationChecks.create({ to: formatNumber, code: otp })
-    .then((verification_check) => {
-      if (verification_check.status === "approved") {
-        res.json({ success: true });
-      } else {
-        res.json({ success: false });
-      }
-    })
+export const sendOTP=async (req, res) => {
+    const { email } = req.body;
+  
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
     }
-    catch(error){
-        console.error("Twilio Error:", error);
-        res.status(500).json({ success: false, error: error.message });
+  
+    const otp = Math.floor(100000 + Math.random() * 900000);
+  
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
       }
+    });
+  
+    const mailOptions = {
+      from: `"Arora Opticals" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your OTP Code",
+      text: `Your OTP code is: ${otp}. It will expire in 5 minutes.`
+    };
+  
+    try {
+      await transporter.sendMail(mailOptions);
+      otpStore[email] = { otp, expires: Date.now() + 5 * 60 * 1000 }; // 5-minute expiry
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error sending email:", error);
+      res.status(500).json({ success: false, message: "Failed to send OTP" });
+    }
 }
 
+export const verifyOTP=async (req, res) => {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+        return res.status(400).json({ message: 'Email and OTP are required' });
+      }
+    const record = otpStore[email];
+    
+    if (!record || record.otp !== Number(otp)) {
+      return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
+    }
+  
+    if (Date.now() > record.expires) {
+      return res.status(400).json({ success: false, message: "OTP expired" });
+    }
+  
+    delete otpStore[email]; // Remove OTP after successful verification
+    res.json({ success: true, message: "OTP verified" });
+}
+
+// POST /api/auth/signup
 export const signup= async (req,res,next)=>{
     const {email,name,state,city,password}=req.body;
     const hashedPassword=bcryptjs.hashSync(password,10);
-    const newUser= new User({email,username:name,state,city,password:hashedPassword});
+    const newUser= new User({email,name,state,city,password:hashedPassword});
     try{
         await newUser.save();
     res.status(201).json('User created successfully');
@@ -56,20 +74,54 @@ export const signup= async (req,res,next)=>{
     
 }
 
-export const signin= async (req,res,next)=>{
+// POST /api/auth/login
+export const login= async (req,res,next)=>{
     const {email,password}=req.body;
+    const validUser= await User.findOne({email});
+
     try{
-        const validUser= await User.findOne({email});
-        if(!validUser) return res.status(404).json('User not found');
+        if(!validUser) return res.status(400).json({ success: false, message: "User Not Found" });
+
         const validPassword=bcryptjs.compareSync(password,validUser.password);
-        if(!validPassword) return next(errorHandler(401,'Invalid Credentials'))
-        const token= jwt.sign({id:validUser._id},process.env.JWT_SECRET);
-        console.log(token);
+
+        if(!validPassword) return res.status(400).json({ success: false, message: "Invalid Credentials" })
+
+        
+        const token= jwt.sign({id:validUser._id},process.env.JWT_SECRET,{expiresIn:'7d'});
         const {password:pass,...rest}=validUser._doc;
-        res.cookie('token',token,{ httpOnly: true, secure: true, sameSite: "none" }).status(200).json(rest);
+        res.cookie('token',token,{ httpOnly: true, secure: true, sameSite: "Strict",maxAge:7*24*60*60*1000, });
+        res.status(200).json({success:true,message:rest});
         console.log("User logged in successfully");
     }
     catch(error){
         next(error);
     }
+}
+
+// POST /api/auth/logout  
+export const logout=async(req,res)=>{
+  res.clearCookie('token', { httpOnly: true, sameSite: 'Strict', secure: process.env.NODE_ENV === 'production' });
+  res.json({ message: 'Logged out' });
+}
+
+// GET /api/auth/me
+export const me=async(req,res) => {
+  const user = await User.findById(req.user.id).select('-password');
+  res.json({ user });
+};
+
+// GET /api/google/callback
+export const googleCallback = async (req, res) => {
+    // Set JWT cookie
+    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    // Redirect back to frontend
+    res.redirect('http://localhost:5173');
 }
