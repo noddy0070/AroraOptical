@@ -14,10 +14,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    date_of_birth: {
-        type: Date,
-        required: false, // You can set this to false if DOB is optional
-    },
+
     gender:{
         type: String,
         required: false,
@@ -32,6 +29,10 @@ const userSchema = new mongoose.Schema({
     },
     state:{
         type:String,
+        required:false,
+    },
+    zipcode:{
+        type:Number,
         required:false,
     },
     password:{

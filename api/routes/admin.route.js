@@ -1,6 +1,6 @@
 import express from "express";
 // import {signup,signin, sendOTP, verifyOTP} from "../controllers/auth.controller.js";
-import { addProduct,getProducts,getSingleProduct } from "../controllers/product.controller.js";
+import { addProduct,getProducts,getSingleProduct,getProductsColor } from "../controllers/product.controller.js";
 import { addAttributes,getAttributes,deleteAttribute,editAttribute } from "../controllers/attributes.controller.js";
 const router= express.Router();
 
@@ -12,5 +12,6 @@ router.post('/add-attributes',addAttributes);
 router.post('/edit-attributes',addProduct);
 router.get('/get-attributes',getAttributes);
 router.delete('/delete-attributes/:attributeId',deleteAttribute);
-router.put('/edit-attributes', editAttribute); 
+router.put('/edit-attributes', editAttribute);
+router.post('/get-products-color',getProductsColor); 
 export default router;

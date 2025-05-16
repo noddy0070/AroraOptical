@@ -37,26 +37,26 @@ const DashBoard = () => {
 
 
   const homeSection = [
-    {id:'Dashboard', path: ['/Admin/Dashboard'],icon:DashboardIcon ,subSections:[]},
-    {id:'Analytics', path: ['/Admin/Dashboard'],icon:AnalyticsIcon ,subSections:[]},
-    {id:'Ecommerce', path: ['/Admin/Dashboard/products','/Admin/Dashboard/add-product'],icon:EcommerceIcon,subSections:ecommerceSection},
-    // {id:'Category', path: ['/Admin/Dashboard/add-product'],icon:CategoryIcon,subSections:categorySection},
-    {id:'Attributes', path: ['/Admin/Dashboard/attributes'],icon:AttributesIcon,subSections:attributesSection},
-    {id:'User', path: ['/Admin/Dashboard/user'],icon:UserIcon,subSections:userSection},
-    {id:'Order', path: ['/Admin/Dashboard/analytics'],icon:OrderIcon,subSections:orderSection},
+    {id:'Dashboard', path: ['/Admin'],icon:DashboardIcon ,subSections:[]},
+    {id:'Analytics', path: ['/Admin'],icon:AnalyticsIcon ,subSections:[]},
+    {id:'Ecommerce', path: ['/Admin/products','/Admin/add-product'],icon:EcommerceIcon,subSections:ecommerceSection},
+    // {id:'Category', path: ['/Admin/add-product'],icon:CategoryIcon,subSections:categorySection},
+    {id:'Attributes', path: ['/Admin/attributes'],icon:AttributesIcon,subSections:attributesSection},
+    {id:'User', path: ['/Admin/user'],icon:UserIcon,subSections:userSection},
+    {id:'Order', path: ['/Admin/analytics'],icon:OrderIcon,subSections:orderSection},
   ]
 
   const settingsSection = [
-    {id:'Setting', path: ['/Admin/Dashboard/search'],icon:SettingsIcon,subSections:[]},
+    {id:'Setting', path: ['/Admin/search'],icon:SettingsIcon,subSections:[]},
   ]
 
   const supportSection = [
     {id:'Help Center', path: ['/'],icon:HelpCenterIcon,subSections:[]},
-    {id:'FAQs', path: ['/Admin/Dashboard/faqs'],icon:FAQIcon,subSections:[]},
-    {id:'Privacy Policy', path: ['/Admin/Dashboard/terms'],icon:PrivacyPolicyIcon,subSections:[]},
-    {id:'Shipping and Delivery', path: ['/Admin/Dashboard/contact'],icon:ShippingAndDeliveryIcon,subSections:[]},
-    {id:'Cancellation Policy', path: ['/Admin/Dashboard/support'],icon:CancellationPolicyIcon,subSections:[]},
-    {id:'Terms & Condition', path: ['/Admin/Dashboard/support'],icon:TermsAndConditionIcon,subSections:[]},
+    {id:'FAQs', path: ['/Admin/faqs'],icon:FAQIcon,subSections:[]},
+    {id:'Privacy Policy', path: ['/Admin/terms'],icon:PrivacyPolicyIcon,subSections:[]},
+    {id:'Shipping and Delivery', path: ['/Admin/contact'],icon:ShippingAndDeliveryIcon,subSections:[]},
+    {id:'Cancellation Policy', path: ['/Admin/support'],icon:CancellationPolicyIcon,subSections:[]},
+    {id:'Terms & Condition', path: ['/Admin/support'],icon:TermsAndConditionIcon,subSections:[]},
   ]
 
   const mainSections=[

@@ -1,3 +1,4 @@
+import { TransitionLink } from '@/Routes/TransitionLink';
 import { useState } from 'react';
 
 
@@ -31,6 +32,7 @@ const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage}) => {
     }
     return 0;
   });
+
 
   const finalSortedProducts = sortOrder === 'ascending' ? sortedProducts : [...sortedProducts].reverse();
   console.log("final", finalSortedProducts)
@@ -94,7 +96,11 @@ const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage}) => {
           {currentProducts.map((product,index) => (
             <tr key={product.uid} className="hover:bg-gray-100">
               <td className="p-2 border text-left">{index+1}</td>
-              <td className="p-2 border">{product.modelName}</td>
+              <td className="p-2 border">
+                <TransitionLink to={`/product/${product._id}`} >
+                {product.modelName}
+                </TransitionLink>
+                </td>
               <td className="p-2 border text-left">{product.modelValue}</td>
               <td className="p-2 border text-left">{product.category}</td>
               {/* <td className="p-2 border text-left">${product.price.toFixed(2)}</td>

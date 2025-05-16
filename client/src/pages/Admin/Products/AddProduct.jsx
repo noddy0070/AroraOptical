@@ -6,7 +6,8 @@ import axios from "axios";
 
 const defaultForm = {
   modelName: '',
-  modelValue: '',
+  modelTitle: '',
+  modelCode:'',
   category: '',
   gender: '',
   taxRate: '',
@@ -150,9 +151,10 @@ const AddProduct=()=>{
                 <div className=" shadow-adminShadow  p-[1vw] ">
                   {/* Basic Attributes */}
                   <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
-                    <FormField label="Model Value" name="modelValue" value={form.modelValue} onChange={handleChange} />
+                    <FormField label="Model Title" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
                     <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
-
+                    <FormField label="Model Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
+                    
                     <div className="grid grid-cols-2 gap-[1vw]">
                       <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
                       <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={["Male", "Female", "Other"]} />

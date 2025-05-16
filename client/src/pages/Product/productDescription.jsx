@@ -1,8 +1,11 @@
-import React,{useState,useRef} from 'react';
+import React,{useState,useRef,useEffect} from 'react';
 import placeholder from "../../assets/images/CategoryPlaceholder.png";
 import categoryPlaceholder from '../../assets/images/CategoryPlaceholder.png';
+import WishListIcon from '../../assets/images/icons/WishlistIcon.svg'
 import './product.css';
 import { IconButton } from '../../components/button';
+import { renderStars } from '@/components/RenderStarts';
+import axios from 'axios';
 const product={
     name: 'Product Name',
     model: 'Model Name',
@@ -53,11 +56,6 @@ const lensOptions=[
 ]
 
 
-const productImg={
-    imgMain:placeholder,
-    img:[placeholder,placeholder,placeholder,placeholder,placeholder,placeholder,placeholder]
-}
-
 export default function ProductDescription({productToDisplay}){
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
@@ -70,7 +68,7 @@ export default function ProductDescription({productToDisplay}){
 
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [hoveredIndex, setHoveredIndex] = useState(null);
-  
+    const tags = productToDisplay.hashtags.split(",").map(tag => tag.trim());
     const images = productToDisplay.images;
   
     const mainImageIndex = hoveredIndex !== null ? hoveredIndex : selectedIndex;
@@ -89,7 +87,31 @@ export default function ProductDescription({productToDisplay}){
         setSelectedQuantity(value); 
       };
 
-      console.log(productToDisplay)
+    const [totalRating, setTotalRating] = useState(0);
+    useEffect(() => {
+    if (productToDisplay?.review?.length > 0) {
+        const sum = productToDisplay.review.reduce((acc, item) => acc + item.rating, 0);
+        const average = sum / productToDisplay.review.length;
+        setTotalRating(average);
+    } else {
+        setTotalRating(0); // or null
+    }
+    }, [productToDisplay.review]);
+
+    const [productsModel,setProductsModel] =useState([]);
+    
+    useEffect(()=>{
+        axios.post(`http://localhost:3000/api/admin/get-products-color`,{modelName:productToDisplay.modelName})
+        .then((res) => {
+            setProductsModel(res.data.message);
+            })
+        .catch((err) => {
+          console.error('Failed to fetch products:', err);
+        });
+    },[productToDisplay])
+    
+
+    //   console.log(productToDisplay)
     return (
         <div className='font-roboto text-regularText flex  flex-row lg:px-[2vw] gap-[1.5vw]'>
 
@@ -105,7 +127,7 @@ export default function ProductDescription({productToDisplay}){
                         <img
                                 key={index}
                                 src={img}
-                                className={`h-[7vw] w-[6.875vw] rounded-[0.625vw] cursor-pointer ${index==selectedIndex?"border-[4px] border-black":""}`}
+                                className={`h-[7vw] w-[6.875vw] rounded-[10px] cursor-pointer object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                                 onClick={() => setSelectedIndex(index)}
@@ -115,12 +137,20 @@ export default function ProductDescription({productToDisplay}){
                         </div>
 
             {/* Main Image with smooth transition */}
-            <div className="relative h-full w-[45.6875vw] ml-4 overflow-hidden rounded-[1.375vw]">
+            <div className="relative h-full w-[45.6875vw] ml-4 overflow-hidden ">
             <img
                 key={mainImage} // ⚠️ important: force re-render on image change
                 src={mainImage}
-                className="h-full w-full rounded-[1.375vw] object-cover transition-all duration-500 ease-in-out opacity-0 animate-fade-in scale-100 hover:scale-105"
+                className="h-full w-full object-cover transition-all duration-500 ease-in-out opacity-0 animate-fade-in "
             />
+            <div className='absolute top-[12px] right-[12px] flex gap-[8px] '>
+                {tags.map((tag, index) => (
+                <div className=' px-[16px] py-[8px] rounded-[1.25vw] text-center md:min-w-[7.125vw] border-[1px] border-black text-tinyTextPhone md:text-tinyText' key={index}>{tag}</div>
+                ))}
+                <button>
+                    <img className='w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw]' src={WishListIcon}/>
+                </button>
+            </div>
             </div>
 
                 
@@ -186,14 +216,17 @@ export default function ProductDescription({productToDisplay}){
             <div className='flex flex-col gap-[1.5vw] w-[41.8125vw] lg:w-[37.8125vw] '>
                 {/* Product Details block */}
                 <div>
-                    <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelName}</h3>
-                    <span className='leading-[150%]'>{product.model}</span>
-                    <h5 className='text-h5Text font-bold leading-[140%]'>{product.price}</h5>
+                    <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelTitle}</h3>
+                    <span className='leading-[150%]'>{productToDisplay.modelCode} {" - "} {productToDisplay.modelName}</span>
+                    <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR',
+                    minimumFractionDigits: 2,}).format(productToDisplay.price)}</span> {" "}
+                     <span>{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR',
+                    minimumFractionDigits: 2,}).format(productToDisplay.discount)}</span> </h5>
                 </div>
                 
                 {/* Rating block */}
-                <span>{product.rating} " * " {product.noOfReviews}</span>
-                <p className='leading-[150%]'>{product.productDescription}</p>
+                {totalRating>0?<span>{renderStars(totalRating)} {" - "} {productToDisplay.review.length} </span>:"No Reviews"}
+                <p className='leading-[150%]'>{productToDisplay.description}</p>
                 {/* Size block */}
                 <div className='flex flex-col gap-[.5vw]'>
                     <div className='flex flex-row  '>
@@ -245,13 +278,27 @@ export default function ProductDescription({productToDisplay}){
 
                 {/* Variant block */}
                 <div className='flex flex-col gap-[.5vw]'>
-                        <span>Variant</span>
+                        {/* <span>Variant</span> */}
                         <div className='flex flex-row gap-[.5vw] overflow-x-auto'>
-                            {product.variants.map((variant,index)=>(
-                                <button key={index} className={`whitespace-nowrap border-[1px] border-black w-auto py-[.75vw] px-[1.5vw] rounded-[2vw] ${
-                                  selectedVariant === variant ? 'bg-black text-white' : 'bg-white text-black' }`}
-                                onClick={() => handleVariantClick(variant)} > {variant}</button>
-                            ))}
+                            {productsModel.map((variant,index)=>{
+                                const colorAttribute = variant.frameAttributes.find(attr => attr.name === "Color");
+                                const colorValue = colorAttribute ? colorAttribute.value : null;
+
+                                const lensColorAttribute = variant.lensAttributes.find(attr => attr.name === "Lens Color");
+                                const lensColorValue = lensColorAttribute ? lensColorAttribute.value : null;
+                                return (
+                                <div className='rounded-[8px] w-[12.5vw] p-[12px] border-[1px] border-black '>
+                                   <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[index]} />
+                                   {colorAttribute && <div className='w-full flex justify-between mb-[8px]'>
+                                    <span>Color</span>
+                                    <span>{colorValue}</span>
+                                   </div>}
+                                   {lensColorAttribute && <div className='w-full flex justify-between'>
+                                    <span>Lens Color</span>
+                                    <span>{lensColorValue}</span>
+                                   </div>}
+                                </div>
+                            )})}
                         </div>
                 </div>
 

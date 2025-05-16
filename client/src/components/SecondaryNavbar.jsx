@@ -131,12 +131,15 @@ export default function SecondaryNavbar () {
               
 
               {isAuthenticated?
+                <TransitionLink to='/settings'>
               <div className='hidden md:flex  flex-row gap-[.5vw] items-center'>
+              
                 <img className='w-[2vw] h-[2vw]' src={profilePlaceholder}/>
                  <span className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
-                {user.name}
+                {user?.name}
               </span>
-                </div>:
+                </div>
+                </TransitionLink>:
                 <div className='hidden md:flex  flex-row gap-[.5vw] items-center'>
                 <TransitionLink to='/login'>
                   <button  className=" text-regularText focus:outline-none hover:text-gray-500"> Login / </button>

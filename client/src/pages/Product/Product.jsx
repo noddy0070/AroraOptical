@@ -22,7 +22,7 @@ export default function Product(){
         <div className='py-[4vw] mx-[2vw] font-roboto'>
             <p className='px-[4vw] mb-[1.5vw] text-[.875rem]'>Root Address</p>
             <ProductDescription productToDisplay={product}/>
-            <CustomerReview/>
+            {/* <CustomerReview/> */}
         </div>
     );
 }

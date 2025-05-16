@@ -4,17 +4,19 @@ import LogOutIcon from '../../assets/images/icons/LogOut.svg';
 import ProfileIcon from '../../assets/images/icons/Profile.svg';
 import WishlistIcon from '../../assets/images/icons/Wishlist2.svg';
 import ProfilePic from '../../assets/images/icons/ProfilePic.png';
-
+import { useSelector } from 'react-redux';
 import Profile from './Profile';
 import WishList from './Wishlist';
 import Orders from './Orders';
 export default function Settings(){
     const [activeTab, setActiveTab] = useState('profile');
+    
+    const {user} =useSelector((state)=>state.auth);
     const tabs = {
-        "profile": <Profile/>,
-        "orders": <Orders/>,
-        "wishlist": <WishList/>
-    }
+            "profile": <Profile user={user}/>,
+            "orders": <Orders/>,
+            "wishlist": <WishList/>
+        }
     
     return (    
         <div className='m-[2vw] font-roboto'>

@@ -62,7 +62,6 @@ export default function SignUp(){
             setError(error.message);
             setLoading(false);
         }
-        
     }
 
     const handleSubmit2=async(e)=>{
@@ -174,7 +173,7 @@ export default function SignUp(){
                     </form>
                         <div className="w-full my-[1vw] relative border-black border-t-[1px] border-solid box-border h-[2px]" />
                         
-                    {/* {error && <p className='text-red-500'>{error}</p>} */}
+                    {error && <p className='text-red-500'>{error}</p>}
                         <div className='font-roboto text-regularTextPhone md:text-regularText '>
                             <p className='text-center leading-[150%]'>Already have an account? <TransitionLink to='/login' ><span className='underline'>Login</span></TransitionLink> | <span className='underline'> <TransitionLink to='/' >Home</TransitionLink></span></p>
                         </div>
@@ -195,7 +194,7 @@ export default function SignUp(){
                     </form>
                         <div className="w-full my-[1vw] relative border-black border-t-[1px] border-solid box-border h-[2px]" />
                         
-                    {/* {error && <p className='text-red-500'>{error}</p>} */}
+                    {error && <p className='text-red-500'>{error}</p>}
                         <div className='font-roboto text-regularTextPhone md:text-regularText'>
                             <p className='text-center leading-[150%]'>Already have an account? <TransitionLink to='/signin' ><span className='underline'>SignIn</span></TransitionLink> | <span className='underline'> <TransitionLink to='/' >Home</TransitionLink></span></p>
                         </div>

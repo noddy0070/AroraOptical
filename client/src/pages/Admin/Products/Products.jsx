@@ -55,7 +55,7 @@ const Products=()=>{
                                         onBlur={(e) => { if (e.target.value.trim() === '') {e.target.value = 'Search Here';}}}/>
                                       </div>
                     <div className="ml-auto"> 
-                    <TitleButton  onClick={()=>navigate('/Admin/Dashboard/add-product')} btnHeight={4.25} btnRadius={3} btnWidth={16}  btnTitle={"Add Product +"}/> 
+                    <TitleButton  onClick={()=>navigate('/Admin/add-product')} btnHeight={4.25} btnRadius={3} btnWidth={16}  btnTitle={"Add Product +"}/> 
                     </div>
                 </div>
 

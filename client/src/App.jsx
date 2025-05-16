@@ -29,6 +29,7 @@ import RefundPolicy from "./pages/Policies/RefundPolicy.jsx";
 import ShippingPolicy from "./pages/Policies/ShippingPolicy.jsx";
 import Footer from "./components/footer.jsx";
 import Attributes from "./pages/Admin/Attributes.jsx";
+import {ProtectedRoute} from "./providers/RoutesProvider.jsx";
 
 
 const Layout = () => {
@@ -147,20 +148,33 @@ export default function App() {
      <Layout />
 
     <Routes>
+
+      {/* Public Routes Goes Here */}
       <Route path="/" element={<Home />} />
+      <Route path='/signup' element={<Signup />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/shop/:category/:audience' element={<ShopURL />}/>
       <Route path="/product/:id" element={<Product />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/free-eye-test" element={<FeeEyeTest />} />
-      <Route path='/signup' element={<Signup />} />
-      <Route path='/login' element={<Login />} />
-      {/* <Route path='/shop' element={<Shop/>} /> */}
-      <Route path='/shop/:category/:audience' element={<ShopURL />}/>
-      <Route path='/settings' element={<Settings/>} />
-      <Route path='/cart' element={<Cart/>}/>
+      <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
+      <Route path='/contact-us'element={<ContactUs/>}/>
+      <Route path='/refund-policy' element={<RefundPolicy/>}/>
+      <Route path='/shipping-policy' element={<ShippingPolicy/>}/>
       <Route path='*' element={<h1>Not Found</h1>} />
-      <Route path='/lens' element={<Lens/>} />
-      <Route path='/Admin' element={<Admin/>} />
-      <Route path="/Admin/Dashboard" element={<DashBoard />}>
+
+      {/* Routes that are authenticated and user role  */}
+      <Route element={<ProtectedRoute/>}>
+        <Route path='/cart' element={<Cart/>}/>
+        <Route path='/settings' element={<Settings/>} />
+        <Route path='/lens' element={<Lens/>} />
+      </Route>
+
+
+      {/* <Route path='/Admin' element={<Admin/>} /> */}
+
+      <Route element={<ProtectedRoute/>}>
+      <Route path="/Admin" element={<DashBoard />}>
             {/* Nested routes go here */}
             <Route index element={<Home2 />} /> {/* Default route when /Admin/Dashboard is visited */}
             <Route path="products" element={<Products />} />
@@ -172,10 +186,8 @@ export default function App() {
             <Route path="attributes" element={<Attributes />} />
             <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
       </Route>
-      <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
-      <Route path='/contact-us'element={<ContactUs/>}/>
-      <Route path='/refund-policy' element={<RefundPolicy/>}/>
-      <Route path='/shipping-policy' element={<ShippingPolicy/>}/>
+      </Route>
+     
     </Routes>
     <Layout2/>
   </BrowserRouter>
