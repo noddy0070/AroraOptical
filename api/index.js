@@ -4,13 +4,14 @@ import mongoose from 'mongoose';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import adminRouter from './routes/admin.route.js';
+import imageRouter from './routes/image.route.js';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import crypto from 'crypto';
 import passport from 'passport';
 import session from 'express-session';
 import './utils/passport.js'; // import passport config
+
 
 dotenv.config();
 
@@ -48,32 +49,9 @@ mongoose.connect(process.env.MONGO).then(() => {
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter); // includes /google, /google/callback
 app.use('/api/admin', adminRouter);
+app.use('/api/image',imageRouter);
 
-// ========== HEALTH CHECK ==========
-app.get('/health', (req, res) => {
-  res.send('🚀 Server is running');
-});
 
-// ========== CLOUDINARY SIGNATURE ==========
-const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
-const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
-
-app.post('/generate-signature', (req, res) => {
-  const { public_id, timestamp } = req.body;
-
-  if (!public_id || !timestamp) {
-    return res.status(400).json({ error: 'public_id and timestamp are required.' });
-  }
-
-  try {
-    const signatureString = `public_id=${public_id}&timestamp=${timestamp}${CLOUDINARY_API_SECRET}`;
-    const signature = crypto.createHash('sha1').update(signatureString).digest('hex');
-    res.json({ signature, api_key: CLOUDINARY_API_KEY });
-  } catch (err) {
-    console.error('Signature generation error:', err);
-    res.status(500).json({ error: 'Failed to generate signature.' });
-  }
-});
 
 // ========== ERROR HANDLER ==========
 app.use((err, req, res, next) => {

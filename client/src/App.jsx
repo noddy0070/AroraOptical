@@ -18,7 +18,7 @@ import React,{useState,useEffect} from "react";
 import DashBoard from "./pages/Admin/Dashboard.jsx";
 import Products from "./pages/Admin/Products/Products.jsx";
 import Shopping from "./pages/Admin/Shopping.jsx";
-import User from "./pages/Admin/User.jsx";
+import User from "./pages/Admin/Users/User.jsx";
 import Trending from "./pages/Admin/Trending.jsx";
 import Search from "./pages/Admin/Search.jsx";
 import Home2 from './pages/Admin/Home.jsx';
@@ -30,7 +30,9 @@ import ShippingPolicy from "./pages/Policies/ShippingPolicy.jsx";
 import Footer from "./components/footer.jsx";
 import Attributes from "./pages/Admin/Attributes.jsx";
 import {ProtectedRoute} from "./providers/RoutesProvider.jsx";
-
+import EditProduct from "./pages/Admin/Products/EditProduct.jsx";
+import AddUser from "./pages/Admin/Users/AddUser.jsx";
+import ViewUser from './pages/Admin/Users/ViewUser.jsx';
 
 const Layout = () => {
   const location = useLocation();
@@ -179,8 +181,12 @@ export default function App() {
             <Route index element={<Home2 />} /> {/* Default route when /Admin/Dashboard is visited */}
             <Route path="products" element={<Products />} />
             <Route path="add-product" element={<AddProduct />} />
+            <Route path="edit-product/:id" element={<EditProduct/>} />
             <Route path="orders" element={<Shopping />} />
             <Route path="user" element={<User />} />
+            <Route path='add-user' element={<AddUser/>}/>
+            <Route path="view-user/:id" element={<ViewUser/>} />
+            
             <Route path="analytics" element={<Trending />} />
             <Route path="search" element={<Search />} />
             <Route path="attributes" element={<Attributes />} />

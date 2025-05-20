@@ -1,19 +1,17 @@
 import { useNavigate } from "react-router";
 import { useState,useRef,useEffect } from "react";
-import Table from "../AnimatedElemetsGraphs/ProductsTable";
+import Table from "../AnimatedElemetsGraphs/UsersTable";
 import { TitleButton } from "@/components/button";
 import SearchIcon2 from '../../../assets/images/icons/SearchIcon.svg'
 import axios from "axios";
 import { baseURL } from "@/url";
-
-
-const Products=()=>{
-    const [productsPerPage, setProductsPerPage] = useState(10);
+const User=()=>{
+    const [usersPerPage, setUsersPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const viewPerPage=[10,25,50]
     const inputRef = useRef(null);
     const [search, setSearch] = useState('');
-    const [products, setProducts] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const handleChangeSearch = () => {
       const value = inputRef.current.value; // Access the input value through the ref
@@ -23,48 +21,47 @@ const Products=()=>{
 
 
     useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-products`)
+        axios.get(`${baseURL}/api/admin/get-users`)
           .then((res) => {
-            setProducts(res.data.products);
+            setUsers(res.data.users);
             console.log(res.data);
           })
           .catch((err) => {
-            console.error('Failed to fetch products:', err);
+            console.error('Failed to fetch users:', err);
           });
-      }, [productsPerPage,currentPage]);
+      }, [usersPerPage,currentPage]);
 
-    const deleteProduct = async (productIc) => {
-      if (!window.confirm('Are you sure you want to delete this Product?')) {
+    const deleteUser = async (userIc) => {
+      if (!window.confirm('Are you sure you want to delete this User?')) {
         return;
       }
     
       try {
-        const response = await axios.delete(`http://localhost:3000/api/admin/delete-product/${productIc}`); // adapt your API endpoint
+        const response = await axios.delete(`http://localhost:3000/api/admin/delete-user/${userIc}`); // adapt your API endpoint
     
         if (response.status === 200||response.status === 201) {
-          alert('Product deleted successfully!');
-          axios.get(`http://localhost:3000/api/admin/get-products`).then((res) => {setProducts(res.data.products);})
-          .catch((err) => {console.error('Failed to fetch products:', err);});
+          alert('User deleted successfully!');
+          axios.get(`http://localhost:3000/api/admin/get-users`).then((res) => {setUsers(res.data.users);})
+          .catch((err) => {console.error('Failed to fetch users:', err);});
         } else {
-          alert('Failed to delete Product.');
+          alert('Failed to delete User.');
         }
       } catch (error) {
-        console.error('Error deleting Product:', error);
-        alert('Server error while deleting Product.');
+        console.error('Error deleting User:', error);
+        alert('Server error while deleting User.');
       }
     };
       
     const navigate = useNavigate();
-    console.log(products);
-    // console.log(productsPerPage);
+    console.log(users);
     return(
-        <div className="w-full px-[2.25vw] py-[2.25vw] flex flex-col gap-[5.5vw] font-roboto ">
-            <div className="shadow-adminShadow w-full bg-white">
+        <div className="w-full px-[2.25vw] py-[2.25vw] flex flex-col gap-[5.5vw] font-roboto">
+            <div className="shadow-adminShadow w-full">
                 <div className="flex  flex-row py-[1.5vw] px-[1.875vw] w-full  items-center   ">
                     <p className="font-bold text-smallText">View</p>
                     <div>
                     <label className="text-smallText  font-bold ml-[1vw]"></label>
-                                <select name="category" value={productsPerPage} onChange={(e)=>setProductsPerPage(e.target.value)} className=" py-[.25vw] px-[.5vw] border-black rounded-[4px] text-regularText border">
+                                <select name="category" value={usersPerPage} onChange={(e)=>setUsersPerPage(e.target.value)} className=" py-[.25vw] px-[.5vw] border-black rounded-[4px] text-regularText border">
                                 {viewPerPage.map((category) => (
                                 <option key={category} value={category}>{category}</option>
                                 ))}
@@ -77,14 +74,13 @@ const Products=()=>{
                                         onBlur={(e) => { if (e.target.value.trim() === '') {e.target.value = 'Search Here';}}}/>
                                       </div>
                     <div className="ml-auto"> 
-                    <TitleButton  onClick={()=>navigate('/Admin/add-product')} btnHeight={4.25} btnRadius={3} btnWidth={16}  btnTitle={"Add Product +"}/> 
+                    <TitleButton  onClick={()=>navigate('/Admin/add-user')} btnHeight={4.25} btnRadius={3} btnWidth={16}  btnTitle={"Add User +"}/> 
                     </div>
                 </div>
 
-                <Table currentPage={currentPage} setCurrentPage={setCurrentPage} itemsPerPage={productsPerPage} tableData={products} deleteProduct={deleteProduct}  />
+                <Table currentPage={currentPage} setCurrentPage={setCurrentPage} itemsPerPage={usersPerPage} tableData={users} deleteItem={deleteUser}  />
                 </div>
-        </div>
-    )
+        </div>)
 }
 
-export default Products;
+export default User;

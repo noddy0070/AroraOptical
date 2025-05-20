@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import axios from 'axios';
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dohfbsepn/image/upload';
 const CLOUDINARY_UPLOAD_PRESET = 'AroraOpticals'; // Set this in your Cloudinary dashboard.
-const CLOUDINARY_DELETE_URL = 'https://api.cloudinary.com/v1_1/dohfbsepn/image/destroy';
-const CLOUDINARY_API_SECRET = "mGc4mgrnhkCrBuvXaN2vFnt5f_s";
-const CLOUDINARY_API_KEY = '192436767777992';
+// const CLOUDINARY_DELETE_URL = 'https://api.cloudinary.com/v1_1/dohfbsepn/image/destroy';
+// const CLOUDINARY_API_SECRET = "mGc4mgrnhkCrBuvXaN2vFnt5f_s";
+// const CLOUDINARY_API_KEY = '192436767777992';
 import CollectionSvg from '../assets/images/icons/collectionSvg.svg'
 
 const ImageUpload = ({uploadedImages,setUploadedImages}) => {
@@ -31,23 +31,40 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
     setSelectedFiles(newFiles);
   };
 
+  const extractPublicIdFromUrl=(url)=> {
+  try {
+    const urlObj = new URL(url);
+    const parts = urlObj.pathname.split('/'); // Split by '/'
+    const fileName = parts.pop(); // Get 't8jn7rgvzfpc5tuz2qx2.png'
+    const publicId = fileName.replace(/\.[^/.]+$/, ''); // strip extension
+    console.log("publicId",publicId);
+    return publicId;
+  } catch {
+    return null;
+  }
 
-  const deleteImageFromCloudinary = async (publicId) => {
+}
+
+
+  const deleteImageFromCloudinary = async (image_url) => {
     try {
       const timestamp = Math.floor(Date.now() / 1000);
-  
+      const publicId= extractPublicIdFromUrl(image_url);
+      console.log(publicId);
       // 🔍 Check if the server is reachable
-      await axios.get('http://localhost:3000/health').catch(() => {
+      await axios.get('http://localhost:3000/api/image/health').catch(() => {
         throw new Error('⚠️ Backend server is not running. Start the server before making requests.');
       });
-  
+      
       // 🔑 Fetch signature from your backend
-      const signatureResponse = await axios.post('http://localhost:3000/generate-signature', {
+      
+      const signatureResponse = await axios.post('http://localhost:3000/api/image/generate-signature', {
         public_id: publicId,
         timestamp,
       });
   
       const { signature, api_key } = signatureResponse.data;
+      console.log(signature,api_key);
   
       if (!signature || !api_key) {
         alert('❌ Failed to get signature. Please check the server response.');
@@ -61,19 +78,18 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
       formData.append('signature', signature);
       formData.append('api_key', api_key);
   
-      const deleteResponse = await axios.post(
-        'https://api.cloudinary.com/v1_1/dohfbsepn/image/destroy',
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
-  
+        console.log("id",publicId);
+      const deleteResponse =await axios.post('http://localhost:3000/api/image/delete-image', { public_id: publicId });
+
+      console.log(deleteResponse.data);
       if (deleteResponse.data.result === 'ok') {
         alert('✅ Image deleted successfully!');
         setUploadedImages((prevImages) =>
-          prevImages.filter((image) => image.public_id !== publicId)
+          prevImages.filter((image) => image !== image_url)
         );
         setUploadSuccess("Image Deleted Successfully");
       } else {
+        
         alert('❌ Failed to delete image.');
       }
     } catch (error) {
@@ -99,10 +115,7 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 
-        uploadedImagesList.push({
-          url: response.data.secure_url,
-          public_id: response.data.public_id,
-        });
+        uploadedImagesList.push(response.data.secure_url);
       }
       setUploadedImages((prevImages) => [...prevImages, ...uploadedImagesList]);
       // setUploadedImages(uploadedImagesList);
@@ -115,7 +128,9 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
       setUploading(false);
     }
   };
-// console.log(uploadedImages)
+console.log(uploadedImages)
+  
+
   return (
     <div className=" bg-white text-black  rounded-[.5vw] flex flex-col gap-[1vw]">
       <h2 className="text-mediumText font-bold text-left">Upload Images</h2>
@@ -124,15 +139,15 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
             <div>
               <p className="text-smallText text-gray-500 font-bold text-left mb-[.5vw]">Uploaded Images</p>
               <div className="flex flex-wrap gap-[1vw]">
-                {uploadedImages.map(({ url, public_id }, index) => (
+                {uploadedImages.map((image, index) => (
                   <div key={index} className="relative border-dashed border-2 border-gray-300 rounded-[.5vw]">
                     <img
-                      src={url}
+                      src={image}
                       alt={`Uploaded ${index + 1}`}
                       className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw]"
                     />
                     <button
-                      onClick={() => deleteImageFromCloudinary(public_id)}
+                      onClick={() => deleteImageFromCloudinary(image)}
                       className="absolute top-1 right-1 text-red-500 font-bold bg-white rounded-full w-[1.5vw] h-[1.5vw] shadow"
                     >
                       ×

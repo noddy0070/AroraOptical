@@ -1,6 +1,6 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '@/redux/slice/authSlice';
 import axios from "axios";
 import LoginImg from '../../assets/images/LoginImg.png'
@@ -14,6 +14,7 @@ export default function Login(){
     const dispatch=useDispatch();
     const [error, setError] = useState('');
     const [loading,setLoading] = useState(false);
+    const {user} =useSelector((state)=>state.auth);
 
     console.log(formData);
     const handleSubmit=async(e)=>{
@@ -35,9 +36,8 @@ export default function Login(){
                 return;
             }
             setError('');
-            dispatch(loginSuccess({ user: res.data.user }));
-            navigate('/');
-            
+            dispatch(loginSuccess({ user: res.data.message }))
+            navigate('/');            
         }catch(error){
             setError("Invalid Credentials");
             console.log(error);
@@ -45,6 +45,8 @@ export default function Login(){
         setLoading(false);
         
     }
+
+
     // const handleGoogleBtn=async(e)=>{
     //     setLoading(true);
     //     try{

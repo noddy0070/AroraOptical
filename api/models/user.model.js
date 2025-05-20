@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         default:null
     },
+    blocked:{
+        type:String,
+        default:false
+    },
     // Cart items: Array of products with quantity
     cart: [
         {

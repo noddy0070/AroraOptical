@@ -3,11 +3,15 @@ import { useNavigate } from "react-router";
 import { Size,Shape,Type,Colors  ,Categories,Material,Brand  } from './../../../data/glassesInformationData'
 import ImageUpload from "@/components/ImageFunctionality";
 import axios from "axios";
+import { ArrayInputField, AttributeSection, FormField } from "@/components/ProductFields";
+import { baseURL } from "@/url";
 
 const defaultForm = {
   modelName: '',
   modelTitle: '',
   modelCode:'',
+  brand:'',
+  isSellable:'',
   category: '',
   gender: '',
   taxRate: '',
@@ -86,7 +90,7 @@ const AddProduct=()=>{
         console.log("Started submitting product...")
       
         try {
-          const response = await axios.post('http://localhost:3000/api/admin/add-product', form);
+          const response = await axios.post(`${baseURL}/api/admin/add-product`, form);
           if (response.status === 200 || response.status === 201) {
             alert('Product added successfully!');
             setForm(defaultForm);
@@ -103,13 +107,13 @@ const AddProduct=()=>{
       useEffect(() => {
         setForm((prev) => ({
           ...prev,
-          images: uploadedImages.map((image) => image.url), 
+          images: uploadedImages, 
         }));
       }, [uploadedImages]); 
 
       // Gets attributes from server to show in add products
       useEffect(() => {
-        axios.get(`http://localhost:3000/api/admin/get-attributes`)
+        axios.get(`${baseURL}/api/admin/get-attributes`)
         .then((res) => {
           setAttributes(res.data);
           distributeAttributes(res.data);
@@ -139,6 +143,7 @@ const AddProduct=()=>{
         setLensAttributes(lenses);
         setGeneralAttributes(generals);
       };
+      console.log("form", form);
     
       console.log(form)
      
@@ -154,10 +159,11 @@ const AddProduct=()=>{
                     <FormField label="Model Title" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
                     <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
                     <FormField label="Model Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
+                    <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={Brand} />
                     
                     <div className="grid grid-cols-2 gap-[1vw]">
                       <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
-                      <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={["Male", "Female", "Other"]} />
+                      <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={["Male", "Female", "Unisex", "Other"]} />
                     </div>
 
                     <FormField label="Description" name="description" type="textarea" value={form.description} onChange={handleChange} />
@@ -165,6 +171,8 @@ const AddProduct=()=>{
                     <FormField label="Tax Rate" name="taxRate" value={form.taxRate} onChange={handleChange} />
                     <FormField label="Discount" name="discount" value={form.discount} onChange={handleChange} />
                     <FormField label="Advertising Hashtags" name="hashtags" value={form.hashtags} onChange={handleChange} />
+                    <FormField label="Sellable" name="isSellable" value={form.isSellable} onChange={handleChange} options={["true","false"]} />
+
                   </div>
 
                   {/* Frame Attribute */}
@@ -207,70 +215,3 @@ const AddProduct=()=>{
 
 export default AddProduct;
 
-const FormField = ({ label, name, type = "text", value, onChange, placeholder = "Value", options }) => (
-  <div>
-    <label className="text-mediumText font-bold">{label}</label>
-    {options ? (
-      <select name={name} value={value} onChange={onChange}
-        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border" >
-        <option value="">Select {label}</option>
-        {options.map((opt) => (
-          <option key={opt} value={opt}>{opt}</option>
-        ))}
-      </select>
-    ) : type === "textarea" ? (
-      <textarea name={name} placeholder={placeholder} value={value} onChange={onChange}
-        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
-    ) : (
-      <input type={type} name={name} placeholder={placeholder} value={value} onChange={onChange}
-        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
-    )}
-  </div>
-);
-
-const AttributeSection = ({ title, attributes, formKey, form, handleChange }) => {
-  const getAttributeValue = (name) =>
-    form[formKey]?.find((attr) => attr.name === name)?.value || "";
-
-  if (!attributes.length) return null;
-
-  return (
-    <>
-      <h6 className="text-h5Text font-bold mb-[.5vw]">{title}</h6>
-      <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
-        {attributes.map((attribute, index) => (
-          <div key={index} className="gap-[1vw] items-center">
-            <label className="text-mediumText font-bold">{attribute.name}</label>
-            {attribute.attributeValueType === "Single" ? (
-              <input name={formKey} type="text" placeholder="Value" value={getAttributeValue(attribute.name)}
-                onChange={(e) => handleChange(e, index, attribute.name)}
-                className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
-            ) : (
-              <select name={formKey} value={getAttributeValue(attribute.name)}
-                onChange={(e) => handleChange(e, index, attribute.name)} style={{ maxHeight: "12.5vw" }}
-                className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border max-h-[12.5vw] overflow-y-auto">
-                <option value="">Select {attribute.name}</option>
-                {attribute.attributeValues.map((val) => (
-                  <option key={val} value={val}>
-                    {val}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-        ))}
-      </div>
-    </>
-  );
-};
-
-const ArrayInputField = ({ label, name, values, handleChange }) => (
-  <div className="col-span-1">
-    <label className="text-mediumText font-bold">{label}</label>
-    {values.map((value, index) => (
-      <input key={index} type="text" name={name} value={value || ''} onChange={(e) => handleChange(e, index)}
-        placeholder={`Enter ${label.toLowerCase()}`}
-        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
-    ))}
-  </div>
-);

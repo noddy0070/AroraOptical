@@ -3,11 +3,12 @@ import { useParams } from 'react-router';
 import ProductDescription from './productDescription';
 import CustomerReview from './CustomerReview';
 import axios from 'axios';
+import { baseURL } from '@/url';
 export default function Product(){
     const { id } = useParams();
     const [product,setProduct]=useState(null);
     useEffect(()=>{
-        axios.get(`http://localhost:3000/api/admin/get-single-product/${id}`)
+        axios.get(`${baseURL}/api/admin/get-single-product/${id}`)
         .then((res) => {
           setProduct(res.data);
             })
@@ -15,12 +16,12 @@ export default function Product(){
           console.error('Failed to fetch products:', err);
         });
     },[id])
-    console.log("product",product)
+
     return (
         
         product==null?<Spinner/>:
         <div className='py-[4vw] mx-[2vw] font-roboto'>
-            <p className='px-[4vw] mb-[1.5vw] text-[.875rem]'>Root Address</p>
+            <p className=' mb-[1.5vw] text-[.875rem]'>Root Address</p>
             <ProductDescription productToDisplay={product}/>
             {/* <CustomerReview/> */}
         </div>

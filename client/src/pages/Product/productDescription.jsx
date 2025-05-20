@@ -6,6 +6,8 @@ import './product.css';
 import { IconButton } from '../../components/button';
 import { renderStars } from '@/components/RenderStarts';
 import axios from 'axios';
+import { formatINR } from '@/components/IntToPrice';
+import { baseURL } from '@/url';
 const product={
     name: 'Product Name',
     model: 'Model Name',
@@ -101,7 +103,7 @@ export default function ProductDescription({productToDisplay}){
     const [productsModel,setProductsModel] =useState([]);
     
     useEffect(()=>{
-        axios.post(`http://localhost:3000/api/admin/get-products-color`,{modelName:productToDisplay.modelName})
+        axios.post(`${baseURL}/api/admin/get-products-color`,{modelName:productToDisplay.modelName})
         .then((res) => {
             setProductsModel(res.data.message);
             })
@@ -111,15 +113,16 @@ export default function ProductDescription({productToDisplay}){
     },[productToDisplay])
     
 
-    //   console.log(productToDisplay)
+      console.log(productToDisplay.frameAttributes.length>0)
     return (
+        <div >
         <div className='font-roboto text-regularText flex  flex-row lg:px-[2vw] gap-[1.5vw]'>
 
             {/* Product Images */}
             <div className='flex flex-col w-[53.6875vw] gap-[1.5vw]'> 
             <div className='flex flex-row h-[47.75vw]  w-full gap-[1.125vw]'>
                 {/* Thumbnails */}
-                <div className="flex flex-col h-[46.75vw] overflow-y-auto gap-[1.125vw] hide-scrollbar">
+                <div className="flex flex-col h-[46.75vw] overflow-y-auto gap-[1vw] hide-scrollbar">
                     {images.map((img, index) => {
                     // ❗ Only hide the selected image (not hovered)
 
@@ -127,7 +130,7 @@ export default function ProductDescription({productToDisplay}){
                         <img
                                 key={index}
                                 src={img}
-                                className={`h-[7vw] w-[6.875vw] rounded-[10px] cursor-pointer object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
+                                className={`h-[7vw] w-[6.875vw]  rounded-[10px] cursor-pointer object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                                 onClick={() => setSelectedIndex(index)}
@@ -155,60 +158,6 @@ export default function ProductDescription({productToDisplay}){
 
                 
                 </div>
-
-            <div className='w-full flex flex-col gap-[1vw]'>
-                <div>
-                <p className='font-bold text-mediumText text-center mt-[1.5vw]'> Buying Options</p>
-                <p className='text-smallText text-center'>Available at Checkout*</p>
-                </div>
-
-                <div className='flex flex-row w-full gap-[1.5vw]'>
-                {buyingOptions.map((option,index)=>(
-                    <div key={index} className='relative w-[16.125vw] h-[18.75vw] rounded-[1.1vw] overflow-hidden'>
-                    <img className='w-full h-full' src={option.img}/>
-                    <IconButton btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[.75vw] top-[.75vw]'/>
-                    <div className='absolute h-[7.5vw]    bottom-[.75vw] left-[.75vw] w-[15.125vw]'>
-                        <h6 className='mb-[1vw] leading-[120%] font-dyeLine font-bold text-h6Text'>
-                            {option.title}
-                        </h6>
-                        <span className='hidden lg:block leading-[150%] font-roboto text-regularText'>
-                            {option.description}
-                        </span>
-
-                    </div>
-                </div>
-                ))}
-                
-                </div>
-                
-            </div>
-
-            <div className='w-full flex flex-col gap-[1vw]'>
-                <div>
-                <p className='font-bold text-mediumText text-center mt-[1.5vw]'> Lens Options</p>
-                <p className='text-smallText text-center'>Available at Checkout*</p>
-                </div>
-
-                <div className='flex flex-row w-full gap-[1.5vw]'>
-                {lensOptions.map((option,index)=>(
-                    <div key={index} className='relative w-[16.125vw] h-[18.75vw] rounded-[1.1vw] overflow-hidden'>
-                    <img className='w-full h-full' src={option.img}/>
-                    <IconButton btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[.75vw] top-[.75vw]'/>
-                    <div className='absolute h-[7.5vw]    bottom-[.75vw] left-[.75vw] w-[15.125vw]'>
-                        <h6 className='mb-[1vw] leading-[120%] font-dyeLine font-bold text-h6Text'>
-                            {option.title}
-                        </h6>
-                        <span className='hidden lg:block leading-[150%] font-roboto text-regularText'>
-                            {option.description}
-                        </span>
-
-                    </div>
-                </div>
-                ))}
-                
-                </div>
-                
-            </div>
             </div>
 
             {/* Product Description */}
@@ -218,10 +167,8 @@ export default function ProductDescription({productToDisplay}){
                 <div>
                     <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelTitle}</h3>
                     <span className='leading-[150%]'>{productToDisplay.modelCode} {" - "} {productToDisplay.modelName}</span>
-                    <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR',
-                    minimumFractionDigits: 2,}).format(productToDisplay.price)}</span> {" "}
-                     <span>{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR',
-                    minimumFractionDigits: 2,}).format(productToDisplay.discount)}</span> </h5>
+                    <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{formatINR(productToDisplay.price)}</span> {" "}
+                     <span>{formatINR(productToDisplay.discount)}</span> </h5>
                 </div>
                 
                 {/* Rating block */}
@@ -278,7 +225,6 @@ export default function ProductDescription({productToDisplay}){
 
                 {/* Variant block */}
                 <div className='flex flex-col gap-[.5vw]'>
-                        {/* <span>Variant</span> */}
                         <div className='flex flex-row gap-[.5vw] overflow-x-auto'>
                             {productsModel.map((variant,index)=>{
                                 const colorAttribute = variant.frameAttributes.find(attr => attr.name === "Color");
@@ -302,83 +248,66 @@ export default function ProductDescription({productToDisplay}){
                         </div>
                 </div>
 
-                {/* Quantity block */}
-                <div className='flex flex-col gap-[.5vw]'>
-                    <span>Quantity</span>
-                    <input type="number" ref={quantityInputRef}  onChange={handleQuantityChange}  value={selectedQuantity} className=' p-[.75vw] border-[1px] w-[4vw] border-black focus:outline-none'></input>
-                </div>
                 {/* Buy and add to cart button */}
                 <div className='flex flex-row gap-[1vw]'>
-                     <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey'>Buy Now</button>
-                     <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery'>Add to cart </button>
+                     <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey'>Add to Cart</button>
+                     <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery'>Select Lenses </button>
                 </div>
                 {/* Notice  */}
                 <p className='text-center text-smallText'>Free shipping over Rs. 999</p>
             </div>
-            <div className='border-y-[1px] border-black'>
-                <div className='py-[1vw] flex flex-row items-center ' onClick={()=>setIsDetailClicked(!isDetailClicked)}>
-                            <p className='text-mediumText font-bold'>Details</p>
-                            <div className="ml-auto cursor-pointer  rotate-180  transform transition-transform duration-300 " style={{ transform:isDetailClicked? 'rotate(180deg)':'rotate(0deg)' }}  >
-                            <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
-                            </svg>
 
-                            </div>
-                </div>
-                <div className={`${isDetailClicked==true?"content show":"content "}`}>
-                <p className='text-regularText  leading-[150%]'>
-                    {product.productDetail}
-                    <br/>
-                    <br/>
-                </p>
-                <p className='text-mediumText  font-semibold leading-[150%]'>Product Specification</p>
-                <ul className='text-regularText list-roman-left leading-[150%] pb-[1vw]'>
-                    {product.productSpecifications.map((specification,index)=>(
-                        <li key={index} className='text-regularText leading-[150%]'>{specification}</li>
-                    ))}
-                </ul>
-                </div>
+
             </div>
+        </div>
+        <div className='px-[4vw] flex flex-col gap-[2.5vw] '>
+            <h2 className='font-dyeLine text-h3Text font-semibold'>Product Detail</h2>
+            {
+                productToDisplay.frameAttributes.length>0 && 
+                <div>
 
-            <div className='border-b-[1px] border-black'>
-                <div className='py-[1vw] flex flex-row items-center ' onClick={()=>setIsShipingClicked(!isShipingClicked)}>
-                            <p className='text-mediumText font-bold'>Shipping</p>
-                            <div className="ml-auto cursor-pointer  rotate-180  transform transition-transform duration-300 " style={{ transform:isShipingClicked? 'rotate(180deg)':'rotate(0deg)' }}  >
-                            <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
-                            </svg>
+                    <h4 className='text-h4Text font-dyeLine font-semibold mb-[1vw]'>Frame</h4>
+                    <div className='flex flex-wrap gap-[2vw]'>
+                        {productToDisplay.frameAttributes.map((item,index)=>(
+                            <div className='text-regularText' key={index}>
+                                <p>{item.name}</p>
+                                <p className='font-semibold'>{item.value}</p>
+                                </div>
+                        ))}
+                    </div>
+                    </div>
+            }
+            {
+                productToDisplay.lensAttributes.length>0 && 
+                <div>
 
-                            </div>
-                </div>
-                <div className={`${isShipingClicked==true?"content show":"content "}`}>
-                <p className='text-regularText  leading-[150%]'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum 
-                    <br/>
-                    <br/>
-                </p>
-                
-                </div>
-            </div>
+                    <h4 className='text-h4Text font-dyeLine font-semibold mb-[1vw]'>Lens</h4>
+                    <div className='flex flex-wrap gap-[2vw]'>
+                        {productToDisplay.lensAttributes.map((item,index)=>(
+                            <div className='text-regularText' key={index}>
+                                <p>{item.name}</p>
+                                <p className='font-semibold'>{item.value}</p>
+                                </div>
+                        ))}
+                    </div>
+                    </div>
+            }
+            {
+                productToDisplay.generalAttributes.length>0 && 
+                <div>
 
-            <div className='border-b-[1px] border-black'>
-                <div className='py-[1vw] flex flex-row items-center ' onClick={()=>setIsReturnClicked(!isReturnClicked)}>
-                            <p className='text-mediumText font-bold'>Returns</p>
-                            <div className="ml-auto cursor-pointer  rotate-180  transform transition-transform duration-300 " style={{ transform:isReturnClicked? 'rotate(180deg)':'rotate(0deg)' }}  >
-                            <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
-                            </svg>
-
-                            </div>
-                </div>
-                <div className={`${isReturnClicked==true?"content show":"content "}`}>
-                <p className='text-regularText  leading-[150%]'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum 
-                    <br/>
-                    <br/>
-                </p>
-                </div>
-            </div>
-            </div>
+                    <h4 className='text-h4Text font-dyeLine font-semibold mb-[1vw]'>General</h4>
+                    <div className='flex flex-wrap gap-[2vw]'>
+                        {productToDisplay.generalAttributes.map((item,index)=>(
+                            <div className='text-regularText' key={index}>
+                                <p>{item.name}</p>
+                                <p className='font-semibold'>{item.value}</p>
+                                </div>
+                        ))}
+                    </div>
+                    </div>
+            }
+        </div>
         </div>
 
     );

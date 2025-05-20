@@ -20,6 +20,7 @@ const Brand = [
     "Levis",
     "Ana Hickmann",
     "Dita Lancier",
+    "Dakley",
     "Mont Blanc",
     "Hugo",
     "Boss",
