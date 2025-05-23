@@ -3,6 +3,7 @@ import express from "express";
 import { addProduct,getProducts,getSingleProduct,getProductsColor,updateProduct,deleteProduct } from "../controllers/product.controller.js";
 import { addAttributes,getAttributes,deleteAttribute,editAttribute } from "../controllers/attributes.controller.js";
 import { getUsers,addUser,getUser } from "../controllers/user.controller.js";
+import { addPolicy,updatePolicy,getPolicy} from "../controllers/policy.controller.js";
 const router= express.Router();
 
 
@@ -26,5 +27,9 @@ router.get('/get-users',getUsers);
 router.post('/add-user',addUser);
 router.get('/get-user/:id',getUser);
 
+// Admin Control Over Policies
+router.post('/add-cancellation-policy',addPolicy)
+router.post('/update-policy/:id',updatePolicy);
+router.get('/get-policy/:id',getPolicy);
 
 export default router;

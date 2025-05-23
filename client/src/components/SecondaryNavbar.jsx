@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 
 export default function SecondaryNavbar () {
   const inputRef = useRef(null);
+  const [showShopDropDown, setShowShopDropDown] =useState(false);
   const [search, setSearch] = useState('');
   const {user,isAuthenticated} =useSelector((state)=>state.auth);
   const handleChange = () => {
@@ -30,84 +31,45 @@ export default function SecondaryNavbar () {
   const womenDropdown=['Category 1', 'Category 2', 'Category 3'];
     return (
       <nav className="w-full  bg-white relative md:sticky top-0 z-50 ">
-        <div className="flex whitespace-nowrap flex-row px-[2vw] md:py-[.75vw] md:h-[4.5vw]  items-center font-roboto text-regularText ">
+        <div className="relative flex  whitespace-nowrap flex-row px-[2vw] md:py-[.75vw] md:h-[4.5vw]  items-center font-roboto text-regularText ">
         
   
-        <div className=' flex flex-row w-full items-center gap-[2vw]'>
-          <div className='flex-row gap-[2vw] hidden md:flex'>
-            <div id="shopBtn" className="relative group">
-              <button className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
+        <div className='relative  flex flex-row w-full items-center gap-[2vw]'>
+          <div className='flex-row hidden md:flex'>
+              <button onMouseEnter={()=>{setShowShopDropDown(true)}} onMouseLeave={()=>{setShowShopDropDown(false)}} className="pr-[1vw] text-regularText py-[1vw] focus:outline-none hover:underline hover:text-gray-500">
                 Shop
               </button>
-              <div className="absolute left-0 mt-[.5vw] text-black hidden w-48 bg-white border border-gray-200 shadow-lg rounded-md group-hover:block">
-                <ul className="py-0 text-left">
-                  {shopDropdown.map((item) => (
-                    <TransitionLink key={item.to} to={item.to}>
-                      <li className="px-4 py-2 hover:bg-gray-100">{item.label}</li>
-                    </TransitionLink>
-                  ))}
-                </ul>
-              </div>
-            </div>
+              
 
-            <div id="menBtn" className="relative group">
-              <button className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
+              <button className="text-regularText px-[1vw] py-[1vw] focus:outline-none hover:underline hover:text-gray-500">
                 Men
               </button>
-              <div className="absolute left-0 mt-[.5vw] text-black hidden w-48 bg-white border border-gray-200 shadow-lg rounded-md group-hover:block">
-                <ul className="py-0">
-                  {menDropdown.map((category, index) => (
-                    <li key={index} className="px-4 py-2 hover:bg-gray-100">
-                      <a href={`#category${index + 1}`}>{category}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+             
                           
-            <div id="womenBtn" className="relative group">
-              <button className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
+              <button className="text-regularText px-[1vw] py-[1vw] focus:outline-none hover:underline hover:text-gray-500">
                 Women
               </button>
-              <div className="absolute left-0 mt-[.5vw] text-black hidden w-48 bg-white border border-gray-200 shadow-lg rounded-md group-hover:block">
-                <ul className="py-0">
-                  {womenDropdown.map((category, index) => (
-                    <li key={index} className="px-0 py-2 hover:bg-gray-100">
-                      <a href={`#category${index + 1}`}>{category}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+              
 
 
-            <div id="btandbtn" className="relative group">
-              <button className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
+              <button className="text-regularText px-[1vw] py-[1vw] focus:outline-none hover:underline hover:text-gray-500">
                 Brands
               </button>
-              <div className="absolute left-0 mt-[.5vw] text-black hidden w-48 bg-white border border-gray-200 shadow-lg rounded-md group-hover:block">
-                <ul className="py-0">
-                  {['Category 1', 'Category 2', 'Category 3'].map((category, index) => (
-                    <li key={index} className="px-4 py-2 hover:bg-gray-100">
-                      <a href={`#category${index + 1}`}>{category}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+             
 
-            <button  className="text-regularText focus:outline-none hover:text-gray-500">
+            <button  className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
               Free Eye Test
             </button>
 
-            <button  className="text-regularText focus:outline-none hover:text-gray-500">
+            <button  className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
               Blog
             </button>
             
-            <button  className="text-regularText focus:outline-none hover:text-gray-500">
+            <button  className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
               About Us
             </button>
           </div>
+        
           
           <div className='pt-[2vw] md:pt-0 md:ml-auto w-full md:w-auto gap-[2vw] md:gap-[1.5vw] flex md:flex-row flex-col-reverse items-center'>
             <div className=' flex flex-row gap-[2vw] md:gap-[.5vw] ml-auto w-full md:w-[19vw] lg:w-[17.5vw] items-center text-gray-600 font-roboto font-bold text-[14px] md:text-smallText h-[12vw] md:h-[3vw] px-[3vw] md:px-[.75vw] rounded-[10vw] md:rounded-[2.5vw] border-[1px] md:shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] shadow-[0px_2px_10px_rgba(0,_0,_0,_0.25)]'>
@@ -153,6 +115,15 @@ export default function SecondaryNavbar () {
           </div>
               
         </div>
+         {showShopDropDown && <div onMouseEnter={()=>{setShowShopDropDown(true)}} className="absolute w-full left-0 top-[4vw]  z-10 text-black  bg-[#FAFAFA] border border-gray-200 shadow-lg block">
+                <ul className="py-0 text-left">
+                  {shopDropdown.map((item) => (
+                    <TransitionLink key={item.to} to={item.to}>
+                      <li className="px-4 py-2 hover:bg-gray-100">{item.label}</li>
+                    </TransitionLink>
+                  ))}
+                </ul>
+              </div>}
         </div>
       </nav>
     );

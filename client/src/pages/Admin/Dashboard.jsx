@@ -49,10 +49,9 @@ const settingsSection = [
 const supportSection = [
   { id: 'Help Center', path: ['/'], icon: HelpCenterIcon, subSections: [] },
   { id: 'FAQs', path: ['/Admin/faqs'], icon: FAQIcon, subSections: [] },
-  { id: 'Privacy Policy', path: ['/Admin/terms'], icon: PrivacyPolicyIcon, subSections: [] },
-  { id: 'Shipping and Delivery', path: ['/Admin/contact'], icon: ShippingAndDeliveryIcon, subSections: [] },
-  { id: 'Cancellation Policy', path: ['/Admin/support'], icon: CancellationPolicyIcon, subSections: [] },
-  { id: 'Terms & Condition', path: ['/Admin/support'], icon: TermsAndConditionIcon, subSections: [] },
+  { id: 'Privacy Policy', path: ['/Admin/privacy-policy'], icon: PrivacyPolicyIcon, subSections: [] },
+  { id: 'Shipping and Delivery', path: ['/Admin/shipping-policy'], icon: ShippingAndDeliveryIcon, subSections: [] },
+  { id: 'Cancellation Policy', path: ['/Admin/cancellation-policy'], icon: CancellationPolicyIcon, subSections: [] },
 ];
 
 const mainSections = [

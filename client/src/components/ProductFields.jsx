@@ -66,3 +66,18 @@ export const ArrayInputField = ({ label, name, values=[], handleChange }) => (
   </div>
 );
 
+
+export const ArrayInputFieldPolicies = ({ label, name, values=[], handleChange }) => (
+  <div className="col-span-1">
+    {values.map((value, index) => (
+      <>
+    <label className="text-mediumText font-bold">{label } {index+1}</label>
+
+      <textarea key={index} type="text" name={name} value={value || ''} onChange={(e) => handleChange(e, index)}
+        placeholder={`Enter ${label.toLowerCase()}`}
+        className="w-full mt-[.5vw] py-[.75vw] px-[1vw] bg-adminInputBoxColor text-regularText rounded-[.45vw] border"/>
+      </>
+    ))}
+  </div>
+);
+

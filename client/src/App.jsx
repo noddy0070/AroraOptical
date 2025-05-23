@@ -33,6 +33,9 @@ import {ProtectedRoute} from "./providers/RoutesProvider.jsx";
 import EditProduct from "./pages/Admin/Products/EditProduct.jsx";
 import AddUser from "./pages/Admin/Users/AddUser.jsx";
 import ViewUser from './pages/Admin/Users/ViewUser.jsx';
+import CancellationPolicy from "./pages/Admin/CancellationPolicy.jsx";
+import PrivacyPolicyAdmin from "./pages/Admin/PrivacyPolicy.jsx";
+import ShippingPolicyAdmin from "./pages/Admin/ShippingPolicy.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -190,6 +193,9 @@ export default function App() {
             <Route path="analytics" element={<Trending />} />
             <Route path="search" element={<Search />} />
             <Route path="attributes" element={<Attributes />} />
+            <Route path="cancellation-policy" element={<CancellationPolicy/>}/>
+            <Route path="privacy-policy" element={<PrivacyPolicyAdmin/>}/>
+            <Route path="shipping-policy" element={<ShippingPolicyAdmin/>}/>
             <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
       </Route>
       </Route>
