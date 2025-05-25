@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import { useNavigate } from "react-router";
-import { Size,Shape,Type,Colors  ,Categories,Material,Brand  } from './../../../data/glassesInformationData'
+import { Size,Shape,Type,Colors  ,Categories,Material,Brand,Classification  } from './../../../data/glassesInformationData'
 import ImageUpload from "@/components/ImageFunctionality";
 import axios from "axios";
 import { ArrayInputField, AttributeSection, FormField } from "@/components/ProductFields";
@@ -38,6 +38,46 @@ const AddProduct=()=>{
     const [generalAttributes, setGeneralAttributes] = useState([]);
     const [form, setForm] = useState(defaultForm);
 
+    // Function to handle removing an attribute
+    const handleRemoveAttribute = (attributeName, attributeType) => {
+      const formKey = `${attributeType.toLowerCase()}Attributes`;
+      setForm(prevForm => ({
+        ...prevForm,
+        [formKey]: prevForm[formKey].filter(attr => attr.name !== attributeName)
+      }));
+    };
+
+    // Function to handle adding an attribute
+    const handleAddAttribute = (attribute, attributeType) => {
+      const formKey = `${attributeType.toLowerCase()}Attributes`;
+      setForm(prevForm => ({
+        ...prevForm,
+        [formKey]: [...prevForm[formKey], { name: attribute.name, value: '' }]
+      }));
+    };
+
+    // Get currently used attributes for a specific type
+    const getUsedAttributes = (attributeType) => {
+      const formKey = `${attributeType.toLowerCase()}Attributes`;
+      return form[formKey].map(attr => ({
+        name: attr.name,
+        value: attr.value
+      }));
+    };
+
+    // Get available attributes for a specific type
+    const getAvailableAttributes = (attributeType) => {
+      switch(attributeType) {
+        case 'Frame':
+          return frameAttributes;
+        case 'Lens':
+          return lensAttributes;
+        case 'General':
+          return generalAttributes;
+        default:
+          return [];
+      }
+    };
 
       // Function used in handleChange to create a map value to store in lens, frame and general Attribute
       const updateAttributeArray = (prevArray, attrName, value) => {
@@ -163,7 +203,7 @@ const AddProduct=()=>{
                     
                     <div className="grid grid-cols-2 gap-[1vw]">
                       <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
-                      <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={["Male", "Female", "Unisex", "Other"]} />
+                      <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={Classification} />
                     </div>
 
                     <FormField label="Description" name="description" type="textarea" value={form.description} onChange={handleChange} />
@@ -176,16 +216,40 @@ const AddProduct=()=>{
                   </div>
 
                   {/* Frame Attribute */}
-                  <AttributeSection title="Frame Attributes" attributes={frameAttributes}
-                    formKey="frameAttributes" form={form} handleChange={handleChange}/>
+                  <AttributeSection 
+                    title="Frame Attributes" 
+                    attributes={getUsedAttributes('Frame')}
+                    formKey="frameAttributes" 
+                    form={form} 
+                    handleChange={handleChange}
+                    onRemoveAttribute={(name) => handleRemoveAttribute(name, 'Frame')}
+                    availableAttributes={getAvailableAttributes('Frame')}
+                    onAddAttribute={(attr) => handleAddAttribute(attr, 'Frame')}
+                  />
 
                   {/* Lens Attribute */}
-                  <AttributeSection title="Lens Attributes"attributes={lensAttributes} 
-                    formKey="lensAttributes" form={form} handleChange={handleChange}/>
+                  <AttributeSection 
+                    title="Lens Attributes"
+                    attributes={getUsedAttributes('Lens')}
+                    formKey="lensAttributes" 
+                    form={form} 
+                    handleChange={handleChange}
+                    onRemoveAttribute={(name) => handleRemoveAttribute(name, 'Lens')}
+                    availableAttributes={getAvailableAttributes('Lens')}
+                    onAddAttribute={(attr) => handleAddAttribute(attr, 'Lens')}
+                  />
 
                   {/* General Attribute */}
-                  <AttributeSection title="General Attributes" attributes={generalAttributes}
-                    formKey="generalAttributes" form={form} handleChange={handleChange}/>
+                  <AttributeSection 
+                    title="General Attributes"
+                    attributes={getUsedAttributes('General')}
+                    formKey="generalAttributes" 
+                    form={form} 
+                    handleChange={handleChange}
+                    onRemoveAttribute={(name) => handleRemoveAttribute(name, 'General')}
+                    availableAttributes={getAvailableAttributes('General')}
+                    onAddAttribute={(attr) => handleAddAttribute(attr, 'General')}
+                  />
                 </div>
                   
                 {/*Section Containing Image, Size and Stock Selection  */}

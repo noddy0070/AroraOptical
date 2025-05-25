@@ -100,8 +100,18 @@ export const login= async (req,res,next)=>{
 
 // POST /api/auth/logout  
 export const logout=async(req,res)=>{
-  res.clearCookie('token', { httpOnly: true, sameSite: 'Strict', secure: process.env.NODE_ENV === 'production' });
-  res.json({ message: 'Logged out' });
+  try {
+    console.log("Logout called");
+    res.clearCookie('token', { 
+      httpOnly: true, 
+      sameSite: 'Strict', 
+      secure: process.env.NODE_ENV === 'production' 
+    });
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ success: false, message: 'Failed to logout' });
+  }
 }
 
 // GET /api/auth/me

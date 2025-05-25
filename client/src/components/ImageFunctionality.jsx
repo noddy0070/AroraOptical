@@ -8,7 +8,7 @@ const CLOUDINARY_UPLOAD_PRESET = 'AroraOpticals'; // Set this in your Cloudinary
 // const CLOUDINARY_API_KEY = '192436767777992';
 import CollectionSvg from '../assets/images/icons/collectionSvg.svg'
 
-const ImageUpload = ({uploadedImages,setUploadedImages}) => {
+const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(null);
@@ -21,7 +21,7 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
       setUploadSuccess(null); // Reset success message
     }
   
-    // 🔄 Reset the input value to allow reselecting the same file
+    // Reset the input value to allow reselecting the same file
     e.target.value = '';
   };
 
@@ -118,7 +118,6 @@ const ImageUpload = ({uploadedImages,setUploadedImages}) => {
         uploadedImagesList.push(response.data.secure_url);
       }
       setUploadedImages((prevImages) => [...prevImages, ...uploadedImagesList]);
-      // setUploadedImages(uploadedImagesList);
       setUploadSuccess('Images uploaded successfully!');
       setSelectedFiles([]); // Clear selected files after upload
     } catch (err) {
@@ -147,7 +146,7 @@ console.log(uploadedImages)
                       className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw]"
                     />
                     <button
-                      onClick={() => deleteImageFromCloudinary(image)}
+                      onClick={() => onImageRemove ? onImageRemove(image) : setUploadedImages(prev => prev.filter(url => url !== image))}
                       className="absolute top-1 right-1 text-red-500 font-bold bg-white rounded-full w-[1.5vw] h-[1.5vw] shadow"
                     >
                       ×

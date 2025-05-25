@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import { useNavigate } from "react-router";
-import { Size,Shape,Type,Colors  ,Categories,Material,Brand  } from './../../../data/glassesInformationData'
+import { Size,Shape,Type,Colors  ,Categories,Material,Brand,Classification  } from './../../../data/glassesInformationData'
 import ImageUpload from "@/components/ImageFunctionality";
 import { ArrayInputField, AttributeSection, FormField } from "@/components/ProductFields";
 import axios from "axios";
@@ -38,13 +38,18 @@ const EditProduct=()=>{
     const [form, setForm] = useState(defaultForm);
     const { id } = useParams();
     const [product,setProduct]=useState(null);
+    const [attributes, setAttributes] = useState([]);
+    const [frameAttributes, setFrameAttributes] = useState([]);
+    const [lensAttributes, setLensAttributes] = useState([]);
+    const [generalAttributes, setGeneralAttributes] = useState([]);
+    const [deletedImages, setDeletedImages] = useState([]); // Track images pending deletion
 
     // Fetching current product details
     useEffect(()=>{
         axios.get(`${baseURL}/api/admin/get-single-product/${id}`)
         .then((res) => {
           setProduct(res.data);
-            })
+        })
         .catch((err) => {
           console.error('Failed to fetch products:', err);
         });
@@ -55,10 +60,84 @@ const EditProduct=()=>{
         if (product !== null) {
           setForm(product);
           setUploadedImages(product.images || []);
+          setDeletedImages([]); // Reset deleted images when product changes
         }
     },[product])
 
+    // Function to handle removing an attribute
+    const handleRemoveAttribute = (attributeName, attributeType) => {
+      const formKey = `${attributeType.toLowerCase()}Attributes`;
+      setForm(prevForm => ({
+        ...prevForm,
+        [formKey]: prevForm[formKey].filter(attr => attr.name !== attributeName)
+      }));
+    };
+
+    // Function to handle adding an attribute
+    const handleAddAttribute = (attribute, attributeType) => {
+      const formKey = `${attributeType.toLowerCase()}Attributes`;
+      setForm(prevForm => ({
+        ...prevForm,
+        [formKey]: [...prevForm[formKey], { name: attribute.name, value: '' }]
+      }));
+    };
+
+    // Get currently used attributes for a specific type
+    const getUsedAttributes = (attributeType) => {
+      const formKey = `${attributeType.toLowerCase()}Attributes`;
+      return form[formKey]?.map(attr => ({
+        name: attr.name,
+        value: attr.value
+      })) || [];
+    };
+
+    // Get available attributes for a specific type
+    const getAvailableAttributes = (attributeType) => {
+      switch(attributeType) {
+        case 'Frame':
+          return frameAttributes;
+        case 'Lens':
+          return lensAttributes;
+        case 'General':
+          return generalAttributes;
+        default:
+          return [];
+      }
+    };
+
+    // Gets attributes from server to show in add products
+    useEffect(() => {
+      axios.get(`${baseURL}/api/admin/get-attributes`)
+      .then((res) => {
+        setAttributes(res.data);
+        distributeAttributes(res.data);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch attributes:', err);
+      });
+    }, []);
+
+    // Distributes the attribute among all three different variables i.e. lens, frame and general 
+    const distributeAttributes = (attributes) => {
+      const frames = [];
+      const lenses = [];
+      const generals = [];
     
+      attributes.forEach(attr => {
+        if (attr.attributeType === "Frame") {
+          frames.push(attr);
+        } else if (attr.attributeType === "Lens") {
+          lenses.push(attr);
+        } else if (attr.attributeType === "General") {
+          generals.push(attr);
+        }
+      });
+    
+      setFrameAttributes(frames);
+      setLensAttributes(lenses);
+      setGeneralAttributes(generals);
+    };
+
     console.log("form", form);
 
     // Function to handle all the changes
@@ -97,37 +176,75 @@ const EditProduct=()=>{
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     };
 
+    // Function to extract public_id from Cloudinary URL
+    const extractPublicIdFromUrl = (url) => {
+      try {
+        const urlObj = new URL(url);
+        const parts = urlObj.pathname.split('/'); // Split by '/'
+        const fileName = parts.pop(); // Get filename with extension
+        return fileName.replace(/\.[^/.]+$/, ''); // strip extension
+      } catch {
+        return null;
+      }
+    };
 
-      
-      // handle submition of form i.e product is added to database
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);      
-        try {
-          const response = await axios.post(`${baseURL}/api/admin/update-product/${form._id}`, form);
-          if (response.status === 200 || response.status === 201) {
-            alert('Product Edited successfully!');
-            setForm(defaultForm);
-            setUploadedImages([]);
-            navigate('/Admin/products');
-          } 
-        } catch (error) {
-          console.error('Error submitting product:', error);
-          alert(error.response?.data?.message || 'An error occurred while submitting the product.');
-        }
-        setLoading(false);
-        console.log("Finished submitting product...")
-      };
-      
-      // Adds Images to form after addition of every image
-      useEffect(() => {
-        setForm((prev) => ({
-          ...prev,
-          images: uploadedImages, 
-        }));
-      }, [uploadedImages]);
+    // Handle image removal from uploadedImages
+    const handleImageRemove = (imageUrl) => {
+      setUploadedImages(prev => prev.filter(url => url !== imageUrl));
+      setDeletedImages(prev => [...prev, imageUrl]);
+      // Update the form's images array as well
+      setForm(prev => ({
+        ...prev,
+        images: prev.images.filter(url => url !== imageUrl)
+      }));
+    };
 
-      
+    // Adds Images to form after addition of every image
+    useEffect(() => {
+      setForm((prev) => ({
+        ...prev,
+        images: uploadedImages,
+      }));
+    }, [uploadedImages]);
+
+    // handle submission of form i.e product is edited in database
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setLoading(true);      
+      try {
+        // First update the product
+        const response = await axios.post(`${baseURL}/api/admin/update-product/${form._id}`, form);
+        
+        if (response.status === 200 || response.status === 201) {
+          // If product update was successful, delete the images from cloud
+          if (deletedImages.length > 0) {
+            try {
+              await Promise.all(deletedImages.map(async imageUrl => {
+                const publicId = extractPublicIdFromUrl(imageUrl);
+                if (publicId) {
+                  await axios.post(`${baseURL}/api/image/delete-image`, { 
+                    public_id: publicId 
+                  });
+                }
+              }));
+            } catch (error) {
+              console.error('Error deleting images:', error);
+              // Even if image deletion fails, we proceed as the product update was successful
+            }
+          }
+          
+          alert('Product Edited successfully!');
+          setForm(defaultForm);
+          setUploadedImages([]);
+          setDeletedImages([]);
+          navigate('/Admin/products');
+        } 
+      } catch (error) {
+        console.error('Error submitting product:', error);
+        alert(error.response?.data?.message || 'An error occurred while submitting the product.');
+      }
+      setLoading(false);
+    };
 
     return (
         (product && <div className="w-full px-[2vw] py-[2vw] flex flex-col gap-[1vw] ">
@@ -143,7 +260,7 @@ const EditProduct=()=>{
                     
                     <div className="grid grid-cols-2 gap-[1vw]">
                       <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
-                      <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={["Male", "Female", "Unisex", "Other"]} />
+                      <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={Classification} />
                     </div>
 
                     <FormField label="Description" name="description" type="textarea" value={form.description} onChange={handleChange} />
@@ -156,68 +273,50 @@ const EditProduct=()=>{
                   </div>
                   
                   {/* Frame Attribute */}
-                  { product.frameAttributes &&<div>
-                   <h6 className="text-h5Text font-bold mb-[.5vw]">Frame Attributes</h6>
-                  <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
-                  
-                    
-                     {form.frameAttributes?.map((item, index) => (
-                      <FormField
-                        key={item.name || index}
-                        label={item.name}
-                        name={item.name}
-                        value={item.value || ''}
-                        onChange={handleChange}
-                      />
-                    ))}
-
-                  
-                  </div>
-                  </div>}
+                  <AttributeSection 
+                    title="Frame Attributes" 
+                    attributes={getUsedAttributes('Frame')}
+                    formKey="frameAttributes" 
+                    form={form} 
+                    handleChange={handleChange}
+                    onRemoveAttribute={(name) => handleRemoveAttribute(name, 'Frame')}
+                    availableAttributes={getAvailableAttributes('Frame')}
+                    onAddAttribute={(attr) => handleAddAttribute(attr, 'Frame')}
+                  />
 
                   {/* Lens Attribute */}
-                  { product.lensAttributes &&<div>
-                   <h6 className="text-h5Text font-bold mb-[.5vw]">Lens Attributes</h6>
-                  <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
-                  
-                    
-                     {form.lensAttributes?.map((item, index) => (
-                      <FormField
-                        key={item.name || index}
-                        label={item.name}
-                        name={item.name}
-                        value={item.value || ''}
-                        onChange={handleChange}
-                      />
-                    ))}
-                  
-                  </div>
-                  </div>}
+                  <AttributeSection 
+                    title="Lens Attributes"
+                    attributes={getUsedAttributes('Lens')}
+                    formKey="lensAttributes" 
+                    form={form} 
+                    handleChange={handleChange}
+                    onRemoveAttribute={(name) => handleRemoveAttribute(name, 'Lens')}
+                    availableAttributes={getAvailableAttributes('Lens')}
+                    onAddAttribute={(attr) => handleAddAttribute(attr, 'Lens')}
+                  />
 
                   {/* General Attribute */}
-                  { form.lensAttributes &&<div>
-                   <h6 className="text-h5Text font-bold mb-[.5vw]">General Attributes</h6>
-                  <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
-                  
-                    
-                     {form.generalAttributes?.map((item, index) => (
-                      <FormField
-                        key={item.name || index}
-                        label={item.name}
-                        name={item.name}
-                        value={item.value || ''}
-                        onChange={handleChange}
-                      />
-                    ))}
-                  
-                  </div>
-                  </div>}
+                  <AttributeSection 
+                    title="General Attributes"
+                    attributes={getUsedAttributes('General')}
+                    formKey="generalAttributes" 
+                    form={form} 
+                    handleChange={handleChange}
+                    onRemoveAttribute={(name) => handleRemoveAttribute(name, 'General')}
+                    availableAttributes={getAvailableAttributes('General')}
+                    onAddAttribute={(attr) => handleAddAttribute(attr, 'General')}
+                  />
                 </div>
                   
                 {/*Section Containing Image, Size and Stock Selection  */}
                 <div className="shadow-adminShadow p-[1vw]   rounded-[.5vw]">
                   
-                <ImageUpload uploadedImages={uploadedImages} setUploadedImages={setUploadedImages} />
+                <ImageUpload 
+                  uploadedImages={uploadedImages} 
+                  setUploadedImages={setUploadedImages}
+                  onImageRemove={handleImageRemove}
+                />
 
                 <div className="grid grid-cols-4 gap-[1vw]">
                   <ArrayInputField label="Size" name="size" values={form.size} handleChange={handleChange} />

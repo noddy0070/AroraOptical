@@ -1,7 +1,10 @@
 import React,{useState,useRef,useEffect} from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import placeholder from "../../assets/images/CategoryPlaceholder.png";
 import categoryPlaceholder from '../../assets/images/CategoryPlaceholder.png';
 import WishListIcon from '../../assets/images/icons/WishlistIcon.svg'
+import WishListIconFilled from '../../assets/images/icons/WishlistIconFilled.svg'
 import './product.css';
 import { IconButton } from '../../components/button';
 import { renderStars } from '@/components/RenderStarts';
@@ -62,11 +65,15 @@ export default function ProductDescription({productToDisplay}){
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
-    const quantityInputRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isDetailClicked, setIsDetailClicked] = useState(true);
     const [isShipingClicked, setIsShipingClicked] = useState(true);
     const [isReturnClicked, setIsReturnClicked] = useState(true);
+    const [isInWishlist, setIsInWishlist] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const { user, isAuthenticated } = useSelector((state) => state.auth);
 
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -112,6 +119,87 @@ export default function ProductDescription({productToDisplay}){
         });
     },[productToDisplay])
     
+    // Check if product is in wishlist on component mount
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            const checkWishlist = async () => {
+                try {
+                    const response = await axios.get(`${baseURL}/api/user/wishlist/${user._id}`, {
+                        withCredentials: true
+                    });
+                    setIsInWishlist(response.data.wishlist.some(item => item._id === productToDisplay._id));
+                } catch (error) {
+                    console.error('Error checking wishlist:', error);
+                }
+            };
+            checkWishlist();
+        }
+    }, [isAuthenticated, user, productToDisplay._id]);
+
+    const handleAddToCart = async () => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+        try {
+            const response = await axios.post(`${baseURL}/api/user/cart/add`, {
+                userId: user._id,
+                productId: productToDisplay._id,
+                quantity: selectedQuantity
+            }, {
+                withCredentials: true
+            });
+
+            if (response.data.success) {
+                // Show success message or update UI
+                alert('Product added to cart successfully!');
+                // Dispatch custom event for cart update
+                window.dispatchEvent(new CustomEvent('cartUpdated'));
+            }
+        } catch (error) {
+            setError(error.response?.data?.message || 'Failed to add product to cart');
+            console.error('Add to cart error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleWishlist = async () => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            if (isInWishlist) {
+                // Remove from wishlist
+                await axios.post(`${baseURL}/api/user/wishlist/remove`, {
+                    userId: user._id,
+                    productId: productToDisplay._id
+                }, {
+                    withCredentials: true
+                });
+                setIsInWishlist(false);
+            } else {
+                // Add to wishlist
+                await axios.post(`${baseURL}/api/user/wishlist/add`, {
+                    userId: user._id,
+                    productId: productToDisplay._id
+                }, {
+                    withCredentials: true
+                });
+                setIsInWishlist(true);
+            }
+        } catch (error) {
+            console.error('Wishlist operation error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
       console.log(productToDisplay.frameAttributes.length>0)
     return (
@@ -150,8 +238,12 @@ export default function ProductDescription({productToDisplay}){
                 {tags.map((tag, index) => (
                 <div className=' px-[16px] py-[8px] rounded-[1.25vw] text-center md:min-w-[7.125vw] border-[1px] border-black text-tinyTextPhone md:text-tinyText' key={index}>{tag}</div>
                 ))}
-                <button>
-                    <img className='w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw]' src={WishListIcon}/>
+                <button onClick={handleWishlist} disabled={loading}>
+                    <img 
+                        className='w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw]' 
+                        src={isInWishlist ? WishListIconFilled : WishListIcon}
+                        alt={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                    />
                 </button>
             </div>
             </div>
@@ -250,9 +342,18 @@ export default function ProductDescription({productToDisplay}){
 
                 {/* Buy and add to cart button */}
                 <div className='flex flex-row gap-[1vw]'>
-                     <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey'>Add to Cart</button>
-                     <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery'>Select Lenses </button>
+                     <button 
+                        onClick={handleAddToCart}
+                        disabled={loading}
+                        className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey disabled:bg-gray-400'
+                    >
+                        {loading ? 'Adding...' : 'Add to Cart'}
+                    </button>
+                     <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery'>
+                        Select Lenses
+                     </button>
                 </div>
+                {error && <p className='text-red-500 text-center mt-2'>{error}</p>}
                 {/* Notice  */}
                 <p className='text-center text-smallText'>Free shipping over Rs. 999</p>
             </div>

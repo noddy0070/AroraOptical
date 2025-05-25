@@ -28,16 +28,14 @@ export default function Settings(){
     const handleLogOut=async ()=>{
         setLoading(true);
         try{
-            const res=await axios.post(`${baseURL}/api/auth/logout`,{
-                withCredentials:true,
+            const res=await axios.post(`${baseURL}/api/auth/logout`, {}, {
+                withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
-                },
+                }
             });
-            const data=await res.data;
-            console.log(data);
             
-            if(data.success===false){
+            if(!res.data.success){
                 setError("Unable to Logout");
                 setLoading(false);
                 return;
@@ -46,7 +44,7 @@ export default function Settings(){
             dispatch(logout());
             navigate('/');
         }catch(e){
-             setError("Unable to Logout");
+            setError("Unable to Logout");
             console.log(e);
         }
         setLoading(false);

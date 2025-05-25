@@ -5,12 +5,14 @@ import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import adminRouter from './routes/admin.route.js';
 import imageRouter from './routes/image.route.js';
+import eyeTestRouter from './routes/eyeTest.route.js';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import session from 'express-session';
 import './utils/passport.js'; // import passport config
+// import { createAdminUser } from './utils/createAdmin.js';
 
 
 dotenv.config();
@@ -41,6 +43,8 @@ app.use(passport.session());
 // ========== DATABASE ==========
 mongoose.connect(process.env.MONGO).then(() => {
   console.log("✅ Connected to MongoDB.");
+  // Create admin user after successful database connection
+  // createAdminUser();
 }).catch((err) => {
   console.error("❌ MongoDB connection error:", err);
 });
@@ -49,9 +53,8 @@ mongoose.connect(process.env.MONGO).then(() => {
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter); // includes /google, /google/callback
 app.use('/api/admin', adminRouter);
-app.use('/api/image',imageRouter);
-
-
+app.use('/api/image', imageRouter);
+app.use('/api/eye-test', eyeTestRouter);
 
 // ========== ERROR HANDLER ==========
 app.use((err, req, res, next) => {

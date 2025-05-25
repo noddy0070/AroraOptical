@@ -36,6 +36,8 @@ import ViewUser from './pages/Admin/Users/ViewUser.jsx';
 import CancellationPolicy from "./pages/Admin/CancellationPolicy.jsx";
 import PrivacyPolicyAdmin from "./pages/Admin/PrivacyPolicy.jsx";
 import ShippingPolicyAdmin from "./pages/Admin/ShippingPolicy.jsx";
+import BookingForm from "./components/EyeTest/BookingForm.jsx";
+import EyeTestManagement from "./pages/Admin/EyeTestManagement.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -173,7 +175,9 @@ export default function App() {
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/settings' element={<Settings/>} />
         <Route path='/lens' element={<Lens/>} />
+        <Route path="/eye-test" element={<BookingForm/>}/>
       </Route>
+
 
 
       {/* <Route path='/Admin' element={<Admin/>} /> */}
@@ -196,6 +200,7 @@ export default function App() {
             <Route path="cancellation-policy" element={<CancellationPolicy/>}/>
             <Route path="privacy-policy" element={<PrivacyPolicyAdmin/>}/>
             <Route path="shipping-policy" element={<ShippingPolicyAdmin/>}/>
+            <Route path="eye-test-management" element={<EyeTestManagement/>}/>
             <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
       </Route>
       </Route>

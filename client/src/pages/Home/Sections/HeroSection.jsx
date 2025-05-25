@@ -27,9 +27,9 @@ export default function HeroSection(){
             }, []);
     const heroSectionImage=screenWidth>768?heroSectionBanner:heroSection
     return (
-        <div className='flex flex-row md:relative md:py-0 py-[5vw]  md:h-full md:w-full overflow-x-auto gap-[2.5vw] hide-scrollbar mr-[-5vw] md:mr-0 md:overflow-x-hidden  rounded-[2.5vw]  md:rounded-[1.875vw] overflow-hidden text-white '>
-            <div className='relative w-[57.5vw] md:w-full flex-shrink-0'>
-            <img className='h-full w-full rounded-[2.5vw]  md:rounded-[1.875vw]' src={heroSectionImage}   />
+        <div className='flex flex-row md:relative md:py-0 md:mx-[-2vw] py-[5vw]  md:h-full md:w-screen overflow-x-auto gap-[2.5vw] hide-scrollbar mr-[-5vw] md:mr-0 md:overflow-x-hidden  rounded-[2.5vw]  md:rounded-[0vw] overflow-hidden text-white '>
+            <div className='relative w-[57.5vw] md:w-screen flex-shrink-0'>
+            <img className='h-full w-full md:w-screen ' src={heroSectionImage}   />
             <div className='absolute top-0 left-0 w-full h-full md:h-full md:w-full px-[3.75vw] md:px-[4vw] py-[7vw] md:py-[3vw] '>
                 <div className='relative w-full ' >
                     <div className='absolute w-full h-full md:w-[39.875vw] left-0'>

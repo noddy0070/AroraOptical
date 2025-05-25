@@ -10,6 +10,8 @@ const Size=['S', 'M', 'L','XL'];
 
 const Categories=['Sunglasses','Eyeglasses','Contact Lenses','Cases','Lens Wipes','Lens solution','Cleaning cloth','Travelling kit'];
 
+const Classification=['Men','Women','Kids','Unisex'];
+
 const Brand = [
     "Fossil",
     "Coach",
@@ -40,4 +42,4 @@ const Brand = [
     "Vogue Eyewear"
   ];
   
-export {Material,Type,Shape,Colors,Size,Categories,Brand};
+export {Material,Type,Shape,Colors,Size,Categories,Brand,Classification };
