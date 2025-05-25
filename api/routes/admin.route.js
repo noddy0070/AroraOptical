@@ -2,7 +2,7 @@ import express from "express";
 // import {signup,signin, sendOTP, verifyOTP} from "../controllers/auth.controller.js";
 import { addProduct,getProducts,getSingleProduct,getProductsColor,updateProduct,deleteProduct } from "../controllers/product.controller.js";
 import { addAttributes,getAttributes,deleteAttribute,editAttribute } from "../controllers/attributes.controller.js";
-import { getUsers,addUser,getUser } from "../controllers/user.controller.js";
+import { getUsers,addUser,getUser,toggleBlockUser } from "../controllers/user.controller.js";
 import { addPolicy,updatePolicy,getPolicy} from "../controllers/policy.controller.js";
 const router= express.Router();
 
@@ -26,6 +26,7 @@ router.put('/edit-attributes', editAttribute);
 router.get('/get-users',getUsers);
 router.post('/add-user',addUser);
 router.get('/get-user/:id',getUser);
+router.post('/toggle-block-user/:id', toggleBlockUser);
 
 // Admin Control Over Policies
 router.post('/add-cancellation-policy',addPolicy)

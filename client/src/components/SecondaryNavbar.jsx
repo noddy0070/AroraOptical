@@ -78,27 +78,41 @@ export default function SecondaryNavbar() {
     >
       <div className='mt-[3vw] text-regularText font-roboto text-[#737373] font-bold flex flex-col gap-[.625vw]'>
         <p className='text-black mb-[.625vw]'>Sunglasses</p>
-        <p>New Arrivals</p>
-        <p>Bestsellers</p>
-        <TransitionLink to="/shop/sunglasses/women">
-          <p className="hover:text-black transition-colors duration-200 cursor-pointer">Women</p>
+        <TransitionLink to="/shop/sunglasses/new-arrivals">
+          <p onClick={()=>setActiveDropdown(null)} className="hover:text-black transition-colors duration-200 cursor-pointer">New Arrivals</p>
         </TransitionLink>
+        <TransitionLink to="/shop/sunglasses/bestsellers">
+          <p onClick={()=>setActiveDropdown(null)} className="hover:text-black transition-colors duration-200 cursor-pointer">Bestsellers</p>
+        </TransitionLink>
+        <TransitionLink to="/shop/sunglasses/women">
+          <p onClick={()=>setActiveDropdown(null)} className="hover:text-black transition-colors duration-200 cursor-pointer">Women</p>
+        </TransitionLink>     
         <TransitionLink to="/shop/sunglasses/men">
-          <p className="hover:text-black transition-colors duration-200 cursor-pointer">Men</p>
+          <p onClick={()=>setActiveDropdown(null)} className="hover:text-black transition-colors duration-200 cursor-pointer">Men</p>
         </TransitionLink>
         <TransitionLink to="/shop/sunglasses/kids">
-          <p className="hover:text-black transition-colors duration-200 cursor-pointer">Kids</p>
+          <p onClick={()=>setActiveDropdown(null)} className="hover:text-black transition-colors duration-200 cursor-pointer">Kids</p>
         </TransitionLink>
         <p>Polarized</p>
       </div>
 
       <div className='mt-[3vw] text-regularText font-roboto text-[#737373] font-bold flex flex-col gap-[.625vw]'>
         <p className='text-black mb-[.625vw]'>Eyeglasses</p>
-        <p>New Arrivals</p>
-        <p>Bestsellers</p>
-        <p>Women</p>
-        <p>Men</p>
-        <p>Kids</p>
+        <TransitionLink to="/shop/eyeglasses/new-arrivals">
+          <p onClick={()=>setActiveDropdown(null)} className="hover:text-black transition-colors duration-200 cursor-pointer">New Arrivals</p>
+        </TransitionLink>
+        <TransitionLink to="/shop/eyeglasses/bestsellers">
+          <p onClick={()=>setActiveDropdown(null)} className="hover:text-black transition-colors duration-200 cursor-pointer">Bestsellers</p>
+        </TransitionLink>
+        <TransitionLink onClick={()=>setActiveDropdown(null)} to="/shop/eyeglasses/women">
+          <p className="hover:text-black transition-colors duration-200 cursor-pointer">Women</p>
+        </TransitionLink>
+        <TransitionLink onClick={()=>setActiveDropdown(null)} to="/shop/eyeglasses/men">
+          <p className="hover:text-black transition-colors duration-200 cursor-pointer">Men</p>
+        </TransitionLink>
+        <TransitionLink onClick={()=>setActiveDropdown(null)} to="/shop/eyeglasses/kids">
+          <p className="hover:text-black transition-colors duration-200 cursor-pointer">Kids</p>
+        </TransitionLink>
       </div>
 
       <div className='mt-[3vw] text-regularText font-roboto text-[#737373] font-bold flex flex-col gap-[.625vw]'>
@@ -197,7 +211,10 @@ export default function SecondaryNavbar() {
             </button>
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
+            <TransitionLink to="/eye-test">
               Free Eye Test
+              </TransitionLink>
+
             </button>
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">

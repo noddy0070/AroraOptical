@@ -11,6 +11,7 @@ import { renderStars } from '@/components/RenderStarts';
 import axios from 'axios';
 import { formatINR } from '@/components/IntToPrice';
 import { baseURL } from '@/url';
+import { TransitionLink } from '@/Routes/TransitionLink';
 const product={
     name: 'Product Name',
     model: 'Model Name',
@@ -258,7 +259,7 @@ export default function ProductDescription({productToDisplay}){
                 {/* Product Details block */}
                 <div>
                     <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelTitle}</h3>
-                    <span className='leading-[150%]'>{productToDisplay.modelCode} {" - "} {productToDisplay.modelName}</span>
+                    <span className='leading-[150%]'>{productToDisplay.modelName}</span>
                     <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{formatINR(productToDisplay.price)}</span> {" "}
                      <span>{formatINR(productToDisplay.discount)}</span> </h5>
                 </div>
@@ -325,8 +326,9 @@ export default function ProductDescription({productToDisplay}){
                                 const lensColorAttribute = variant.lensAttributes.find(attr => attr.name === "Lens Color");
                                 const lensColorValue = lensColorAttribute ? lensColorAttribute.value : null;
                                 return (
-                                <div className='rounded-[8px] w-[12.5vw] p-[12px] border-[1px] border-black '>
-                                   <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[index]} />
+                                variant._id==productToDisplay._id?
+                                <div className={`rounded-[8px] w-[12.5vw] p-[12px] border-[1px] ${variant._id==productToDisplay._id?"border-black":""    } `}>
+                                   <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[0]} />
                                    {colorAttribute && <div className='w-full flex justify-between mb-[8px]'>
                                     <span>Color</span>
                                     <span>{colorValue}</span>
@@ -336,6 +338,19 @@ export default function ProductDescription({productToDisplay}){
                                     <span>{lensColorValue}</span>
                                    </div>}
                                 </div>
+                                :<TransitionLink to={`/product/${variant._id}`}>
+                                <div className={`rounded-[8px] w-[12.5vw] p-[12px] border-[1px]  `}>
+                                   <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[0]} />
+                                   {colorAttribute && <div className='w-full flex justify-between mb-[8px]'>
+                                    <span>Color</span>
+                                    <span>{colorValue}</span>
+                                   </div>}
+                                   {lensColorAttribute && <div className='w-full flex justify-between'>
+                                    <span>Lens Color</span>
+                                    <span>{lensColorValue}</span>
+                                   </div>}
+                                </div>
+                                </TransitionLink>
                             )})}
                         </div>
                 </div>

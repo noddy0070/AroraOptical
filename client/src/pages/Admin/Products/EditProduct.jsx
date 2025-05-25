@@ -85,10 +85,14 @@ const EditProduct=()=>{
     // Get currently used attributes for a specific type
     const getUsedAttributes = (attributeType) => {
       const formKey = `${attributeType.toLowerCase()}Attributes`;
-      return form[formKey]?.map(attr => ({
+      const attributes = form[formKey];
+      if (!Array.isArray(attributes)) {
+        return [];
+      }
+      return attributes.map(attr => ({
         name: attr.name,
         value: attr.value
-      })) || [];
+      }));
     };
 
     // Get available attributes for a specific type
@@ -141,7 +145,7 @@ const EditProduct=()=>{
     console.log("form", form);
 
     // Function to handle all the changes
-     const handleChange = (e, index, attrName) => {
+    const handleChange = (e, index, attrName) => {
       const { name, value } = e.target;
 
       // Handle array-based fields like size or stock
@@ -154,25 +158,33 @@ const EditProduct=()=>{
         return;
       }
 
-      // List of attribute categories to check
-      const attributeGroups = ["frameAttributes", "lensAttributes", "generalAttributes"];
-
-      for (let group of attributeGroups) {
-        const i = form[group]?.findIndex(attr => attr.name === name);
-        if (i !== -1) {
-          setForm((prevForm) => {
-            const updatedAttributes = [...prevForm[group]];
-            updatedAttributes[i] = {
-              ...updatedAttributes[i],
-              value: value,
+      // Handle attribute fields
+      if (attrName) {
+        const formKey = name; // This will be frameAttributes, lensAttributes, or generalAttributes
+        setForm((prevForm) => {
+          const currentAttributes = Array.isArray(prevForm[formKey]) ? prevForm[formKey] : [];
+          const attributeIndex = currentAttributes.findIndex(attr => attr.name === attrName);
+          
+          if (attributeIndex !== -1) {
+            // Update existing attribute
+            const updatedAttributes = [...currentAttributes];
+            updatedAttributes[attributeIndex] = {
+              ...updatedAttributes[attributeIndex],
+              value: value
             };
-            return { ...prevForm, [group]: updatedAttributes };
-          });
-          return; // Important: exit after updating
-        }
+            return { ...prevForm, [formKey]: updatedAttributes };
+          } else {
+            // Add new attribute
+            return {
+              ...prevForm,
+              [formKey]: [...currentAttributes, { name: attrName, value: value }]
+            };
+          }
+        });
+        return;
       }
 
-      // Fallback for simple fields
+      // Handle regular fields
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     };
 

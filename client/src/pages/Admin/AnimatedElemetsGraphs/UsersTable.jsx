@@ -1,19 +1,27 @@
 import { formatINR } from '@/components/IntToPrice';
 import { TransitionLink } from '@/Routes/TransitionLink';
 import { useState } from 'react';
+import axios from 'axios';
+import { baseURL } from '@/url';
 
-
-
-const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage,deleteItem}) => {
-  
-  console.log("tableData",tableData);
+const Table = ({tableData, itemsPerPage, currentPage, setCurrentPage}) => {
   const totalPages = Math.ceil(tableData.length / itemsPerPage);
 
+  const handleBlockUser = async (userId, currentlyBlocked) => {
+    try {
+      const response = await axios.post(`${baseURL}/api/admin/toggle-block-user/${userId}`);
+      if (response.data.success) {
+        // Refresh the page to update the table
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error toggling user block status:', error);
+      alert('Failed to update user status');
+    }
+  };
 
   return (
     <div className="p-6">
-      
-
       <table className="w-full border-collapse border border-gray-300 text-sm">
         <thead className="bg-blue-500 text-white">
           <tr>
@@ -23,37 +31,68 @@ const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage,deleteItem}) =
             <th className="p-2 border">Phone Number</th>
             <th className="p-2 border">Role</th>
             <th className="p-2 border">Orders</th>
-            <th className=''>Action</th>
+            <th className="p-2 border">Status</th>
+            <th className='p-2 border'>Action</th>
           </tr>
         </thead>
         <tbody>
           {tableData.map((item,index) => (
-            <tr key={item.uid} className="hover:bg-gray-100">
+            <tr key={item._id} className="hover:bg-gray-100">
               <td className="p-2 border text-left">{index+1}</td>
               <td className="p-2 border">
                 <TransitionLink to={`/Admin/view-user/${item._id}`}>
-                {item.name}
+                  {item.name}
                 </TransitionLink>
-                </td>
+              </td>
               <td className="p-2 border text-left">{item.email}</td>
-              <td className="p-2 border text-left">{item.number?item.number:"not provided"}</td>
+              <td className="p-2 border text-left">{item.number ? item.number : "not provided"}</td>
               <td className="p-2 border text-left">{item.role}</td>
               <td className="p-2 border text-left">{item.orders.length}</td>
-              <td className="py-2  border text-left">
-                <div key={index} className='flex justify-center gap-[.625vw] items-center'>                
-                    <svg className='w-[1.5vw] h-[1.125vw] cursor-pointer' viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 9C1 9 5 1 12 1C19 1 23 9 23 9C23 9 19 17 12 17C5 17 1 9 1 9Z" stroke="#1E1E1E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z" stroke="#1E1E1E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-
-                    <svg   className='w-[1.5vw] h-[1.5vw] cursor-pointer' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 20H21M16.5 3.49998C16.8978 3.10216 17.4374 2.87866 18 2.87866C18.2786 2.87866 18.5544 2.93353 18.8118 3.04014C19.0692 3.14674 19.303 3.303 19.5 3.49998C19.697 3.69697 19.8532 3.93082 19.9598 4.18819C20.0665 4.44556 20.1213 4.72141 20.1213 4.99998C20.1213 5.27856 20.0665 5.55441 19.9598 5.81178C19.8532 6.06915 19.697 6.303 19.5 6.49998L7 19L3 20L4 16L16.5 3.49998Z" stroke="#1E1E1E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-
-                    <svg  className='w-[1.5vw] h-[1.5vw] cursor-pointer' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z" fill="#1D1B20"/>
-                    </svg>
-                </div>
+              <td className="p-2 border text-left">
+                <span className={item.blocked === "true" ? "text-red-600" : "text-green-600"}>
+                  {item.blocked === "true" ? "Blocked" : "Active"}
+                </span>
+              </td>
+              <td className="p-2 border text-center">
+                {item.blocked === "true" ? (
+                  <svg
+                    onClick={() => handleBlockUser(item._id, item.blocked)}
+                    className="w-[1.5vw] h-[1.5vw] cursor-pointer mx-auto text-red-600 hover:text-red-700"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 17C12.5523 17 13 16.5523 13 16C13 15.4477 12.5523 15 12 15C11.4477 15 11 15.4477 11 16C11 16.5523 11.4477 17 12 17Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M12 2C8.13401 2 5 5.13401 5 9V10C3.34315 10 2 11.3431 2 13V20C2 21.6569 3.34315 23 5 23H19C20.6569 23 22 21.6569 22 20V13C22 11.3431 20.6569 10 19 10V9C19 5.13401 15.866 2 12 2ZM15 10V9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9V10H15ZM5 12C4.44772 12 4 12.4477 4 13V20C4 20.5523 4.44772 21 5 21H19C19.5523 21 20 20.5523 20 20V13C20 12.4477 19.5523 12 19 12H5Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    onClick={() => handleBlockUser(item._id, item.blocked)}
+                    className="w-[1.5vw] h-[1.5vw] cursor-pointer mx-auto text-green-600 hover:text-green-700"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 17C12.5523 17 13 16.5523 13 16C13 15.4477 12.5523 15 12 15C11.4477 15 11 15.4477 11 16C11 16.5523 11.4477 17 12 17Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M12 2C8.13401 2 5 5.13401 5 9V10C3.34315 10 2 11.3431 2 13V20C2 21.6569 3.34315 23 5 23H19C20.6569 23 22 21.6569 22 20V13C22 11.3431 20.6569 10 19 10C19 5.13401 15.866 2 12 2ZM9 10C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9H9V10ZM4 13C4 12.4477 4.44772 12 5 12H19C19.5523 12 20 12.4477 20 13V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V13Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                )}
               </td>
             </tr>
           ))}

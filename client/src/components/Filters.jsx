@@ -60,12 +60,11 @@ import {Size as size, Colors as color, Material as frameMaterial, Type as frameT
     </div>
   </div>
   );
-    console.log(filtersSelected)
     return (
         <div>
             <div id='audience' className="font-roboto flex flex-col ml-[-2vw] mb-[1.5vw]">
             {Object.keys(audienceForFilter).map((key) => (
-                <TransitionLink to={`/shop/${category}/${key.toLowerCase()}`}>
+                <TransitionLink key={key} to={`/shop/${category}/${key.toLowerCase()}`}>
                 <div
                     key={key}
                     id={key.toLowerCase()}

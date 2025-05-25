@@ -17,14 +17,48 @@ export const addProduct= async (req,res,next)=>{
 
 export const getProducts = async (req, res, next) => {
   try {
-    const products= await Product.find();
+    const { category, gender, newArrivals, bestsellers } = req.query;
+    let query = {};
+    
+    // Add filters if they exist
+    if (category) {
+      query.category = category[0].toUpperCase() + category.slice(1);
+    }
+    if (gender) {
+      // Map the URL parameter to the actual gender value
+      const genderMap = {
+        'women': 'Women',
+        'men': 'Men',
+        'kids': 'Kids'
+      };
+      
+      // Include both specific gender and Unisex products for all gender selections
+      query.gender = { $in: [genderMap[gender.toLowerCase()], 'Unisex'] };
+    }
 
+    // Check if new arrivals filter is requested
+    if (newArrivals === 'true') {
+      // Case-insensitive regex pattern for various "new arrival" hashtag formats
+      query.hashtags = {
+        $regex: /new\s*arrival|new\s*arrivals/i
+      };
+    }
+    
+    let products;
+    if (bestsellers === 'true') {
+      // Get products sorted by orders (highest to lowest) and limit to top sellers
+      products = await Product.find(query).sort({ orders: -1 }).limit(20);
+    } else {
+      products = await Product.find(query);
+    }
+    
     res.status(200).json({
+      success: true,
       products,
     });
   } catch (err) {
     console.error('Error fetching products:', err);
-    res.status(500).json({ message: 'Server error fetching products' });
+    res.status(500).json({ success: false, message: 'Server error fetching products' });
   }
 };
 

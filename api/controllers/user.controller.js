@@ -234,3 +234,32 @@ export const getWishlistItems = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to get wishlist items' });
   }
 };
+
+// Toggle user's blocked status
+export const toggleBlockUser = async (req, res, next) => {
+  const { id } = req.params;
+  
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Toggle the blocked status
+    user.blocked = user.blocked === "true" ? "false" : "true";
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: `User ${user.blocked === "true" ? "blocked" : "unblocked"} successfully`,
+      blocked: user.blocked
+    });
+  } catch (err) {
+    console.error('Error toggling user block status:', err);
+    res.status(500).json({ message: 'Server error while updating user status' });
+  }
+};
