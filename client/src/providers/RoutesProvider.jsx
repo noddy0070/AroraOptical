@@ -9,14 +9,13 @@ const ProtectedRoute = () => {
     return <Navigate to="./login" replace/>;
   }
 
-  if (user?.role === 'user' && location.pathname.includes('/Admin')) {
+  // Case-insensitive check for admin routes
+  if (user?.role === 'user' && location.pathname.toLowerCase().includes('/admin')) {
     return <Navigate to="/" replace/>;
   }
 
   return <Outlet/>;
 };
-
-
 
 export {ProtectedRoute};
 

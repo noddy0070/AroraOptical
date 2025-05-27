@@ -178,31 +178,26 @@ export default function App() {
         <Route path="/eye-test" element={<BookingForm/>}/>
       </Route>
 
-
-
-      {/* <Route path='/Admin' element={<Admin/>} /> */}
-
+      {/* Admin Routes - All protected and using consistent /Admin casing */}
       <Route element={<ProtectedRoute/>}>
-      <Route path="/Admin" element={<DashBoard />}>
-            {/* Nested routes go here */}
-            <Route index element={<Home2 />} /> {/* Default route when /Admin/Dashboard is visited */}
-            <Route path="products" element={<Products />} />
-            <Route path="add-product" element={<AddProduct />} />
-            <Route path="edit-product/:id" element={<EditProduct/>} />
-            <Route path="orders" element={<Shopping />} />
-            <Route path="user" element={<User />} />
-            <Route path='add-user' element={<AddUser/>}/>
-            <Route path="view-user/:id" element={<ViewUser/>} />
-            
-            <Route path="analytics" element={<Trending />} />
-            <Route path="search" element={<Search />} />
-            <Route path="attributes" element={<Attributes />} />
-            <Route path="cancellation-policy" element={<CancellationPolicy/>}/>
-            <Route path="privacy-policy" element={<PrivacyPolicyAdmin/>}/>
-            <Route path="shipping-policy" element={<ShippingPolicyAdmin/>}/>
-            <Route path="eye-test-management" element={<EyeTestManagement/>}/>
-            <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
-      </Route>
+        <Route path="/admin" element={<DashBoard />}>
+          <Route index element={<Home2 />} />
+          <Route path="products" element={<Products />} />
+          <Route path="add-product" element={<AddProduct />} />
+          <Route path="edit-product/:id" element={<EditProduct/>} />
+          <Route path="orders" element={<Shopping />} />
+          <Route path="user" element={<User />} />
+          <Route path='add-user' element={<AddUser/>}/>
+          <Route path="view-user/:id" element={<ViewUser/>} />
+          <Route path="analytics" element={<Trending />} />
+          <Route path="search" element={<Search />} />
+          <Route path="attributes" element={<Attributes />} />
+          <Route path="cancellation-policy" element={<CancellationPolicy/>}/>
+          <Route path="privacy-policy" element={<PrivacyPolicyAdmin/>}/>
+          <Route path="shipping-policy" element={<ShippingPolicyAdmin/>}/>
+          <Route path="eye-test-management" element={<EyeTestManagement/>}/>
+          <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
+        </Route>
       </Route>
      
     </Routes>

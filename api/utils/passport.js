@@ -23,6 +23,7 @@ passport.use(
             googleId: profile.id,
           });
         }
+        console.log(user);
 
         return done(null, user);
       } catch (err) {
