@@ -89,7 +89,7 @@ export const login= async (req,res,next)=>{
         
         const token= jwt.sign({id:validUser._id},process.env.JWT_SECRET,{expiresIn:'7d'});
         const {password:pass,...rest}=validUser._doc;
-        res.cookie('token',token,{ httpOnly: true, secure: true, sameSite: "Strict",maxAge:7*24*60*60*1000, });
+        res.cookie('token',token,{ httpOnly: true, secure: true, sameSite: "None",maxAge:7*24*60*60*1000, });
         res.status(200).json({success:true,message:rest});
         console.log("User logged in successfully");
     }
