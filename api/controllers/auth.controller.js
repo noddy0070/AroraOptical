@@ -133,5 +133,5 @@ export const googleCallback = async (req, res) => {
     });
 
     // Redirect back to frontend
-    res.redirect(prcess.env.GOOGLE_CALLBACK_REDIRECT);
+    res.redirect(process.env.GOOGLE_CALLBACK_REDIRECT);
 }
