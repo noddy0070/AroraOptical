@@ -24,8 +24,10 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: ['http://localhost:5173','https://www.aroraopticals.com'], // ✅ exact frontend origin only
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['set-cookie'],
 }));
 
 app.use(bodyParser.json());
