@@ -123,21 +123,34 @@ export const me=async(req,res) => {
 // GET /api/google/callback
 export const googleCallback = async (req, res) => {
     try {
+        if (!req.user) {
+            return res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=false&error=NoUserData`);
+        }
+
         // Set JWT cookie
         const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
+        // Set cookie with proper configuration
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'None',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : 'localhost'
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined,
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
+        // Log cookie being set
+        console.log('Setting auth cookie:', {
+            token: token.substring(0, 10) + '...',
+            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
         });
 
         // Redirect back to frontend with success
         res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=true`);
     } catch (error) {
         console.error('Google callback error:', error);
-        res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=false`);
+        res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=false&error=${encodeURIComponent(error.message)}`);
     }
 };

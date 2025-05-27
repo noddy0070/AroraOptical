@@ -23,10 +23,11 @@ const app = express();
 app.use(cookieParser());
 
 app.use(cors({
-    origin:['http://localhost:5173','https://www.aroraopticals.com'],
+    origin: ['http://localhost:5173', 'https://www.aroraopticals.com'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['set-cookie']
 }));
 
 app.use(bodyParser.json());
@@ -36,10 +37,13 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
+    proxy: true, // Required for Vercel
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        httpOnly: true,
+        domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
     }
 }));
 
