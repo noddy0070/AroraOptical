@@ -20,7 +20,9 @@ const ShippingPolicyAdmin=()=>{
         const [policy,setPolicy]=useState(null);
     
      useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-policy/682e6724fb2ffba94269d8cc`)
+        axios.get(`${baseURL}/api/admin/get-policy/682e6724fb2ffba94269d8cc`, {
+          withCredentials: true
+        })
             .then((res) => {
             setPolicy(res.data.message);
             })
@@ -61,7 +63,9 @@ const ShippingPolicyAdmin=()=>{
         console.log("Started Updating Shipping Policy...")
       
         try {
-          const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6724fb2ffba94269d8cc`, form);
+          const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6724fb2ffba94269d8cc`, form, {
+            withCredentials: true
+          });
           if (response.status === 200 || response.status === 201) {
             alert('Shipping Policy Updated successfully!');
           } 

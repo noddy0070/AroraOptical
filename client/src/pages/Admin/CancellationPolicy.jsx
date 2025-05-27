@@ -20,7 +20,9 @@ const CancellationPolicy=()=>{
         const [policy,setPolicy]=useState(null);
     
      useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-policy/682e66a5424de8081226383e`)
+        axios.get(`${baseURL}/api/admin/get-policy/682e66a5424de8081226383e`, {
+          withCredentials: true
+        })
             .then((res) => {
             setPolicy(res.data.message);
             })
@@ -61,7 +63,9 @@ const CancellationPolicy=()=>{
         console.log("Started Updating Cancellation Policy...")
       
         try {
-          const response = await axios.post(`${baseURL}/api/admin/update-policy/682e66a5424de8081226383e`, form);
+          const response = await axios.post(`${baseURL}/api/admin/update-policy/682e66a5424de8081226383e`, form, {
+            withCredentials: true
+          });
           if (response.status === 200 || response.status === 201) {
             alert('Cancellation Policy Updated successfully!');
           } 

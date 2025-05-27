@@ -23,7 +23,9 @@ export default function AttributesPage() {
         };
         try {
             // replace URL with your backend endpoint
-            const response = await axios.post(`${baseURL}/api/admin/add-attributes`, payload);
+            const response = await axios.post(`${baseURL}/api/admin/add-attributes`, payload, {
+              withCredentials: true
+            });
 
             if (response.status === 200 || response.status === 201) {
               alert('Attribute added successfully!');
@@ -31,7 +33,9 @@ export default function AttributesPage() {
               setAttributeName('');
               setAttributeType('');
               setValueType('String');
-              axios.get(`${baseURL}/api/admin/get-attributes`).then((res) => {setAttributes(res.data);;})
+              axios.get(`${baseURL}/api/admin/get-attributes`, {
+                withCredentials: true
+              }).then((res) => {setAttributes(res.data);;})
               .catch((err) => {console.error('Failed to fetch products:', err);});
           } else {
               alert('Failed to add attribute.');
@@ -43,7 +47,9 @@ export default function AttributesPage() {
     };
     
     useEffect(() => {
-      axios.get(`${baseURL}/api/admin/get-attributes`)
+      axios.get(`${baseURL}/api/admin/get-attributes`, {
+        withCredentials: true
+      })
       .then((res) => {
         setAttributes(res.data);
       })
@@ -58,11 +64,15 @@ export default function AttributesPage() {
       }
     
       try {
-        const response = await axios.delete(`${baseURL}/api/admin/delete-attributes/${attributeId}`); // adapt your API endpoint
+        const response = await axios.delete(`${baseURL}/api/admin/delete-attributes/${attributeId}`, {
+          withCredentials: true
+        }); // adapt your API endpoint
     
         if (response.status === 200||response.status === 201) {
           alert('Attribute deleted successfully!');
-          axios.get(`${baseURL}/api/admin/get-attributes`).then((res) => {setAttributes(res.data);})
+          axios.get(`${baseURL}/api/admin/get-attributes`, {
+            withCredentials: true
+          }).then((res) => {setAttributes(res.data);})
           .catch((err) => {console.error('Failed to fetch products:', err);});
         } else {
           alert('Failed to delete attribute.');
@@ -76,7 +86,9 @@ export default function AttributesPage() {
 
     const editAttribute = async (attributeId, updatedData) => {
       try {
-        const response = await axios.put(`${baseURL}/api/admin/edit-attributes`, updatedData);
+        const response = await axios.put(`${baseURL}/api/admin/edit-attributes`, updatedData, {
+          withCredentials: true
+        });
     
         if (response.status === 200 || response.status === 201) {
           alert('Attribute updated successfully!');

@@ -20,7 +20,9 @@ const PrivacyPolicyAdmin=()=>{
         const [policy,setPolicy]=useState(null);
     
      useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-policy/682e6778fb2ffba94269d8ce`)
+        axios.get(`${baseURL}/api/admin/get-policy/682e6778fb2ffba94269d8ce`, {
+          withCredentials: true
+        })
             .then((res) => {
             setPolicy(res.data.message);
             })
@@ -61,7 +63,9 @@ const PrivacyPolicyAdmin=()=>{
         console.log("Started Updating Privacy Policy...")
       
         try {
-          const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6778fb2ffba94269d8ce`, form);
+          const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6778fb2ffba94269d8ce`, form, {
+            withCredentials: true
+          });
           if (response.status === 200 || response.status === 201) {
             alert('Privacy Policy Updated successfully!');
           } 

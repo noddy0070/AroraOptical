@@ -12,7 +12,9 @@ const ViewUser = () => {
      useEffect(()=>{
         if (!id) return; 
         console.log("started");
-        axios.get(`${baseURL}/api/admin/get-user/${id}`)
+        axios.get(`${baseURL}/api/admin/get-user/${id}`, {
+          withCredentials: true
+        })
         .then((res) => {
           setUserDetails(res.data.message);
           console.log(res.data);

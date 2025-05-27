@@ -46,7 +46,9 @@ const EditProduct=()=>{
 
     // Fetching current product details
     useEffect(()=>{
-        axios.get(`${baseURL}/api/admin/get-single-product/${id}`)
+        axios.get(`${baseURL}/api/admin/get-single-product/${id}`, {
+          withCredentials: true
+        })
         .then((res) => {
           setProduct(res.data);
         })
@@ -111,7 +113,9 @@ const EditProduct=()=>{
 
     // Gets attributes from server to show in add products
     useEffect(() => {
-      axios.get(`${baseURL}/api/admin/get-attributes`)
+      axios.get(`${baseURL}/api/admin/get-attributes`, {
+        withCredentials: true
+      })
       .then((res) => {
         setAttributes(res.data);
         distributeAttributes(res.data);
@@ -225,7 +229,9 @@ const EditProduct=()=>{
       setLoading(true);      
       try {
         // First update the product
-        const response = await axios.post(`${baseURL}/api/admin/update-product/${form._id}`, form);
+        const response = await axios.post(`${baseURL}/api/admin/update-product/${form._id}`, form, {
+          withCredentials: true
+        });
         
         if (response.status === 200 || response.status === 201) {
           // If product update was successful, delete the images from cloud
@@ -236,6 +242,8 @@ const EditProduct=()=>{
                 if (publicId) {
                   await axios.post(`${baseURL}/api/image/delete-image`, { 
                     public_id: publicId 
+                  }, {
+                    withCredentials: true
                   });
                 }
               }));

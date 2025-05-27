@@ -62,6 +62,8 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       const signatureResponse = await axios.post(`${baseURL}/api/image/generate-signature`, {
         public_id: publicId,
         timestamp,
+      }, {
+        withCredentials: true
       });
   
       const { signature, api_key } = signatureResponse.data;
@@ -80,7 +82,9 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       formData.append('api_key', api_key);
   
         console.log("id",publicId);
-      const deleteResponse =await axios.post(`${baseURL}/api/image/delete-image`, { public_id: publicId });
+      const deleteResponse =await axios.post(`${baseURL}/api/image/delete-image`, { public_id: publicId }, {
+        withCredentials: true
+      });
 
       console.log(deleteResponse.data);
       if (deleteResponse.data.result === 'ok') {

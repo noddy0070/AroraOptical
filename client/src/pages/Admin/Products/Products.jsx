@@ -23,7 +23,9 @@ const Products=()=>{
 
 
     useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-products`)
+        axios.get(`${baseURL}/api/admin/get-products`, {
+          withCredentials: true
+        })
           .then((res) => {
             setProducts(res.data.products);
             console.log(res.data);
@@ -39,11 +41,15 @@ const Products=()=>{
       }
     
       try {
-        const response = await axios.delete(`${baseURL}/api/admin/delete-product/${productIc}`); // adapt your API endpoint
+        const response = await axios.delete(`${baseURL}/api/admin/delete-product/${productIc}`, {
+          withCredentials: true
+        }); // adapt your API endpoint
     
         if (response.status === 200||response.status === 201) {
           alert('Product deleted successfully!');
-          axios.get(`${baseURL}/api/admin/get-products`).then((res) => {setProducts(res.data.products);})
+          axios.get(`${baseURL}/api/admin/get-products`, {
+            withCredentials: true
+          }).then((res) => {setProducts(res.data.products);})
           .catch((err) => {console.error('Failed to fetch products:', err);});
         } else {
           alert('Failed to delete Product.');

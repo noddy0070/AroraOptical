@@ -111,7 +111,9 @@ export default function ProductDescription({productToDisplay}){
     const [productsModel,setProductsModel] =useState([]);
     
     useEffect(()=>{
-        axios.post(`${baseURL}/api/admin/get-products-color`,{modelName:productToDisplay.modelName})
+        axios.post(`${baseURL}/api/admin/get-products-color`,{modelName:productToDisplay.modelName}, {
+            withCredentials: true
+          })
         .then((res) => {
             setProductsModel(res.data.message);
             })

@@ -9,7 +9,9 @@ const Table = ({tableData, itemsPerPage, currentPage, setCurrentPage}) => {
 
   const handleBlockUser = async (userId, currentlyBlocked) => {
     try {
-      const response = await axios.post(`${baseURL}/api/admin/toggle-block-user/${userId}`);
+      const response = await axios.post(`${baseURL}/api/admin/toggle-block-user/${userId}`, {
+        withCredentials: true
+      });
       if (response.data.success) {
         // Refresh the page to update the table
         window.location.reload();

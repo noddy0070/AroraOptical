@@ -58,7 +58,9 @@ const AddUser=()=>{
         console.log("Started adding user...")
       
         try {
-          const response = await axios.post(`${baseURL}/api/admin/add-user`, form);
+          const response = await axios.post(`${baseURL}/api/admin/add-user`, form, {
+            withCredentials: true
+          });
           if (response.status === 200 || response.status === 201) {
             alert('User added successfully!');
             setForm(defaultForm);

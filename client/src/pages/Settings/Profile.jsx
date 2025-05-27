@@ -88,11 +88,10 @@ export default function Profile({user}){
         e.preventDefault();
         setDisableEdit(true);
         setLoading(true);
-        
-        console.log(formData);
-        console.log(`${baseURL}/api/user/update/${user._id}`);
         try{
-            const response = await axios.post(`${baseURL}/api/user/update/${user._id}`, formData);
+            const response = await axios.post(`${baseURL}/api/user/update/${user._id}`, formData, {
+                withCredentials: true
+              });
 
             if (response.data.success) {
             alert("Updated Profile Successfully");

@@ -21,7 +21,9 @@ const User=()=>{
     };
 
     useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-users`)
+        axios.get(`${baseURL}/api/admin/get-users`, {
+            withCredentials: true
+          })
           .then((res) => {
             setUsers(res.data.users);
           })

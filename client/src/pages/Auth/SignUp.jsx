@@ -107,7 +107,9 @@ export default function SignUp(){
         try {
             const response = await axios.post(`${baseURL}/api/auth/send-otp`, {
                 email: formData.email,
-            });
+            }, {
+                withCredentials: true
+              });
 
             if (response.data.success) {
                 setStep(2);
@@ -153,7 +155,9 @@ export default function SignUp(){
             const response = await axios.post(`${baseURL}/api/auth/verify-otp`, {
                 email: formData.email,
                 otp: otp,
-            });
+            }, {
+                withCredentials: true
+              });
 
             if (response.data.success) {
                 await createUser();
@@ -177,7 +181,9 @@ export default function SignUp(){
     const createUser = async () => {
         setLoading(true);
         try {
-            const response = await axios.post(`${baseURL}/api/auth/signup`, formData);
+            const response = await axios.post(`${baseURL}/api/auth/signup`, formData, {
+                withCredentials: true
+              });
             if (response.status === 201) {
                 navigate('/login');
             } else {
