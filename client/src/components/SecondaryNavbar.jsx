@@ -9,7 +9,7 @@ import { TransitionLink } from '../Routes/TransitionLink';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { baseURL } from '@/url';
-import navbarDropdown from '../assets/images/navbarDropdown.png'
+import navbarDropdown from '../assets/images/navbarDropDown.png'
 export default function SecondaryNavbar() {
   const inputRef = useRef(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
