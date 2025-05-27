@@ -123,8 +123,11 @@ export const me=async(req,res) => {
 // GET /api/google/callback
 export const googleCallback = async (req, res) => {
     try {
+        console.log('Processing Google callback, user:', req.user?._id); // Debug log
+
         if (!req.user) {
-            return res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=false&error=NoUserData`);
+            console.error('No user data in Google callback');
+            return res.redirect(`${process.env.FRONTEND_URL}/login?error=NoUserData`);
         }
 
         // Set JWT cookie
@@ -133,24 +136,19 @@ export const googleCallback = async (req, res) => {
         // Set cookie with proper configuration
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined,
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            secure: true, // Always use secure in production
+            sameSite: 'none', // Required for cross-site cookies
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            path: '/',
+            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
         });
 
-        // Log cookie being set
-        console.log('Setting auth cookie:', {
-            token: token.substring(0, 10) + '...',
-            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
-        });
+        console.log('Auth cookie set, redirecting to frontend'); // Debug log
 
-        // Redirect back to frontend with success
-        res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=true`);
+        // Redirect back to frontend
+        res.redirect(`${process.env.FRONTEND_URL}?loginSuccess=true`);
     } catch (error) {
         console.error('Google callback error:', error);
-        res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=false&error=${encodeURIComponent(error.message)}`);
+        res.redirect(`${process.env.FRONTEND_URL}/login?error=${encodeURIComponent(error.message)}`);
     }
 };

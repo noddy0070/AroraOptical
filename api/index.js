@@ -17,6 +17,15 @@ import './utils/passport.js'; // import passport config
 
 dotenv.config();
 
+// Debug log for environment variables
+console.log('Server Environment:', {
+    nodeEnv: process.env.NODE_ENV,
+    frontendUrl: process.env.FRONTEND_URL,
+    hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
+    hasGoogleClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
+    hasJwtSecret: !!process.env.JWT_SECRET
+});
+
 const app = express();
 
 // ========== MIDDLEWARES ==========
@@ -50,6 +59,16 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Debug middleware
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`, {
+        cookies: req.cookies,
+        session: req.session,
+        user: req.user
+    });
+    next();
+});
+
 // ========== DATABASE ==========
 mongoose.connect(process.env.MONGO).then(() => {
   console.log("✅ Connected to MongoDB.");
@@ -68,6 +87,7 @@ app.use('/api/eye-test', eyeTestRouter);
 
 // ========== ERROR HANDLER ==========
 app.use((err, req, res, next) => {
+  console.error('Error:', err);
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   res.status(statusCode).json({
@@ -78,6 +98,7 @@ app.use((err, req, res, next) => {
 });
 
 // ========== SERVER ==========
-app.listen(3000, () => {
-  console.log('🚀 Server is running on port 3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
