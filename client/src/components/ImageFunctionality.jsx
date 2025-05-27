@@ -7,6 +7,7 @@ const CLOUDINARY_UPLOAD_PRESET = 'AroraOpticals'; // Set this in your Cloudinary
 // const CLOUDINARY_API_SECRET = "mGc4mgrnhkCrBuvXaN2vFnt5f_s";
 // const CLOUDINARY_API_KEY = '192436767777992';
 import CollectionSvg from '../assets/images/icons/collectionSvg.svg'
+import { baseURL } from '@/url';
 
 const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -52,13 +53,13 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       const publicId= extractPublicIdFromUrl(image_url);
       console.log(publicId);
       // 🔍 Check if the server is reachable
-      await axios.get('http://localhost:3000/api/image/health').catch(() => {
+      await axios.get(`${baseURL}/api/image/health`).catch(() => {
         throw new Error('⚠️ Backend server is not running. Start the server before making requests.');
       });
       
       // 🔑 Fetch signature from your backend
       
-      const signatureResponse = await axios.post('http://localhost:3000/api/image/generate-signature', {
+      const signatureResponse = await axios.post(`${baseURL}/api/image/generate-signature`, {
         public_id: publicId,
         timestamp,
       });
@@ -79,7 +80,7 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       formData.append('api_key', api_key);
   
         console.log("id",publicId);
-      const deleteResponse =await axios.post('http://localhost:3000/api/image/delete-image', { public_id: publicId });
+      const deleteResponse =await axios.post(`${baseURL}/api/image/delete-image`, { public_id: publicId });
 
       console.log(deleteResponse.data);
       if (deleteResponse.data.result === 'ok') {

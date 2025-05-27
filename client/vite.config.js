@@ -6,7 +6,7 @@ export default defineConfig({
   server:{
     proxy:{
       '/api':{
-        target:'http://localhost:3000',
+        target:'https://arora-optical-backend.vercel.app', 
         secure:false
       }
     }

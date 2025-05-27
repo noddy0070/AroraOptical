@@ -39,11 +39,11 @@ const Products=()=>{
       }
     
       try {
-        const response = await axios.delete(`http://localhost:3000/api/admin/delete-product/${productIc}`); // adapt your API endpoint
+        const response = await axios.delete(`${baseURL}/api/admin/delete-product/${productIc}`); // adapt your API endpoint
     
         if (response.status === 200||response.status === 201) {
           alert('Product deleted successfully!');
-          axios.get(`http://localhost:3000/api/admin/get-products`).then((res) => {setProducts(res.data.products);})
+          axios.get(`${baseURL}/api/admin/get-products`).then((res) => {setProducts(res.data.products);})
           .catch((err) => {console.error('Failed to fetch products:', err);});
         } else {
           alert('Failed to delete Product.');
