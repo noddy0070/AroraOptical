@@ -23,7 +23,7 @@ const app = express();
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'http://localhost:5173', // ✅ exact frontend origin only
+  origin: ['http://localhost:5173','https://www.aroraopticals.com'], // ✅ exact frontend origin only
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
