@@ -8,20 +8,30 @@ dotenv.config();
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID ,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ,
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      proxy: true
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await User.findOne({ googleId: profile.id });
+        // Check if user exists
+        let user = await User.findOne({ email: profile.emails[0].value });
 
         if (!user) {
+          // Create new user if doesn't exist
           user = await User.create({
             name: profile.displayName,
             email: profile.emails[0].value,
             googleId: profile.id,
+            password: Math.random().toString(36).slice(-8), // Random password for Google users
           });
+        } else {
+          // Update existing user's Google ID if not set
+          if (!user.googleId) {
+            user.googleId = profile.id;
+            await user.save();
+          }
         }
 
         return done(null, user);
@@ -32,10 +42,12 @@ passport.use(
   )
 );
 
+// Serialize user for the session
 passport.serializeUser((user, done) => {
-  done(null, user._id);
+  done(null, user.id);
 });
 
+// Deserialize user from the session
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);

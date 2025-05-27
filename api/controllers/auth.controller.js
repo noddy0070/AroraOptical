@@ -122,16 +122,22 @@ export const me=async(req,res) => {
 
 // GET /api/google/callback
 export const googleCallback = async (req, res) => {
-    // Set JWT cookie
-    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    try {
+        // Set JWT cookie
+        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : 'localhost'
+        });
 
-    // Redirect back to frontend
-    res.redirect(process.env.GOOGLE_CALLBACK_REDIRECT);
-}
+        // Redirect back to frontend with success
+        res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=true`);
+    } catch (error) {
+        console.error('Google callback error:', error);
+        res.redirect(`${process.env.GOOGLE_CALLBACK_REDIRECT}?success=false`);
+    }
+};

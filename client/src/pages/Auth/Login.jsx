@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '@/redux/slice/authSlice';
 import axios from "axios";
@@ -20,10 +20,36 @@ export default function Login(){
     });
     const [showPassword, setShowPassword] = useState(false);
     const navigate=useNavigate();
+    const location = useLocation();
     const dispatch=useDispatch();
     const [error, setError] = useState('');
     const [loading,setLoading] = useState(false);
     const {user} =useSelector((state)=>state.auth);
+
+    useEffect(() => {
+        // Check for Google OAuth redirect success/failure
+        const urlParams = new URLSearchParams(location.search);
+        const success = urlParams.get('success');
+        
+        if (success === 'true') {
+            // Fetch user data after successful Google login
+            const checkAuth = async () => {
+                try {
+                    const res = await axios.get(`${baseURL}/api/auth/me`, { 
+                        withCredentials: true 
+                    });
+                    dispatch(loginSuccess({ user: res.data.user }));
+                    navigate('/');
+                } catch (err) {
+                    console.error('Auth check error:', err);
+                    setError('Failed to complete authentication');
+                }
+            };
+            checkAuth();
+        } else if (success === 'false') {
+            setError('Google sign-in failed. Please try again.');
+        }
+    }, [location, dispatch, navigate]);
 
     const validateForm = () => {
         let errors = {};
@@ -159,7 +185,7 @@ export default function Login(){
 
                             <a href={`${baseURL}/api/auth/google`} className='flex flex-row justify-center shadow-[0px_.125vw_.625vw_rgba(0,_0,_0,_0.25)] items-center rounded-[8vw] md:rounded-[2vw]'>
                                 <button disabled={loading} className='flex flex-row justify-center items-center gap-[4px] md:gap-[.5vw] text-regularTextPhone md:text-regularText p-[2vw] md:p-[.75vw] rounded-[8vw] md:rounded-[2vw]'>
-                                    <img src={google} className='h-[5vw] w-[5vw] md:h-[1.5vw] md:w-[1.5vw]'/><p>Sign in with Google</p>
+                                    <img src={google} className='h-[5vw] w-[5vw] md:h-[1.5vw] md:w-[1.5vw]' alt="Google icon"/><p>Sign in with Google</p>
                                 </button>
                             </a>
                             {error && <p className='text-red-500 text-center'>{error}</p>}
