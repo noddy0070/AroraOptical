@@ -48,7 +48,7 @@ export default function HeroSection(){
                          style={{ aspectRatio: '16/9' }}
                     />
                 )}
-                <div className='absolute inset-0 bg-black/30'></div>
+                <div className='absolute inset-0 bg-black/10'></div>
                 <div className='absolute inset-0 flex flex-col justify-between px-[4vw] py-[3vw]'>
                     <div className='relative max-w-[39.875vw]'>
                         <h1 className='font-dyeLine text-h1Text font-bold leading-[120%] pb-[1.5vw] text-white'>
@@ -116,7 +116,7 @@ export default function HeroSection(){
                          style={{ aspectRatio: '1/1' }}
                     />
                 )}
-                <div className='absolute inset-0 bg-black/30 rounded-[2.5vw]'></div>
+                <div className='absolute inset-0 bg-black/10 rounded-[2.5vw]'></div>
                 <div className='absolute inset-0 flex flex-col justify-between p-[3.75vw]'>
                     <div>
                         <h1 className='font-dyeLine text-[24px] font-bold leading-[120%] pb-[3.5vw] text-white'>
