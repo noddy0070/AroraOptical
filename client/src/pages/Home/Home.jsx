@@ -37,7 +37,7 @@ export default function Home() {
             </Suspense>
             
             <Suspense fallback={<SectionLoader />}>
-                <FreeEyeTest/>
+                <FreeEyeTest />
             </Suspense>
             
             <Suspense fallback={<SectionLoader />}>
