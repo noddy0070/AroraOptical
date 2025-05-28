@@ -67,17 +67,21 @@ export default function Item({comapny, price, image, rating, title, colour, prod
     return (
         <div className='relative overflow-hidden font-roboto shadow-[0px_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[1.25vw]'>
             <div className='relative overflow-hidden h-[17.3125vw] mb-[.5vw]'>
-                <img 
-                    onMouseEnter={()=>setHover(true)} 
-                    onMouseLeave={()=>setHover(false)}  
-                    style={{
-                        transform: hover ? 'scale(1.25)' : 'scale(1)',
-                        transition: 'transform 0.3s ease-in-out'
-                    }} 
-                    src={image} 
-                    alt={title} 
-                    className='object-cover z-[0] overflow-hidden max-h-[17.3125vw] transition-transform duration-700 cursor-pointer w-[100%] h-[17.3125vw] rounded-t-[1.25vw] mb-[.5vw]'
-                />
+                <div className="img-container" style={{"--aspect-ratio": "100%"}}>
+                    <img 
+                        loading="lazy"
+                        onMouseEnter={()=>setHover(true)} 
+                        onMouseLeave={()=>setHover(false)}  
+                        style={{
+                            transform: hover ? 'scale(1.25)' : 'scale(1)',
+                            transition: 'transform 0.3s ease-in-out'
+                        }} 
+                        src={image} 
+                        alt={title}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className='object-cover z-[0] overflow-hidden max-h-[17.3125vw] transition-transform duration-700 cursor-pointer w-[100%] h-[17.3125vw] rounded-t-[1.25vw] mb-[.5vw] blur-load image-loading'
+                    />
+                </div>
                 <button 
                     onClick={handleWishlist}
                     disabled={loading}
@@ -85,7 +89,8 @@ export default function Item({comapny, price, image, rating, title, colour, prod
                 >
                     <img 
                         src={isInWishlist ? wishListFilled : wishList} 
-                        alt='wishlist' 
+                        alt='wishlist'
+                        loading="lazy"
                         className='w-full h-auto'
                     />
                 </button>

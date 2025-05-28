@@ -117,7 +117,14 @@ export default function Shop({category, audience}) {
     return (
         <div className=''>
             <div className='relative  w-full h-[25.25vw]'>
-                <img alt='hi' className='relative  hide-scrollbar w-full h-[25.25vw]' src={shopBanner1}></img>
+                <img 
+                    alt='Shop Banner'
+                    loading="eager"
+                    fetchpriority="high"
+                    sizes="100vw"
+                    className='relative hide-scrollbar w-full h-[25.25vw] object-cover'
+                    src={shopBanner1}
+                />
                 <IconButton className='absolute right-[4vw] top-[3vw]' btnSize={3.0625} padding={.85} iconWidth={2.1875}/>
             </div>
             <h3 className='text-h3Text font-dyeLine font-bold leading-[120%] text-center py-[4vw]'>

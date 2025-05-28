@@ -147,7 +147,9 @@ console.log(uploadedImages)
                   <div key={index} className="relative border-dashed border-2 border-gray-300 rounded-[.5vw]">
                     <img
                       src={image}
+                      loading="lazy"
                       alt={`Uploaded ${index + 1}`}
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw]"
                     />
                     <button
@@ -170,7 +172,9 @@ console.log(uploadedImages)
                   <div key={index} className="relative border-dashed border-2 border-gray-300 rounded-[.5vw]">
                     <img
                       src={URL.createObjectURL(file)}
+                      loading="lazy"
                       alt="Preview"
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw]"
                     />
                     <button
