@@ -30,12 +30,10 @@ export const getAttributes = async (req, res, next) => {
 
 export const deleteAttribute = async (req, res, next) => {
     const { attributeId } = req.params;
-    console.log("hi",attributeId);
     try {
       const deletedAttribute = await Attributes.findByIdAndDelete(attributeId);
     
       if (!deletedAttribute) {
-        console.log(attributeId);
         return res.status(404).json({ message: 'Attribute not found' });
       }
   

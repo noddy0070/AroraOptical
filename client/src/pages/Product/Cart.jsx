@@ -13,7 +13,7 @@ import { baseURL } from '@/url';
 export default function Cart(){
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-    const [deliveryPrice, setDeliveryPrice] = useState(100);
+    const [deliveryPrice, setDeliveryPrice] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [finalPrice, setFinalPrice] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -121,7 +121,8 @@ export default function Cart(){
     };
 
     return (
-        <div className='mx-[2vw]'>
+        <div className='bg-[#F5F5F5]'>
+        <div className='mx-[2vw] bg-white rounded-[2vw]'>
             <div className='flex flex-row items-center mt-[3vw] mb-[4vw]'>
                 <h4 className='font-dyeLine font-bold text-h4Text'>Items in your cart ({cartItems.reduce((total, item) => total + item.quantity, 0)})</h4>
                 <h5 className='ml-auto font-dyeLine font-bold text-h5Text'>Cart Total: ₹{finalPrice}</h5>
@@ -223,6 +224,6 @@ export default function Cart(){
                     <p className='text-[#767676] font-bold italic text-center'>Adding power and lens options are available at checkout*</p>
                 </div>
             </div>
-        </div>
+        </div></div>
     );
 };

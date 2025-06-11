@@ -52,6 +52,7 @@ export default {
   		},
   		colors: {
   			darkslategrey: '#1d3240',
+			offwhitebg:'#F5F5F5',
   			btngrery: 'rgba(29, 50, 64, 0.5)',
   			btnHoverColour: '#f3e9d2',
   			ligtgrey: '#f2f2f2',

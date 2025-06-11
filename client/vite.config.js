@@ -6,8 +6,11 @@ export default defineConfig({
   server:{
     proxy:{
       '/api':{
-        target:'https://arora-optical-backend.vercel.app', 
-        secure:false
+        target: 'https://arora-optical-backend.vercel.app',
+        changeOrigin: true,
+        secure: true,
+        ws: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   },

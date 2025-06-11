@@ -25,7 +25,7 @@ export default function HeroSection(){
     };
 
     return (
-        <div className='relative overflow-hidden mx-[-5vw] md:mx-[-2vw]'>
+        <div className='relative overflow-hidden mx-[-5vw] bg-offwhitebg md:mx-[-2vw]'>
             {/* Desktop/Tablet View */}
             <div className='hidden md:block relative h-[calc(100vh-4.5vw)]  min-h-[600px] max-h-[800px] w-full'>
                 <div className={`w-full h-full transition-opacity  duration-300 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}>

@@ -30,7 +30,7 @@ input[type=number] {
 
 /* Page Transition Animation*/
 body{
-  background-color: white;
+  background-color: #F5F5F5;
   transition-property: opacity, transform, filter, background-color;
   transition-timing-function: ease-in-out;
   transition-duration: 0.3s;

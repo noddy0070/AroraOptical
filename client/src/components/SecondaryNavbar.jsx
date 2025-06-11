@@ -190,7 +190,7 @@ export default function SecondaryNavbar() {
   <div className="
   "></div>
   return (
-    <nav className="w-full bg-white relative md:sticky top-0 z-50">
+    <nav className="w-full bg-offwhitebg relative md:sticky top-0 z-50">
       <div className="relative flex whitespace-nowrap flex-row px-[2vw] md:py-[.75vw] md:h-[4.5vw] items-center font-roboto text-regularText">
         <div className='relative flex flex-row w-full items-center gap-[2vw]'>
           <div className='flex-row hidden md:flex'>

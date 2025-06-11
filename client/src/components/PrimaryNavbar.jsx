@@ -4,7 +4,7 @@ import { TransitionLink } from '../Routes/TransitionLink';
 
 export default function PrimaryNavbar () {
     return (
-      <nav className="w-full hidden md:block ">
+      <nav className="w-full hidden md:block bg-offwhitebg ">
         <div className="flex flex-row  h-[4.5vw] justify-between items-center ">
           <div className='m-auto'>
                 <TransitionLink to='/'>

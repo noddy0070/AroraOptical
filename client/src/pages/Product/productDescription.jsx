@@ -5,6 +5,7 @@ import placeholder from "../../assets/images/CategoryPlaceholder.png";
 import categoryPlaceholder from '../../assets/images/CategoryPlaceholder.png';
 import WishListIcon from '../../assets/images/icons/WishlistIcon.svg'
 import WishListIconFilled from '../../assets/images/icons/WishlistIconFilled.svg'
+import * as logos from "../../assets/images/companyLogos";
 import './product.css';
 import { IconButton } from '../../components/button';
 import { renderStars } from '@/components/RenderStarts';
@@ -12,60 +13,25 @@ import axios from 'axios';
 import { formatINR } from '@/components/IntToPrice';
 import { baseURL } from '@/url';
 import { TransitionLink } from '@/Routes/TransitionLink';
-const product={
-    name: 'Product Name',
-    model: 'Model Name',
-    price: 'Price',
-    rating: 3.5,
-    noOfReviews: 100,
-    productDescription:"Product Description- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.",
-    sizes: ['S','M','L','XL'],
-    variants: ['Option One','Option Two','Option Three','Option Four'],
-    productDetail:"Product Details- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.",
-    productSpecifications:["Specification1","Specification2","Specification3","Specification4"],
+
+const mapBrandToLogo = {
+    "Ray Ban": logos.rayban, 
+    "Oakley": logos.dakley,
+    "Prada": logos.prada,
+    "Versace": logos.versace,
+    "Gucci": logos.gucci,
 }
-
-const buyingOptions=[
-    {
-        img:categoryPlaceholder,
-        title:'Non Prescriptive',
-        description:'Fashion-forward frames with clear lenses—no prescription needed.',
-    },
-    {
-        img:categoryPlaceholder,
-        title:'Single Vision',
-        description:'Perfect for clear vision at one distance—ideal for reading or distance.',
-    },
-    {
-        img:categoryPlaceholder,
-        title:'Varifocal',
-        description:'Seamless transition between near and far vision in one lens.',
-    }
-]
-
-const lensOptions=[
-    {
-        img:categoryPlaceholder,
-        title:'Clear',
-        description:'Classic, crystal-clear lenses for everyday use—offering sharp, undistorted vision.',
-    },
-    {
-        img:categoryPlaceholder,
-        title:'Blue Lenses',
-        description:'Protect your eyes from digital strain with lenses designed to filter blue light.',
-    },
-    {
-        img:categoryPlaceholder,
-        title:'Light Adative',
-        description:'Versatile lenses that adjust to changing light—darken in sunlight and  clear indoors',
-    }
-]
+const mapBrandToDescription = {
+    "Ray Ban": "The modern evolution of the emblem of '60s rock and '80s art. The Mega Wayfarer, a new icon that makes modernity its own.",
+    "Oakley": "Oakley is a pioneer and industry leader in sport performance and lifestyle eyewear. Culture never stops shifting and we continue to shift with it. HSTN Rx is the eyeglass version of the HSTN sunglass.",
+    "Prada": "Prada is a brand of sunglasses and eyeglasses. It was founded in 1913 by Mario Prada, a company that manufactures and sells eyeglasses and sunglasses.",
+    "Versace": "Versace is a brand of sunglasses and eyeglasses. It was founded in 1978 by Gianni Versace, a company that manufactures and sells eyeglasses and sunglasses.",
+    "Gucci": "Gucci is a brand of sunglasses and eyeglasses. It was founded in 1921 by Guccio Gucci, a company that manufactures and sells eyeglasses and sunglasses.",
+}
 
 
 export default function ProductDescription({productToDisplay}){
     const [selectedSize, setSelectedSize] = useState('');
-    const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
-    const [selectedQuantity, setSelectedQuantity] = useState(1);
     const [isHovered, setIsHovered] = useState(false);
     const [isDetailClicked, setIsDetailClicked] = useState(true);
     const [isShipingClicked, setIsShipingClicked] = useState(true);
@@ -73,6 +39,7 @@ export default function ProductDescription({productToDisplay}){
     const [isInWishlist, setIsInWishlist] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [similarProducts, setSimilarProducts] = useState([]);
     const navigate = useNavigate();
     const { user, isAuthenticated } = useSelector((state) => state.auth);
 
@@ -88,14 +55,6 @@ export default function ProductDescription({productToDisplay}){
       setSelectedSize(event.target.value);
     };
 
-    const handleVariantClick = (variant) => {
-        setSelectedVariant(variant);
-      };
-
-      const handleQuantityChange = () => {
-        const value = quantityInputRef.current.value;
-        setSelectedQuantity(value); 
-      };
 
     const [totalRating, setTotalRating] = useState(0);
     useEffect(() => {
@@ -139,6 +98,32 @@ export default function ProductDescription({productToDisplay}){
         }
     }, [isAuthenticated, user, productToDisplay._id]);
 
+    useEffect(() => {
+        // Fetch similar products based on category and brand
+        const fetchSimilarProducts = async () => {
+            try {
+                const response = await axios.get(`${baseURL}/api/admin/get-products`, {
+                    params: {
+                        category: productToDisplay.category,
+                        brand: productToDisplay.brand,
+                        limit: 4 // Limit to 4 similar products
+                    }
+                });
+                
+                // Filter out the current product and limit to 4 items
+                const filtered = response.data.products
+                    .filter(product => product._id !== productToDisplay._id)
+                    .slice(0, 4);
+                
+                setSimilarProducts(filtered);
+            } catch (error) {
+                console.error('Error fetching similar products:', error);
+            }
+        };
+
+        fetchSimilarProducts();
+    }, [productToDisplay]);
+
     const handleAddToCart = async () => {
         if (!isAuthenticated) {
             navigate('/login');
@@ -151,7 +136,7 @@ export default function ProductDescription({productToDisplay}){
             const response = await axios.post(`${baseURL}/api/user/cart/add`, {
                 userId: user._id,
                 productId: productToDisplay._id,
-                quantity: selectedQuantity
+                quantity: 1
             }, {
                 withCredentials: true
             });
@@ -204,7 +189,6 @@ export default function ProductDescription({productToDisplay}){
         }
     };
 
-      console.log(productToDisplay.frameAttributes.length>0)
     return (
         <div >
         <div className='font-roboto text-regularText flex  flex-row lg:px-[2vw] gap-[1.5vw]'>
@@ -213,7 +197,7 @@ export default function ProductDescription({productToDisplay}){
             <div className='flex flex-col w-[53.6875vw] gap-[1.5vw]'> 
             <div className='flex flex-row h-[47.75vw]  w-full gap-[1.125vw]'>
                 {/* Thumbnails */}
-                <div className="flex flex-col h-[46.75vw] overflow-y-auto gap-[1vw] hide-scrollbar">
+                <div className="flex  flex-col h-[46.75vw] overflow-y-auto gap-[1vw] hide-scrollbar">
                     {images.map((img, index) => {
                     // ❗ Only hide the selected image (not hovered)
 
@@ -221,7 +205,7 @@ export default function ProductDescription({productToDisplay}){
                         <img
                                 key={index}
                                 src={img}
-                                className={`h-[7vw] w-[6.875vw]  rounded-[10px] cursor-pointer object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
+                                className={`h-[7vw] w-[6.875vw] bg-white  rounded-[10px] cursor-pointer object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                                 onClick={() => setSelectedIndex(index)}
@@ -231,15 +215,15 @@ export default function ProductDescription({productToDisplay}){
                         </div>
 
             {/* Main Image with smooth transition */}
-            <div className="relative h-full w-[45.6875vw] ml-4 overflow-hidden ">
+            <div className="relative  h-full w-[45.6875vw] ml-4 overflow-hidden bg-white  rounded-[2vw]   ">
             <img
                 key={mainImage} // ⚠️ important: force re-render on image change
                 src={mainImage}
-                className="h-full w-full object-cover transition-all duration-500 ease-in-out opacity-0 animate-fade-in "
+                className="h-full w-full object-cover  transition-all duration-500 ease-in-out p-[2vw] opacity-0 animate-fade-in "
             />
-            <div className='absolute top-[12px] right-[12px] flex gap-[8px] '>
+            <div className='absolute top-[1vw] right-[1vw] flex gap-[8px] '>
                 {tags.map((tag, index) => (
-                <div className=' px-[16px] py-[8px] rounded-[1.25vw] text-center md:min-w-[7.125vw] border-[1px] border-black text-tinyTextPhone md:text-tinyText' key={index}>{tag}</div>
+                <div className=' px-[16px]  py-[8px] rounded-[1.25vw] text-center md:min-w-[7.125vw] border-[1px] border-black text-tinyTextPhone md:text-tinyText' key={index}>{tag}</div>
                 ))}
                 <button onClick={handleWishlist} disabled={loading}>
                     <img 
@@ -259,6 +243,7 @@ export default function ProductDescription({productToDisplay}){
             <div className=' w-[41.8125vw] lg:w-[37.8125vw]'>
             <div className='flex flex-col gap-[1.5vw] w-[41.8125vw] lg:w-[37.8125vw] '>
                 {/* Product Details block */}
+                <img src={mapBrandToLogo[productToDisplay.brand]} alt="sf" className='w-auto h-[2.5vw] mr-auto object-contain' />
                 <div>
                     <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelTitle}</h3>
                     <span className='leading-[150%]'>{productToDisplay.modelName}</span>
@@ -329,7 +314,7 @@ export default function ProductDescription({productToDisplay}){
                                 const lensColorValue = lensColorAttribute ? lensColorAttribute.value : null;
                                 return (
                                 variant._id==productToDisplay._id?
-                                <div className={`rounded-[8px] w-[12.5vw] p-[12px] border-[1px] ${variant._id==productToDisplay._id?"border-black":""    } `}>
+                                <div className={`rounded-[8px] w-[12.5vw] p-[12px] bg-white border-[1px] ${variant._id==productToDisplay._id?"border-black":""    } `}>
                                    <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[0]} />
                                    {colorAttribute && <div className='w-full flex justify-between mb-[8px]'>
                                     <span>Color</span>
@@ -378,13 +363,15 @@ export default function ProductDescription({productToDisplay}){
 
             </div>
         </div>
-        <div className='px-[4vw] flex flex-col gap-[2.5vw] '>
+
+        {/* Product Details */}
+        <div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw] '>
             <h2 className='font-dyeLine text-h3Text font-semibold'>Product Detail</h2>
             {
                 productToDisplay.frameAttributes.length>0 && 
                 <div>
 
-                    <h4 className='text-h4Text font-dyeLine font-semibold mb-[1vw]'>Frame</h4>
+                    <h4 className='text-h4Text font-dyeLine font-semibold '>Frame</h4>
                     <div className='flex flex-wrap gap-[2vw]'>
                         {productToDisplay.frameAttributes.map((item,index)=>(
                             <div className='text-regularText' key={index}>
@@ -399,7 +386,7 @@ export default function ProductDescription({productToDisplay}){
                 productToDisplay.lensAttributes.length>0 && 
                 <div>
 
-                    <h4 className='text-h4Text font-dyeLine font-semibold mb-[1vw]'>Lens</h4>
+                    <h4 className='text-h4Text font-dyeLine font-semibold '>Lens</h4>
                     <div className='flex flex-wrap gap-[2vw]'>
                         {productToDisplay.lensAttributes.map((item,index)=>(
                             <div className='text-regularText' key={index}>
@@ -414,7 +401,7 @@ export default function ProductDescription({productToDisplay}){
                 productToDisplay.generalAttributes.length>0 && 
                 <div>
 
-                    <h4 className='text-h4Text font-dyeLine font-semibold mb-[1vw]'>General</h4>
+                    <h4 className='text-h4Text font-dyeLine font-semibold '>General</h4>
                     <div className='flex flex-wrap gap-[2vw]'>
                         {productToDisplay.generalAttributes.map((item,index)=>(
                             <div className='text-regularText' key={index}>
@@ -426,7 +413,73 @@ export default function ProductDescription({productToDisplay}){
                     </div>
             }
         </div>
+
+        {/* Product Description */}
+        <div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw] '>
+            <h2 className='font-dyeLine text-h3Text font-semibold'>Seller Information</h2>
+            <div className='flex flex-row  mx-auto items-center gap-[7.5vw]'>
+                <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand}  className='w-auto h-[9vw]  object-contain' />
+                <div className='w-[45vvw]'>
+                    <p className='text-regularText'>{mapBrandToDescription[productToDisplay.brand]}</p>
+                </div>
+            </div>
         </div>
 
+        {/* Similar Products */}
+        <div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw]'>
+            <div className='flex justify-between items-center'>
+                <h2 className='font-dyeLine text-h3Text font-semibold'>Similar Products</h2>
+                <button className='text-regularText hover:underline'>View all</button>
+            </div>
+            <p className='text-regularText'>You might like these products too....</p>
+            
+            <div className='grid grid-cols-4 gap-[1vw]'>
+                {similarProducts.map((product, index) => (
+                    <TransitionLink to={`/product/${product._id}`} key={product._id}>
+                        <div className='relative bg-white rounded-[10px] overflow-hidden border border-gray-200'>
+                            <div className='relative aspect-w-1 aspect-h-1'>
+                                <img 
+                                    src={product.images[0]} 
+                                    alt={product.modelTitle}
+                                    className='w-full h-full object-cover'
+                                />
+                                <button 
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleWishlist(product._id);
+                                    }}
+                                    className='absolute top-2 right-2'
+                                >
+                                    <img 
+                                        src={isInWishlist ? WishListIconFilled : WishListIcon}
+                                        alt="wishlist"
+                                        className='w-[1.5vw] h-[1.5vw]'
+                                    />
+                                </button>
+                            </div>
+                            <div className='p-[1vw]'>
+                                <div className='flex items-center justify-between mb-1'>
+                                    <span className='font-medium'>{product.brand}</span>
+                                    <span className='text-sm'>{product.review?.length > 0 ? `${renderStars(product.review.reduce((acc, item) => acc + item.rating, 0) / product.review.length)} • ${product.review.length}` : "No Reviews"}</span>
+                                </div>
+                                <h3 className='font-bold text-h6Text mb-1'>{product.modelTitle}</h3>
+                                <p className='text-sm text-gray-600'>{product.modelName}</p>
+                                <div className='mt-2'>
+                                    <span className='font-bold'>{formatINR(product.discount)}</span>
+                                    {product.price !== product.discount && (
+                                        <span className='ml-2 text-sm line-through text-gray-500'>{formatINR(product.price)}</span>
+                                    )}
+                                </div>
+                                <button className='w-full mt-2 py-2 bg-btngrery rounded-full text-sm font-medium hover:bg-gray-200 transition-colors'>
+                                    Add To Cart
+                                </button>
+                            </div>
+                        </div>
+                    </TransitionLink>
+                ))}
+            </div>
+        </div>
+        </div>
     );
 };

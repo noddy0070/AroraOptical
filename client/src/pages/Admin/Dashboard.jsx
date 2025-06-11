@@ -43,7 +43,7 @@ const homeSection = [
 ];
 
 const settingsSection = [
-  { id: 'Setting', path: ['/Admin/search'], icon: SettingsIcon, subSections: [] },
+  { id: 'Eye Test', path: ['/Admin/eye-test-management'], icon: SettingsIcon, subSections: [] },
 ];
 
 const supportSection = [
@@ -56,7 +56,7 @@ const supportSection = [
 
 const mainSections = [
   { id: 'Home', subSections: homeSection },
-  { id: 'Settings', subSections: settingsSection },
+  { id: 'Extras', subSections: settingsSection },
   { id: 'Support', subSections: supportSection },
 ];
 

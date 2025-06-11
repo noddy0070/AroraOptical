@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify';
+import { baseURL } from '@/url';
 
 const BookingForm = () => {
   const { user } = useSelector(state => state.auth);
@@ -29,8 +30,9 @@ const BookingForm = () => {
   const fetchAvailableSlots = async (date) => {
     try {
       const formattedDate = date.toISOString().split('T')[0];
-      const response = await fetch(`/api/eye-test/available-slots?date=${formattedDate}`);
+      const response = await fetch(`${baseURL}/api/eye-test/available-slots?date=${formattedDate}`);
       const data = await response.json();
+      console.log(data);
       setAvailableSlots(data);
     } catch (error) {
       console.error('Error fetching slots:', error);

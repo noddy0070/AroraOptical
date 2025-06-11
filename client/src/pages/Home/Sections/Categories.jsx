@@ -74,7 +74,7 @@ const CategoryCard = ({ category, index }) => {
 
 export default function Categories() {
     return (
-        <div className='select-none mx-[-5vw] pt-[6vw] md:pt-[7vw] md:mx-[-2vw] overflow-hidden flex flex-col'>
+        <div className='bg-offwhitebg select-none mx-[-5vw] pt-[6vw] md:pt-[7vw] md:mx-[-2vw] overflow-hidden flex flex-col'>
             <div className='flex justify-center mb-[4vw]'>
                 <h2 className='text-h3TextPhone md:text-h2Text leading-[120%] text-center font-dyeLine font-bold'>
                     Fresh arrivals and new<br/> selections

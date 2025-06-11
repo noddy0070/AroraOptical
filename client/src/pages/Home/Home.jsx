@@ -18,7 +18,7 @@ const SectionLoader = () => (
 
 export default function Home() {
     return(
-        <div className='relative pt-[2.25vw] overflow-hidden px-[5vw] md:px-[2vw]'>
+        <div className='relative bg-offwhitebg pt-[2.25vw] overflow-hidden px-[5vw] md:px-[2vw]'>
             {/* Priority sections loaded immediately */}
             <HeroSection/>
             <Categories/>

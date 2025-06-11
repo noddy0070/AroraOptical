@@ -9,7 +9,6 @@ export const test=(req,res)=>{;
 // Editing User Profile Function
 export const update=async (req,res)=>{
     if(req.body.id!==req.params.id){
-        console.log("error");
         return;}
 
     try{
@@ -65,9 +64,7 @@ export const getUser = async (req, res, next) => {
     return res.status(400).json({ message: "Invalid product ID" });
   }
   try {
-    console.log(id);
     const user = await User.findById(id);
-    console.log(user);
     res.status(200).json({success:true,message:user});
   } catch (err) {
     console.error('Error fetching product:', err);

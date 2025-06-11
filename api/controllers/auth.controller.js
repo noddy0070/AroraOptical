@@ -91,7 +91,6 @@ export const login= async (req,res,next)=>{
         const {password:pass,...rest}=validUser._doc;
         res.cookie('token',token,{ httpOnly: true, secure: true, sameSite: "None",maxAge:7*24*60*60*1000, });
         res.status(200).json({success:true,message:rest});
-        console.log("User logged in successfully");
     }
     catch(error){
         next(error);
@@ -101,7 +100,6 @@ export const login= async (req,res,next)=>{
 // POST /api/auth/logout  
 export const logout=async(req,res)=>{
   try {
-    console.log("Logout called");
     res.clearCookie('token', { 
       httpOnly: true, 
       sameSite: 'None', 

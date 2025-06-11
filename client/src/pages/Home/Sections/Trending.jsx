@@ -15,7 +15,7 @@ export default function Trending(){
                 <div className="absolute inset-0 bg-gradient-to-t from-[rgba(126,126,126,0.37)] via-transparent to-transparent"></div>
             </div>
 
-            <div className='md:col-span-1 h-full'>
+            <div className='md:col-span-1 h-full bg-white md:rounded-none md:rounded-r-[3.125vw] rounded-[4vw]'>
                 <div className='px-[4vw] flex flex-col justify-center gap-[2vw] md:gap-[1vw] items-center h-full'>
                     <button className=' rounded-[6vw] md:rounded-[3.125vw] w-[21vw] md:w-[10.5vw] h-[8vw] md:h-[4vw]  border-solid border-black border-[1px]'>
                         <span className='font-roboto text-[12px] md:text-regularText'>Offers</span>

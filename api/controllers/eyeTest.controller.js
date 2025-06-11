@@ -32,6 +32,7 @@ export const getAvailableTimeSlots = async (req, res, next) => {
         });
       }
     }
+    console.log("allTimeSlots",allTimeSlots);
 
     // Get booked slots for the date
     const bookedTests = await EyeTest.find({
@@ -43,6 +44,7 @@ export const getAvailableTimeSlots = async (req, res, next) => {
     }).select('timeSlot');
 
     const bookedSlots = bookedTests.map(test => test.timeSlot);
+    console.log("bookedSlots",bookedSlots);
 
     // Filter out booked slots
     const availableSlots = allTimeSlots.filter(slot => !bookedSlots.includes(slot.value));
