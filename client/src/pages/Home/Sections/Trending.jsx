@@ -25,7 +25,7 @@ export default function Trending(){
 
                     </h3>
                     <span className='text-center font-roboto justify-end text-[14px] md:text-regularText '>
-                    Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.Norem ipsum dolor sit amet, consectetur 
+                    Discover our latest trending eyewear collections featuring premium frames, designer sunglasses, and exclusive offers. From classic elegance to contemporary styles, find your perfect look with unbeatable deals and seasonal discounts.
                     </span>
                     <div className='flex flex-row justify-center group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 gap-[.1vw] '>
                         <TitleButton btnHeightPhone={12.5} btnRadiusPhone={9} btnWidthPhone={47} btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>

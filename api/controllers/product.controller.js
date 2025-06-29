@@ -1,8 +1,8 @@
 import Product from "../models/product.model.js";
 import mongoose from "mongoose";
 export const addProduct= async (req,res,next)=>{
-    const {modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes}=req.body;
-    const newProduct= new Product({modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes});
+    const {modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes,rx}=req.body;
+    const newProduct= new Product({modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes,rx});
     const existingProduct = await Product.findOne({ modelCode });
     if (existingProduct) {
         return res.status(400).json({ message: 'Product already exists' });
@@ -97,12 +97,12 @@ export const updateProduct=async (req,res)=>{
         console.log("error");
         return;
     }
-    const {modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes}=req.body;
+    const {modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes,rx}=req.body;
     try{
 
         const updatedProduct=await Product.findByIdAndUpdate(req.params.id,
             {$set:{
-               modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes
+               modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes,rx
             }},{new:true}
         )
         res.status(200).json({success:true,message:updatedProduct});

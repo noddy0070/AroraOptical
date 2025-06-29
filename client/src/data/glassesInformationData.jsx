@@ -8,7 +8,7 @@ const Colors=[{colorName:'Black',colorCode:'' },{colorName:'Brown',colorCode:'' 
 
 const Size=['S', 'M', 'L','XL'];
 
-const Categories=['Sunglasses','Eyeglasses','Contact Lenses','Cases','Lens Wipes','Lens solution','Cleaning cloth','Travelling kit'];
+const Categories=['Sunglasses','Eyeglasses','Contact Lenses','Accessories','Smart Glasses'];
 
 const Classification=['Men','Women','Kids','Unisex'];
 

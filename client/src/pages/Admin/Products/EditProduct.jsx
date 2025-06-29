@@ -27,6 +27,7 @@ const defaultForm = {
   lensAttributes: [],
   frameAttributes: [],
   generalAttributes: [],
+  rx:false  
 };
 
 
@@ -277,11 +278,13 @@ const EditProduct=()=>{
                     <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
                     <FormField label="Model Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
                     <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={Brand} />
-                    
                     <div className="grid grid-cols-2 gap-[1vw]">
                       <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
                       <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={Classification} />
                     </div>
+                    {(form.category == "Eyeglasses" || form.category === "Contact Lenses" || form.category === "Smart Glasses") && (
+                      <FormField label="Rx" name="rx" value={form.rx} onChange={handleChange} options={["true","false"]} />
+                    )}
 
                     <FormField label="Description" name="description" type="textarea" value={form.description} onChange={handleChange} />
                     <FormField label="Price" name="price" value={form.price} onChange={handleChange} />

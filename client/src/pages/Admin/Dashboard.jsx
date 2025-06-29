@@ -31,6 +31,7 @@ const userSection = [
 
 const orderSection = [
   { id: "Order List" },
+  { id: "Order Management" },
 ];
 
 const homeSection = [
@@ -39,7 +40,7 @@ const homeSection = [
   { id: 'Ecommerce', path: ['/Admin/products', '/Admin/add-product'], icon: EcommerceIcon, subSections: ecommerceSection },
   { id: 'Attributes', path: ['/Admin/attributes'], icon: AttributesIcon, subSections: attributesSection },
   { id: 'User', path: ['/Admin/user', '/Admin/add-user'], icon: UserIcon, subSections: userSection },
-  { id: 'Order', path: ['/Admin/analytics'], icon: OrderIcon, subSections: orderSection },
+  { id: 'Order', path: ['/Admin/orders', '/Admin/order-management'], icon: OrderIcon, subSections: orderSection },
 ];
 
 const settingsSection = [

@@ -4,15 +4,34 @@ const Footer=()=>{
     return(
         <footer className="px-[5vw]  footer py-[7vw] md:py-[5vw]  md:px-[4vw] font-roboto text-regularTextPhone md:text-regularText flex flex-col md:gap-[5vw] gap-[20vw]">
         <div className="flex flex-col md:flex-row gap-[6vw] md:gap-[1.5vw] ">
-            <div className='flex flex-col gap-[6vw] md:gap-[1.5vw]'>
-                <img src={logo} alt='logo' className='mb-[2vw] md:mb-[.5vw] h-[19vw] w-[27vw] md:w-[6.75vw] md:h-[4.75vw]' />
-                <span><strong>Address:</strong><br className='block md:hidden'/> Arora Opticals, Civil Lines, Cantt, Jhansi, Uttar Pradesh 284001</span>
-                <span><strong>Contact:<br/></strong><a href="tel:+9415031678" className="underline md:no-underline hover:underline">
-                    9415031678
-                    </a><br/><a href="mailto:aroraopticalssadar@gmail.com" className="underline md:no-underline  hover:underline">
-  aroraopticalssadar@gmail.com
-</a>
-</span>
+            <div className='flex flex-col gap-[6vw] md:gap-[1vw]'>
+                {/* <img src={logo} alt='logo' className='mb-[2vw] md:mb-[.5vw] h-[19vw] w-[27vw] md:w-[6.75vw] md:h-[4.75vw]' /> */}
+                <span className="flex items-start gap-[2vw] md:gap-[0.5vw]">
+                    <svg className="w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw] mt-[0.5vw] md:mt-[0.2vw] flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="black"/>
+                    </svg>
+                    <div>
+                        <strong>Address:</strong><br/><br className='block md:hidden'/> Arora Opticals, Civil Lines, Cantt, Jhansi, Uttar Pradesh 284001
+                    </div>
+                </span>
+                <span className="flex items-start gap-[2vw] md:gap-[0.5vw]">
+                    <svg className="w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw] mt-[0.5vw] md:mt-[0.2vw] flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="black"/>
+                    </svg>
+                    <div>
+                        <strong>Phone: </strong><br/><a href="tel:+919415031678" className="underline md:no-underline hover:underline">+91 9415031678</a><br/> <a href="tel:+917007946072" className="underline md:no-underline hover:underline">+91 7007946072</a>
+                    </div>
+                </span>
+                <span className="flex items-start gap-[2vw] md:gap-[0.5vw]">
+                    <svg className="w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw] mt-[0.5vw] md:mt-[0.2vw] flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="black"/>
+                    </svg>
+                    <div>
+                        <strong>Email:</strong><br/><a href="mailto:aroraopticalssadar@gmail.com" className="underline md:no-underline hover:underline">
+                            aroraopticalssadar@gmail.com
+                        </a>
+                    </div>
+                </span>
 <div className='flex flex-row gap-[3vw] md:gap-[.75vw]'>
     
     <a href='https://www.facebook.com/optilens.12'>
@@ -44,13 +63,27 @@ const Footer=()=>{
                 <span></span>
             </div>
             <div className="w-full md:w-[16.25vw] flex flex-col gap-[3vw] md:gap-[.75vw]">
-                <span>Shop</span>
-                <span>Men</span>
-                <span>Women</span>
-                <span>Brands</span>
-                <span>Blog</span>
-                <span>About Us</span>
-                <span>Free Eye Test</span>
+                <TransitionLink to="/shop/eyeglasses/all" className="hover:underline cursor-pointer">
+                    <span>Shop</span>
+                </TransitionLink>
+                <TransitionLink to="/shop/eyeglasses/men" className="hover:underline cursor-pointer">
+                    <span>Men</span>
+                </TransitionLink>
+                <TransitionLink to="/shop/eyeglasses/women" className="hover:underline cursor-pointer">
+                    <span>Women</span>
+                </TransitionLink>
+                <TransitionLink to="/shop/smart-glasses/all" className="hover:underline cursor-pointer">
+                    <span>Smart Glasses</span>
+                </TransitionLink>
+                <TransitionLink to="/blog" className="hover:underline cursor-pointer">
+                    <span>Blog</span>
+                </TransitionLink>
+                <TransitionLink to="/about-us" className="hover:underline cursor-pointer">
+                    <span>About Us</span>
+                </TransitionLink>
+                <TransitionLink to="/eye-test" className="hover:underline cursor-pointer">
+                    <span>Free Eye Test</span>
+                </TransitionLink>
             </div>
             
         </div>

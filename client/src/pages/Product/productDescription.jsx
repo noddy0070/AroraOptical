@@ -304,8 +304,8 @@ export default function ProductDescription({productToDisplay}){
                 </div>
 
                 {/* Variant block */}
-                <div className='flex flex-col gap-[.5vw]'>
-                        <div className='flex flex-row gap-[.5vw] overflow-x-auto'>
+                <div className='flex flex-col gap-[.5vw] '>
+                        <div className='flex flex-row gap-[.5vw] overflow-x-auto '>
                             {productsModel.map((variant,index)=>{
                                 const colorAttribute = variant.frameAttributes.find(attr => attr.name === "Color");
                                 const colorValue = colorAttribute ? colorAttribute.value : null;
@@ -326,7 +326,7 @@ export default function ProductDescription({productToDisplay}){
                                    </div>}
                                 </div>
                                 :<TransitionLink to={`/product/${variant._id}`}>
-                                <div className={`rounded-[8px] w-[12.5vw] p-[12px] border-[1px]  `}>
+                                <div className={`rounded-[8px] w-[12.5vw] p-[12px] border-[1px] bg-white `}>
                                    <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[0]} />
                                    {colorAttribute && <div className='w-full flex justify-between mb-[8px]'>
                                     <span>Color</span>
@@ -343,17 +343,21 @@ export default function ProductDescription({productToDisplay}){
                 </div>
 
                 {/* Buy and add to cart button */}
-                <div className='flex flex-row gap-[1vw]'>
+                <div className='flex flex-row gap-[1vw] mx-auto'>
                      <button 
                         onClick={handleAddToCart}
                         disabled={loading}
-                        className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey disabled:bg-gray-400'
+                        className= {` rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey disabled:bg-gray-400 ${productToDisplay.rx?"w-[16vw]":"w-[32vw]"}`}
                     >
                         {loading ? 'Adding...' : 'Add to Cart'}
                     </button>
-                     <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery'>
+                    {productToDisplay.rx && (
+                        <TransitionLink to={'/lens'}>
+                        <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery'>
                         Select Lenses
                      </button>
+                        </TransitionLink>
+                    )}
                 </div>
                 {error && <p className='text-red-500 text-center mt-2'>{error}</p>}
                 {/* Notice  */}

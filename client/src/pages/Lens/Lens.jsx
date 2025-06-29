@@ -3,6 +3,7 @@ import lensCoatingImg from '../../assets/images/lensPage/lensCoating.png';
 import lensThicknessImg from '../../assets/images/lensPage/lensThickness.png';
 import prescriptionImg from '../../assets/images/lensPage/prescription.png';
 import {useState,useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import LensType from './LensType';
 import LensCoating from './LensCoating';
 import LensThickness from './LensThickness';
@@ -15,6 +16,7 @@ import { TransitionLink } from '../../Routes/TransitionLink';
 const lensData=[{id:'lensType',img:lensTypeImg},{id:'lensCoating',img:lensCoatingImg},{id:'lensThickness',img:lensThicknessImg},{id:'prescription',img:prescriptionImg}];
 
 export default function Lens() {
+  const navigate = useNavigate();
   const [amount, setAmount] = useState(0);
   const [focusedTopPosition, setFocusedTopPosition] = useState(null);  
   const [focused, setFocused] = useState("lensType");
@@ -115,17 +117,18 @@ export default function Lens() {
             </div>
 
             <div className="relative  w-[83.8125vw] flex flex-col items-center  ">
-              <TransitionLink to="/">
-              <button className='w-[2.5vw] h-[2.5vw] absolute top-[2.8125vw] right-[2.1875vw] cursor-pointer shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] border-[1px] border-white bg-[#CECECE] rounded-full'>
+              <button 
+                onClick={() => navigate(-1)}
+                className='w-[2.5vw] h-[2.5vw] absolute z-[100] top-[2.8125vw] right-[2.1875vw] cursor-pointer shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] border-[1px] border-white bg-[#CECECE] rounded-full'
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="p-[.5vw] text-white rounded-cross-icon">
                   <line x1="5" y1="5" x2="19" y2="19" />
                   <line x1="19" y1="5" x2="5" y2="19" />
                 </svg>
               </button>
-              </TransitionLink>
 
-              <div className="relative w-full mt-[5vw]   h-[28.625vw]">
+              <div className="relative w-full mt-[3vw]   h-[28.625vw]">
             <div className="relative  h-[28.625vw]">
             <div
               className="relative transition-transform duration-700 ease-in-out"

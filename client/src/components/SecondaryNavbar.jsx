@@ -117,18 +117,15 @@ export default function SecondaryNavbar() {
 
       <div className='mt-[3vw] text-regularText font-roboto text-[#737373] font-bold flex flex-col gap-[.625vw]'>
         <p className='text-black mb-[.625vw]'>Contact Lenses</p>
+        <p className="hover:text-black transition-colors duration-200 cursor-pointer">Bauch and lomb </p>
+        <p className="hover:text-black transition-colors duration-200 cursor-pointer">Cooper Vision</p>
+        <p className="hover:text-black transition-colors duration-200 cursor-pointer">Johnson & Johnson</p>
+        <p className="hover:text-black transition-colors duration-200 cursor-pointer">Silklens</p>
+        <p className="hover:text-black transition-colors duration-200 cursor-pointer">Purecon</p>
        
       </div>
 
-      <div className='mt-[3vw] text-regularText font-roboto text-[#737373] font-bold flex flex-col gap-[.625vw]'>
-        <p className='text-black mb-[.625vw]'>Computer Glasses</p>
-        <p>New Arrivals</p>
-        <p>Bestsellers</p>
-        <p>Women</p>
-        <p>Men</p>
-        <p>Kids</p>
-        <p>Polarized</p>
-      </div>
+      
 
       <div className='mt-[3vw] text-regularText font-roboto text-[#737373] font-bold flex flex-col gap-[.625vw]'>
         <p className='text-black mb-[.625vw]'>Accessories</p>
@@ -144,48 +141,48 @@ export default function SecondaryNavbar() {
     </div>
   );
 
-  const shopDropdown = [
-    { 
-      label: 'Eyeglasses', 
-      to: '/shop/eyeglasses/all',
-      description: 'Stylish frames for prescription lenses'
-    },
-    { 
-      label: 'Sunglasses', 
-      to: '/shop/sunglasses/all',
-      description: 'Protect your eyes with trendy shades'
-    },
-    { 
-      label: 'Contact Lenses', 
-      to: '/shop/contact-lenses/all',
-      description: 'Daily, monthly, and colored contacts'
-    },
-    { 
-      label: 'Computer Glasses', 
-      to: '/shop/computer-glasses/all',
-      description: 'Blue light protection for digital screens'
-    },
-    { 
-      label: 'Accessories', 
-      to: '/shop/accessories/all',
-      description: 'Cases, cleaners, and eyewear care'
-    },
-    { 
-      label: 'New Arrivals', 
-      to: '/shop/new-arrivals',
-      description: 'Latest additions to our collection'
-    },
-    { 
-      label: 'Best Sellers', 
-      to: '/shop/best-sellers',
-      description: 'Most popular frames and styles'
-    },
-    { 
-      label: 'Sale', 
-      to: '/shop/sale',
-      description: 'Special offers and discounts'
-    }
-  ];
+  // const shopDropdown = [
+  //   { 
+  //     label: 'Eyeglasses', 
+  //     to: '/shop/eyeglasses/all',
+  //     description: 'Stylish frames for prescription lenses'
+  //   },
+  //   { 
+  //     label: 'Sunglasses', 
+  //     to: '/shop/sunglasses/all',
+  //     description: 'Protect your eyes with trendy shades'
+  //   },
+  //   { 
+  //     label: 'Contact Lenses', 
+  //     to: '/shop/contact-lenses/all',
+  //     description: 'Daily, monthly, and colored contacts'
+  //   },
+  //   { 
+  //     label: 'Computer Glasses', 
+  //     to: '/shop/computer-glasses/all',
+  //     description: 'Blue light protection for digital screens'
+  //   },
+  //   { 
+  //     label: 'Accessories', 
+  //     to: '/shop/accessories/all',
+  //     description: 'Cases, cleaners, and eyewear care'
+  //   },
+  //   { 
+  //     label: 'New Arrivals', 
+  //     to: '/shop/new-arrivals',
+  //     description: 'Latest additions to our collection'
+  //   },
+  //   { 
+  //     label: 'Best Sellers', 
+  //     to: '/shop/best-sellers',
+  //     description: 'Most popular frames and styles'
+  //   },
+  //   { 
+  //     label: 'Sale', 
+  //     to: '/shop/sale',
+  //     description: 'Special offers and discounts'
+  //   }
+  // ];
 
   <div className="
   "></div>
@@ -193,7 +190,7 @@ export default function SecondaryNavbar() {
     <nav className="w-full bg-offwhitebg relative md:sticky top-0 z-50">
       <div className="relative flex whitespace-nowrap flex-row px-[2vw] md:py-[.75vw] md:h-[4.5vw] items-center font-roboto text-regularText">
         <div className='relative flex flex-row w-full items-center gap-[2vw]'>
-          <div className='flex-row hidden md:flex'>
+          <div className='flex-row hidden md:flex font-bold'>
             <div className="relative">
               <button 
                 onMouseEnter={() => handleDropdownEnter('shop')}
@@ -207,7 +204,7 @@ export default function SecondaryNavbar() {
 
 
             <button className="text-regularText px-[1vw] py-[1vw] focus:outline-none hover:underline hover:text-gray-500">
-              Brands
+              Smart Glasses
             </button>
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
@@ -222,7 +219,9 @@ export default function SecondaryNavbar() {
             </button>
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
+            <TransitionLink to="/about-us">
               About Us
+            </TransitionLink>
             </button>
           </div>
 
@@ -259,7 +258,7 @@ export default function SecondaryNavbar() {
               {isAuthenticated ? (
                 <TransitionLink to='/settings'>
                   <div className='hidden md:flex flex-row gap-[.5vw] items-center'>
-                    <img className='w-[2vw] h-[2vw]' src={profilePlaceholder} alt="Profile"/>
+                    {/* <img className='w-[2vw] h-[2vw]' src={profilePlaceholder} alt="Profile"/> */}
                     <span className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
                       {user?.name}
                     </span>

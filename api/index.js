@@ -6,6 +6,7 @@ import authRouter from './routes/auth.route.js';
 import adminRouter from './routes/admin.route.js';
 import imageRouter from './routes/image.route.js';
 import eyeTestRouter from './routes/eyeTest.route.js';
+import orderRouter from './routes/order.route.js';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -84,6 +85,7 @@ app.use('/api/auth', authRouter); // includes /google, /google/callback
 app.use('/api/admin', adminRouter);
 app.use('/api/image', imageRouter);
 app.use('/api/eye-test', eyeTestRouter);
+app.use('/api/order', orderRouter);
 
 // ========== ERROR HANDLER ==========
 app.use((err, req, res, next) => {

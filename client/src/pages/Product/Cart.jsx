@@ -9,6 +9,7 @@ import add from '../../assets/images/icons/add.svg';
 import subtract from '../../assets/images/icons/subtract.svg';
 import axios from 'axios';
 import { baseURL } from '@/url';
+import { useNavigate } from 'react-router-dom';
 
 export default function Cart(){
     const [cartItems, setCartItems] = useState([]);
@@ -19,6 +20,7 @@ export default function Cart(){
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const { user } = useSelector((state) => state.auth);
+    const navigate = useNavigate();
 
     // Fetch cart items on component mount
     useEffect(() => {
@@ -219,7 +221,7 @@ export default function Cart(){
                         btnWidth={30} 
                         btnRadius={2} 
                         btnTitle={loading ? "Processing..." : "Proceed to Checkout"}
-                        onClick={() => {/* Handle checkout */}}
+                        onClick={() => navigate('/checkout')}
                     />
                     <p className='text-[#767676] font-bold italic text-center'>Adding power and lens options are available at checkout*</p>
                 </div>

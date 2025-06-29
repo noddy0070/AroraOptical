@@ -27,6 +27,7 @@ export default {
   			]
   		},
   		fontSize: {
+			aboutUsText: 'clamp(50px,5.75vw,92px)',
   			testimonial: 'clamp(42px,5.5vw,90px)',
   			h1Text: 'clamp(32px,3.5vw,72px)',
   			h2Text: 'clamp(28px,3vw,56px)',

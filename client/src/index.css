@@ -266,3 +266,44 @@ img {
   height: 100%;
   object-fit: cover;
 }
+
+/* Disable text selection globally */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection for specific elements if needed */
+.allow-select {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Allow text selection for input fields and textareas */
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Utility class to disable text selection on specific elements */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Disable text selection on images */
+img {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none; /* Also prevents dragging */
+}

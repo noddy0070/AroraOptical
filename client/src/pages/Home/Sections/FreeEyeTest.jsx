@@ -1,3 +1,4 @@
+import { TransitionLink } from '@/Routes/TransitionLink';
 import StoreImg from '../../../assets/images/homePage/store.webp';
 import { IconButton,TitleButton } from '../../../components/button';
 export default function FreeEyeTest(){
@@ -12,7 +13,8 @@ export default function FreeEyeTest(){
                     Book your free eye test today! Experience the same exceptional service our local customers love—now available nationwide.
                     </span>
                     <div className='mx-auto md:mx-0 flex flex-row w-min md:mt-[1vw] gap-[.1vw] group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 '>
-                        <TitleButton btnHeightPhone={12.5} btnWidthPhone={47}  btnRadiusPhone={9} btnTitle={"Book Test"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
+                        <TransitionLink to='/eye-test'>
+                        <TitleButton btnHeightPhone={12.5} btnWidthPhone={47}  btnRadiusPhone={9} btnTitle={"Book Now"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/></TransitionLink>
                         <IconButton btnSizePhone={12.5} iconWidthPhone={14} paddingPhone={1} btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
                     </div>
                 </div>
@@ -46,7 +48,7 @@ export default function FreeEyeTest(){
                         <div className="text-h6TextPhone md:text-h5Text leading-[140%] font-bold font-dyeLine ">
                             {"Expertise You Can Trust: "}<br/>
                             <span className="leading-[150%] font-normal lg:block block md:hidden text-tinyTextPhone md:text-smallText font-roboto">
-                                    With 25 years of experience and a reputation for top-notch service, we’ve helped thousands see better.
+                                    With 25 years of experience and a reputation for top-notch service, we've helped thousands see better.
                             </span>
                             <span className="leading-[150%] font-normal lg:hidden hidden md:block text-tinyTextPhone md:text-smallText font-roboto">
                                 With 25 years of excellence, we've improved thousands of lives.
@@ -68,12 +70,12 @@ export default function FreeEyeTest(){
                     <p className="m-0 text-[14px] lg:text-regularText leading-[140%] font-dyeLine " >&nbsp;</p>
                     <p className="m-0">
                     <div className="text-h6TextPhone md:text-h5Text leading-[140%] font-bold font-dyeLine">
-                            {"Stylish, Affordable Eyewear: "}<br/>
+                            {"Advance Eye Testing 20/20 to 6/6 "}<br/>
                             <span className="leading-[150%] font-normal lg:block block md:hidden text-tinyTextPhone md:text-smallText font-roboto">
-                            Whether you need prescription glasses, trendy frames, or premium lenses, we've got something for every style and budget.
+                            Our comprehensive eye tests measure vision from 20/20 (perfect vision) to 6/6 (metric equivalent), using advanced equipment to detect refractive errors, eye diseases, and provide precise prescriptions for optimal vision correction.
                             </span>
                             <span className="leading-[150%] font-normal lg:hidden hidden md:block text-tinyTextPhone md:text-smallText font-roboto">
-                            From prescription glasses to trendy frames, we have styles for every budget.
+                            Comprehensive vision testing from 20/20 to 6/6 using advanced equipment for precise prescriptions and early disease detection.
                             </span>
                         </div>
                     </p>
