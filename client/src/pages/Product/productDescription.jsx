@@ -5,7 +5,6 @@ import placeholder from "../../assets/images/CategoryPlaceholder.png";
 import categoryPlaceholder from '../../assets/images/CategoryPlaceholder.png';
 import WishListIcon from '../../assets/images/icons/WishlistIcon.svg'
 import WishListIconFilled from '../../assets/images/icons/WishlistIconFilled.svg'
-import * as logos from "../../assets/images/companyLogos";
 import './product.css';
 import { IconButton } from '../../components/button';
 import { renderStars } from '@/components/RenderStarts';
@@ -13,21 +12,7 @@ import axios from 'axios';
 import { formatINR } from '@/components/IntToPrice';
 import { baseURL } from '@/url';
 import { TransitionLink } from '@/Routes/TransitionLink';
-
-const mapBrandToLogo = {
-    "Ray Ban": logos.rayban, 
-    "Oakley": logos.dakley,
-    "Prada": logos.prada,
-    "Versace": logos.versace,
-    "Gucci": logos.gucci,
-}
-const mapBrandToDescription = {
-    "Ray Ban": "The modern evolution of the emblem of '60s rock and '80s art. The Mega Wayfarer, a new icon that makes modernity its own.",
-    "Oakley": "Oakley is a pioneer and industry leader in sport performance and lifestyle eyewear. Culture never stops shifting and we continue to shift with it. HSTN Rx is the eyeglass version of the HSTN sunglass.",
-    "Prada": "Prada is a brand of sunglasses and eyeglasses. It was founded in 1913 by Mario Prada, a company that manufactures and sells eyeglasses and sunglasses.",
-    "Versace": "Versace is a brand of sunglasses and eyeglasses. It was founded in 1978 by Gianni Versace, a company that manufactures and sells eyeglasses and sunglasses.",
-    "Gucci": "Gucci is a brand of sunglasses and eyeglasses. It was founded in 1921 by Guccio Gucci, a company that manufactures and sells eyeglasses and sunglasses.",
-}
+import { mapBrandToLogo, mapBrandToDescription } from '@/data/brandMap';
 
 
 export default function ProductDescription({productToDisplay}){
@@ -205,7 +190,7 @@ export default function ProductDescription({productToDisplay}){
                         <img
                                 key={index}
                                 src={img}
-                                className={`h-[7vw] w-[6.875vw] bg-white  rounded-[10px] cursor-pointer object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
+                                className={`h-[7vw] w-[6.875vw] bg-white  rounded-[10px] cursor-pointer clickable object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                                 onClick={() => setSelectedIndex(index)}
@@ -219,7 +204,7 @@ export default function ProductDescription({productToDisplay}){
             <img
                 key={mainImage} // ⚠️ important: force re-render on image change
                 src={mainImage}
-                className="h-full w-full object-cover  transition-all duration-500 ease-in-out p-[2vw] opacity-0 animate-fade-in "
+                className="h-full w-full object-cover clickable transition-all duration-500 ease-in-out p-[2vw] opacity-0 animate-fade-in "
             />
             <div className='absolute top-[1vw] right-[1vw] flex gap-[8px] '>
                 {tags.map((tag, index) => (
@@ -352,7 +337,7 @@ export default function ProductDescription({productToDisplay}){
                         {loading ? 'Adding...' : 'Add to Cart'}
                     </button>
                     {productToDisplay.rx && (
-                        <TransitionLink to={'/lens'}>
+                        <TransitionLink to={`/lens/${productToDisplay._id}`}>
                         <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery'>
                         Select Lenses
                      </button>
@@ -445,7 +430,7 @@ export default function ProductDescription({productToDisplay}){
                                 <img 
                                     src={product.images[0]} 
                                     alt={product.modelTitle}
-                                    className='w-full h-full object-cover'
+                                    className='w-full h-full object-cover clickable'
                                 />
                                 <button 
                                     onClick={(e) => {

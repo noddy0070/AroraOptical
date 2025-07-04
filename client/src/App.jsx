@@ -77,11 +77,11 @@ const Layout = () => {
   const [isMobileView, setIsMobileView] = useState(false);
 
   // Routes where navigation bars should be hidden (exact matches)
-  const hideNavbarsExact = ["/login", "/signup", "/lens"];
+  const hideNavbarsExact = ["/login", "/signup",];
 
   // Check if current route should hide navigation bars
   const shouldHideNavbar =
-    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin");
+    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin") || location.pathname.includes("/lens");
 
   // Handle responsive viewport changes
   useEffect(() => {
@@ -133,11 +133,11 @@ const Layout2 = () => {
   const [isMobileView, setIsMobileView] = useState(false);
 
   // Routes where footer should be hidden (exact matches)
-  const hideNavbarsExact = ["/login", "/signup", "/lens"];
+  const hideNavbarsExact = ["/login", "/signup"];
 
   // Check if current route should hide footer
   const shouldHideNavbar =
-    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin");
+    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin") || location.pathname.includes("/lens");
 
   // Handle responsive viewport changes
   useEffect(() => {
@@ -231,7 +231,7 @@ export default function App() {
         <Route path='/checkout' element={<Checkout/>}/>
         <Route path='/order/:orderId' element={<OrderDetails/>}/>
         <Route path='/settings' element={<Settings/>} />
-        <Route path='/lens' element={<Lens/>} />
+        <Route path='/lens/:id' element={<Lens/>} />
         <Route path="/eye-test" element={<BookingForm/>}/>
       </Route>
 

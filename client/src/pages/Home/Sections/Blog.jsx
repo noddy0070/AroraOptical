@@ -60,7 +60,7 @@ export default function Blog(){
                 {
                 BlogData.map((blog,index)=>(
                   <div key={index}  onContextMenu={handleContextMenu} className="select-none  Blog  relative min-w-[63.5vw] shadow-[0px_4px_6px_rgba(0,_0,_0,_0.4)] h-[77.25vw] rounded-[7.5vw]  md:min-w-[27.125vw]  md:h-[31.625vw] md:rounded-[3.125vw] ">
-                <img  className="BlogImage w-full h-full "  src={blog.src} alt={blog.alt} />
+                <img  className="BlogImage w-full h-full clickable"  src={blog.src} alt={blog.alt} />
                 <div className='absolute bottom-0 w-full h-full rounded-[7.5vw]   md:rounded-[3.125vw]'  style={{
                     background: 'linear-gradient(0deg, rgba(229, 229, 229, 1) 0%, rgba(236, 236, 236, 0) 100%)'}}></div>
                 <IconButton className='absolute m-[4vw] md:m-[1.5vw] top-[0vw] right-[0vw]' btnSizePhone={8} paddingPhone={1} iconWidthPhone={16} btnSize={3.0625} padding={.85} iconWidth={2.1875}/>

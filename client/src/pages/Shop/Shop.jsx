@@ -122,7 +122,7 @@ export default function Shop({category, audience}) {
                     loading="eager"
                     fetchpriority="high"
                     sizes="100vw"
-                    className='relative hide-scrollbar w-full h-[25.25vw] object-cover'
+                    className='relative hide-scrollbar w-full h-[25.25vw] object-cover clickable'
                     src={shopBanner1}
                 />
                 <IconButton className='absolute right-[4vw] top-[3vw]' btnSize={3.0625} padding={.85} iconWidth={2.1875}/>

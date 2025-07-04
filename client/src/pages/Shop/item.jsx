@@ -79,7 +79,7 @@ export default function Item({comapny, price, image, rating, title, colour, prod
                         src={image} 
                         alt={title}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className='object-cover z-[0] overflow-hidden max-h-[17.3125vw] transition-transform duration-700 cursor-pointer w-[100%] h-[17.3125vw] rounded-t-[1.25vw] mb-[.5vw] blur-load image-loading'
+                        className='object-cover z-[0] overflow-hidden max-h-[17.3125vw] transition-transform duration-700 cursor-pointer clickable w-[100%] h-[17.3125vw] rounded-t-[1.25vw] mb-[.5vw] blur-load image-loading'
                     />
                 </div>
                 <button 

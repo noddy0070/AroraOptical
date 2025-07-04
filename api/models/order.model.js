@@ -21,6 +21,34 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      prescriptionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Prescription', // Reference to the Prescription model
+        required: false, // Optional - only required for Rx products
+      },
+      // Lens customization options (if applicable)
+      lensOptions: {
+        lensType: {
+          type: String,
+          enum: ['Single Vision', 'Bifocal', 'Progressive', 'Computer', 'Reading'],
+          required: false,
+        },
+        lensCoating: {
+          type: String,
+          enum: ['Anti-Reflective', 'Blue Light Filter', 'Photochromic', 'None'],
+          required: false,
+        },
+        lensThickness: {
+          type: String,
+          enum: ['Standard', 'Thin', 'Ultra Thin'],
+          required: false,
+        },
+        lensTint: {
+          type: String,
+          enum: ['None', 'Grey', 'Brown', 'Green'],
+          required: false,
+        },
+      },
     },
   ],
   totalPrice: {
@@ -85,6 +113,63 @@ const orderSchema = new mongoose.Schema({
     type: String,
   },
 }, { timestamps: true });
+
+// Instance method to add product to order with prescription
+orderSchema.methods.addProduct = function(productId, quantity, price, prescriptionId = null, lensOptions = {}) {
+  this.products.push({
+    productId,
+    quantity,
+    price,
+    prescriptionId,
+    lensOptions
+  });
+  
+  // Recalculate total price
+  this.totalPrice = this.products.reduce((total, product) => total + (product.price * product.quantity), 0);
+  this.finalAmount = this.totalPrice + this.deliveryCharges + this.taxAmount - this.discountAmount;
+  
+  return this.save();
+};
+
+// Instance method to remove product from order
+orderSchema.methods.removeProduct = function(productId, prescriptionId = null) {
+  this.products = this.products.filter(product => 
+    !(product.productId.toString() === productId.toString() && 
+      product.prescriptionId?.toString() === prescriptionId?.toString())
+  );
+  
+  // Recalculate total price
+  this.totalPrice = this.products.reduce((total, product) => total + (product.price * product.quantity), 0);
+  this.finalAmount = this.totalPrice + this.deliveryCharges + this.taxAmount - this.discountAmount;
+  
+  return this.save();
+};
+
+// Instance method to get products requiring prescriptions
+orderSchema.methods.getRxProducts = function() {
+  return this.products.filter(product => product.prescriptionId);
+};
+
+// Instance method to check if order has Rx products
+orderSchema.methods.hasRxProducts = function() {
+  return this.products.some(product => product.prescriptionId);
+};
+
+// Static method to find orders with populated prescriptions
+orderSchema.statics.findWithPrescriptions = function(orderId) {
+  return this.findById(orderId)
+    .populate('products.productId')
+    .populate('products.prescriptionId')
+    .populate('userId');
+};
+
+// Static method to find orders by user with prescriptions
+orderSchema.statics.findByUserWithPrescriptions = function(userId) {
+  return this.find({ userId })
+    .populate('products.productId')
+    .populate('products.prescriptionId')
+    .sort({ orderDate: -1 });
+};
 
 const Order = mongoose.model('Order', orderSchema);
 

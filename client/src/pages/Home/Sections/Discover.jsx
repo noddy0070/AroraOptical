@@ -91,7 +91,7 @@ export default function Discover(){
                 </div>
                 <div className='hidden md:flex w-[45vw] mr-[-5vw] md:mr-0 overflow-x-auto md:w-auto  flex-row gap-[3.5vw] md:gap-[1.5vw] bottom-0 h-[44.25vw]  md:h-[18.75vw]     '>
                     <div className='relative flex-shrink-0 w-[38.25vw] h-[44.25vw] md:w-[16.125vw] md:h-[18.75vw] rounded-[2.5vw] md:rounded-[1.1vw] overflow-hidden'>
-                        <img className='w-full h-full' src={DiscoverSide1}/>
+                        <img className='w-full h-full clickable' src={DiscoverSide1}/>
                         <IconButton btnSizePhone={6} iconWidthPhone={14} paddingPhone={1} btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[1.75vw] top-[1.75vw] md:right-[.75vw] md:top-[.75vw]'/>
                         <div className='absolute z-[10] text-white bottom-[2vw] md:bottom-[.75vw] left-[2.5vw] md:left-[.75vw] md:w-[15.125vw]'>
                             <h6 className='mb-[1vw] leading-[120%] font-dyeLine font-bold text-[11px] md:text-h6Text'>
@@ -105,7 +105,7 @@ export default function Discover(){
                     </div>
 
                     <div className='relative flex-shrink-0 w-[38.25vw] h-[44.25vw] md:w-[16.125vw] md:h-[18.75vw] rounded-[2.5vw] md:rounded-[1.1vw] overflow-hidden'>
-                        <img className='w-full h-full' src={DiscoverSide2}/>
+                        <img className='w-full h-full clickable' src={DiscoverSide2}/>
                         <IconButton btnSizePhone={6} iconWidthPhone={14} paddingPhone={1} btnSize={1.825} iconWidth={1.825} padding={0.45} className='absolute right-[1.75vw] top-[1.75vw] md:right-[.75vw] md:top-[.75vw]'/>
                         <div className='absolute z-[10] text-white bottom-[2vw] md:bottom-[.75vw] left-[2.5vw] md:left-[.75vw] md:w-[15.125vw]'>
                             <h6 className='mb-[1vw] leading-[120%] font-dyeLine font-bold text-[11px] md:text-h6Text'>
@@ -131,7 +131,7 @@ export default function Discover(){
       >
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none" />
-        <img className="h-full w-full object-cover" src={DiscoverMain1} alt="placeholder" />
+        <img className="h-full w-full object-cover clickable" src={DiscoverMain1} alt="placeholder" />
       </motion.div>
 
       {/* Second Div */}
@@ -144,7 +144,7 @@ export default function Discover(){
         onClick={() => setSelected(!selected)}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/0 pointer-events-none" />
-        <img className="h-full w-full object-cover" src={DiscoverMain2} alt="placeholder" />
+        <img className="h-full w-full object-cover clickable" src={DiscoverMain2} alt="placeholder" />
       </motion.div>
 
       {/* Third Div */}
@@ -156,7 +156,7 @@ export default function Discover(){
         onMouseLeave={() => setHovered(1)}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/0 pointer-events-none" />
-        <img className="h-full w-full object-cover" src={DiscoverMain3} alt="placeholder" />
+        <img className="h-full w-full object-cover clickable" src={DiscoverMain3} alt="placeholder" />
       </motion.div>
     </div>
          

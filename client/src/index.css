@@ -305,5 +305,13 @@ img {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  pointer-events: none; /* Also prevents dragging */
+  /* Removed pointer-events: none to allow clickable images */
+}
+
+/* Allow pointer events for clickable images */
+img.clickable,
+img[onClick],
+img[onclick],
+img.cursor-pointer {
+  pointer-events: auto;
 }

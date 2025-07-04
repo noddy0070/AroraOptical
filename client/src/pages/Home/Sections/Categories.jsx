@@ -23,7 +23,7 @@ const CategoryCard = ({ category, index }) => {
         >
             <div className={`w-full h-full transition-opacity duration-300 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}>
                 <img 
-                    className="w-full h-full rounded-[3vw] md:rounded-[2vw] transform group-hover:scale-110 transition-all duration-700 object-cover"
+                    className="w-full h-full rounded-[3vw] md:rounded-[2vw] transform group-hover:scale-110 transition-all duration-700 object-cover clickable"
                     src={category.src} 
                     alt={category.alt}
                     loading={index <= 1 ? "eager" : "lazy"}

@@ -150,7 +150,7 @@ console.log(uploadedImages)
                       loading="lazy"
                       alt={`Uploaded ${index + 1}`}
                       sizes="(max-width: 768px) 100vw, 33vw"
-                      className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw]"
+                      className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw] clickable"
                     />
                     <button
                       onClick={() => onImageRemove ? onImageRemove(image) : setUploadedImages(prev => prev.filter(url => url !== image))}
@@ -175,7 +175,7 @@ console.log(uploadedImages)
                       loading="lazy"
                       alt="Preview"
                       sizes="(max-width: 768px) 100vw, 33vw"
-                      className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw]"
+                      className="w-[16.625vw] h-[14.875vw] object-cover rounded-[.5vw] clickable"
                     />
                     <button
                       onClick={() => handleRemoveImage(index)}
@@ -194,7 +194,7 @@ console.log(uploadedImages)
         <div className="relative w-[16.625vw] h-[14.875vw] flex flex-col items-center justify-center bg-gray-100 rounded-[.5vw] border-dashed border-2 border-gray-300">
           <img 
             src={CollectionSvg} 
-            className="w-[5vw] h-[5vw] rounded-[.5vw] mb-[.5vw] object-cover"
+            className="w-[5vw] h-[5vw] rounded-[.5vw] mb-[.5vw] object-cover clickable"
             alt="Collection"
           />
           <p className='text-gray-500 text-smallText'>image upload</p>

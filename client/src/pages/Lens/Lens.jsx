@@ -21,7 +21,18 @@ export default function Lens() {
   const [focusedTopPosition, setFocusedTopPosition] = useState(null);  
   const [focused, setFocused] = useState("lensType");
   const [subFocusedCoating,setSubFocusedCoating]=useState("");
-  console.log(subFocusedCoating);
+  const [subFocusedPrescription,setSubFocusedPrescription]=useState("");
+
+  const [form,setForm]=useState({
+    lensType:"",
+    lensCoating:"",
+    lensThickness:"",
+    prescriptionId:"",
+  });
+  useEffect(()=>{
+    console.log(form);
+  },[form]);
+
   const calculatePosition = (id) => {
     const element = document.getElementById(id);
     const focusedElement = document.getElementById("focused");
@@ -46,6 +57,10 @@ export default function Lens() {
     // Calculate the position of the new focused element
     if(id==="lensCoating" &&( subFocusedCoating==="lensTint"||subFocusedCoating==="blueFilter")){
       setSubFocusedCoating("");
+    }
+
+    if(id==="prescription" && subFocusedPrescription==="newPrescription"){
+      setSubFocusedPrescription("");
     }
 
     const newPosition = calculatePosition(id);
@@ -90,7 +105,6 @@ export default function Lens() {
     };
   }, [isResizing]);
 
-  console.log(isResizing);
       
     return (
         <section className="h-screen flex flex-row bg-white-100 overflow-hidden">
@@ -145,23 +159,27 @@ export default function Lens() {
               }}
             >
               <div className="absolute w-full h-[100vh] top-0">
-                <LensType amount={amount} />
+                <LensType form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} />
               </div>
               <div className="absolute w-full h-[100vh] top-[100vh] left-0 transform transition-all duration-700" style={{left:subFocusedCoating=="lensTint" || subFocusedCoating=="blueFilter"?"-100vw":"0"}}>
-                <LensCoating amount={amount}  subFocusedCoating={subFocusedCoating} setSubFocusedCoating={setSubFocusedCoating} />
+                <LensCoating form={form} setForm={setForm} handleFocus={handleFocus} amount={amount}  subFocusedCoating={subFocusedCoating} setSubFocusedCoating={setSubFocusedCoating} />
               </div>
               <div className='absolute w-full h-[28.625vw] top-[100vh] transform transition-all duration-700' style={{ left:subFocusedCoating=="lensTint"?"-0vw":"100vw"}}>
-                <LensTint amount={amount} />
+                <LensTint form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} />
               </div>
               <div className='absolute w-full h-[28.625vw] top-[100vh] transform transition-all duration-700' style={{left:subFocusedCoating=="blueFilter"?"-0vw":"100vw"}}>
-                <BlueFilterLens amount={amount} />
+                <BlueFilterLens form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} />
               </div>
               <div className="absolute w-full h-[100vh] top-[200vh]">
-                <LensThickness amount={amount} />
+                <LensThickness form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} />
               </div>
              
-              <div className="absolute w-full h-[100vh] top-[300vh]">
-                <PrescriptionForm  />
+              <div className="absolute w-full h-[100vh] top-[300vh]  left-0  transform transition-all duration-700"  style={{left:subFocusedPrescription=="newPrescription"?"-100vw":"0vw"}}>
+                <Prescription form={form} setForm={setForm} handleFocus={handleFocus} setSubFocusedPrescription={setSubFocusedPrescription} />
+              </div>
+
+              <div className="absolute w-full h-[100vh] top-[300vh]  transform transition-all duration-700" style={{left:subFocusedPrescription=="newPrescription"?"-0vw":"100vw"}}>
+                <PrescriptionForm form={form} setForm={setForm} handleFocus={handleFocus}  />
               </div>
             </div>
           </div>

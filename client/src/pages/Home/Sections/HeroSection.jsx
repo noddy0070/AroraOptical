@@ -30,7 +30,7 @@ export default function HeroSection(){
             <div className='hidden md:block relative h-[calc(100vh-4.5vw)]  min-h-[600px] max-h-[800px] w-full'>
                 <div className={`w-full h-full transition-opacity  duration-300 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}>
                     <img 
-                        className='h-full w-full object-cover'
+                        className='h-full w-full object-cover clickable'
                         src={heroSectionImage}
                         alt="Hero Banner"
                         loading="eager"
@@ -98,7 +98,7 @@ export default function HeroSection(){
             <div className='md:hidden relative h-[100vw] w-full'>
                 <div className={`w-full h-full transition-opacity duration-300 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}>
                     <img 
-                        className='h-full w-full object-cover rounded-[2.5vw]'
+                        className='h-full w-full object-cover rounded-[2.5vw] clickable'
                         src={heroSection}
                         alt="Hero Banner Mobile"
                         loading="eager"

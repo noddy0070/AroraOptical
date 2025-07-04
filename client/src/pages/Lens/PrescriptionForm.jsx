@@ -27,13 +27,13 @@ export default function PrescriptionForm() {
                             <span className="font-medium mt-auto  mb-[.125vw]">Sphere(SPH)</span>
                             <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
                                 <option value="">+/-</option>
-                                {Array.from({length: 81}, (_, i) => (i - 40) * 0.25).map(val => (
+                                {Array.from({length: 98}, (_, i) => (i - 48) * 0.25).map(val => (
                                     <option key={val} value={val.toFixed(2)}>{val > 0 ? "+" : ""}{val.toFixed(2)}</option>
                                 ))}
                             </select>
                             <select  className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
                                 <option value="">+/-</option>
-                                {Array.from({length: 81}, (_, i) => (i - 40) * 0.25).map(val => (
+                                {Array.from({length: 98}, (_, i) => (i - 48) * 0.25).map(val => (
                                     <option key={val} value={val.toFixed(2)}>{val > 0 ? "+" : ""}{val.toFixed(2)}</option>
                                 ))}
                             </select>
@@ -43,13 +43,13 @@ export default function PrescriptionForm() {
                             <span className="font-medium mt-auto mb-[.125vw]">Cylinder(CYL)</span>
                             <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
                                 <option value="">+/-</option>
-                                {Array.from({length: 81}, (_, i) => (i - 40) * 0.25).map(val => (
+                                {Array.from({length: 50}, (_, i) => (i - 24) * 0.25).map(val => (
                                     <option key={val} value={val.toFixed(2)}>{val > 0 ? "+" : ""}{val.toFixed(2)}</option>
                                 ))}
                             </select>
                             <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
                                 <option value="">+/-</option>
-                                {Array.from({length: 81}, (_, i) => (i - 40) * 0.25).map(val => (
+                                {Array.from({length: 50}, (_, i) => (i - 24) * 0.25).map(val => (
                                     <option key={val} value={val.toFixed(2)}>{val > 0 ? "+" : ""}{val.toFixed(2)}</option>
                                 ))}
                             </select>
@@ -57,31 +57,33 @@ export default function PrescriptionForm() {
                         {/* Axis */}
                         <div className="grid grid-rows-3 w-[10vw] items-center">
                             <span className="font-medium mt-auto mb-[.125vw]">Axis</span>
-                            <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
-                                <option value="">Right Axis</option>
-                                {Array.from({length: 180}, (_, i) => i + 1).map(val => (
-                                    <option key={val} value={val}>{val}</option>
-                                ))}
-                            </select>
-                            <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
-                                <option value="">Left Axis</option>
-                                {Array.from({length: 180}, (_, i) => i + 1).map(val => (
-                                    <option key={val} value={val}>{val}</option>
-                                ))}
-                            </select>
+                            <input
+                                type="number"
+                                min="1"
+                                max="180"
+                                placeholder="Right Axis"
+                                className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]"
+                            />
+                            <input
+                                type="number"
+                                min="1"
+                                max="180"
+                                placeholder="Left Axis"
+                                className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]"
+                            />
                         </div>
                         {/* Near(ADD) */}
                         <div className="grid grid-rows-3 w-[10vw] items-center">
                             <span className="font-medium mt-auto mb-[.125vw]">Near(ADD)</span>
                             <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
                                 <option value="">--</option>
-                                {Array.from({length: 15}, (_, i) => (i * 0.25).toFixed(2)).map(val => (
+                                {Array.from({length: 16}, (_, i) => ((i+1) * 0.25).toFixed(2)).map(val => (
                                     <option key={val} value={val}>+{val}</option>
                                 ))}
                             </select>
                             <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
                                 <option value="">--</option>
-                                {Array.from({length: 15}, (_, i) => (i * 0.25).toFixed(2)).map(val => (
+                                {Array.from({length: 16}, (_, i) => ((i+1) * 0.25).toFixed(2)).map(val => (
                                     <option key={val} value={val}>+{val}</option>
                                 ))}
                             </select>
@@ -96,23 +98,34 @@ export default function PrescriptionForm() {
                         <div className="flex flex-col w-[28vw]">
                             <span className="font-medium mb-[.25vw]">Pupils Distance*</span>
                             {/* 2 PD Numbers checkbox above */}
-                            
                             {/* PD row: main PD, Left PD, Right PD */}
                             <div className="flex flex-row gap-[.5vw] items-center">
-                                <input className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full" placeholder="63 (Average/Don`t Know)" type="text" disabled={twoPD} />
-                                
+                                    <input className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full" placeholder="63 (Average/Don`t Know)" type="text" />
                             </div>
                         </div>
                         <div className="flex flex-col w-[28vw]">
-                        <label className="flex flex-row items-center gap-1 mb-[.5vw] ml-auto">
+                            <label className="flex flex-row items-center gap-1 mb-[.5vw] ml-auto">
                                 <input type="checkbox" checked={twoPD} onChange={e => setTwoPD(e.target.checked)} className="accent-primary w-[1vw] h-[1vw]" />
                                 <span className="text-xs">2 PD Numbers</span>
-                                
                             </label>
                             <div className="flex flex-row gap-[.5vw] items-center">
-                            <input className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full" placeholder="Left PD" type="text" disabled={!twoPD} />
-                                <input className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full" placeholder="Right PD" type="text" disabled={!twoPD} />
-                                </div>
+                                {twoPD && (
+                                    <>
+                                        <select className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full">
+                                            <option value="">Left PD</option>
+                                            {Array.from({length: 35}, (_, i) => (23 + i * 0.5).toFixed(1)).map(val => (
+                                                <option key={val} value={val}>{val}</option>
+                                            ))}
+                                        </select>
+                                        <select className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full">
+                                            <option value="">Right PD</option>
+                                            {Array.from({length: 35}, (_, i) => (23 + i * 0.5).toFixed(1)).map(val => (
+                                                <option key={val} value={val}>{val}</option>
+                                            ))}
+                                        </select>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
 
