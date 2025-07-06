@@ -1,5 +1,5 @@
 import express from "express";
-import {test,update, addToCart, removeFromCart, updateCartQuantity, addToWishlist, removeFromWishlist, getCartItems, getWishlistItems} from "../controllers/user.controller.js";
+import {test,update, addToCart, removeFromCart, updateCartQuantity, addToWishlist, removeFromWishlist, getCartItems, getWishlistItems, addAddressToList, removeAddressFromList, editAddressInList} from "../controllers/user.controller.js";
 import { getPolicy } from "../controllers/policy.controller.js";
 // import { verifyToken } from "../middleware/auth.js";
 
@@ -19,5 +19,9 @@ router.get('/cart/:userId', getCartItems);
 router.post('/wishlist/add', addToWishlist);
 router.post('/wishlist/remove', removeFromWishlist);
 router.get('/wishlist/:userId', getWishlistItems);
+
+router.post('/address/add/:id', addAddressToList);
+router.post('/address/remove/:id', removeAddressFromList);
+router.post('/address/edit/:id', editAddressInList);
 
 export default router;

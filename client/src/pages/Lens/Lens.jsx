@@ -33,6 +33,8 @@ export default function Lens() {
     console.log(form);
   },[form]);
 
+
+
   const calculatePosition = (id) => {
     const element = document.getElementById(id);
     const focusedElement = document.getElementById("focused");
@@ -55,6 +57,7 @@ export default function Lens() {
   // Handle clicks on other elements
   const handleFocus = (id) => {
     // Calculate the position of the new focused element
+
     if(id==="lensCoating" &&( subFocusedCoating==="lensTint"||subFocusedCoating==="blueFilter")){
       setSubFocusedCoating("");
     }
@@ -105,21 +108,37 @@ export default function Lens() {
     };
   }, [isResizing]);
 
+  const isDisabled = (id) => {
+    if(id==="lensType"){
+      return false;
+    }
+    if(id==="lensCoating" && form.lensType===""){
+      return true;
+    }
+    if(id==="lensThickness" && form.lensType==="" && form.lensCoating===""){
+      return true;
+    }
+    if(id==="prescription" && form.lensType==="" && form.lensCoating==="" && form.lensThickness===""){
+      return true;
+    }
+    return true;
+  }
       
     return (
         <section className="h-screen flex flex-row bg-white-100 overflow-hidden">
             <div className="relative  w-[16.1875vw] bg-darkslategrey z-10  gap-[2vw]">    
               <div className="absolute left-[75%] flex flex-col pt-[5.5vw] items-center gap-[2vw]">
                 {lensData.map((item) => (
-                  <div
+                  <button
                     key={item.id}
                     id={item.id}
-                    className={`z-[2] w-[7.875vw] h-[7.875vw] cursor-pointer flex flex-col items-center justify-center  bg-white rounded-full
+                    className={`z-[2] w-[7.875vw] h-[7.875vw] flex flex-col items-center justify-center  bg-white rounded-full
                       `}
+                    disabled={isDisabled(item.id)}  
                     onClick={() =>handleFocus(item.id)}
                   >
                     <img className="w-[5.9375vw] h-[5.9375vw]" src={item.img} />
-                  </div>
+                  </button>
                 ))}
                 <div
                   id="focused"

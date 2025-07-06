@@ -260,3 +260,60 @@ export const toggleBlockUser = async (req, res, next) => {
     res.status(500).json({ message: 'Server error while updating user status' });
   }
 };
+
+// Add address to user's addressList
+export const addAddressToList = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const address = req.body.address;
+    console.log(userId, address);
+    if (!userId || !address) {
+      return res.status(400).json({ success: false, message: 'User ID and address are required.' });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    user.addressList.push(address);
+    await user.save();
+    res.status(200).json({ success: true, addressList: user.addressList });
+  } catch (error) {
+    console.error('Add address error:', error);
+    res.status(500).json({ success: false, message: 'Failed to add address.' });
+  }
+};
+
+export const removeAddressFromList = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const addressIndex = req.body.index;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    if (addressIndex < 0 || addressIndex >= user.addressList.length) {
+      return res.status(400).json({ success: false, message: 'Invalid address index.' });
+    }
+    user.addressList.splice(addressIndex, 1);
+    await user.save();
+    res.status(200).json({ success: true, addressList: user.addressList });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to remove address.' });
+  }
+};
+
+export const editAddressInList = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const addressIndex = req.body.index;
+    const newAddress = req.body.address;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    if (addressIndex < 0 || addressIndex >= user.addressList.length) {
+      return res.status(400).json({ success: false, message: 'Invalid address index.' });
+    }
+    user.addressList[addressIndex] = newAddress;
+    await user.save();
+    res.status(200).json({ success: true, addressList: user.addressList });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to edit address.' });
+  }
+};

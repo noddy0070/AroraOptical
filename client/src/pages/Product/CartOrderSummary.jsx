@@ -2,8 +2,9 @@ import React from 'react'
 import { TitleButton2 } from '@/components/button'
 import { formatINR } from '@/components/IntToPrice'
 import { useNavigate } from 'react-router-dom'
+import { TransitionLink } from '@/Routes/TransitionLink'
 
-const CartOrderSummary = ({totalPrice, discount, deliveryPrice, finalPrice, replacementPolicyIcon, deliveryTimeIcon, loading}) => {
+const CartOrderSummary = ({ totalPrice, discount, deliveryPrice, finalPrice, replacementPolicyIcon, deliveryTimeIcon, loading, cartItems}) => {
     const navigate = useNavigate();
   return (
     <div className='flex flex-col gap-[1.25vw] w-[34.5625vw] pr-[3.625vw]'>
@@ -15,17 +16,16 @@ const CartOrderSummary = ({totalPrice, discount, deliveryPrice, finalPrice, repl
                                 <br/>
                                 <div className='flex flex-row w-full'>
                                     <p>Discount</p>
-                                    <span className='ml-auto'>-</span>
                                 </div>
                                 <br/>
                                 <p>Shipping Charges</p>
                             </div>
-                            <div className='ml-auto'>
-                                <p>₹{totalPrice}</p>
+                            <div className='ml-auto '>
+                                <p className=''>{formatINR(totalPrice)}</p>
                                 <br/>
-                                <p>₹{discount}</p>
+                                <p className='text-right'>-{formatINR(discount)}</p>
                                 <br/>
-                                <p>₹{deliveryPrice}</p>
+                                <p className='text-right'>{formatINR(deliveryPrice)}</p>
                             </div>
                         </div>
                         <p className="w-full overflow-hidden whitespace-nowrap">---------------------------------------------------------------------------------------------------------</p>
@@ -34,7 +34,7 @@ const CartOrderSummary = ({totalPrice, discount, deliveryPrice, finalPrice, repl
                                 <p>Total</p>
                             </div>
                             <div className='ml-auto'>
-                                <p>₹{finalPrice}</p>
+                                <p>{formatINR(finalPrice)}</p>
                             </div>
                         </div>
                     </div>
@@ -48,6 +48,7 @@ const CartOrderSummary = ({totalPrice, discount, deliveryPrice, finalPrice, repl
                             <p className='whitespace-nowrap'>Fast Delivery</p>
                         </div>
                     </div>
+                    <TransitionLink to="/checkout" data={cartItems}>
                     <TitleButton2 
                         className='mt-[1.25vw] mx-auto bg-black' 
                         btnHeight={3} 
@@ -56,6 +57,7 @@ const CartOrderSummary = ({totalPrice, discount, deliveryPrice, finalPrice, repl
                         btnTitle={loading ? "Processing..." : "Proceed to Checkout"}
                         onClick={() => navigate('/checkout')}
                     />
+                    </TransitionLink>
                     <p className='text-[#767676] font-bold italic text-center'>Adding power and lens options are available at checkout*</p>
                 </div>
   )

@@ -107,7 +107,7 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
     const [isHovered, setIsHovered] = useState(false);
     return (
         <button
-        onClick={()=>{onClick}}
+        onClick={onClick}
         className={`group text-white shadow-[0px_.25vw_.375vw_rgba(0,_0,_0,_0.4)] transition-all duration-700 ease-in-out hover:bg-btnHoverColour ${className}`}
         style={{
           width: `${btnWidth}vw`,

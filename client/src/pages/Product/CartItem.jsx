@@ -26,7 +26,7 @@ const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
                                         <p className=' text-smallText leading-[150%]'>{item.productId.modelName}</p>
                                     </div>
                                     <div className='ml-auto'>
-                                        <p className='font-bold text-h5Text'>{formatINR(item.productId.price * item.quantity)}</p>
+                                        <p className='font-bold text-mediumText'>{formatINR(item.productId.price * item.quantity)}</p>
                                     </div>
                                     </div>
                                        

@@ -7,6 +7,7 @@ import { baseURL } from '@/url';
 import { useNavigate } from 'react-router-dom';
 import CartOrderSummary from './CartOrderSummary';
 import CartItem from './CartItem';
+import { formatINR } from '@/components/IntToPrice';
 
 export default function Cart(){
     const [cartItems, setCartItems] = useState([]);
@@ -125,16 +126,16 @@ export default function Cart(){
         <div className='mx-[2vw] bg-white rounded-[2vw] p-[2vw] mt-[3vw]'>
             <div className='flex flex-row items-center mb-[2vw]'>
                 <h4 className='font-dyeLine font-bold text-h4Text'>Items in your cart ({cartItems.reduce((total, item) => total + item.quantity, 0)})</h4>
-                <h5 className='ml-auto font-dyeLine font-bold text-h5Text'>Cart Total: ₹{finalPrice}</h5>
+                <h5 className='ml-auto font-dyeLine font-bold text-h5Text'>Cart Total: {formatINR(finalPrice)}</h5>
             </div>
             <div className='flex flex-row text-regularText roboto gap-[3.75vw]'>
-                <div className='flex flex-col gap-[2vw] w-[57.6875vw] h-[60.375vw] overflow-y-auto hide-scrollbar'>
+                <div className='flex flex-col gap-[2vw] w-[57.6875vw]  overflow-y-auto hide-scrollbar'>
                     {error && <p className='text-red-500 text-center'>{error}</p>}
                     {cartItems.map((item) => (
                         <CartItem key={item.productId._id} item={item} handleRemoveItem={handleRemoveItem} updateQuantity={updateQuantity}/>
                     ))}
                 </div>
-                <CartOrderSummary totalPrice={totalPrice} discount={discount} deliveryPrice={deliveryPrice} finalPrice={finalPrice} replacementPolicyIcon={replacementPolicyIcon} deliveryTimeIcon={deliveryTimeIcon} loading={loading}/>
+                <CartOrderSummary cartItems={cartItems} totalPrice={totalPrice} discount={discount} deliveryPrice={deliveryPrice} finalPrice={finalPrice} replacementPolicyIcon={replacementPolicyIcon} deliveryTimeIcon={deliveryTimeIcon} loading={loading}/>
             </div>
         </div></div>
     );

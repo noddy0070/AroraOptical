@@ -23,6 +23,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    addressList: [
+      {
+        fullName: { type: String, required: true },
+        mobileNumber: { type: String, required: true },
+        pincode: { type: String, required: true },
+        flat: { type: String, required: true },
+        area: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true },
+        deliveryInstruction: { type: String, required: false }
+      }
+    ],
     city:{
         type:String,
         required:false,

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function PrescriptionForm() {
+export default function PrescriptionForm({form}) {
     const [twoPD, setTwoPD] = useState(false);
     const [acceptTC, setAcceptTC] = useState(false);
 
@@ -73,7 +73,7 @@ export default function PrescriptionForm() {
                             />
                         </div>
                         {/* Near(ADD) */}
-                        <div className="grid grid-rows-3 w-[10vw] items-center">
+                        {form.lensType==="Bifocal"? <div className="grid grid-rows-3 w-[10vw] items-center">
                             <span className="font-medium mt-auto mb-[.125vw]">Near(ADD)</span>
                             <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]">
                                 <option value="">--</option>
@@ -87,7 +87,7 @@ export default function PrescriptionForm() {
                                     <option key={val} value={val}>+{val}</option>
                                 ))}
                             </select>
-                        </div>
+                        </div>:<div className="grid grid-rows-3 w-[10vw] items-center"></div>}
                     </div>
                     {/* Date and PD */}
                     <div className="flex flex-row gap-[1vw] items-center">
