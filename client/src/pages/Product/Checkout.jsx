@@ -20,7 +20,7 @@ const Checkout = () => {
     setStep(newStep);
   };
   const location = useLocation();
-  const cartItems = location.state.data || [];
+  const cartItems = location.state?.data || [];
   // const navigate = useNavigate();
   // const [loading, setLoading] = useState(false);
   // const [cartItems, setCartItems] = useState([]);

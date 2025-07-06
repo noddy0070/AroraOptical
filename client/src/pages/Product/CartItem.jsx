@@ -4,7 +4,7 @@ import { formatINR } from '@/components/IntToPrice';
 import close from '../../assets/images/icons/close.svg';
 import subtract from '../../assets/images/icons/subtract.svg';
 import add from '../../assets/images/icons/add.svg';
-import edit from '../../assets/images/icons/edit.svg';
+import edit from '../../assets/images/icons/Edit.svg';
 import { TransitionLink } from '@/Routes/TransitionLink';
     
 const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
