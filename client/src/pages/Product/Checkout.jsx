@@ -21,6 +21,15 @@ const Checkout = () => {
   };
   const location = useLocation();
   const cartItems = location.state?.data || [];
+  const [shippingAddress,setShippingAddress] = useState({
+    name: '',
+    address: '',
+    city: '',
+    state: '',
+    zipcode: '',
+    phone: '',
+    email: '',
+  })
   // const navigate = useNavigate();
   // const [loading, setLoading] = useState(false);
   // const [cartItems, setCartItems] = useState([]);
@@ -223,7 +232,7 @@ const Checkout = () => {
       exit={{ x: direction === "forward" ? "-100vw" : "0vw", opacity: 0 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
     >
-      <Step1 cartItems={cartItems} setStep={goToStep} />
+      <Step1 cartItems={cartItems} setStep={goToStep} setShippingAddress={setShippingAddress} />
     </motion.div>
   )}
 
@@ -235,7 +244,7 @@ const Checkout = () => {
       exit={{ x: direction === "forward" ? "100vw" : "0vw", opacity: 0 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
     >
-        <Step2 cartItems={cartItems} setStep={goToStep} />
+        <Step2 cartItems={cartItems} setStep={goToStep} shippingAddress={shippingAddress} />
     </motion.div>
   )}
 </AnimatePresence>

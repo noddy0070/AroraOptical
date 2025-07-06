@@ -10,7 +10,8 @@ const AddressDialougeBox = ({ isOpen, onClose, handleAddressSubmit, isEditAddres
     area: '',
     state: '',
     city: '',
-    deliveryInstruction: ''
+    deliveryInstruction: '',
+    email: '',
   });
   const [pincodeLoading, setPincodeLoading] = useState(false);
   const [pincodeError, setPincodeError] = useState('');
@@ -184,6 +185,21 @@ const AddressDialougeBox = ({ isOpen, onClose, handleAddressSubmit, isEditAddres
                 pattern="[0-9]{10}"
                 className="w-full p-[12px] border border-gray-300 rounded-[0.375vw] text-smallText font-roboto focus:outline-none focus:border-gray-700"
                 placeholder="Enter 10-digit mobile number"
+              />
+            </div>
+            {/* Email */}
+            <div>
+              <label className="block text-smallText font-roboto font-medium mb-[0.5vw]">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="w-full p-[12px] border border-gray-300 rounded-[0.375vw] text-smallText font-roboto focus:outline-none focus:border-gray-700"
+                placeholder="Enter your email"
               />
             </div>
 

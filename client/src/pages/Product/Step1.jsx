@@ -11,7 +11,7 @@ import { formatINR } from '@/components/IntToPrice';
 import { TitleButton2 } from '@/components/button';
 // import { toast } from 'react-toastify'; // Uncomment if you want to show toasts
 
-const Step1 = ({ cartItems, setStep }) => {
+const Step1 = ({ cartItems, setStep, setShippingAddress }) => {
   const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
   const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
@@ -21,6 +21,9 @@ const Step1 = ({ cartItems, setStep }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   useEffect(() => {
     console.log(user);
+    if(user.addressList.length>0){
+      setShippingAddress(user.addressList[0]);
+    }
   }, [user]);
 
   useEffect(() => {

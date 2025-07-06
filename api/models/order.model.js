@@ -65,30 +65,17 @@ const orderSchema = new mongoose.Schema({
     default: Date.now,
   },
   shippingAddress: {
-    name: { type: String, required: true },
-    address: { type: String, required: true },
+    fullName: { type: String, required: true },
+    area: { type: String, required: true },
+    flat: { type: String, required: true },
     city: { type: String, required: true },
     state: { type: String, required: true },
-    zipcode: { type: String, required: true },
-    phone: { type: String, required: true },
+    pincode: { type: String, required: true },
+    mobileNumber: { type: String, required: true },
     email: { type: String, required: true },
   },
-  // Shiprocket Integration Fields
-  shiprocket: {
-    orderId: { type: String }, // Shiprocket order ID
-    shipmentId: { type: String }, // Shiprocket shipment ID
-    awbCode: { type: String }, // Airway bill number
-    courierName: { type: String }, // Courier company name
-    courierId: { type: String }, // Courier ID
-    trackingUrl: { type: String }, // Tracking URL
-    pickupLocation: { type: String }, // Pickup location
-    deliveryDate: { type: Date }, // Expected delivery date
-    status: { type: String }, // Shiprocket status
-    statusCode: { type: Number }, // Shiprocket status code
-    lastUpdate: { type: Date }, // Last status update
-  },
   paymentDetails: {
-    method: { type: String, enum: ['COD', 'Online', 'Wallet'], default: 'COD' },
+    method: { type: String, enum: ['COD', 'Online'], default: 'COD' },
     status: { type: String, enum: ['Pending', 'Completed', 'Failed'], default: 'Pending' },
     transactionId: { type: String },
     amount: { type: Number },

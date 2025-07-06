@@ -2,6 +2,16 @@ import Order from '../models/order.model.js';
 import User from '../models/user.model.js';
 import Product from '../models/product.model.js';
 import shiprocketAPI from '../utils/shiprocket.js';
+import Razorpay from 'razorpay';
+import dotenv from 'dotenv';
+import crypto from 'crypto';
+dotenv.config();
+
+// Razorpay instance
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_ID_KEY,
+  key_secret: process.env.RAZORPAY_SECRET_KEY,
+});
 
 // Create new order
 export const createOrder = async (req, res) => {
@@ -390,5 +400,78 @@ export const getPickupLocations = async (req, res) => {
   } catch (error) {
     console.error('Get pickup locations error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch pickup locations' });
+  }
+};
+
+// Create Razorpay order
+export const createRazorpayOrder = async (req, res) => {
+  try {
+    const { amount, currency = 'INR', receipt } = req.body;
+    if (!amount) {
+      return res.status(400).json({ success: false, message: 'Amount is required' });
+    }
+    const options = {
+      amount: Math.round(amount * 100), // amount in paise
+      currency,
+      receipt: receipt || `rcpt_${Date.now()}`,
+    };
+    const order = await razorpay.orders.create(options);
+    res.status(201).json({ success: true, order });
+  } catch (error) {
+    console.error('Razorpay order creation error:', error);
+    res.status(500).json({ success: false, message: 'Failed to create Razorpay order' });
+  }
+};
+
+// Verify Razorpay payment
+export const verifyRazorpayPayment = async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount, cartItems, shippingAddress } = req.body;
+    const userId = req.user.id;
+    const key_secret = process.env.RAZORPAY_SECRET_KEY;
+    const generated_signature = crypto.createHmac('sha256', key_secret)
+      .update(razorpay_order_id + '|' + razorpay_payment_id)
+      .digest('hex');
+    if (generated_signature !== razorpay_signature) {
+      return res.status(400).json({ success: false, message: 'Invalid payment signature' });
+    }
+    // Calculate totals
+    let totalPrice = 0;
+    let taxAmount = 0;
+    let discountAmount = 0;
+    for (const item of cartItems) {
+      totalPrice += item.productId.price * item.quantity;
+      // You can add tax/discount logic here if needed
+    }
+    const finalAmount = amount;
+    // Create order in DB
+    const order = new Order({
+      userId,
+      products: cartItems.map(item => ({
+        productId: item.productId._id,
+        quantity: item.quantity,
+        price: item.productId.price
+      })),
+      totalPrice,
+      taxAmount,
+      discountAmount,
+      deliveryCharges: 0,
+      finalAmount,
+      shippingAddress,
+      paymentDetails: {
+        method: 'Online',
+        status: 'Completed',
+        transactionId: razorpay_payment_id,
+        amount: finalAmount
+      },
+      notes: ''
+    });
+    await order.save();
+    // Optionally clear user's cart, update user orders, etc.
+    console.log(order);
+    return res.status(200).json({ success: true, message: 'Payment verified and order created', order });
+  } catch (error) {
+    console.error('Razorpay payment verification error:', error);
+    res.status(500).json({ success: false, message: 'Failed to verify payment' });
   }
 }; 
