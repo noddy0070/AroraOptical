@@ -302,6 +302,7 @@ export const trackOrder = async (req, res) => {
 export const checkServiceability = async (req, res) => {
   try {
     const { pickupPincode, deliveryPincode, weight = 0.5 } = req.query;
+    console.log(pickupPincode, deliveryPincode, weight);
 
     if (!pickupPincode || !deliveryPincode) {
       return res.status(400).json({ 

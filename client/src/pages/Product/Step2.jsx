@@ -6,14 +6,14 @@ import { baseURL, razorpayKey, razorpaySecret } from '@/url';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const Step2 = ({ cartItems, setStep, shippingAddress }) => {
+const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
     const [paymentMethod, setPaymentMethod] = useState("upi");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     console.log(shippingAddress);
 
     // Calculate total amount
-    const totalAmount = cartItems.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0);
+    const totalAmount = cartItems.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0) + deliveryPrice;
 
     // Razorpay handler
     const handleRazorpayPayment = async () => {
@@ -97,7 +97,7 @@ const Step2 = ({ cartItems, setStep, shippingAddress }) => {
 
       <div className='flex flex-col gap-[1.5vw] w-[37.5vw] p-[16px]'>
               <p className='text-h6Text leading-[150%] font-roboto font-bold'>Order Summary</p>
-              <div className='flex flex-col gap-[1.5vw]'>
+              <div className='flex flex-col gap-[1.5vw] w-full'>
                 {cartItems.map((item) => (
                   <div key={item.productId._id} className='flex flex-row gap-[1.5vw] border-[1px] border-[#f5f5f5] rounded-[8px] p-[8px]'>
                     <img src={item.productId.images[0]} alt="item" className='w-[3.125vw] h-[3.375vw]' />
@@ -108,6 +108,21 @@ const Step2 = ({ cartItems, setStep, shippingAddress }) => {
                     <p className='text-smallText leading-[150%] font-bold font-roboto text-right ml-auto'>{item.quantity} x {formatINR(item.productId.price)}</p>
                   </div>
                 ))}
+                <p className='text-regularText leading-[150%] font-roboto font-bold'>Total Payable</p>
+                <div className='flex flex-row'>
+                  <p className='text-regularText leading-[150%] font-roboto'>MRP(Incl. Tax)</p>
+                  <p className='text-regularText ml-auto text-right leading-[150%] font-roboto'>{formatINR(cartItems.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0))}</p>
+                </div>
+                <div className='flex flex-row'>
+                  <p className='text-regularText leading-[150%] font-roboto'>Delivery Charges</p>
+                  <p className='text-regularText ml-auto text-right leading-[150%] font-roboto'>{formatINR(deliveryPrice)}</p>
+                </div>
+                <div className='w-full h-[1px] border-dashed border-black border-[1px] '></div>
+                <div className='flex flex-row'>
+                  <p className='text-regularText leading-[150%] font-roboto'>Total Amount</p>
+                  <p className='text-regularText ml-auto text-right leading-[150%] font-roboto'>{formatINR(totalAmount)}</p>
+                </div>
+
               </div>
                     <TitleButton2 
                         className='mt-[1.25vw] mx-auto bg-black w-[100%]' 

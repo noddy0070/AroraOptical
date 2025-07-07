@@ -9,9 +9,9 @@ import { baseURL } from '@/url';
 import { loginSuccess } from '@/redux/slice/authSlice';
 import { formatINR } from '@/components/IntToPrice';
 import { TitleButton2 } from '@/components/button';
-// import { toast } from 'react-toastify'; // Uncomment if you want to show toasts
+import { toast } from 'react-toastify'; 
 
-const Step1 = ({ cartItems, setStep, setShippingAddress }) => {
+const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => {
   const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
   const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
@@ -19,8 +19,9 @@ const Step1 = ({ cartItems, setStep, setShippingAddress }) => {
   const [isEditAddress, setIsEditAddress] = useState(false);
   const [addressData, setAddressData] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [isDeliverable, setIsDeliverable] = useState('Check Deliverability');
+
   useEffect(() => {
-    console.log(user);
     if(user.addressList.length>0){
       setShippingAddress(user.addressList[0]);
     }
@@ -100,6 +101,33 @@ const Step1 = ({ cartItems, setStep, setShippingAddress }) => {
     setIsAddressDialogOpen(true);
   }
 
+  const checkDeliverability = async (address) => {
+    try {
+      console.log(address);
+      // Replace with your store's pickup pincode
+      const pickupPincode = '284001';
+      const deliveryPincode = address.pincode;
+      const weight = 0.5; // in kg, adjust as needed
+      const response = await axios.get(`${baseURL}/api/order/serviceability`, {
+        params: { pickupPincode, deliveryPincode, weight },
+      });
+      if (response.data.success && response.data.serviceability.data && response.data.serviceability.data.available_courier_companies.length > 0) {
+        setIsDeliverable('Delivery Available');
+        setDeliveryPrice(response.data.serviceability.data.available_courier_companies[0].rate);
+        toast.success(`Delivery available! Price: ₹${response.data.serviceability.data.available_courier_companies[0].rate}`);
+      } else {
+        setIsDeliverable('Not Deliverable');
+        setDeliveryPrice(null);
+        toast.error('Delivery not available to this address.');
+      }
+    } catch (error) {
+      setIsDeliverable('Not Deliverable');
+      setDeliveryPrice(null);
+      toast.error('Failed to check deliverability.');
+      console.log(error);
+    }
+  };
+
   return (
     <div className='flex flex-col gap-[2vw] bg-white p-[2vw] rounded-[1.75vw] mx-[2vw]'>
         <div className='flex flex-row items-center justify-between'>
@@ -118,12 +146,21 @@ const Step1 = ({ cartItems, setStep, setShippingAddress }) => {
                     name="selectedAddress"
                     className='w-[1vw] h-[1vw] mt-[10px] accent-black'
                     checked={selectedAddressIndex === index}
-                    onChange={() => setSelectedAddressIndex(index)}
+                      onChange={() =>{ setSelectedAddressIndex(index), setIsDeliverable('Check Deliverability')}}
                   />
                   <div className='flex flex-col gap-[4px]'>
                   <span className='text-mediumText leading-[150%] font-roboto'>{address.fullName}</span>
                   <span className='text-mediumText leading-[150%] font-roboto line-clamp-2'>{address.flat} {address.area}, {address.city} {address.state}, {address.pincode}</span>
                   <span className='text-mediumText leading-[150%] font-roboto'>{address.mobileNumber}</span>
+                  {selectedAddressIndex === index && 
+                  <button className='text-left'>
+                    <span
+                      className='text-mediumText leading-[150%] font-roboto underline text-blue-500 cursor-pointer'
+                      onClick={() => checkDeliverability(address)}
+                    >
+                      {(isDeliverable==='Delivery Available'?'Delivery Available':isDeliverable==='Not Deliverable'?'Not Deliverable':'Check Deliverability')}
+                    </span>
+                  </button>}
                   </div>
                 </div>
                 <button className='ml-auto' onClick={() => handleEditAddress(index)}>
@@ -166,7 +203,8 @@ const Step1 = ({ cartItems, setStep, setShippingAddress }) => {
                   </div>
                 ))}
               </div>
-                    <TitleButton2 
+                    <TitleButton2
+                        disabled={isDeliverable==='Not Deliverable' || isDeliverable==='Check Deliverability'}
                         className='mt-[1.25vw] mx-auto bg-black w-[100%]' 
                         btnHeight={3} 
                         btnWidth={30} 

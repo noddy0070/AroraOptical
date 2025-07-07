@@ -4,7 +4,7 @@ import { formatINR } from '@/components/IntToPrice'
 import { useNavigate } from 'react-router-dom'
 import { TransitionLink } from '@/Routes/TransitionLink'
 
-const CartOrderSummary = ({ totalPrice, discount, deliveryPrice, finalPrice, replacementPolicyIcon, deliveryTimeIcon, loading, cartItems}) => {
+const CartOrderSummary = ({ totalPrice, discount, finalPrice, replacementPolicyIcon, deliveryTimeIcon, loading, cartItems}) => {
     const navigate = useNavigate();
   return (
     <div className='flex flex-col gap-[1.25vw] w-[34.5625vw] pr-[3.625vw]'>
@@ -18,14 +18,12 @@ const CartOrderSummary = ({ totalPrice, discount, deliveryPrice, finalPrice, rep
                                     <p>Discount</p>
                                 </div>
                                 <br/>
-                                <p>Shipping Charges</p>
                             </div>
                             <div className='ml-auto '>
                                 <p className=''>{formatINR(totalPrice)}</p>
                                 <br/>
                                 <p className='text-right'>-{formatINR(discount)}</p>
                                 <br/>
-                                <p className='text-right'>{formatINR(deliveryPrice)}</p>
                             </div>
                         </div>
                         <p className="w-full overflow-hidden whitespace-nowrap">---------------------------------------------------------------------------------------------------------</p>
