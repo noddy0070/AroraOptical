@@ -76,24 +76,28 @@ const userSchema = new mongoose.Schema({
         lensType: {
             type: String,
             required: false,
-            enum: ['Zero Power', 'Single Vision', 'Bifocal'],
+            enum: ['None','Zero Power', 'Single Vision', 'Bifocal'],
         },
         lensCoating:{
             type: String,
             required: false,
-            enum: ['Clear-Vision', 'Blue-Filter/Green', 'Blue-Filter/Blue', 'Blue-Filter/Mixed', 'Solid-Tinted-Lens/Green', 'Solid-Tinted-Lens/Brown',
+            enum: ['None','Clear-Vision', 'Blue-Filter/Green', 'Blue-Filter/Blue', 'Blue-Filter/Mixed', 'Solid-Tinted-Lens/Green', 'Solid-Tinted-Lens/Brown',
                  'Solid-Tinted-Lens/Grey','Gradient-Tinted-Lens/Brown', 'Gradient-Tinted-Lens/Green', 'Gradient-Tinted-Lens/Grey', 'Photochromatic'],
         },
         lensThickness:{
             type: String,
             required: false,
-            enum: ['Thin', 'Medium', 'Thick'],
+            enum: ['None','Thin', 'Medium', 'Thick'],
         },
         prescriptionId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Prescription', // Reference to the Prescription model
             required: false, // Optional - only required for Rx products
         },
+        totalAmount:{
+          type: Number,
+          required: true,
+        }
         },
     ],
     

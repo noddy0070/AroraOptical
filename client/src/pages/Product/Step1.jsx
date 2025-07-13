@@ -28,7 +28,7 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
   }, [user]);
 
   useEffect(() => {
-    setTotalPrice(cartItems.reduce((total, item) => total + item.productId.price * item.quantity, 0));
+    setTotalPrice(cartItems.reduce((total, item) => total + item.totalAmount * item.quantity, 0));
   }, [cartItems]);
 
   const handleAddressSubmit = async (addressData) => {
@@ -199,7 +199,7 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
                     <p className='text-regularText leading-[150%] font-roboto font-bold'>{item.productId.modelTitle}</p>
                     <p className='text-smallText leading-[150%] font-roboto'>{item.productId.brand}</p>
                     </div>
-                    <p className='text-smallText leading-[150%] font-bold font-roboto text-right ml-auto'>{item.quantity} x {formatINR(item.productId.price)}</p>
+                    <p className='text-smallText leading-[150%] font-bold font-roboto text-right ml-auto'>{item.quantity} x {formatINR(item.totalAmount)}</p>
                   </div>
                 ))}
               </div>

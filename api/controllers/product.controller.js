@@ -62,6 +62,19 @@ export const getProducts = async (req, res, next) => {
   }
 };
 
+export const getAccessories = async (req, res, next) => {
+  try {
+    const products = await Product.find({ category: 'Accessories' });
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    res.status(500).json({ success: false, message: 'Server error fetching products' });
+  }
+};
+
 export const getProductsColor = async (req, res, next) => {
 
   const {modelName}=req.body;

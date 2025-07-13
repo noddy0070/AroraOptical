@@ -1,17 +1,61 @@
 import * as logos from "../assets/images/companyLogos";
 
-
 const mapBrandToLogo = {
-    "Ray Ban": logos.rayban, 
+    "Ana Hickmann": logos.anahickmann,
+    "Armani Exchange": logos.armaniexchange,
+    "Boss": logos.boss,
+    "Burberry": logos.burberry,
+    "Calvin Klein": logos.calvinklein,
+    "Coach": logos.coach,
+    "Dita Lancier": logos.ditalancier,
+    "Dolce And Gabana": logos.dolcegabbana,
+    "Emporio Armani": logos.emporioarmani,
+    "Ferrari": logos.ferrari,
+    "Fossil": logos.fossil,
+    "Hugo": logos.hugo,
+    "Jimmy Choo": logos.jimmychoo,
+    "Levis": logos.levis,
+    "Michael Kors": logos.michaelkors,
+    "Mont Blanc": logos.montblanc,
+    "Maui Jim": logos.mauijim,
+    "Miumiu": logos.miumiu,
     "Oakley": logos.oakley,
+    "Perricarden": logos.perricarden,
     "Prada": logos.prada,
+    "Ray Ban": logos.rayban,
+    "Swarovski": logos.swarovski,
+    "Tommy Hilfiger": logos.tommyhilfiger,
     "Versace": logos.versace,
+    "Vogue Eyewear": logos.vogueeyewear,
 }
 const mapBrandToDescription = {
-    "Ray Ban": "The modern evolution of the emblem of '60s rock and '80s art. The Mega Wayfarer, a new icon that makes modernity its own.",
+    "Ana Hickmann": "Ana Hickmann eyewear combines elegance and fashion, reflecting the beauty and glamour of the renowned Brazilian model herself. A perfect blend of modernity and sophistication.",
+    "Armani Exchange": "Armani Exchange offers a youthful, energetic take on eyewear, blending iconic styling with bold designs. A perfect match for the fashion-forward individual.",
+    "Boss": "Boss eyewear exemplifies timeless elegance and contemporary style. Precision in every frame reflects the brand's commitment to luxury and sophistication.",
+    "Burberry": "Burberry eyewear exudes British elegance, with classic designs that marry heritage with modern trends. Iconic checks and refined frames are perfect for those who appreciate timeless style.",
+    "Calvin Klein": "Calvin Klein's eyewear collection stands out for its minimalist, bold designs, echoing the brand's iconic modern aesthetic. Clean lines and innovative materials define this collection.",
+    "Coach": "Coach eyewear embodies classic American style with a touch of luxury. Each piece is carefully crafted to reflect the brand’s timeless appeal, sophistication, and impeccable quality.",
+    "Dita Lancier": "Dita Lancier combines innovation with craftsmanship, offering eyewear that stands out for its unique designs and meticulous attention to detail. It’s eyewear for those who demand the best.",
+    "Dolce And Gabana": "Dolce & Gabbana eyewear celebrates Italian luxury and flair, with bold, creative frames that embody the brand’s rich, opulent heritage. For those who want to make a statement.",
+    "Emporio Armani": "Emporio Armani eyewear represents youthful sophistication and Italian craftsmanship. Modern, sleek designs combine fashion-forward trends with the brand's signature luxury.",
+    "Ferrari": "Ferrari eyewear reflects the same passion and precision that powers the iconic Ferrari cars. Bold, luxurious designs cater to those who crave performance and elegance in equal measure.",
+    "Fossil": "Fossil eyewear features a mix of classic and contemporary styles, known for their durability and fashion-forward designs. The perfect balance of casual and sophisticated for everyday wear.",
+    "Hugo": "Hugo eyewear brings a modern edge to timeless design, offering sharp, clean lines and refined sophistication. Ideal for the contemporary individual with a bold, confident sense of style.",
+    "Jimmy Choo": "Jimmy Choo eyewear is synonymous with luxury, glamour, and exclusivity. Opulent designs with a playful twist capture the essence of high fashion and modern elegance.",
+    "Levis": "Levi’s eyewear merges classic American design with contemporary fashion, offering comfortable, durable frames that combine casual chic with authentic style.",
+    "Michael Kors": "Michael Kors eyewear defines modern luxury, with chic and timeless designs that embrace glamour and sophistication. Perfect for those who appreciate quality and stylish elegance.",
+    "Mont Blanc": "Mont Blanc eyewear exudes refined elegance, inspired by the brand’s legacy of excellence. Crafted for those who appreciate understated luxury and timeless design.",
+    "Maui Jim": "Maui Jim eyewear brings innovation and style together, with polarized lenses that offer exceptional clarity and protection. Designed for those who seek adventure and unparalleled performance.",
+    "Miumiu": "Miu Miu eyewear is playful, avant-garde, and full of personality. With bold designs and unique details, it caters to those who love to experiment with fashion and self-expression.",
     "Oakley": "Oakley is a pioneer and industry leader in sport performance and lifestyle eyewear. Culture never stops shifting and we continue to shift with it. HSTN Rx is the eyeglass version of the HSTN sunglass.",
+    "Perricarden": "Perricarden eyewear showcases elegance with a dash of luxury. Meticulously designed for those who appreciate high-quality materials and distinctive style.",
     "Prada": "Prada is a brand of sunglasses and eyeglasses. It was founded in 1913 by Mario Prada, a company that manufactures and sells eyeglasses and sunglasses.",
+    "Ray Ban": "The modern evolution of the emblem of '60s rock and '80s art. The Mega Wayfarer, a new icon that makes modernity its own.",
+    "Swarovski": "Swarovski eyewear is known for its sparkling sophistication, using the brand's iconic crystals to elevate each frame with an elegant, refined shine.",
+    "Tommy Hilfiger": "Tommy Hilfiger eyewear brings a fresh, American style to life with bold, timeless frames. A blend of classic sophistication and contemporary trends for effortless elegance.",
     "Versace": "Versace is a brand of sunglasses and eyeglasses. It was founded in 1978 by Gianni Versace, a company that manufactures and sells eyeglasses and sunglasses.",
-}
+    "Vogue Eyewear": "Vogue Eyewear blends fashion with femininity, offering stylish frames that make a bold statement. Designed for women who love to express themselves through their eyewear."
+};
+
 
 export {mapBrandToLogo, mapBrandToDescription};

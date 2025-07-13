@@ -57,10 +57,13 @@ export const getAvailableTimeSlots = async (req, res, next) => {
 
 // Book a new eye test
 export const bookEyeTest = async (req, res, next) => {
+  console.log("req.body",req.body);
   try {
+    console.log("req.body",req.body);
     const { testDate, timeSlot } = req.body;
 
     // Check if slot is already booked
+
     const existingBooking = await EyeTest.findOne({
       testDate,
       timeSlot,

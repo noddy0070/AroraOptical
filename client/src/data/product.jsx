@@ -87,22 +87,98 @@ export const  product=[
 
 ]
 
-
-const productDeail2={
-    name: 'Product Name',
-    model: 'Model Name',
-    price: 'Price',
-    image:[placeholder,productPlaceholder,placeholder,productPlaceholder],
-    comapny:"RayBan",
-    rating:"3.5 • 10",
-    title:"Junior new wayfarer",
-    price:"₹12,690.00",
-    colour:"100/71 - Black",
-    rating: 3.5,
-    noOfReviews: 100,
-    productDescription:"Product Description- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.",
-    sizes: ['S','M','L','XL'],
-    variants: ['Option One','Option Two','Option Three','Option Four'],
-    productDetail:"Product Details- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.",
-    productSpecifications:["Specification1","Specification2","Specification3","Specification4"],
-}
+export const accessories=[
+    {
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"cases"
+        
+    },
+    {
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"lensWipes"
+    },
+    {
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"lensSolution"
+    },
+    {
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"cleaningCloth"
+    },{
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"travellingKit"
+    },{
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"antiFogKit"
+    },{
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer22",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"cases"
+    },{
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer3",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"cases"
+    },{
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer4",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"cases"
+    },{
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer5",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"cases"
+    },{
+        images:[placeholder,productPlaceholder,placeholder,productPlaceholder],
+        comapny:"RayBan",
+        rating:"3.5 • 10",
+        title:"Junior new wayfarer6",
+        price:"₹12,690.00",
+        colour:"100/71 - Black",
+        category:"cases"
+    },
+]

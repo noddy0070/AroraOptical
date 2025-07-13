@@ -3,25 +3,35 @@ import lensCoatingImg from '../../assets/images/lensPage/lensCoating.png';
 import lensThicknessImg from '../../assets/images/lensPage/lensThickness.png';
 import prescriptionImg from '../../assets/images/lensPage/prescription.png';
 import {useState,useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LensType from './LensType';
 import LensCoating from './LensCoating';
 import LensThickness from './LensThickness';
 import Prescription from './Prescription';
 import PrescriptionForm from './PrescriptionForm';
+import SavedPrescription from './SavedPrescription';
 import BlueFilterLens from './BlueFilterLens';
 import LensTint from './LensTint';
 import { TransitionLink } from '../../Routes/TransitionLink';
+import axios from 'axios';
+import { baseURL } from '@/url';
+import { useSelector } from 'react-redux';
 
 const lensData=[{id:'lensType',img:lensTypeImg},{id:'lensCoating',img:lensCoatingImg},{id:'lensThickness',img:lensThicknessImg},{id:'prescription',img:prescriptionImg}];
 
 export default function Lens() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const productId=location.pathname.split('/')[2];
+  console.log(productId);
+
+  const {user} = useSelector((state) => state.auth);
   const [amount, setAmount] = useState(0);
   const [focusedTopPosition, setFocusedTopPosition] = useState(null);  
   const [focused, setFocused] = useState("lensType");
   const [subFocusedCoating,setSubFocusedCoating]=useState("");
   const [subFocusedPrescription,setSubFocusedPrescription]=useState("");
+
 
   const [form,setForm]=useState({
     lensType:"",
@@ -47,7 +57,15 @@ export default function Lens() {
     }
     return 0;
   };
-
+  useEffect(()=>{
+    fetchProductDetails();
+  },[]);
+  const fetchProductDetails = async () => {
+    const response = await axios.get(`${baseURL}/api/admin/get-single-product/${productId}`,{
+      withCredentials: true
+    });
+    setAmount(response.data.price);
+  }
   // Set the initial position of #focused
   useEffect(() => {
     const initialPosition = calculatePosition("lensType");
@@ -123,6 +141,36 @@ export default function Lens() {
     }
     return true;
   }
+
+  const addProductToCart = async (updatedFormData = form, updatedAmount = amount) => {
+    try {
+      console.log("Current form state:", updatedFormData);
+      console.log("lensThickness value:", updatedFormData.lensThickness);
+      const response = await axios.post(`${baseURL}/api/user/cart/add`, {
+          userId: user._id,
+          productId: productId,
+          quantity: 1,
+          lensType: updatedFormData.lensType,
+          lensCoating: updatedFormData.lensCoating,
+          lensThickness: updatedFormData.lensThickness,
+          prescriptionId: updatedFormData.prescriptionId,
+          totalAmount: updatedAmount
+      }, {
+          withCredentials: true
+      });
+
+      if (response.data.success) {
+          // Show success message or update UI
+          alert('Product added to cart successfully!');
+          // Dispatch custom event for cart update
+          window.dispatchEvent(new CustomEvent('cartUpdated'));
+          navigate('/cart');
+      }
+  } catch (error) {
+      console.error('Add to cart error:', error);
+  }
+  }
+  console.log(subFocusedPrescription);
       
     return (
         <section className="h-screen flex flex-row bg-white-100 overflow-hidden">
@@ -178,28 +226,35 @@ export default function Lens() {
               }}
             >
               <div className="absolute w-full h-[100vh] top-0">
-                <LensType form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} />
+                <LensType form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount}/>
               </div>
               <div className="absolute w-full h-[100vh] top-[100vh] left-0 transform transition-all duration-700" style={{left:subFocusedCoating=="lensTint" || subFocusedCoating=="blueFilter"?"-100vw":"0"}}>
-                <LensCoating form={form} setForm={setForm} handleFocus={handleFocus} amount={amount}  subFocusedCoating={subFocusedCoating} setSubFocusedCoating={setSubFocusedCoating} />
+                <LensCoating form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} subFocusedCoating={subFocusedCoating} setSubFocusedCoating={setSubFocusedCoating} />
               </div>
               <div className='absolute w-full h-[28.625vw] top-[100vh] transform transition-all duration-700' style={{ left:subFocusedCoating=="lensTint"?"-0vw":"100vw"}}>
-                <LensTint form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} />
+                <LensTint form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} />
               </div>
               <div className='absolute w-full h-[28.625vw] top-[100vh] transform transition-all duration-700' style={{left:subFocusedCoating=="blueFilter"?"-0vw":"100vw"}}>
-                <BlueFilterLens form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} />
+                <BlueFilterLens form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} />
               </div>
               <div className="absolute w-full h-[100vh] top-[200vh]">
-                <LensThickness form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} />
+                <LensThickness form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} addProductToCart={addProductToCart} />
               </div>
              
-              <div className="absolute w-full h-[100vh] top-[300vh]  left-0  transform transition-all duration-700"  style={{left:subFocusedPrescription=="newPrescription"?"-100vw":"0vw"}}>
-                <Prescription form={form} setForm={setForm} handleFocus={handleFocus} setSubFocusedPrescription={setSubFocusedPrescription} />
+              <div className="absolute w-full h-[100vh] top-[300vh]  left-0  transform transition-all duration-700"  style={{left:subFocusedPrescription=="newPrescription"||subFocusedPrescription=="savedPrescription"?"-100vw":"0vw"}}>
+              <Prescription form={form} setForm={setForm} handleFocus={handleFocus} setSubFocusedPrescription={setSubFocusedPrescription} />
+                
+
               </div>
 
               <div className="absolute w-full h-[100vh] top-[300vh]  transform transition-all duration-700" style={{left:subFocusedPrescription=="newPrescription"?"-0vw":"100vw"}}>
-                <PrescriptionForm form={form} setForm={setForm} handleFocus={handleFocus}  />
+                <PrescriptionForm form={form} setForm={setForm} handleFocus={handleFocus} setSubFocusedPrescription={setSubFocusedPrescription} />
               </div>
+              <div className="absolute w-full h-[100vh] top-[300vh]  transform transition-all duration-700" style={{left:subFocusedPrescription=="savedPrescription"?"-0vw":"100vw"}}>
+              <SavedPrescription form={form} setForm={setForm} handleFocus={handleFocus} amount={amount}
+              addProductToCart={addProductToCart} setSubFocusedPrescription={setSubFocusedPrescription} />
+                
+                </div>
             </div>
           </div>
           </div>        

@@ -13,7 +13,7 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
     console.log(shippingAddress);
 
     // Calculate total amount
-    const totalAmount = cartItems.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0) + deliveryPrice;
+    const totalAmount = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0) + deliveryPrice;
 
     // Razorpay handler
     const handleRazorpayPayment = async () => {
@@ -105,13 +105,13 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
                     <p className='text-regularText leading-[150%] font-roboto font-bold'>{item.productId.modelTitle}</p>
                     <p className='text-smallText leading-[150%] font-roboto'>{item.productId.brand}</p>
                     </div>
-                    <p className='text-smallText leading-[150%] font-bold font-roboto text-right ml-auto'>{item.quantity} x {formatINR(item.productId.price)}</p>
+                    <p className='text-smallText leading-[150%] font-bold font-roboto text-right ml-auto'>{item.quantity} x {formatINR(item.totalAmount)}</p>
                   </div>
                 ))}
                 <p className='text-regularText leading-[150%] font-roboto font-bold'>Total Payable</p>
                 <div className='flex flex-row'>
                   <p className='text-regularText leading-[150%] font-roboto'>MRP(Incl. Tax)</p>
-                  <p className='text-regularText ml-auto text-right leading-[150%] font-roboto'>{formatINR(cartItems.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0))}</p>
+                  <p className='text-regularText ml-auto text-right leading-[150%] font-roboto'>{formatINR(cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0))}</p>
                 </div>
                 <div className='flex flex-row'>
                   <p className='text-regularText leading-[150%] font-roboto'>Delivery Charges</p>

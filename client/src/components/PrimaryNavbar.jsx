@@ -12,7 +12,7 @@ export default function PrimaryNavbar () {
                 </div>
         </div>
       </nav>
-    );
+    );  
   };
   
   

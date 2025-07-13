@@ -12,33 +12,23 @@ const Categories=['Sunglasses','Eyeglasses','Contact Lenses','Accessories','Smar
 
 const Classification=['Men','Women','Kids','Unisex'];
 
-const Brand = [
-  "Ana Hickmann",
-  "Armani Exchange",
-  "Boss",
-  "Burberry",
-  "Calvin Klein",
-  "Coach",
-  "Dita Lancier",
-  "Dolce And Gabana",
-  "Emporio Armani",
-  "Ferrari",
-  "Fossil",
-  "Hugo",
-  "Jimmy Choo",
-  "Levis",
-  "Michael Kors",
-  "Mont Blanc",
-  "Maui Jim",
-  "Miumiu",
-  "Oakley",
-  "Perricarden",
-  "Prada",
-  "Ray Ban",
-  "Swarovski",
-  "Tommy Hilfiger",
-  "Versache",
-  "Vogue Eyewear"
+const GlassesBrand = [
+  "Ana Hickmann","Armani Exchange","Boss","Burberry","Calvin Klein","Coach","Dita Lancier","Dolce And Gabana","Emporio Armani","Ferrari","Fossil","Hugo","Jimmy Choo","Levis","Michael Kors","Mont Blanc","Maui Jim","Miumiu","Oakley","Perricarden","Prada","Ray Ban","Swarovski","Tommy Hilfiger","Versace","Vogue Eyewear"
   ];
+
+const LensBrand =[
+  "Bauch and Lomb","Cooper Vision","Johnson & Johnson","Silklens","Purecon"
+]
+
+const AccessoriesBrand =[
+  "Arora Opticals","Zeiss",
+]
   
-export {Material,Type,Shape,Colors,Size,Categories,Brand,Classification };
+const AccessoriesType=['Cases','Travelling Kit','Cleaning Cloth','Lens Wipes', 'Anti Fog Kit', 'AO Lens Solution', 'Lens Solution Kit'];
+
+const SmartGlassesBrand =[
+  "Ray Ban",
+]
+
+
+export {Material,Type,Shape,Colors,Size,Categories,GlassesBrand,Classification,AccessoriesType,LensBrand,AccessoriesBrand,SmartGlassesBrand };

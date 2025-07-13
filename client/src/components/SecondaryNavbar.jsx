@@ -128,7 +128,9 @@ export default function SecondaryNavbar() {
       
 
       <div className='mt-[3vw] text-regularText font-roboto text-[#737373] font-bold flex flex-col gap-[.625vw]'>
+        <TransitionLink to="/accessories">
         <p className='text-black mb-[.625vw]'>Accessories</p>
+        </TransitionLink>
         <p>Cases</p>
         <p>Travelling Kit</p>
         <p>Cleaning Cloth</p>

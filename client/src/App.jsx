@@ -14,6 +14,7 @@ import Blog from "./pages/Home/Sections/Blog";
 import FeeEyeTest from "./pages/Home/Sections/FreeEyeTest";
 import AboutUs from "./pages/About-us.jsx";
 import ThankYou from "./pages/Product/ThankYou";
+import Accessories from "./pages/Shop/Accessories.jsx";
 
 // ========== AUTHENTICATION PAGES ==========
 import Signup from "./pages/Auth/SignUp";
@@ -224,6 +225,7 @@ export default function App() {
       <Route path='/shipping-policy' element={<ShippingPolicy/>}/>
       <Route path='/about-us' element={<AboutUs/>}/>
       <Route path='/thank-you' element={<ThankYou />} />
+      <Route path='/accessories' element={<Accessories />} />
       <Route path='*' element={<h1>Not Found</h1>} />
 
       {/* ========== PROTECTED USER ROUTES ========== */}

@@ -4,20 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify';
+import eyeTestBanner from '../../assets/images/eyeTestBanner.png'
+import Calendar from 'react-calendar';
+import axios from 'axios';
 import { baseURL } from '@/url';
 
+import './calendar.css';
 const BookingForm = () => {
+  const [date, setDate] = useState(new Date());
   const { user } = useSelector(state => state.auth);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     patientName: user?.name || '',
-    age: '',
     phoneNumber: '',
     email: user?.email || '',
     testDate: new Date(),
     timeSlot: '',
-    previousEyeTest: false,
-    currentEyewear: 'None',
     specialNotes: ''
   });
   const [availableSlots, setAvailableSlots] = useState([]);
@@ -51,18 +53,18 @@ const BookingForm = () => {
         throw new Error('Invalid time slot selected');
       }
 
-      const response = await fetch('/api/eye-test/book', {
-        method: 'POST',
+      const response = await axios.post(`${baseURL}/api/eye-test/book`, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
+        data: {
           ...formData,
           timeSlot: selectedSlot.value, // Send the 24-hour format to backend
-        }),
+        },
+        withCredentials: true,
       });
 
-      const data = await response.json();
+      const data = await response.data;
 
       if (!response.ok) {
         throw new Error(data.message);
@@ -86,124 +88,68 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-6">Book Free Eye Test</h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Patient Name</label>
+    <div className="">
+      <img src={eyeTestBanner} alt="Eye Test Banner" className="w-full h-auto mb-6" />
+      <div className='p-[2vw]'>
+      <h2 className="text-h4Text font-semibold mb-6 text-center">Booking Details</h2>
+
+      <div className='flex flex-row gap-[2vw] justify-center'>
+      <form onSubmit={handleSubmit} className="space-y-4 w-[25vw]">
+
+        <div className="">
+          <div className='mb-[1vw]'>
+            <label className="block text-regularText font-medium mb-[.5vw] ">Patient Name</label>
             <input
               type="text"
               name="patientName"
               value={formData.patientName}
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-[12px]"
             />
           </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Age</label>
-            <input
-              type="number"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Phone Number</label>
+          <div className='mb-[1vw]'>
+            <label className="block text-regularText font-medium mb-[.5vw]">Phone Number</label>
             <input
               type="tel"
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-[12px]"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+          <div className='mb-[1vw]'>
+            <label className="block text-regularText font-medium mb-[.5vw]">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-[12px]"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Test Date</label>
+          {/* <div className='mb-[1vw]'>
+            <label className="block text-regularText font-medium mb-[.5vw]">Test Date</label>
             <DatePicker
               selected={formData.testDate}
               onChange={date => setFormData(prev => ({ ...prev, testDate: date }))}
               minDate={new Date()}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-[12px]"
               dateFormat="MMMM d, yyyy"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Time Slot</label>
-            <select
-              name="timeSlot"
-              value={formData.timeSlot}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            >
-              <option value="">Select a time</option>
-              {availableSlots.map(slot => (
-                <option key={slot.value} value={slot.value}>
-                  {slot.display}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Current Eyewear</label>
-            <select
-              name="currentEyewear"
-              value={formData.currentEyewear}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            >
-              <option value="None">None</option>
-              <option value="Glasses">Glasses</option>
-              <option value="Contact Lenses">Contact Lenses</option>
-              <option value="Both">Both</option>
-            </select>
-          </div>
+          </div> */}
         </div>
-
         <div>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              name="previousEyeTest"
-              checked={formData.previousEyeTest}
-              onChange={handleChange}
-              className="rounded"
-            />
-            <span className="text-sm">Had an eye test before?</span>
-          </label>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Special Notes</label>
+          <label className="block text-regularText font-medium mb-[.5vw]">Special Notes</label>
           <textarea
             name="specialNotes"
             value={formData.specialNotes}
             onChange={handleChange}
-            className="w-full p-2 border rounded h-24"
+            className="w-full p-2 border rounded-[12px] h-24"
             placeholder="Any special requirements or concerns..."
           />
         </div>
@@ -216,6 +162,22 @@ const BookingForm = () => {
           {loading ? 'Booking...' : 'Book Eye Test'}
         </button>
       </form>
+      <div className='w-[34vw]'>
+      <Calendar
+        onChange={setDate}
+        value={date}
+        // You can add more props for locale, minDate, maxDate, etc.
+      />
+      </div>
+      <div className='w-[25vw] flex flex-col gap-[12px] mx-auto'>
+        {availableSlots.map(slot => (
+          <div onClick={()=>setFormData(prev=>({...prev,timeSlot:slot.value}))} key={slot.value}   className={`cursor-pointer py-[12px] w-[280px] text-center font-bold text-mediumText  border-[rgba(04,43,43,.32)] border-[1px] rounded-[14px] bg-white  ${formData.timeSlot===slot.value?'bg-[rgba(04,43,43,1)] text-white':'bg-white text-[rgba(04,43,43,.32)]'}`}>
+            <p>{slot.display}</p>
+          </div>
+        ))}
+      </div>
+      </div>
+      </div>
     </div>
   );
 };

@@ -20,6 +20,7 @@ const Checkout = () => {
     setStep(newStep);
   };
   const location = useLocation();
+  console.log(location);
   const cartItems = location.state?.data || [];
   const [shippingAddress,setShippingAddress] = useState({
     name: '',

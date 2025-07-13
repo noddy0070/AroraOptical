@@ -16,7 +16,7 @@ const prescriptionSchema = new mongoose.Schema({
   },
   
   prescriptionDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   
@@ -196,26 +196,6 @@ const prescriptionSchema = new mongoose.Schema({
     enum: ['Manual Entry', 'Image Upload','Imported'],
     default: 'Manual Entry',
   },
-  
-  
-  // Associated orders
-  orders: [{
-    orderId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Order',
-    },
-    orderDate: {
-      type: Date,
-      default: Date.now,
-    },
-  }],
-  
-  // Prescription tags for easy categorization
-  tags: [{
-    type: String,
-    trim: true,
-  }],
-  
   
 }, { 
   timestamps: true,

@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import { useNavigate } from "react-router";
-import { Size,Shape,Type,Colors  ,Categories,Material,Brand,Classification  } from './../../../data/glassesInformationData'
+import { Size,Shape,Type,Colors  ,Categories,Material,GlassesBrand,Classification,AccessoriesType,LensBrand,AccessoriesBrand,SmartGlassesBrand} from './../../../data/glassesInformationData'
 import ImageUpload from "@/components/ImageFunctionality";
 import axios from "axios";
 import { ArrayInputField, AttributeSection, FormField } from "@/components/ProductFields";
@@ -108,7 +108,13 @@ const AddProduct=()=>{
           });
           return;
         }
-      
+        if(name === "category" && (value === "Sunglasses" || value === "Accessories")){
+          setForm((prevForm) => ({
+            ...prevForm,
+            rx: false
+          }));
+        }
+
         // For attribute maps
         const attributeFields = ["lensAttributes", "frameAttributes", "generalAttributes"];
         if (attributeFields.includes(name)) {
@@ -203,14 +209,35 @@ const AddProduct=()=>{
                     <FormField label="Model Title" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
                     <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
                     <FormField label="Model Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
-                    <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={Brand} />
                     <div className="grid grid-cols-2 gap-[1vw]">
                       <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
                       <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={Classification} />
                     </div>
+                    {(form.category == "Sunglasses" || form.category == "Eyeglasses") && (
+                      <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={GlassesBrand} />
+                    )}
+
+                    {(form.category == "Smart Glasses") && (
+                      <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={SmartGlassesBrand} />
+                    )}
+                    
+                    {(form.category == "Contact Lenses") && (
+                      <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={LensBrand} />
+                    )}
+
+                    {(form.category == "Accessories") && (
+                      <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={AccessoriesBrand} />
+                    )}
+                    
                     {(form.category == "Eyeglasses" || form.category === "Contact Lenses" || form.category === "Smart Glasses") && (
                       <FormField label="Rx" name="rx" value={form.rx} onChange={handleChange} options={["true","false"]} />
                     )}
+
+                    {(form.category == "Accessories") && (
+                      <FormField label="Accessories Type" name="accessoriesType" value={form.accessoriesType} onChange={handleChange} options={AccessoriesType} />
+                    )}
+
+
 
 
                     <FormField label="Description" name="description" type="textarea" value={form.description} onChange={handleChange} />
@@ -223,7 +250,8 @@ const AddProduct=()=>{
                   </div>
 
                   {/* Frame Attribute */}
-                  <AttributeSection 
+                  {(form.category == "Sunglasses" || form.category == "Eyeglasses" || form.category == "Smart Glasses") && (
+                    <AttributeSection 
                     title="Frame Attributes" 
                     attributes={getUsedAttributes('Frame')}
                     formKey="frameAttributes" 
@@ -232,22 +260,23 @@ const AddProduct=()=>{
                     onRemoveAttribute={(name) => handleRemoveAttribute(name, 'Frame')}
                     availableAttributes={getAvailableAttributes('Frame')}
                     onAddAttribute={(attr) => handleAddAttribute(attr, 'Frame')}
-                  />
+                  />)}
 
                   {/* Lens Attribute */}
-                  <AttributeSection 
-                    title="Lens Attributes"
-                    attributes={getUsedAttributes('Lens')}
-                    formKey="lensAttributes" 
-                    form={form} 
-                    handleChange={handleChange}
-                    onRemoveAttribute={(name) => handleRemoveAttribute(name, 'Lens')}
-                    availableAttributes={getAvailableAttributes('Lens')}
-                    onAddAttribute={(attr) => handleAddAttribute(attr, 'Lens')}
-                  />
+                    {(form.category == "Contact Lenses" || form.category == "Eyeglasses" || form.category == "Smart Glasses" || form.category == "Sunglasses") && (
+                      <AttributeSection 
+                      title="Lens Attributes"
+                      attributes={getUsedAttributes('Lens')}
+                      formKey="lensAttributes" 
+                      form={form} 
+                      handleChange={handleChange}
+                      onRemoveAttribute={(name) => handleRemoveAttribute(name, 'Lens')}
+                      availableAttributes={getAvailableAttributes('Lens')}
+                      onAddAttribute={(attr) => handleAddAttribute(attr, 'Lens')}
+                    />)}
 
                   {/* General Attribute */}
-                  <AttributeSection 
+                    <AttributeSection 
                     title="General Attributes"
                     attributes={getUsedAttributes('General')}
                     formKey="generalAttributes" 

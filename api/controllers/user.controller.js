@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from 'bcryptjs';
 import mongoose from "mongoose";
+import Prescription from "../models/prescription.model.js";
 export const test=(req,res)=>{;
     res.json({message:'Hello World'});
 }
@@ -75,30 +76,40 @@ export const getUser = async (req, res, next) => {
 // Cart Controllers
 export const addToCart = async (req, res) => {
   try {
-    const { userId, productId, quantity = 1 } = req.body;
+    const { userId, productId, quantity = 1, lensType='None', lensCoating='None', lensThickness='None', prescriptionId, totalAmount} = req.body;
     
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
+    console.log(totalAmount);
+
     // Check if product already exists in cart
     const existingCartItem = user.cart.find(item => 
       item.productId.toString() === productId
     );
 
-    if (existingCartItem) {
+    if (existingCartItem && existingCartItem.lensType==lensType && existingCartItem.lensCoating==lensCoating && existingCartItem.lensThickness==lensThickness) {
       // Update quantity if product exists
       existingCartItem.quantity += quantity;
     } else {
       // Add new product to cart
-      user.cart.push({ productId, quantity });
+      console.log(totalAmount);
+      console.log(lensThickness);
+      console.log('here we are');
+      if(prescriptionId){
+        user.cart.push({ productId, quantity, lensType, lensCoating, lensThickness, prescriptionId, totalAmount });
+      }else{
+        user.cart.push({ productId, quantity, lensType, lensCoating, lensThickness, totalAmount });
+      }
     }
-
+    console.log(user.cart);
     await user.save();
     res.status(200).json({ success: true, message: 'Product added to cart successfully' });
   } catch (error) {
     console.error('Add to cart error:', error);
+
     res.status(500).json({ success: false, message: 'Failed to add product to cart' });
   }
 };
@@ -315,5 +326,56 @@ export const editAddressInList = async (req, res) => {
     res.status(200).json({ success: true, addressList: user.addressList });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to edit address.' });
+  }
+};
+
+export const addPrescription = async (req, res) => {
+  try {
+    const prescriptionForm = req.body;
+    const prescriptionData = {
+      userId: req.body.userId,
+      prescriptionName: prescriptionForm.prescriptionName,
+      prescriptionDate: prescriptionForm.prescriptionDate,
+      rightEye: {
+        sphere: prescriptionForm.prescriptionRightSphere,
+        cylinder: prescriptionForm.prescriptionRightCylinder,
+        axis: prescriptionForm.prescriptionRightAxis,
+        add: prescriptionForm.prescriptionRightNear,
+      },
+      leftEye: {
+        sphere: prescriptionForm.prescriptionLeftSphere,
+        cylinder: prescriptionForm.prescriptionLeftCylinder,
+        axis: prescriptionForm.prescriptionLeftAxis,
+        add: prescriptionForm.prescriptionLeftNear,
+      },
+      pupillaryDistance: {
+        main: prescriptionForm.prescriptionPupilsDistance,
+        left: prescriptionForm.prescriptionLeftPupilsDistance,
+        right: prescriptionForm.prescriptionRightPupilsDistance,
+      },
+      otherDetails: prescriptionForm.prescriptionOtherDetails,
+      termsAccepted: true,
+      source: 'Manual Entry',
+    };
+    const newPrescription = new Prescription(prescriptionData);
+    await newPrescription.save();
+    const user = await User.findById(prescriptionData.userId);
+    user.prescriptions.push(newPrescription._id);
+    await user.save();
+    res.status(200).json({ success: true, message: 'Prescription added successfully' });
+  } catch (error) {
+    console.error('Add prescription error:', error);
+    res.status(500).json({ success: false, message: 'Failed to add prescription' });
+  }
+};
+
+export const getPrescriptions = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const prescriptions = await Prescription.find({userId: userId});
+    res.status(200).json({ success: true, prescriptions: prescriptions });
+  } catch (error) {
+    console.error('Get prescriptions error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get prescriptions' });
   }
 };

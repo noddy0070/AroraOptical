@@ -4,6 +4,7 @@ import greenTintImg from '../assets/images/lensPage/greenTint.png';
 import greyTintImg from '../assets/images/lensPage/greyTint.png';
 import brownTintImg from '../assets/images/lensPage/brownTint.png';
 import { IconButton, TitleButton } from './button';
+import { formatINR } from './IntToPrice';
 
 export const LensFeatureBox=({ img=placeholder, title, description,price,classNameLearnMore='',onclick = () => {} })=> {
     const [hover, setHover] = useState(false);
@@ -17,7 +18,7 @@ export const LensFeatureBox=({ img=placeholder, title, description,price,classNa
                 </div>
                 <div className='flex flex-row mx-[.25vw] font-dyeLine font-bold text-h6Text leading-[140%]'>
                     <h6>{title}</h6>
-                    <h6 className='ml-auto mr-[.25vw]'>{price}</h6>
+                    <h6 className='ml-auto mr-[.25vw]'>{price==0?"Free":price==-1?"":formatINR(price)}</h6>
                 </div>
                 <p className='font-roboto text-regularText mt-[.25vw] leading-[150%]'>{description}</p>
             </div>
@@ -29,7 +30,7 @@ export const LensFeatureBox=({ img=placeholder, title, description,price,classNa
 }
 
 
-export const  LensTintBox=({form,setForm, handleFocus, img=placeholder, title, description,price,classNameLearnMore='',onclick = () => {} })=> {
+export const  LensTintBox=({form,setForm, handleFocus, img=placeholder, title, description,price,classNameLearnMore='',onclick = () => {},setAmount,amount })=> {
     const [hover, setHover] = useState(false);
     const [selectedColor,setSelectedColor]=useState('Grey');
     const [selectedTitle,setSelectedTitle]=useState(title=='Solid Tint'?'Solid-Tinted-Lens/':'Gradient-Tinted-Lens/');
@@ -45,7 +46,7 @@ export const  LensTintBox=({form,setForm, handleFocus, img=placeholder, title, d
                 </div>
                 <div className='flex flex-row mx-[.25vw] font-dyeLine font-bold text-h6Text leading-[140%]'>
                     <h6>{title}</h6>
-                    <h6 className='ml-auto mr-[.25vw]'>{price}</h6>
+                    <h6 className='ml-auto mr-[.25vw]'>{price==0?"Free":formatINR(price)}</h6>
                 </div>
                 <p className='font-roboto text-regularText mt-[.25vw] leading-[150%]'>{description}</p>
                 <p className="relative text-regularText leading-[150%] font-roboto font-bold text-center text-transparent !bg-clip-text
@@ -74,7 +75,7 @@ export const  LensTintBox=({form,setForm, handleFocus, img=placeholder, title, d
                         </div>
                     </div>
                     <TitleButton btnTitle='Confirm' btnWidth={10} btnHeight={2.5} btnRadius={1.25} className='mx-auto' className2='text-clip'  
-                    onClick={()=>{setForm({...form,lensCoating:(selectedTitle + selectedColor)});handleFocus("lensThickness")}} />
+                    onClick={()=>{setForm({...form,lensCoating:(selectedTitle + selectedColor)});handleFocus("lensThickness");setAmount(amount+price)}} />
                 </div>
             
             </div>

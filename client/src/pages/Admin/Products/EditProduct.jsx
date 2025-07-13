@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import { useNavigate } from "react-router";
-import { Size,Shape,Type,Colors  ,Categories,Material,Brand,Classification  } from './../../../data/glassesInformationData'
+import { Size,Shape,Type,Colors  ,Categories,Material,GlassesBrand,Classification,LensBrand,AccessoriesType } from './../../../data/glassesInformationData'
 import ImageUpload from "@/components/ImageFunctionality";
 import { ArrayInputField, AttributeSection, FormField } from "@/components/ProductFields";
 import axios from "axios";
@@ -277,7 +277,7 @@ const EditProduct=()=>{
                     <FormField label="Model Title" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
                     <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
                     <FormField label="Model Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
-                    <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={Brand} />
+                    <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={GlassesBrand} />
                     <div className="grid grid-cols-2 gap-[1vw]">
                       <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
                       <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={Classification} />

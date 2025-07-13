@@ -1,6 +1,6 @@
 import express from "express";
 // import {signup,signin, sendOTP, verifyOTP} from "../controllers/auth.controller.js";
-import { addProduct,getProducts,getSingleProduct,getProductsColor,updateProduct,deleteProduct } from "../controllers/product.controller.js";
+import { addProduct,getProducts,getSingleProduct,getProductsColor,updateProduct,deleteProduct,getAccessories } from "../controllers/product.controller.js";
 import { addAttributes,getAttributes,deleteAttribute,editAttribute } from "../controllers/attributes.controller.js";
 import { getUsers,addUser,getUser,toggleBlockUser } from "../controllers/user.controller.js";
 import { addPolicy,updatePolicy,getPolicy} from "../controllers/policy.controller.js";
@@ -14,7 +14,7 @@ router.post('/update-product/:id',updateProduct);
 router.get('/get-products',getProducts);
 router.get('/get-single-product/:attributeId',getSingleProduct);
 router.post('/get-products-color',getProductsColor); 
-
+router.get('/get-accessories',getAccessories);
 // Attributes Routes
 router.post('/add-attributes',addAttributes);
 router.post('/edit-attributes',addProduct);

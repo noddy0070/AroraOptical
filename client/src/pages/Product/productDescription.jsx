@@ -117,11 +117,13 @@ export default function ProductDescription({productToDisplay}){
 
         setLoading(true);
         setError('');
+        console.log(productToDisplay);
         try {
             const response = await axios.post(`${baseURL}/api/user/cart/add`, {
                 userId: user._id,
                 productId: productToDisplay._id,
-                quantity: 1
+                quantity: 1,
+                totalAmount: productToDisplay.price
             }, {
                 withCredentials: true
             });
@@ -299,7 +301,7 @@ export default function ProductDescription({productToDisplay}){
                                 const lensColorValue = lensColorAttribute ? lensColorAttribute.value : null;
                                 return (
                                 variant._id==productToDisplay._id?
-                                <div className={`rounded-[8px] w-[12.5vw] p-[12px] bg-white border-[1px] ${variant._id==productToDisplay._id?"border-black":""    } `}>
+                                <div key={index} className={`rounded-[8px] w-[12.5vw] p-[12px] bg-white border-[1px] ${variant._id==productToDisplay._id?"border-black":""    } `}>
                                    <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[0]} />
                                    {colorAttribute && <div className='w-full flex justify-between mb-[8px]'>
                                     <span>Color</span>

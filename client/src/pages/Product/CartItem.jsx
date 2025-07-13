@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { mapBrandToLogo } from '@/data/brandMap';
 import { formatINR } from '@/components/IntToPrice';
 import close from '../../assets/images/icons/close.svg';
@@ -6,8 +6,23 @@ import subtract from '../../assets/images/icons/subtract.svg';
 import add from '../../assets/images/icons/add.svg';
 import edit from '../../assets/images/icons/Edit.svg';
 import { TransitionLink } from '@/Routes/TransitionLink';
+import axios from 'axios';
+import { baseURL } from '@/url';
+import { useSelector } from 'react-redux';
     
 const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
+   const [prescription,setPrescription]=useState(null);
+   const { user } = useSelector(state => state.auth);
+   useEffect(()=>{
+    const fetchPrescription=async()=>{
+        const response=await axios.get(`${baseURL}/api/user/prescription/${user._id}`);
+        setPrescription(response.data.prescriptions);
+    }
+    fetchPrescription();
+   },[user._id]);  
+   const filteredPrescription=prescription.filter(prescription=>prescription._id===item.prescriptionId);
+   console.log(filteredPrescription);
+
   return (
     <div key={item.productId._id} className='flex flex-col gap-[1.25vw] border-b-[1px] border-gray-400 py-[1.5vw]'>  
                             <div className='flex flex-row gap-[1vw]'>
@@ -22,15 +37,22 @@ const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
                                     </div>
                                     <div className='flex flex-row gap-between items-start'>
                                     <div className='mb-[1.25vw]'>
-                                        <p className='font-bold text-regularText leading-[150%] mb-[.5vw]'>{item.productId.modelTitle}</p>
-                                        <p className=' text-smallText leading-[150%]'>{item.productId.modelName}</p>
+                                        <TransitionLink to={`/product/${item.productId._id}`}>
+                                        <p className='font-bold text-regularText leading-[150%] mb-[.5vw] hover:underline cursor-pointer'>{item.productId.modelTitle}</p>
+                                        </TransitionLink>
+
+                                        <TransitionLink to={`/product/${item.productId._id}`}>
+                                        <p className=' text-smallText leading-[150%] hover:underline cursor-pointer'>{item.productId.modelName}</p>
+                                        </TransitionLink>
                                     </div>
                                     <div className='ml-auto'>
-                                        <p className='font-bold text-mediumText'>{formatINR(item.productId.price * item.quantity)}</p>
+                                        <p className='font-bold text-regularText'>{formatINR(item.productId.price)}</p>
                                     </div>
                                     </div>
                                        
-                                    <p className='mb-[1.25vw] text-tinyText leading-[150%]'>Variant.size</p>
+                                    <p className='mb-[4px] text-regularText leading-[150%] font-medium'>Total Amount:</p>
+                                    <p className='mb-[1.25vw] text-regularText leading-[150%] font-medium'>{formatINR(item.totalAmount * item.quantity)}</p>
+
                                     <div className='gap-[.5vw]'>
                                         <p className='text-tinyText leading-[150%]'>Quantity</p>
                                     <div className='flex flex-row gap-[.5vw] mt-[.5vw] items-center'>
@@ -87,7 +109,7 @@ const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
                                                 <img className='w-[1.25vw] h-[1.25vw] cursor-pointer' src={edit}/>
                                                 </TransitionLink>
                                                 </div>
-                                                <p className='text-smallText font-roboto leading-[150%]'>{item.prescriptionId?item.prescriptionId.name:'No Prescription Selected'}</p>
+                                                <p className='text-smallText font-roboto leading-[150%]'>{item.prescriptionId?filteredPrescription[0].prescriptionName:'No Prescription Selected'}</p>
                                             </div>
                                         </div>
                                     </div>
