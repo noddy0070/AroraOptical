@@ -1,9 +1,11 @@
 import React,{useState,useEffect} from 'react';
 import heroSectionBanner from '../../../assets/images/homePage/homePageBanner.png';
 import heroSection from '../../../assets/images/heroBanner.png';
+import heroSectionBanner2 from '../../../assets/images/newHeader.png'
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { IconButton, TitleButton } from '../../../components/button';
+import { TransitionLink } from '@/Routes/TransitionLink';
 
 export default function HeroSection(){
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -31,7 +33,7 @@ export default function HeroSection(){
                 <div className={`w-full h-full transition-opacity  duration-300 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}>
                     <img 
                         className='h-full w-full object-cover clickable'
-                        src={heroSectionImage}
+                        src={heroSectionBanner2}
                         alt="Hero Banner"
                         loading="eager"
                         fetchpriority="high"
@@ -49,7 +51,7 @@ export default function HeroSection(){
                     />
                 )}
                 <div className='absolute inset-0 bg-black/10'></div>
-                <div className='absolute inset-0 flex flex-col justify-between px-[4vw] py-[3vw]'>
+                {/* <div className='absolute inset-0 flex flex-col justify-between px-[4vw] py-[3vw]'>
                     <div className='relative max-w-[39.875vw]'>
                         <h1 className='font-dyeLine text-h1Text font-bold leading-[120%] pb-[1.5vw] text-white'>
                             Experience the Best of Both Worlds
@@ -61,6 +63,8 @@ export default function HeroSection(){
                         </p>
                     </div>
                     <div className='flex flex-col items-center'>
+                    <TransitionLink to="/shop/sunglasses/bestsellers">
+
                         <div className='flex gap-[.1vw] group hover:cursor-pointer hover:scale-105 transition-transform duration-700'>
                             <TitleButton
                                 btnTitle={"Shop"}
@@ -77,11 +81,13 @@ export default function HeroSection(){
                                 className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'
                             />
                         </div>
+                        </TransitionLink>
+
                         <p className='text-regularText pt-[.875vw] font-roboto text-center leading-[150%] text-white'>
                             Learn More
                         </p>
                     </div>
-                </div>
+                </div> */}
                 <div className='absolute right-[4vw] top-[3vw] flex gap-2'>
                     <ArrowBackIosRoundedIcon 
                         className='bg-btngrery rounded-full p-[0.25vw] cursor-pointer hover:bg-black transition-colors' 

@@ -4,7 +4,7 @@ import MenPlaceholder from '../../../assets/images/homePage/Men.png';
 import WomenPlaceholder from '../../../assets/images/homePage/Women.png';
 import KidsPlaceholder from '../../../assets/images/homePage/Kids.png';
 import AccessoriesPlaceholder from '../../../assets/images/homePage/Accessories.png';
-
+import { TransitionLink } from '@/Routes/TransitionLink';
 const CategoriesData = [
     { src: MenPlaceholder, alt: "Men", title: "Men" },
     { src: WomenPlaceholder, alt: "Women", title: "Women" },
@@ -40,6 +40,7 @@ const CategoryCard = ({ category, index }) => {
                 />
             )}
 
+            <TransitionLink to={`/shop/sunglasses/women`}>
             <div className='absolute bottom-0 w-full h-full rounded-[3vw] md:rounded-[2vw]' />
             
             <TitleButton 
@@ -63,6 +64,7 @@ const CategoryCard = ({ category, index }) => {
                 padding={.85} 
                 iconWidth={2.1875}
             />
+            </TransitionLink>
             
             <div 
                 className="absolute inset-0 bg-gradient-to-t transition-opacity duration-500 ease-in-out pointer-events-none opacity-50 md:opacity-80 group-hover:opacity-0" 
