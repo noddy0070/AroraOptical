@@ -9,9 +9,14 @@ import { TransitionLink } from '@/Routes/TransitionLink';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import { useSelector } from 'react-redux';
-    
+
+const lensThicknessMap={
+    "Medium": "1.56",
+    "Thick": "1.59",
+}
+
 const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
-   const [prescription,setPrescription]=useState(null);
+   const [prescription,setPrescription]=useState(['']);
    const { user } = useSelector(state => state.auth);
    useEffect(()=>{
     const fetchPrescription=async()=>{
@@ -73,12 +78,12 @@ const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
                             </div>
                             {
                                 item.productId.rx && (
-                                    <div className='flex flex-row pb-[1.25vw] gap-[2.8125vw]'>
+                                    <div className='flex flex-row pb-[1.25vw] gap-[1vw]'>
                                         <div className='flex flex-row p-[.625vw] border-black border-[.1vw] rounded-[.625vw] gap-[.5vw]'>
                                             <div className='w-[3.125vw] h-[3.125vw] rounded-[.625vw] bg-gray-400'></div>
                                             <div className='flex flex-col gap-[.5vw]'>
                                                 <div className='flex flex-row gap-[.5vw]'>
-                                                <p className='text-regularText font-dyeLine leading-[150%] font-bold'>Single Vision</p>
+                                                <p className='text-regularText font-dyeLine leading-[150%] whitespace-nowrap font-bold'>Vision Type</p>
                                                 <TransitionLink to={`/lens/${item.productId._id}`}>
                                                 <img className='w-[1.25vw] h-[1.25vw] cursor-pointer' src={edit}/>
                                                 </TransitionLink>
@@ -91,7 +96,7 @@ const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
                                             <div className='w-[3.125vw] h-[3.125vw] rounded-[.625vw] bg-gray-400'></div>
                                             <div className='flex flex-col gap-[.5vw]'>
                                                 <div className='flex flex-row gap-[.5vw]'>
-                                                <p className='text-regularText font-dyeLine leading-[150%] font-bold'>Lens Coating</p>
+                                                <p className='text-regularText font-dyeLine leading-[150%] whitespace-nowrap font-bold'>Lens Coating</p>
                                                 <TransitionLink to={`/lens/${item.productId._id}`}> 
                                                 <img className='w-[1.25vw] h-[1.25vw] cursor-pointer' src={edit}/>
                                                 </TransitionLink>
@@ -104,12 +109,25 @@ const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
                                             <div className='w-[3.125vw] h-[3.125vw] rounded-[.625vw] bg-gray-400'></div>
                                             <div className='flex flex-col gap-[.5vw]'>
                                                 <div className='flex flex-row gap-[.5vw]'>
+                                                <p className='text-regularText font-dyeLine leading-[150%] whitespace-nowrap font-bold'>Lens Thickness</p>
+                                                <TransitionLink to={`/lens/${item.productId._id}`}>
+                                                <img className='w-[1.25vw] h-[1.25vw] cursor-pointer' src={edit}/>
+                                                </TransitionLink>
+                                                </div>
+                                                <p className='text-smallText font-roboto leading-[150%]'>{item.lensThickness?`Index: ${lensThicknessMap[item.lensThickness]}`:'No Lens Selected'}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className='flex flex-row p-[.625vw] border-black border-[.1vw] rounded-[.625vw] gap-[.5vw]'>
+                                            <div className='w-[3.125vw] h-[3.125vw] rounded-[.625vw] bg-gray-400'></div>
+                                            <div className='flex flex-col gap-[.5vw]'>
+                                                <div className='flex flex-row gap-[.5vw]'>
                                                 <p className='text-regularText font-dyeLine leading-[150%] font-bold'>Prescription</p>
                                                 <TransitionLink to={`/lens/${item.productId._id}`}>
                                                 <img className='w-[1.25vw] h-[1.25vw] cursor-pointer' src={edit}/>
                                                 </TransitionLink>
                                                 </div>
-                                                <p className='text-smallText font-roboto leading-[150%]'>{item.prescriptionId?filteredPrescription[0].prescriptionName:'No Prescription Selected'}</p>
+                                                <p className='text-smallText font-roboto leading-[150%]'>{item.prescriptionId?filteredPrescription[0]?.prescriptionName:'No Prescription Selected'}</p>
                                             </div>
                                         </div>
                                     </div>

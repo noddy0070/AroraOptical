@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify';
 import eyeTestBanner from '../../assets/images/eyeTestBanner.png'
-import Calendar from 'react-calendar';
 import axios from 'axios';
 import { baseURL } from '@/url';
 
-import './calendar.css';
+import CalendarComponent from './CalendarComponent';
 const BookingForm = () => {
-  const [date, setDate] = useState(new Date());
   const { user } = useSelector(state => state.auth);
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
+    userId: user._id,
     patientName: user?.name || '',
     phoneNumber: '',
     email: user?.email || '',
@@ -26,6 +24,7 @@ const BookingForm = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // console.log('formData.testDate in BookingForm:', formData.testDate);
     fetchAvailableSlots(formData.testDate);
   }, [formData.testDate]);
 
@@ -41,7 +40,7 @@ const BookingForm = () => {
       toast.error('Failed to fetch available time slots');
     }
   };
-
+  console.log(formData)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -54,24 +53,25 @@ const BookingForm = () => {
       }
 
       const response = await axios.post(`${baseURL}/api/eye-test/book`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
         data: {
           ...formData,
           timeSlot: selectedSlot.value, // Send the 24-hour format to backend
+        }
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
         },
         withCredentials: true,
       });
 
-      const data = await response.data;
+      const data = response.data;
 
-      if (!response.ok) {
-        throw new Error(data.message);
+      if (response.status !== 201) {
+        throw new Error(data.message || 'Failed to book appointment');
       }
 
       toast.success('Eye test booked successfully!');
-      navigate('/dashboard/appointments');
+      navigate('/');
     } catch (error) {
       toast.error(error.message || 'Failed to book eye test');
     } finally {
@@ -91,10 +91,10 @@ const BookingForm = () => {
     <div className="">
       <img src={eyeTestBanner} alt="Eye Test Banner" className="w-full h-auto mb-6" />
       <div className='p-[2vw]'>
-      <h2 className="text-h4Text font-semibold mb-6 text-center">Booking Details</h2>
 
-      <div className='flex flex-row gap-[2vw] justify-center'>
-      <form onSubmit={handleSubmit} className="space-y-4 w-[25vw]">
+      <div className='flex flex-row gap-[2vw] justify-center '>
+      <form onSubmit={handleSubmit} className="space-y-4 w-[25vw] mt-[1vw] ">
+      <h2 className="text-h4Text font-semibold mb-[1vw]">Patient Details</h2>
 
         <div className="">
           <div className='mb-[1vw]'>
@@ -132,16 +132,7 @@ const BookingForm = () => {
             />
           </div>
 
-          {/* <div className='mb-[1vw]'>
-            <label className="block text-regularText font-medium mb-[.5vw]">Test Date</label>
-            <DatePicker
-              selected={formData.testDate}
-              onChange={date => setFormData(prev => ({ ...prev, testDate: date }))}
-              minDate={new Date()}
-              className="w-full p-2 border rounded-[12px]"
-              dateFormat="MMMM d, yyyy"
-            />
-          </div> */}
+         
         </div>
         <div>
           <label className="block text-regularText font-medium mb-[.5vw]">Special Notes</label>
@@ -162,16 +153,19 @@ const BookingForm = () => {
           {loading ? 'Booking...' : 'Book Eye Test'}
         </button>
       </form>
-      <div className='w-[34vw]'>
-      <Calendar
-        onChange={setDate}
-        value={date}
-        // You can add more props for locale, minDate, maxDate, etc.
-      />
+      <div className=' '>
+      <CalendarComponent formData={formData} setFormData={setFormData}/>
       </div>
-      <div className='w-[25vw] flex flex-col gap-[12px] mx-auto'>
+      <div className=' flex flex-col gap-[.75vw] w-[25vw] mt-[1-+vw] '>
+        <span className='text-[#192020] text-mediumText '>
+          {formData.testDate ? new Date(formData.testDate).toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long' 
+          }) : 'Select a date'}
+        </span>
         {availableSlots.map(slot => (
-          <div onClick={()=>setFormData(prev=>({...prev,timeSlot:slot.value}))} key={slot.value}   className={`cursor-pointer py-[12px] w-[280px] text-center font-bold text-mediumText  border-[rgba(04,43,43,.32)] border-[1px] rounded-[14px] bg-white  ${formData.timeSlot===slot.value?'bg-[rgba(04,43,43,1)] text-white':'bg-white text-[rgba(04,43,43,.32)]'}`}>
+          <div onClick={()=>setFormData(prev=>({...prev,timeSlot:slot.value}))} key={slot.value}   className={`cursor-pointer py-[.75vw] w-[17.5vw] text-center font-bold text-mediumText  border-[rgba(04,43,43,.32)] border-[.0625vw] rounded-[.875vw] transition-colors duration-300  ${formData.timeSlot===slot.value?'bg-[rgba(04,43,43,1)] text-white ':'bg-white  text-[rgba(04,43,43,.32)]'}`}>
             <p>{slot.display}</p>
           </div>
         ))}

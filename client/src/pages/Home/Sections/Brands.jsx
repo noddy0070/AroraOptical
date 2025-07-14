@@ -37,12 +37,9 @@ const logosData = [
 
 export default function Brands() {
     const slider = React.useRef(null);
-    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
       
           useEffect(() => {
-            // Set initial width
-            setScreenWidth(window.innerWidth);
-        
             // Handle window resize
             const handleResize = () => {
               setScreenWidth(window.innerWidth);
@@ -74,12 +71,12 @@ export default function Brands() {
           };
 
     return(
-        <div className="h-[15vw] md:h-[17.5vw] overflow-hidden mx-[-6vw] md:mx-[-32px] flex justify-center items-center">
+        <div className="h-[15vw] md:h-[17.5vw]  overflow-hidden mx-[-6vw] md:mx-[-32px] flex justify-center items-center">
         <Slider className="w-full"  ref={slider} {...settings}>
            
         {logosData.map((logo, index) => (
-        <div key={index} className="flex relative justify-center items-center">
-          <img src={logo.src} alt={logo.alt} className="max-h-full object-contain " style={screenWidth>768?{height:`${logo.height}vw`}:{height:`${logo.heightPhone}vw`}} />
+        <div key={index} className="flex relative justify-center items-center ">
+          <img src={logo.src} alt={logo.alt} className="max-h-full object-contain " style={screenWidth>768?{height:`${logo.height}vw`} : {height: `${logo.heightPhone}vw`}} />
             
         </div>
       ))}

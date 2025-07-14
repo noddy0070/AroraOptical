@@ -60,13 +60,13 @@ export const bookEyeTest = async (req, res, next) => {
   console.log("req.body",req.body);
   try {
     console.log("req.body",req.body);
-    const { testDate, timeSlot } = req.body;
-
+    const details = req.body.data;
+    console.log('details',details);
     // Check if slot is already booked
 
     const existingBooking = await EyeTest.findOne({
-      testDate,
-      timeSlot,
+      testDate: details.testDate,
+      timeSlot: details.timeSlot,
       status: { $nin: ['Cancelled', 'No Show'] }
     });
 
@@ -76,8 +76,7 @@ export const bookEyeTest = async (req, res, next) => {
 
     // Create new booking
     const eyeTest = await EyeTest.create({
-      ...req.body,
-      userId: req.user.id
+      ...details,
     });
 
     res.status(201).json(eyeTest);
@@ -91,6 +90,7 @@ export const getAllEyeTests = async (req, res, next) => {
   try {
     const { status, date } = req.query;
     let query = {};
+
 
     // Filter by status if provided
     if (status) {
@@ -122,6 +122,7 @@ export const getAllEyeTests = async (req, res, next) => {
 
     res.status(200).json(formattedTests);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

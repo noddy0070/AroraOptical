@@ -32,9 +32,7 @@ export default function Home() {
                 <Trending/>
             </Suspense>
             
-            <Suspense fallback={<SectionLoader />}>
                 <Brands/>
-            </Suspense>
             
             <Suspense fallback={<SectionLoader />}>
                 <FreeEyeTest />

@@ -31,6 +31,7 @@ export default function Lens() {
   const [focused, setFocused] = useState("lensType");
   const [subFocusedCoating,setSubFocusedCoating]=useState("");
   const [subFocusedPrescription,setSubFocusedPrescription]=useState("");
+  const [product,setProduct]=useState(null);
 
 
   const [form,setForm]=useState({
@@ -64,6 +65,7 @@ export default function Lens() {
     const response = await axios.get(`${baseURL}/api/admin/get-single-product/${productId}`,{
       withCredentials: true
     });
+    setProduct(response.data);
     setAmount(response.data.price);
   }
   // Set the initial position of #focused
@@ -183,7 +185,11 @@ export default function Lens() {
                     className={`z-[2] w-[7.875vw] h-[7.875vw] flex flex-col items-center justify-center  bg-white rounded-full
                       `}
                     disabled={isDisabled(item.id)}  
-                    onClick={() =>handleFocus(item.id)}
+                    onClick={() =>{handleFocus(item.id);
+                      if(item.id==="lensType"){
+                        setAmount(product.price);
+                      }
+                    }}
                   >
                     <img className="w-[5.9375vw] h-[5.9375vw]" src={item.img} />
                   </button>

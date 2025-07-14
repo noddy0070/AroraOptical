@@ -10,10 +10,7 @@ const eyeTestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  age: {
-    type: Number,
-    required: true,
-  },
+
   phoneNumber: {
     type: String,
     required: true,
@@ -35,37 +32,13 @@ const eyeTestSchema = new mongoose.Schema({
     enum: ['Scheduled', 'Completed', 'Cancelled', 'No Show'],
     default: 'Scheduled',
   },
-  previousEyeTest: {
-    type: Boolean,
-    default: false,
-  },
-  currentEyewear: {
-    type: String,
-    enum: ['None', 'Glasses', 'Contact Lenses', 'Both'],
-    default: 'None',
-  },
   specialNotes: {
     type: String,
   },
   cancellationReason: {
     type: String,
+    required:false
   },
-  testResults: {
-    rightEye: {
-      sphere: String,
-      cylinder: String,
-      axis: String,
-      vision: String,
-    },
-    leftEye: {
-      sphere: String,
-      cylinder: String,
-      axis: String,
-      vision: String,
-    },
-    pdDistance: String,
-    recommendations: String,
-  }
 }, { timestamps: true });
 
 // Add index for efficient querying

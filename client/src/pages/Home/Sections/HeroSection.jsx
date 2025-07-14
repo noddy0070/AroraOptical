@@ -33,7 +33,7 @@ export default function HeroSection(){
                 <div className={`w-full h-full transition-opacity  duration-300 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}>
                     <img 
                         className='h-full w-full object-cover clickable'
-                        src={heroSectionBanner2}
+                        src={heroSectionBanner}
                         alt="Hero Banner"
                         loading="eager"
                         fetchpriority="high"
@@ -51,7 +51,7 @@ export default function HeroSection(){
                     />
                 )}
                 <div className='absolute inset-0 bg-black/10'></div>
-                {/* <div className='absolute inset-0 flex flex-col justify-between px-[4vw] py-[3vw]'>
+                <div className='absolute inset-0 flex flex-col justify-between px-[4vw] py-[3vw]'>
                     <div className='relative max-w-[39.875vw]'>
                         <h1 className='font-dyeLine text-h1Text font-bold leading-[120%] pb-[1.5vw] text-white'>
                             Experience the Best of Both Worlds
@@ -87,7 +87,7 @@ export default function HeroSection(){
                             Learn More
                         </p>
                     </div>
-                </div> */}
+                </div>
                 <div className='absolute right-[4vw] top-[3vw] flex gap-2'>
                     <ArrowBackIosRoundedIcon 
                         className='bg-btngrery rounded-full p-[0.25vw] cursor-pointer hover:bg-black transition-colors' 

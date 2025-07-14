@@ -227,7 +227,7 @@ export default function Accessories({category, audience}) {
                     </div>
 
                     {/* Product grid */}
-                    <div className='grid grid-cols-2 md:grid-cols-3 gap-[1vw]'>
+                    <div className='grid grid-cols-2 md:grid-cols-4 gap-[1vw]'>
                         {filteredProducts.length > 0 ? (
                             filteredProducts.map((item, index) => (
                                 <div key={index} className='w-[22.875vw]'>

@@ -16,7 +16,7 @@ const router = express.Router();
 router.get('/available-slots', getAvailableTimeSlots);
 
 // Protected routes (require user authentication)
-router.post('/book', authMiddleware, bookEyeTest);
+router.post('/book',  bookEyeTest);
 router.get('/user-tests',authMiddleware,  getUserEyeTests);
 router.get('/details/:id' , authMiddleware, getEyeTestDetails);
 

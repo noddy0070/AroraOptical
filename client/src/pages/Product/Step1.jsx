@@ -114,6 +114,7 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
       if (response.data.success && response.data.serviceability.data && response.data.serviceability.data.available_courier_companies.length > 0) {
         setIsDeliverable('Delivery Available');
         setDeliveryPrice(response.data.serviceability.data.available_courier_companies[0].rate);
+        console.log(response.data.serviceability.data.available_courier_companies);
         toast.success(`Delivery available! Price: ₹${response.data.serviceability.data.available_courier_companies[0].rate}`);
       } else {
         setIsDeliverable('Not Deliverable');

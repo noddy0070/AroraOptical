@@ -33,6 +33,7 @@ const EyeTestManagement = () => {
 
       setEyeTests(data);
     } catch (error) {
+      console.log(error)
       toast.error('Failed to fetch eye tests');
     } finally {
       setLoading(false);
