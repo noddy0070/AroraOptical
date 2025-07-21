@@ -83,7 +83,7 @@ const Layout = () => {
 
   // Check if current route should hide navigation bars
   const shouldHideNavbar =
-    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin") || location.pathname.includes("/lens");
+    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin")||location.pathname.includes("/admin")  || location.pathname.includes("/lens");
 
   // Handle responsive viewport changes
   useEffect(() => {
@@ -97,7 +97,7 @@ const Layout = () => {
     return () => window.removeEventListener("resize", checkViewportWidth); // Cleanup
   }, []);
 
-  const isAdminRoute = location.pathname.includes("/Admin");
+  const isAdminRoute = location.pathname.includes("/Admin") || location.pathname.includes("/admin");
 
   // Show desktop-only message for admin routes on mobile
   if (isAdminRoute && isMobileView) {
@@ -135,11 +135,11 @@ const Layout2 = () => {
   const [isMobileView, setIsMobileView] = useState(false);
 
   // Routes where footer should be hidden (exact matches)
-  const hideNavbarsExact = ["/login", "/signup"];
+  const hideNavbarsExact = ["/login", "/signup","/admin"];
 
   // Check if current route should hide footer
   const shouldHideNavbar =
-    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin") || location.pathname.includes("/lens");
+    hideNavbarsExact.includes(location.pathname) || location.pathname.includes("/Admin") ||location.pathname.includes("/admin") || location.pathname.includes("/lens");
 
   // Handle responsive viewport changes
   useEffect(() => {
@@ -244,7 +244,8 @@ export default function App() {
       <Route element={<ProtectedRoute/>}>
         <Route path="/admin" element={<DashBoard />}>
           {/* Admin Dashboard - Main admin interface */}
-          <Route index element={<Home2 />} />
+          {/* <Route index element={<Home2 />} /> */}
+          <Route index element={<Products/>} />
           
           {/* Product Management */}
           <Route path="products" element={<Products />} />
