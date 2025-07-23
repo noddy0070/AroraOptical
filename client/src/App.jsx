@@ -1,3 +1,8 @@
+// =========================
+// Main React App Component
+// =========================
+// This file sets up the main application, routing, layout logic, and responsive design for both user and admin interfaces.
+
 // ========== REACT AND ROUTING IMPORTS ==========
 import {BrowserRouter,Routes, Route,useLocation } from "react-router-dom";
 import React,{useState,useEffect} from "react";
@@ -116,6 +121,7 @@ const Layout = () => {
   // Render navigation bars conditionally
   return (
     <>
+      {/* Show navbars unless on login/signup/admin/lens routes */}
       {!shouldHideNavbar && (
         <>
           <PrimaryNavbar />
@@ -172,6 +178,7 @@ const Layout2 = () => {
   // Render footer conditionally
   return (
     <>
+      {/* Show footer unless on login/signup/admin/lens routes */}
       {!shouldHideNavbar && (
         <>
           <Footer />
