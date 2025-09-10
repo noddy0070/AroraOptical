@@ -274,9 +274,9 @@ const EditProduct=()=>{
                 <div className=" shadow-adminShadow  p-[1vw] ">
                   {/* Basic Attributes */}
                   <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
-                    <FormField label="Model Title" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
                     <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
-                    <FormField label="Model Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
+                    <FormField label="Model Title" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
+                    <FormField label="Color Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
                     <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={GlassesBrand} />
                     <div className="grid grid-cols-2 gap-[1vw]">
                       <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />

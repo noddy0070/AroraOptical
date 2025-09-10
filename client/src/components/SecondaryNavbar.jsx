@@ -194,20 +194,23 @@ export default function SecondaryNavbar() {
         <div className='relative flex flex-row w-full items-center gap-[2vw]'>
           <div className='flex-row hidden md:flex font-bold'>
             <div className="relative">
+              <TransitionLink to="/shop/sunglasses/new-arrivals">
               <button 
                 onMouseEnter={() => handleDropdownEnter('shop')}
                 onMouseLeave={handleDropdownLeave}
                 className="pr-[1vw] text-regularText py-[1vw] focus:outline-none hover:underline hover:text-gray-500"
               >
+
                 Shop
               </button>
+              </TransitionLink>
               {activeDropdown === 'shop' && renderDropdown()}
             </div>
 
 
-            <button className="text-regularText px-[1vw] py-[1vw] focus:outline-none hover:underline hover:text-gray-500">
+            {/* <button className="text-regularText px-[1vw] py-[1vw] focus:outline-none hover:underline hover:text-gray-500">
               Smart Glasses
-            </button>
+            </button> */}
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
             <TransitionLink to="/eye-test">
@@ -216,9 +219,9 @@ export default function SecondaryNavbar() {
 
             </button>
 
-            <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
+            {/* <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
               Blog
-            </button>
+            </button> */}
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
             <TransitionLink to="/about-us">

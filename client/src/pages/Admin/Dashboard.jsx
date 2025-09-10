@@ -53,6 +53,7 @@ const supportSection = [
   { id: 'Privacy Policy', path: ['/Admin/privacy-policy'], icon: PrivacyPolicyIcon, subSections: [] },
   { id: 'Shipping and Delivery', path: ['/Admin/shipping-policy'], icon: ShippingAndDeliveryIcon, subSections: [] },
   { id: 'Cancellation Policy', path: ['/Admin/cancellation-policy'], icon: CancellationPolicyIcon, subSections: [] },
+  { id: 'Terms and Conditions', path: ['/Admin/terms-and-conditions'], icon: TermsAndConditionIcon, subSections: [] },
 ];
 
 const mainSections = [

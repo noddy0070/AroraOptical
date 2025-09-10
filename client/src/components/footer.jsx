@@ -54,15 +54,15 @@ const Footer=()=>{
     
 </div>
             </div>
-            <div className="ml-auto w-full md:w-[16.25vw] flex flex-col gap-[3vw] md:gap-[.75vw] md:text-smallText">
+            {/* <div className="ml-auto w-full md:w-[16.25vw] flex flex-col gap-[3vw] md:gap-[.75vw] md:text-smallText">
                 <span>Eyeglasses</span>
                 <span>Sunglasses</span>
                 <span>Contact Lenses</span>
                 <span>Computer Glasses</span>
                 <span>Accessories</span>
                 <span></span>
-            </div>
-            <div className="w-full md:w-[16.25vw] flex flex-col gap-[3vw] md:gap-[.75vw]">
+            </div> */}
+            <div className="ml-auto w-full md:w-[16.25vw] flex flex-col gap-[3vw] md:gap-[.75vw]">
                 <TransitionLink to="/shop/eyeglasses/all" className="hover:underline cursor-pointer">
                     <span>Shop</span>
                 </TransitionLink>
@@ -100,6 +100,9 @@ const Footer=()=>{
             </TransitionLink>
             <TransitionLink to='/shipping-policy' className="underline">
                 <span>Shiping and Delivery Policy</span>
+            </TransitionLink>
+            <TransitionLink to='/terms-and-conditions' className="underline">
+                <span>Terms and Conditions</span>
             </TransitionLink>
         </div>
         </footer>

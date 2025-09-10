@@ -4,6 +4,7 @@ import CategoryPlaceholder from '../../../assets/images/CategoryPlaceholder.png'
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import TrendingImg from '../../../assets/images/homePage/Trending.png';
+import { TransitionLink } from '@/Routes/TransitionLink';
 export default function Trending(){
     return (
         <div className=' md:px-[4vw] py-[5vw] md:py-[7vw] gap-[6vw] md:gap-0 flex flex-col-reverse md:grid  md:grid-cols-2 '>
@@ -28,7 +29,9 @@ export default function Trending(){
                     Discover our latest trending eyewear collections featuring premium frames, designer sunglasses, and exclusive offers. From classic elegance to contemporary styles, find your perfect look with unbeatable deals and seasonal discounts.
                     </span>
                     <div className='flex flex-row justify-center group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 gap-[.1vw] '>
+                    <TransitionLink to="/shop/sunglasses/bestsellers">
                         <TitleButton btnHeightPhone={12.5} btnRadiusPhone={9} btnWidthPhone={47} btnTitle={"Shop"} btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
+                        </TransitionLink>
                         <IconButton btnSizePhone={12.5} iconWidthPhone={20} paddingPhone={1} btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
                     </div>
                 </div>

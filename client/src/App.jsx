@@ -65,12 +65,14 @@ import EyeTestManagement from "./pages/Admin/EyeTestManagement.jsx";
 import CancellationPolicy from "./pages/Admin/CancellationPolicy.jsx";
 import PrivacyPolicyAdmin from "./pages/Admin/PrivacyPolicy.jsx";
 import ShippingPolicyAdmin from "./pages/Admin/ShippingPolicy.jsx";
+import TermsAndConditionsAdmin from "./pages/Admin/TermsAndConditions.jsx";
 
 // ========== POLICY PAGES (PUBLIC) ==========
 import PrivacyPolicy from "./pages/Policies/PrivacyPolicy.jsx";
 import ContactUs from "./pages/Policies/ContactUs.jsx";
 import RefundPolicy from "./pages/Policies/RefundPolicy.jsx";
 import ShippingPolicy from "./pages/Policies/ShippingPolicy.jsx";
+import TermsAndConditions from "./pages/Policies/TermsAndConditions.jsx";
 
 // ========== UTILITIES & PROVIDERS ==========
 import {ProtectedRoute} from "./providers/RoutesProvider.jsx";
@@ -230,6 +232,7 @@ export default function App() {
       <Route path='/contact-us'element={<ContactUs/>}/>
       <Route path='/refund-policy' element={<RefundPolicy/>}/>
       <Route path='/shipping-policy' element={<ShippingPolicy/>}/>
+      <Route path='/terms-and-conditions' element={<TermsAndConditions/>}/>
       <Route path='/about-us' element={<AboutUs/>}/>
       <Route path='/thank-you' element={<ThankYou />} />
       <Route path='/accessories' element={<Accessories />} />
@@ -280,6 +283,7 @@ export default function App() {
           <Route path="cancellation-policy" element={<CancellationPolicy/>}/>
           <Route path="privacy-policy" element={<PrivacyPolicyAdmin/>}/>
           <Route path="shipping-policy" element={<ShippingPolicyAdmin/>}/>
+          <Route path="terms-and-conditions" element={<TermsAndConditionsAdmin/>}/>
           
           {/* Fallback for admin routes */}
           <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
