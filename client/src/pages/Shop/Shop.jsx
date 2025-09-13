@@ -24,22 +24,26 @@ export default function Shop({category, audience}) {
     console.log('products',products);
 
     useEffect(() => {
+        
         const fetchProducts = async () => {
             try {
                 setLoading(true);
                 // Convert audience to gender parameter
-                const genderParam = audience.toLowerCase() === "everyone" ? "" : audience.toLowerCase();
+                const genderParam = audience.toLowerCase() === "everyone" || audience.toLowerCase() === "glasses" ? "" : audience.toLowerCase();
+                console.log('genderParam',genderParam);
                 
                 // Check if this is a new arrivals or bestsellers request
                 const isNewArrivals = audience.toLowerCase() === "new-arrivals";
                 const isBestsellers = audience.toLowerCase() === "bestsellers";
+                const isAccessories = audience.toLowerCase() === "accessories";
                 
                 const response = await axios.get(`${baseURL}/api/admin/get-products`, {
                     params: {
                         category: category,
                         gender: isNewArrivals || isBestsellers ? "" : genderParam,
                         newArrivals: isNewArrivals ? "true" : "false",
-                        bestsellers: isBestsellers ? "true" : "false"
+                        bestsellers: isBestsellers ? "true" : "false",
+                        accessories: isAccessories ? "true" : "false"
                     }
                 });
 
@@ -128,7 +132,10 @@ export default function Shop({category, audience}) {
                 <IconButton className='absolute right-[4vw] top-[3vw]' btnSize={3.0625} padding={.85} iconWidth={2.1875}/>
             </div>
             <h3 className='text-h3Text font-dyeLine font-bold leading-[120%] text-center py-[4vw]'>
-                {formatCategoryName(category)} for {audience}
+                {audience==='Everyone' || audience==='Men' || audience==='Women' || audience==='Kids' ? 
+                    `${formatCategoryName(category)} for ${audience}` : 
+                    `${audience.charAt(0).toUpperCase() + audience.slice(1)} ${formatCategoryName(category)}`
+                }
             </h3>
             <div className='flex flex-row mx-[2vw]'>
                 <div className='w-[24.1875vw] pr-[1vw] flex flex-col gap-[1.5vw]'>

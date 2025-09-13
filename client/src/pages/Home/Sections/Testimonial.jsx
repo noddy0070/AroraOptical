@@ -11,6 +11,7 @@ const testimonials = [
     { src: TestimonialImage3,review:"Great place for buying latest spectacles. The staff is very polite and humble. They will also hell you in selecting right frame for you. Over all really good experience. Also, they have all the latest trends, so you will not feel that you are missing out on fashion.",rating:5, name:"Richi Sharma",location:"Jhansi", alt:"testimonialProfile",},
     
 ]
+import './home.css'
 export default function Testimonial(){
     const [screenWidth, setScreenWidth] = useState(null);
 

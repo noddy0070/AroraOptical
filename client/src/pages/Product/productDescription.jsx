@@ -230,12 +230,14 @@ export default function ProductDescription({productToDisplay}){
             <div className=' w-[41.8125vw] lg:w-[37.8125vw]'>
             <div className='flex flex-col gap-[1.5vw] w-[41.8125vw] lg:w-[37.8125vw] '>
                 {/* Product Details block */}
-                <img src={mapBrandToLogo[productToDisplay.brand]} alt="sf" className='w-auto h-[2.5vw] mr-auto object-contain' />
+                <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand} className='w-auto h-[2.5vw] mr-auto object-contain' />
                 <div>
                     <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelTitle}</h3>
                     <span className='leading-[150%]'>{productToDisplay.modelName}</span>
-                    <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{formatINR(productToDisplay.price)}</span> {" "}
-                     <span>{formatINR(productToDisplay.discount)}</span> </h5>
+                    {/* <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{formatINR(productToDisplay.price)}</span> {" "}
+                     <span>{formatINR(productToDisplay.discount)}</span> </h5> */}
+
+                    <h5 className='text-h5Text font-bold leading-[140%]'>{formatINR(productToDisplay.price)}</h5>
                 </div>
                 
                 {/* Rating block */}
@@ -243,13 +245,13 @@ export default function ProductDescription({productToDisplay}){
                 <p className='leading-[150%]'>{productToDisplay.description}</p>
                 {/* Size block */}
                 <div className='flex flex-col gap-[.5vw]'>
-                    <div className='flex flex-row  '>
+                    {/* <div className='flex flex-row  '>
                         <span>Size</span>
                         <span className='ml-auto underline'>Size chart</span>
-                    </div>
+                    </div> */}
 
                     {/* Custom dropdown menu */}
-                    <div className='relative w-full group ' onClick={()=>setIsHovered(!isHovered)}  >
+                    {/* <div className='relative w-full group ' onClick={()=>setIsHovered(!isHovered)}  >
                     
                     <div className="w-full appearance-none rounded-[2vw] focus:outline-none p-[.75vw] border-black border-[1px] cursor-pointer">
                         <div className='flex flex-row items-center transition-transform ease-in-out '>
@@ -286,7 +288,7 @@ export default function ProductDescription({productToDisplay}){
                         )}
 
                     
-                    </div>
+                    </div> */}
                     
                 </div>
 
@@ -356,7 +358,7 @@ export default function ProductDescription({productToDisplay}){
         </div>
 
         {/* Product Details */}
-        <div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw] '>
+        {productToDisplay.frameAttributes.length + productToDisplay.lensAttributes.length + productToDisplay.generalAttributes.length > 0 &&<div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw] '>
             <h2 className='font-dyeLine text-h3Text font-semibold'>Product Detail</h2>
             {
                 productToDisplay.frameAttributes.length>0 && 
@@ -403,7 +405,7 @@ export default function ProductDescription({productToDisplay}){
                     </div>
                     </div>
             }
-        </div>
+        </div>}
 
         {/* Product Description */}
         <div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw] '>

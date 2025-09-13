@@ -204,7 +204,8 @@ export default function SecondaryNavbar() {
                 Shop
               </button>
               </TransitionLink>
-              {activeDropdown === 'shop' && renderDropdown()}
+              {/* Uncomment this when you want to show the dropdown */}
+              {/* {activeDropdown === 'shop' && renderDropdown()} */}
             </div>
 
 

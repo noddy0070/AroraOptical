@@ -27,6 +27,7 @@ const mapBrandToLogo = {
     "Tommy Hilfiger": logos.tommyhilfiger,
     "Versace": logos.versace,
     "Vogue Eyewear": logos.vogueeyewear,
+    "Zeiss": logos.zeiss,
 }
 const mapBrandToDescription = {
     "Ana Hickmann": "Ana Hickmann eyewear combines elegance and fashion, reflecting the beauty and glamour of the renowned Brazilian model herself. A perfect blend of modernity and sophistication.",
@@ -54,7 +55,8 @@ const mapBrandToDescription = {
     "Swarovski": "Swarovski eyewear is known for its sparkling sophistication, using the brand's iconic crystals to elevate each frame with an elegant, refined shine.",
     "Tommy Hilfiger": "Tommy Hilfiger eyewear brings a fresh, American style to life with bold, timeless frames. A blend of classic sophistication and contemporary trends for effortless elegance.",
     "Versace": "Versace is a brand of sunglasses and eyeglasses. It was founded in 1978 by Gianni Versace, a company that manufactures and sells eyeglasses and sunglasses.",
-    "Vogue Eyewear": "Vogue Eyewear blends fashion with femininity, offering stylish frames that make a bold statement. Designed for women who love to express themselves through their eyewear."
+    "Vogue Eyewear": "Vogue Eyewear blends fashion with femininity, offering stylish frames that make a bold statement. Designed for women who love to express themselves through their eyewear.",
+    "Zeiss":"Zeiss is a brand of sunglasses and eyeglasses. It was founded in 1846 by Carl Zeiss, a company that manufactures and sells eyeglasses and sunglasses."
 };
 
 

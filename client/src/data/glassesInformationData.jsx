@@ -16,6 +16,7 @@ const GlassesBrand = [
   "Ana Hickmann","Armani Exchange","Boss","Burberry","Calvin Klein","Coach","Dita Lancier","Dolce And Gabana","Emporio Armani","Ferrari","Fossil","Hugo","Jimmy Choo","Levis","Michael Kors","Mont Blanc","Maui Jim","Miumiu","Oakley","Perricarden","Prada","Ray Ban","Swarovski","Tommy Hilfiger","Versace","Vogue Eyewear"
   ];
 
+
 const LensBrand =[
   "Bauch and Lomb","Cooper Vision","Johnson & Johnson","Silklens","Purecon"
 ]

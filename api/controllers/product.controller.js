@@ -17,12 +17,19 @@ export const addProduct= async (req,res,next)=>{
 
 export const getProducts = async (req, res, next) => {
   try {
-    const { category, gender, newArrivals, bestsellers } = req.query;
+    const { category, gender, newArrivals, bestsellers, accessories } = req.query;
     let query = {};
-    
+    console.log('category',category);
     // Add filters if they exist
     if (category) {
-      query.category = category[0].toUpperCase() + category.slice(1);
+      if(category==='accessories'){
+        query.category = 'Accessories';
+      } else if(category==='glasses'){
+        query.category = { $in: ['Sunglasses', 'Eyeglasses'] };
+      }
+      else{
+        query.category = category[0].toUpperCase() + category.slice(1);
+      }
     }
     if (gender) {
       // Map the URL parameter to the actual gender value

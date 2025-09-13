@@ -6,10 +6,10 @@ import KidsPlaceholder from '../../../assets/images/homePage/Kids.png';
 import AccessoriesPlaceholder from '../../../assets/images/homePage/Accessories.png';
 import { TransitionLink } from '@/Routes/TransitionLink';
 const CategoriesData = [
-    { src: MenPlaceholder, alt: "Men", title: "Men" },
-    { src: WomenPlaceholder, alt: "Women", title: "Women" },
-    { src: KidsPlaceholder, alt: "Kids", title: "Kids" },
-    { src: AccessoriesPlaceholder, alt: "Accessories", title: "Accessories" },
+    { src: MenPlaceholder, alt: "Men", title: "Men", link: "/shop/glasses/men" },
+    { src: WomenPlaceholder, alt: "Women", title: "Women", link: "/shop/glasses/women" },
+    { src: KidsPlaceholder, alt: "Kids", title: "Kids", link: "/shop/glasses/kids" },
+    { src: AccessoriesPlaceholder, alt: "Accessories", title: "Accessories", link: "/shop/accessories/glasses" },
 ];
 
 const CategoryCard = ({ category, index }) => {
@@ -40,7 +40,7 @@ const CategoryCard = ({ category, index }) => {
                 />
             )}
 
-            <TransitionLink to={`/shop/sunglasses/women`}>
+            <TransitionLink to={category.link}>
             <div className='absolute bottom-0 w-full h-full rounded-[3vw] md:rounded-[2vw]' />
             
             <TitleButton 

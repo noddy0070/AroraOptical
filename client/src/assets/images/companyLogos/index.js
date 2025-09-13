@@ -24,3 +24,4 @@ export { default as sf } from './SF.png';
 export { default as swarovski } from './Swarovski.png';
 export { default as versace } from './Versace.png';
 export { default as vogue } from './Vogue.png';
+export { default as zeiss } from './Zeiss.png';

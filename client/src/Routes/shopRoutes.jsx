@@ -12,14 +12,17 @@ export default function ShopURL () {
         kids: <Shop category={category} audience={"Kids"} />,
         "new-arrivals": <Shop category={category} audience={"new-arrivals"} />,
         "bestsellers": <Shop category={category} audience={"bestsellers"} />,
+        "accessories": <Shop category={category} audience={"accessories"} />,    
+        "glasses": <Shop category={category} audience={"glasses"} />,      
     }
     
     const categoryComponents = {
       eyeglasses: audienceComponents,
       sunglasses: audienceComponents,
+      glasses: audienceComponents,
       "contact-lenses": audienceComponents,
     "computer-glasses": audienceComponents,
-        accessories: audienceComponents,
+    accessories: audienceComponents,
     };
   
     return categoryComponents[category][audience] ; // Handle undefined routes

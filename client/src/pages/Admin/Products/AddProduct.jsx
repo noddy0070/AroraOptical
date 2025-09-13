@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import { useNavigate } from "react-router";
-import { Size,Shape,Type,Colors  ,Categories,Material,GlassesBrand,Classification,AccessoriesType,LensBrand,AccessoriesBrand,SmartGlassesBrand} from './../../../data/glassesInformationData'
+import {Categories,GlassesBrand,Classification,AccessoriesType,LensBrand,AccessoriesBrand,SmartGlassesBrand} from './../../../data/glassesInformationData'
 import ImageUpload from "@/components/ImageFunctionality";
 import axios from "axios";
 import { ArrayInputField, AttributeSection, FormField } from "@/components/ProductFields";
@@ -206,13 +206,19 @@ const AddProduct=()=>{
                 <div className=" shadow-adminShadow  p-[1vw] ">
                   {/* Basic Attributes */}
                   <div className="grid grid-cols-2 gap-[1vw] mb-[1.5vw] font-roboto">
+                  <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
+
                     <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
                     <FormField label="Model Title" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
-                    <FormField label="Color Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
+                    {form.category != "Accessories" && (
+
                     <div className="grid grid-cols-2 gap-[1vw]">
-                      <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
-                      <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={Classification} />
+                    <FormField label="Color Code" name="modelCode" value={form.modelCode} onChange={handleChange} />
+                    <FormField label="Gender" name="gender" value={form.gender} onChange={handleChange} options={Classification} />
+
                     </div>
+                    )}
+
                     {(form.category == "Sunglasses" || form.category == "Eyeglasses") && (
                       <FormField label="Brand" name="brand" value={form.brand} onChange={handleChange} options={GlassesBrand} />
                     )}
