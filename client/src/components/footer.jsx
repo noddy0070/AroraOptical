@@ -63,21 +63,21 @@ const Footer=()=>{
                 <span></span>
             </div> */}
             <div className="ml-auto w-full md:w-[16.25vw] flex flex-col gap-[3vw] md:gap-[.75vw]">
-                <TransitionLink to="/shop/eyeglasses/all" className="hover:underline cursor-pointer">
+                <TransitionLink to="/shop/glasses/all" className="hover:underline cursor-pointer">
                     <span>Shop</span>
                 </TransitionLink>
-                <TransitionLink to="/shop/eyeglasses/men" className="hover:underline cursor-pointer">
+                <TransitionLink to="/shop/glasses/men" className="hover:underline cursor-pointer">
                     <span>Men</span>
                 </TransitionLink>
-                <TransitionLink to="/shop/eyeglasses/women" className="hover:underline cursor-pointer">
+                <TransitionLink to="/shop/glasses/women" className="hover:underline cursor-pointer">
                     <span>Women</span>
                 </TransitionLink>
-                <TransitionLink to="/shop/smart-glasses/all" className="hover:underline cursor-pointer">
+                {/* <TransitionLink to="/shop/smart-glasses/all" className="hover:underline cursor-pointer">
                     <span>Smart Glasses</span>
                 </TransitionLink>
                 <TransitionLink to="/blog" className="hover:underline cursor-pointer">
                     <span>Blog</span>
-                </TransitionLink>
+                </TransitionLink> */}
                 <TransitionLink to="/about-us" className="hover:underline cursor-pointer">
                     <span>About Us</span>
                 </TransitionLink>
