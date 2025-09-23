@@ -82,7 +82,7 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
         totalAmount:totalAmount*100,
         shippingAddress,
         userId:user._id,
-        notes:'None for now'
+        notes:'None for now'  
       }
       try{
         const response = await axios.post(`${baseURL}/api/order/create-phonepe`, data, { withCredentials: true });

@@ -15,6 +15,7 @@ import {
   verifyRazorpayPayment,
   getOrderStatus,
   createPhonepeOrder,
+  checkPhonepeHealth,
 } from '../controllers/order.controller.js';
 
 const router = express.Router();
@@ -23,6 +24,7 @@ const router = express.Router();
 router.get('/serviceability', checkServiceability);
 router.get('/couriers', getCourierList);
 router.get('/pickup-locations', getPickupLocations);
+router.get('/phonepe-health', checkPhonepeHealth);
 
 // Protected routes (require authentication)
 router.post('/create', authMiddleware, createOrder);

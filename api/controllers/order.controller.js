@@ -10,12 +10,64 @@ dotenv.config();
 
 // Razorpay instance
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_ID_KEY,
+  key_id: process.env.RAZORPAY_ID_KEY,  
   key_secret: process.env.RAZORPAY_SECRET_KEY,
 });
 
-// PhonePe Instance
-const client = StandardCheckoutClient.getInstance(process.env.PHONEPE_CLIENT_ID,process.env.PHONEPE_CLIENT_SECRET,process.env.PHONEPE_CLIENT_VERSION,Env.PRODUCTION)
+// PhonePe Instance - Lazy initialization to handle missing env vars
+let phonepeClient = null;
+
+const getPhonepeClient = () => {
+  if (!phonepeClient) {
+    try {
+      // Validate required environment variables
+      if (!process.env.PHONEPE_CLIENT_ID || !process.env.PHONEPE_CLIENT_SECRET || !process.env.PHONEPE_CLIENT_VERSION) {
+        console.error('PhonePe environment variables missing:', {
+          PHONEPE_CLIENT_ID: !!process.env.PHONEPE_CLIENT_ID,
+          PHONEPE_CLIENT_SECRET: !!process.env.PHONEPE_CLIENT_SECRET,
+          PHONEPE_CLIENT_VERSION: !!process.env.PHONEPE_CLIENT_VERSION
+        });
+        throw new Error('PhonePe configuration missing');
+      }
+      
+      phonepeClient = StandardCheckoutClient.getInstance(
+        process.env.PHONEPE_CLIENT_ID,
+        process.env.PHONEPE_CLIENT_SECRET,
+        process.env.PHONEPE_CLIENT_VERSION,
+        Env.PRODUCTION
+      );
+      console.log('PhonePe client initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize PhonePe client:', error);
+      throw error;
+    }
+  }
+  return phonepeClient;
+};
+
+// PhonePe health check endpoint
+export const checkPhonepeHealth = async (req, res) => {
+  try {
+    const client = getPhonepeClient();
+    res.status(200).json({
+      success: true,
+      message: 'PhonePe service is available',
+      environment: 'PRODUCTION'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'PhonePe service unavailable',
+      error: error.message,
+      missingEnvVars: {
+        PHONEPE_CLIENT_ID: !process.env.PHONEPE_CLIENT_ID,
+        PHONEPE_CLIENT_SECRET: !process.env.PHONEPE_CLIENT_SECRET,
+        PHONEPE_CLIENT_VERSION: !process.env.PHONEPE_CLIENT_VERSION,
+        PHONEPE_REDIRECT_URL: !process.env.PHONEPE_REDIRECT_URL
+      }
+    });
+  }
+};5
 
 // Create new order
 export const createOrder = async (req, res) => {
@@ -565,6 +617,19 @@ export const createPhonepeOrder = async (req, res) => {
     const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}?merchantOrderId=${order._id}`
     const request = StandardCheckoutPayRequest.builder().merchantOrderId(order._id).amount(finalAmount).redirectUrl(redirectUrl).build();
 
+    // Get PhonePe client with error handling
+    let client;
+    try {
+      client = getPhonepeClient();
+    } catch (error) {
+      console.error('PhonePe client initialization failed:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'PhonePe service unavailable. Please try again later.',
+        error: error.message
+      });
+    }
+
     const response = await client.pay(request);
     console.log("response",response);
     return res.json({
@@ -596,6 +661,19 @@ export const getOrderStatus = async (req, res) => {
       return res.status(400).json({ 
         success: false, 
         message: 'Order not found' 
+      });
+    }
+
+    // Get PhonePe client with error handling
+    let client;
+    try {
+      client = getPhonepeClient();
+    } catch (error) {
+      console.error('PhonePe client initialization failed:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'PhonePe service unavailable. Please try again later.',
+        error: error.message
       });
     }
 
