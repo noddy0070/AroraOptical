@@ -5,6 +5,7 @@ import shiprocketAPI from '../utils/shiprocket.js';
 import Razorpay from 'razorpay';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
+import { StandardCheckoutClient, StandardCheckoutPayRequest,Env } from 'pg-sdk-node';
 dotenv.config();
 
 // Razorpay instance
@@ -12,6 +13,9 @@ const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_ID_KEY,
   key_secret: process.env.RAZORPAY_SECRET_KEY,
 });
+
+// PhonePe Instance
+const client = StandardCheckoutClient.getInstance(process.env.PHONEPE_CLIENT_ID,process.env.PHONEPE_CLIENT_SECRET,process.env.PHONEPE_CLIENT_VERSION,Env.PRODUCTION)
 
 // Create new order
 export const createOrder = async (req, res) => {
@@ -127,6 +131,7 @@ export const createOrder = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to create order' });
   }
 };
+
 
 // Get all orders (admin)
 export const getAllOrders = async (req, res) => {
@@ -424,6 +429,10 @@ export const createRazorpayOrder = async (req, res) => {
   }
 };
 
+
+
+
+
 // Verify Razorpay payment
 export const verifyRazorpayPayment = async (req, res) => {
   try {
@@ -476,3 +485,138 @@ export const verifyRazorpayPayment = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to verify payment' });
   }
 }; 
+
+
+export const createPhonepeOrder = async (req, res) => {
+  try {
+    const {
+      cartItems,
+      shippingAddress,
+      totalAmount,
+      notes,
+      userId,
+    } = req.body;
+    const products = cartItems;
+    // Validate required fields
+    
+    if (!products || !Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Products array is required and must not be empty' 
+      });
+    }
+
+    if (!shippingAddress) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Shipping address is required' 
+      });
+    }
+
+ 
+
+
+    const mappedProducts = [];
+
+    for (const item of products) {
+      // Validate item structure
+      if (!item.productId || !item.quantity || item.quantity <= 0) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Each product must have productId and valid quantity' 
+        });
+      }
+      // Map product to order model format
+      const mappedProduct = {
+        productId: item._id,
+        quantity: item.quantity,
+        price: item.totalAmount,
+        prescriptionId: item.prescriptionId || null,
+        lensOptions: {
+          lensType: item.lensType=="None"? null : item.lensType,
+          lensCoating: item.lensCoating=="None"? null : item.lensCoating,
+          lensThickness: item.lensThickness=="None"? null : item.lensThickness,
+          lensTint:item.lensTint=="None"? null : item.lensTint
+        }
+      };
+
+      mappedProducts.push(mappedProduct);
+    }
+
+    const finalAmount = totalAmount;
+  
+    // Create order in database first
+    const order = new Order({
+      userId,
+      products: mappedProducts,
+      totalPrice:finalAmount,
+      finalAmount,
+      shippingAddress,
+      paymentDetails: {
+        method: 'PhonePe',
+        status: 'Pending',
+        amount: finalAmount
+      },
+      notes,
+      status: 'Pending'
+    });
+    
+    await order.save();
+    const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}?merchantOrderId=${order._id}`
+    const request = StandardCheckoutPayRequest.builder().merchantOrderId(order._id).amount(finalAmount).redirectUrl(redirectUrl).build();
+
+    const response = await client.pay(request);
+    console.log("response",response);
+    return res.json({
+      checkoutPageUrl: response.redirectUrl
+    })
+    
+  } catch (error) {
+    console.error('Create PhonePe order error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to create PhonePe order',
+      error: error.message 
+    });
+  }
+};
+
+export const getOrderStatus = async (req, res) => {
+  try {
+    const {merchantOrderId} = req.query;
+    
+    if(!merchantOrderId){
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Merchant order ID is required' 
+      });
+    }
+    const order = await Order.findById(merchantOrderId);
+    if(!order){
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Order not found' 
+      });
+    }
+
+    const response = await client.getOrderStatus(merchantOrderId);
+
+    const status= response.state;
+    if(status === 'COMPLETED'){
+      order.status = 'Confirmed';
+      await order.save();
+      return res.redirect('http://localhost:5173/')
+    }else{
+      return res.redirect('http://localhost:5173/failed')
+    }
+
+  } catch (error) {
+    console.error('Get order status error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to check order status',
+      error: error.message 
+    });
+  }
+};
+

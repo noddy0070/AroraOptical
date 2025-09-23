@@ -75,7 +75,7 @@ const orderSchema = new mongoose.Schema({
     email: { type: String, required: true },
   },
   paymentDetails: {
-    method: { type: String, enum: ['COD', 'Online'], default: 'COD' },
+    method: { type: String, enum: ['COD', 'Online', 'PhonePe'], default: 'COD' },
     status: { type: String, enum: ['Pending', 'Completed', 'Failed'], default: 'Pending' },
     transactionId: { type: String },
     amount: { type: Number },

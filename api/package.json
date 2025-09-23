@@ -34,9 +34,11 @@
     "nodemon": "^3.1.7",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
+    "pg-sdk-node": "https://phonepe.mycloudrepo.io/public/repositories/phonepe-pg-sdk-node/releases/v2/phonepe-pg-sdk-node.tgz",
     "razorpay": "^2.9.6",
     "react-redux": "^9.1.2",
     "redux-persist": "^6.0.0",
-    "twilio": "^5.4.0"
+    "twilio": "^5.4.0",
+    "uuid": "^13.0.0"
   }
 }

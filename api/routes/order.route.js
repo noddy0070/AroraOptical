@@ -12,7 +12,9 @@ import {
   getCourierList,
   getPickupLocations,
   createRazorpayOrder,
-  verifyRazorpayPayment
+  verifyRazorpayPayment,
+  getOrderStatus,
+  createPhonepeOrder,
 } from '../controllers/order.controller.js';
 
 const router = express.Router();
@@ -24,6 +26,9 @@ router.get('/pickup-locations', getPickupLocations);
 
 // Protected routes (require authentication)
 router.post('/create', authMiddleware, createOrder);
+router.post('/create-phonepe', authMiddleware, createPhonepeOrder);
+router.get('/status', getOrderStatus);
+
 router.get('/user-orders', authMiddleware, getUserOrders);
 router.get('/:orderId', authMiddleware, getOrder);
 router.get('/:orderId/track', authMiddleware, trackOrder);

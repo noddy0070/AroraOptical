@@ -40,7 +40,8 @@ app.use(cookieParser());
 
 // Enable CORS for frontend origins and allow credentials (cookies, auth headers)
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://www.aroraopticals.com'],
+    origin: ['http://localhost:5173', 'https://www.aroraopticals.com'
+      ,'https://mercury-uat.phonepe.com','https://api-preprod.phonepe.com/apis/pg-meta/client/v1/events/batch?t=1758602415074__5'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
@@ -71,14 +72,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Debug middleware: log each request's method, path, cookies, session, and user
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`, {
-        cookies: req.cookies,
-        session: req.session,
-        user: req.user
-    });
-    next();
-});
+// app.use((req, res, next) => {
+//     console.log(`${req.method} ${req.path}`, {
+//         cookies: req.cookies,
+//         session: req.session,
+//         user: req.user
+//     });
+//     next();
+// });
 
 // ========== DATABASE ==========
 // Connect to MongoDB using Mongoose
