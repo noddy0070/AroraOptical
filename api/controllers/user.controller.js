@@ -379,3 +379,34 @@ export const getPrescriptions = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to get prescriptions' });
   }
 };
+
+// Get user orders
+export const getOrders = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Find user and populate orders with order details
+    const user = await User.findById(userId)
+      .populate({
+        path: 'orders.orderId',
+        model: 'Order'
+      })
+      .populate({
+        path: 'orders.items.productId',
+        model: 'Products'
+      })
+      .populate({
+        path: 'orders.items.prescriptionId',
+        model: 'Prescription'
+      });
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    
+    res.status(200).json({ success: true, orders: user.orders });
+  } catch (error) {
+    console.error('Get orders error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get orders' });
+  }
+};

@@ -1,6 +1,6 @@
 import express from "express";
 import {test,update, addToCart, removeFromCart, updateCartQuantity, addToWishlist, removeFromWishlist, getCartItems, getWishlistItems, 
-    addAddressToList, removeAddressFromList, editAddressInList, addPrescription, getPrescriptions} from "../controllers/user.controller.js";
+    addAddressToList, removeAddressFromList, editAddressInList, addPrescription, getPrescriptions, getOrders} from "../controllers/user.controller.js";
 import { getPolicy } from "../controllers/policy.controller.js";
 // import { verifyToken } from "../middleware/auth.js";
 
@@ -21,6 +21,9 @@ router.get('/prescription/:userId', getPrescriptions);
 router.post('/wishlist/add', addToWishlist);
 router.post('/wishlist/remove', removeFromWishlist);
 router.get('/wishlist/:userId', getWishlistItems);
+
+// Orders routes
+router.get('/orders/:userId', getOrders);
 
 router.post('/address/add/:id', addAddressToList);
 router.post('/address/remove/:id', removeAddressFromList);

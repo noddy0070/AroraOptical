@@ -601,12 +601,40 @@ export const getOrderStatus = async (req, res) => {
 
     const response = await client.getOrderStatus(merchantOrderId);
 
-    const status= response.state;
+    const status = response.state;
     if(status === 'COMPLETED'){
+      // Update order status
       order.status = 'Confirmed';
+      order.paymentDetails.status = 'Completed';
       await order.save();
+      
+      // Find the user and update their cart and orders
+      const user = await User.findById(order.userId);
+      if (user) {
+        // Store cart items before clearing
+        const cartItems = [...user.cart];
+        
+        // Clear the user's cart
+        user.cart = [];
+        
+        // Add the order to user's orders with cart items
+        user.orders.push({
+          orderId: order._id,
+          date: new Date(),
+          items: cartItems // Include the cart items in the order
+        });
+        
+        await user.save();
+        console.log('Cart cleared and order with items added to user orders');
+      }
+      
       return res.redirect('http://localhost:5173/')
     }else{
+      // Update order status for failed payment
+      order.status = 'Failed';
+      order.paymentDetails.status = 'Failed';
+      await order.save();
+      
       return res.redirect('http://localhost:5173/failed')
     }
 
