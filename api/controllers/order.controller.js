@@ -706,14 +706,14 @@ export const getOrderStatus = async (req, res) => {
         console.log('Cart cleared and order with items added to user orders');
       }
       
-      return res.redirect('http://localhost:5173/')
+      return res.redirect(process.env.PHONEPE_FRONTEND_URL)
     }else{
       // Update order status for failed payment
       order.status = 'Failed';
       order.paymentDetails.status = 'Failed';
       await order.save();
       
-      return res.redirect('http://localhost:5173/failed')
+      return res.redirect(process.env.PHONEPE_FRONTEND_URL+'/failed')
     }
 
   } catch (error) {
