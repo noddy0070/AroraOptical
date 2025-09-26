@@ -143,48 +143,48 @@ export default function SecondaryNavbar() {
     </div>
   );
 
-  // const shopDropdown = [
-  //   { 
-  //     label: 'Eyeglasses', 
-  //     to: '/shop/eyeglasses/all',
-  //     description: 'Stylish frames for prescription lenses'
-  //   },
-  //   { 
-  //     label: 'Sunglasses', 
-  //     to: '/shop/sunglasses/all',
-  //     description: 'Protect your eyes with trendy shades'
-  //   },
-  //   { 
-  //     label: 'Contact Lenses', 
-  //     to: '/shop/contact-lenses/all',
-  //     description: 'Daily, monthly, and colored contacts'
-  //   },
-  //   { 
-  //     label: 'Computer Glasses', 
-  //     to: '/shop/computer-glasses/all',
-  //     description: 'Blue light protection for digital screens'
-  //   },
-  //   { 
-  //     label: 'Accessories', 
-  //     to: '/shop/accessories/all',
-  //     description: 'Cases, cleaners, and eyewear care'
-  //   },
-  //   { 
-  //     label: 'New Arrivals', 
-  //     to: '/shop/new-arrivals',
-  //     description: 'Latest additions to our collection'
-  //   },
-  //   { 
-  //     label: 'Best Sellers', 
-  //     to: '/shop/best-sellers',
-  //     description: 'Most popular frames and styles'
-  //   },
-  //   { 
-  //     label: 'Sale', 
-  //     to: '/shop/sale',
-  //     description: 'Special offers and discounts'
-  //   }
-  // ];
+  const shopDropdown = [
+    { 
+      label: 'Eyeglasses', 
+      to: '/shop/eyeglasses/all',
+      description: 'Stylish frames for prescription lenses'
+    },
+    { 
+      label: 'Sunglasses', 
+      to: '/shop/sunglasses/all',
+      description: 'Protect your eyes with trendy shades'
+    },
+    { 
+      label: 'Contact Lenses', 
+      to: '/shop/contact-lenses/all',
+      description: 'Daily, monthly, and colored contacts'
+    },
+    { 
+      label: 'Computer Glasses', 
+      to: '/shop/computer-glasses/all',
+      description: 'Blue light protection for digital screens'
+    },
+    { 
+      label: 'Accessories', 
+      to: '/shop/accessories/all',
+      description: 'Cases, cleaners, and eyewear care'
+    },
+    { 
+      label: 'New Arrivals', 
+      to: '/shop/new-arrivals',
+      description: 'Latest additions to our collection'
+    },
+    { 
+      label: 'Best Sellers', 
+      to: '/shop/best-sellers',
+      description: 'Most popular frames and styles'
+    },
+    { 
+      label: 'Sale', 
+      to: '/shop/sale',
+      description: 'Special offers and discounts'
+    }
+  ];
 
   <div className="
   "></div>
@@ -205,7 +205,7 @@ export default function SecondaryNavbar() {
               </button>
               </TransitionLink>
               {/* Uncomment this when you want to show the dropdown */}
-              {/* {activeDropdown === 'shop' && renderDropdown()} */}
+              {activeDropdown === 'shop' && renderDropdown()}
             </div>
 
 
@@ -220,9 +220,9 @@ export default function SecondaryNavbar() {
 
             </button>
 
-            {/* <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
+            <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
               Blog
-            </button> */}
+            </button>
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
             <TransitionLink to="/about-us">
