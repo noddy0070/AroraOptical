@@ -146,3 +146,155 @@ export const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+export const testProducts = async (req, res, next) => {
+  try {
+    const totalProducts = await Product.countDocuments();
+    const sampleProducts = await Product.find().limit(5);
+    
+    res.status(200).json({
+      success: true,
+      totalProducts,
+      sampleProducts: sampleProducts.map(p => ({
+        id: p._id,
+        modelTitle: p.modelTitle,
+        modelName: p.modelName,
+        brand: p.brand,
+        isSellable: p.isSellable,
+        category: p.category
+      }))
+    });
+  } catch (error) {
+    console.error('Test products error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error fetching test products',
+      error: error.message
+    });
+  }
+};
+
+export const searchProducts = async (req, res, next) => {
+  try {
+    const { q, limit = 20 } = req.query;
+    
+    console.log('Search request received:', { q, limit });
+    
+    if (!q || q.trim().length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Search query is required' 
+      });
+    }
+
+    const searchTerm = q.trim();
+    console.log('Searching for:', searchTerm);
+    
+    // First, let's check if there are any products at all
+    const totalProducts = await Product.countDocuments();
+    console.log('Total products in database:', totalProducts);
+    
+    // Get a sample product to check the structure
+    const sampleProduct = await Product.findOne();
+    console.log('Sample product structure:', sampleProduct ? Object.keys(sampleProduct.toObject()) : 'No products found');
+    
+    // Create search query for multiple fields
+    const searchQuery = {
+      $or: [
+        // Text search in basic fields
+        { modelTitle: { $regex: searchTerm, $options: 'i' } },
+        { modelName: { $regex: searchTerm, $options: 'i' } },
+        { modelCode: { $regex: searchTerm, $options: 'i' } },
+        { brand: { $regex: searchTerm, $options: 'i' } },
+        { description: { $regex: searchTerm, $options: 'i' } },
+        { hashtags: { $regex: searchTerm, $options: 'i' } },
+        
+        // Search in frame attributes
+        { 
+          frameAttributes: { 
+            $elemMatch: { 
+              $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },
+                { value: { $regex: searchTerm, $options: 'i' } }
+              ]
+            } 
+          } 
+        },
+        
+        // Search in lens attributes
+        { 
+          lensAttributes: { 
+            $elemMatch: { 
+              $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },
+                { value: { $regex: searchTerm, $options: 'i' } }
+              ]
+            } 
+          } 
+        },
+        
+        // Search in general attributes
+        { 
+          generalAttributes: { 
+            $elemMatch: { 
+              $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },
+                { value: { $regex: searchTerm, $options: 'i' } }
+              ]
+            } 
+          } 
+        }
+      ]
+    };
+
+    // Try search without isSellable filter first
+    let products = await Product.find(searchQuery)
+      .limit(parseInt(limit))
+      .sort({ orders: -1, createdAt: -1 });
+
+    console.log('Products found without isSellable filter:', products.length);
+
+    // If no results, try with isSellable filter
+    if (products.length === 0) {
+      searchQuery.isSellable = { $in: ['true', 'True', 'TRUE', true] };
+      products = await Product.find(searchQuery)
+        .limit(parseInt(limit))
+        .sort({ orders: -1, createdAt: -1 });
+      console.log('Products found with isSellable filter:', products.length);
+    }
+
+    // If still no results, try without any filters
+    if (products.length === 0) {
+      const simpleQuery = {
+        $or: [
+          { modelTitle: { $regex: searchTerm, $options: 'i' } },
+          { modelName: { $regex: searchTerm, $options: 'i' } },
+          { brand: { $regex: searchTerm, $options: 'i' } }
+        ]
+      };
+      products = await Product.find(simpleQuery)
+        .limit(parseInt(limit))
+        .sort({ orders: -1, createdAt: -1 });
+      console.log('Products found with simple query:', products.length);
+    }
+
+    res.status(200).json({
+      success: true,
+      products,
+      total: products.length,
+      searchTerm,
+      debug: {
+        totalProductsInDB: totalProducts,
+        searchQuery: searchQuery
+      }
+    });
+
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error during search',
+      error: error.message
+    });
+  }
+};

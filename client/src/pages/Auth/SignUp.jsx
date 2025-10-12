@@ -6,6 +6,8 @@ import { TransitionLink } from '../../Routes/TransitionLink';
 import { State, City } from "country-state-city";
 import { baseURL } from '@/url';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUp(){
     const [formData,setFormData]=useState({
@@ -178,6 +180,76 @@ export default function SignUp(){
         }
     };
 
+    const handleResendOTP = async () => {
+        setOtp(""); // Clear the OTP field
+        setError(null); // Clear any existing errors
+        
+        setLoading(true);
+        try {
+            const response = await axios.post(`${baseURL}/api/auth/send-otp`, {
+                email: formData.email,
+            }, {
+                withCredentials: true
+              });
+
+            if (response.data.success) {
+                toast.success("OTP sent successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+            } else {
+                toast.error(response.data.message || "Failed to send OTP", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setError(response.data.message || "Failed to send OTP");
+            }
+        } catch (error) {
+            if (error.response) {
+                toast.error(error.response.data.message || "Failed to send OTP", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setError(error.response.data.message || "Failed to send OTP");
+            } else if (error.request) {
+                toast.error("Network error. Please check your connection.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setError("Network error. Please check your connection.");
+            } else {
+                toast.error("An unexpected error occurred.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setError("An unexpected error occurred.");
+            }
+            console.error("OTP resend error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const createUser = async () => {
         setLoading(true);
         try {
@@ -185,16 +257,58 @@ export default function SignUp(){
                 withCredentials: true
               });
             if (response.status === 201) {
-                navigate('/login');
+                toast.success("Account created successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setTimeout(() => {
+                    navigate('/login');
+                }, 2000); // Wait 2 seconds to show the success message
             } else {
-                setError(response.data.message || "Failed to create account");
+                toast.error("Failed to create account", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setError("Failed to create account");
             }
         } catch (error) {
             if (error.response) {
-                setError(error.response.data.message || "Failed to create account");
+                toast.error("Account Already Exists", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setError("Account Already Exists");
             } else if (error.request) {
+                toast.error("Network error. Please check your connection.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 setError("Network error. Please check your connection.");
             } else {
+                toast.error("An unexpected error occurred.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 setError("An unexpected error occurred.");
             }
             console.error("Signup error:", error);
@@ -219,6 +333,18 @@ export default function SignUp(){
 
     return (
         <div className='flex flex-col md:flex-row items-center justify-center gap-[4vw] my-auto pt-[20vh] md:pt-[4vw]'>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <div className='px-[4.5vw] md:px-[4vw] w-full md:w-[47.375vw] md:max-w-[762px]'>
                 <div className='flex flex-col h-full'>
                     {step === 1 ? (
@@ -358,7 +484,7 @@ export default function SignUp(){
                                 <div className="w-full my-[1vw] relative border-black border-t-[1px] border-solid box-border h-[2px]" />
                                 {error && <p className='text-red-500 text-center'>{error}</p>}
                                 <div className='font-roboto text-regularTextPhone md:text-regularText'>
-                                    <p className='text-center leading-[150%]'>Didn't receive OTP? <button onClick={handleSubmit} className='underline text-blue-600'>Resend</button></p>
+                                    <p className='text-center leading-[150%]'>Didn't receive OTP? <button onClick={handleResendOTP} disabled={loading} className='underline text-blue-600 disabled:text-gray-400 disabled:cursor-not-allowed'>{loading ? "Sending..." : "Resend"}</button></p>
                                 </div>
                             </div>
                         </div>

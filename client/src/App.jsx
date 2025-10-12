@@ -20,6 +20,7 @@ import FeeEyeTest from "./pages/Home/Sections/FreeEyeTest";
 import AboutUs from "./pages/About-us.jsx";
 import ThankYou from "./pages/Product/ThankYou";
 import Accessories from "./pages/Shop/Accessories.jsx";
+import SearchResults from "./pages/Search/SearchResults.jsx";
 
 // ========== AUTHENTICATION PAGES ==========
 import Signup from "./pages/Auth/SignUp";
@@ -226,6 +227,7 @@ export default function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/shop/:category/:audience' element={<ShopURL />}/>
       <Route path="/product/:id" element={<Product />} />
+      <Route path="/search" element={<SearchResults />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/free-eye-test" element={<FeeEyeTest />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>

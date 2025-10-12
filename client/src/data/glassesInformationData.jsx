@@ -21,6 +21,19 @@ const LensBrand =[
   "Bauch and Lomb","Cooper Vision","Johnson & Johnson","Silklens","Purecon"
 ]
 
+const Wearability=[
+  'Daily Disposable','Monthly Disposable','Yearly Disposable'
+]
+
+const LensType=[
+  "Spherical","Toric","Multifocal"
+]
+
+const CategoryOfLens=[
+  "Clear Lenses","Coloured Lenses"
+]
+
+
 const AccessoriesBrand =[
   "Arora Opticals","Zeiss",
 ]
@@ -32,4 +45,4 @@ const SmartGlassesBrand =[
 ]
 
 
-export {Material,Type,Shape,Colors,Size,Categories,GlassesBrand,Classification,AccessoriesType,LensBrand,AccessoriesBrand,SmartGlassesBrand };
+export {Material,Type,Shape,Colors,Size,Categories,GlassesBrand,Classification,AccessoriesType,LensBrand,AccessoriesBrand,SmartGlassesBrand,Wearability,LensType,CategoryOfLens };

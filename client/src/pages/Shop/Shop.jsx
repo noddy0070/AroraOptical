@@ -18,8 +18,11 @@ export default function Shop({category, audience}) {
     const [hoveredSort, setHoveredSort] = useState(null);
     const [isHovered, setIsHovered] = useState(false);
     const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [activeFilters, setActiveFilters] = useState({Audience:[],Brands:[],Shapes:[],"Frame Type":[],"Frame Material":[],"Colors":[],"Sizes":[]});
+    const [clearTrigger, setClearTrigger] = useState(0);
 
     console.log('products',products);
 
@@ -49,6 +52,7 @@ export default function Shop({category, audience}) {
 
                 if (response.data.success) {
                     setProducts(response.data.products);
+                    setFilteredProducts(response.data.products); // Initialize filtered products
                 } else {
                     setError('Failed to fetch products');
                 }
@@ -75,6 +79,242 @@ export default function Shop({category, audience}) {
         setSelectedSorts(selectedSort.filter(sort => sort !== itemToRemove));
     };
 
+    // Handle filter changes from Filters component
+    const handleFiltersChange = (filters) => {
+        setActiveFilters(filters);
+        console.log('Filters changed:', filters);
+    };
+
+    // Handle clear all filters
+    const handleClearAllFilters = () => {
+        setActiveFilters({Audience:[],Brands:[],Shapes:[],"Frame Type":[],"Frame Material":[],"Colors":[],"Sizes":[]});
+        setClearTrigger(prev => prev + 1); // Trigger clear in Filters component
+        console.log('All filters cleared from Shop component');
+    };
+
+    // Filter products based on active filters
+    const filterProducts = (products, filters) => {
+        let filtered = [...products];
+        
+        console.log('Filtering products with:', filters);
+        
+        // Filter by audience
+        if (filters.Audience && filters.Audience.length > 0) {
+            filtered = filtered.filter(product => {
+                // Check if product has gender field
+                if (product.gender) {
+                    const productGender = product.gender.toLowerCase();
+                    const isUnisex = productGender === 'unisex';
+                    
+                    // If product is unisex, show it for Men, Women, and Unisex filters
+                    if (isUnisex) {
+                        return filters.Audience.some(audience => 
+                            audience.toLowerCase() === 'unisex' ||
+                            audience.toLowerCase() === 'men' ||
+                            audience.toLowerCase() === 'women'
+                        );
+                    }
+                    
+                    // For non-unisex products, match exact gender
+                    return filters.Audience.some(audience => 
+                        audience.toLowerCase() === productGender
+                    );
+                }
+                
+                // Check in frameAttributes for gender/audience
+                const hasAudienceMatch = product.frameAttributes?.some(attr => 
+                    (attr.name.toLowerCase().includes('gender') || 
+                     attr.name.toLowerCase().includes('audience') ||
+                     attr.name.toLowerCase().includes('classification')) && 
+                    filters.Audience.some(audience => {
+                        const attrValue = attr.value.toLowerCase();
+                        const audienceLower = audience.toLowerCase();
+                        
+                        // If attribute says unisex, show for Men, Women, and Unisex
+                        if (attrValue.includes('unisex')) {
+                            return audienceLower === 'unisex' ||
+                                   audienceLower === 'men' ||
+                                   audienceLower === 'women';
+                        }
+                        
+                        // Otherwise match exactly
+                        return attrValue.includes(audienceLower);
+                    })
+                );
+                
+                if (hasAudienceMatch) return true;
+                
+                // Fallback: check in text fields
+                const textFields = [
+                    product.modelTitle,
+                    product.modelName,
+                    product.description,
+                    product.brand
+                ].join(' ').toLowerCase();
+                
+                // Check if text contains unisex - if so, show for Men, Women, and Unisex
+                if (textFields.includes('unisex')) {
+                    return filters.Audience.some(audience => 
+                        audience.toLowerCase() === 'unisex' ||
+                        audience.toLowerCase() === 'men' ||
+                        audience.toLowerCase() === 'women'
+                    );
+                }
+                
+                return filters.Audience.some(audience => 
+                    textFields.includes(audience.toLowerCase())
+                );
+            });
+            console.log('After audience filter:', filtered.length);
+        }
+        
+        // Filter by brand
+        if (filters.Brands && filters.Brands.length > 0) {
+            filtered = filtered.filter(product => 
+                filters.Brands.includes(product.brand)
+            );
+            console.log('After brand filter:', filtered.length);
+        }
+        
+        // Filter by shape
+        if (filters.Shapes && filters.Shapes.length > 0) {
+            filtered = filtered.filter(product => 
+                product.frameAttributes?.some(attr => 
+                    (attr.name.toLowerCase().includes('shape') || 
+                     attr.name.toLowerCase().includes('frame')) && 
+                    filters.Shapes.some(shape => 
+                        attr.value.toLowerCase().includes(shape.toLowerCase())
+                    )
+                ) || 
+                // Fallback: check in text fields
+                filters.Shapes.some(shape => {
+                    const textFields = [
+                        product.modelTitle,
+                        product.modelName,
+                        product.description,
+                        product.brand
+                    ].join(' ').toLowerCase();
+                    return textFields.includes(shape.toLowerCase());
+                })
+            );
+            console.log('After shape filter:', filtered.length);
+        }
+        
+        // Filter by frame type
+        if (filters["Frame Type"] && filters["Frame Type"].length > 0) {
+            filtered = filtered.filter(product => 
+                product.frameAttributes?.some(attr => 
+                    (attr.name.toLowerCase().includes('type') || 
+                     attr.name.toLowerCase().includes('frame')) && 
+                    filters["Frame Type"].some(type => 
+                        attr.value.toLowerCase().includes(type.toLowerCase())
+                    )
+                ) ||
+                // Fallback: check in text fields
+                filters["Frame Type"].some(type => {
+                    const textFields = [
+                        product.modelTitle,
+                        product.modelName,
+                        product.description,
+                        product.brand
+                    ].join(' ').toLowerCase();
+                    return textFields.includes(type.toLowerCase());
+                })
+            );
+            console.log('After frame type filter:', filtered.length);
+        }
+        
+        // Filter by frame material
+        if (filters["Frame Material"] && filters["Frame Material"].length > 0) {
+            filtered = filtered.filter(product => 
+                product.frameAttributes?.some(attr => 
+                    (attr.name.toLowerCase().includes('material') || 
+                     attr.name.toLowerCase().includes('frame')) && 
+                    filters["Frame Material"].some(material => 
+                        attr.value.toLowerCase().includes(material.toLowerCase())
+                    )
+                ) ||
+                // Fallback: check in text fields
+                filters["Frame Material"].some(material => {
+                    const textFields = [
+                        product.modelTitle,
+                        product.modelName,
+                        product.description,
+                        product.brand
+                    ].join(' ').toLowerCase();
+                    return textFields.includes(material.toLowerCase());
+                })
+            );
+            console.log('After frame material filter:', filtered.length);
+        }
+        
+        // Filter by colors
+        if (filters.Colors && filters.Colors.length > 0) {
+            filtered = filtered.filter(product => 
+                product.frameAttributes?.some(attr => 
+                    (attr.name.toLowerCase().includes('color') || 
+                     attr.name.toLowerCase().includes('colour')) && 
+                    filters.Colors.some(color => 
+                        attr.value.toLowerCase().includes(color.toLowerCase())
+                    )
+                ) ||
+                // Fallback: check in text fields
+                filters.Colors.some(color => {
+                    const textFields = [
+                        product.modelTitle,
+                        product.modelName,
+                        product.description,
+                        product.brand
+                    ].join(' ').toLowerCase();
+                    return textFields.includes(color.toLowerCase());
+                })
+            );
+            console.log('After color filter:', filtered.length);
+        }
+        
+        // Filter by size
+        if (filters.Sizes && filters.Sizes.length > 0) {
+            filtered = filtered.filter(product => {
+                // Check if product has size field
+                if (product.size && Array.isArray(product.size)) {
+                    return product.size.some(size => filters.Sizes.includes(size));
+                }
+                
+                // Check in frameAttributes for size
+                const hasSizeMatch = product.frameAttributes?.some(attr => 
+                    attr.name.toLowerCase().includes('size') && 
+                    filters.Sizes.some(size => 
+                        attr.value.toLowerCase().includes(size.toLowerCase())
+                    )
+                );
+                
+                if (hasSizeMatch) return true;
+                
+                // Fallback: check in text fields
+                const textFields = [
+                    product.modelTitle,
+                    product.modelName,
+                    product.description,
+                    product.brand
+                ].join(' ').toLowerCase();
+                
+                return filters.Sizes.some(size => 
+                    textFields.includes(size.toLowerCase())
+                );
+            });
+            console.log('After size filter:', filtered.length);
+        }
+        
+        console.log('Final filtered products:', filtered.length);
+        return filtered;
+    };
+
+    // Update filtered products when filters change
+    useEffect(() => {
+        const filtered = filterProducts(products, activeFilters);
+        setFilteredProducts(filtered);
+    }, [products, activeFilters]);
+
     function formatCategoryName(category) {
         return category
             .split('-')
@@ -85,7 +325,7 @@ export default function Shop({category, audience}) {
     
     // Sort products based on selected sort options
     const getSortedProducts = () => {
-        let sortedProducts = [...products];
+        let sortedProducts = [...filteredProducts]; // Use filtered products instead of all products
         
         selectedSort.forEach(sort => {
             switch(sort) {
@@ -141,9 +381,20 @@ export default function Shop({category, audience}) {
                 <div className='w-[24.1875vw] pr-[1vw] flex flex-col gap-[1.5vw]'>
                     <div className='flex flex-row'>
                         <h6 className='font-roboto font-bold text-h5Text'>Filters</h6>
-                        <button className='leading-[150%] font-roboto text-regularText ml-auto'>Clear All</button>
+                        <button 
+                            onClick={handleClearAllFilters}
+                            className='leading-[150%] font-roboto text-regularText ml-auto hover:text-blue-600 transition-colors'
+                        >
+                            Clear All
+                        </button>
                     </div>
-                    <Filters category={category} audienceShop={audience}/>
+                    <Filters 
+                        productCategory={category} 
+                        audienceShop={audience}
+                        onFiltersChange={handleFiltersChange}
+                        onClearAll={handleClearAllFilters}
+                        clearTrigger={clearTrigger}
+                    />
                 </div>
 
                 <div className='flex flex-col flex-1'>
@@ -211,21 +462,13 @@ export default function Shop({category, audience}) {
                     </div>
 
                     {/* Product grid */}
-                    <div className='grid grid-cols-2 md:grid-cols-3 gap-[1vw]'>
+                    <div className='grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
                         {getSortedProducts().length > 0 ? (
                             getSortedProducts().map((item, index) => (
-                                <div key={index} className='w-[22.875vw]'>
-                                    <TransitionLink to={`/product/${item._id}`}>
+                                <div key={index} >
                                     <Item 
-                                        image={item.images[0]} 
-                                        comapny={item.brand}
-                                        rating={item.rating || "0.0"}
-                                        title={item.modelTitle}
-                                        price={item.price}
-                                        colour={item.frameAttributes.find(attr => attr.name === "Color")?.value || "N/A"}
-                                        productId={item._id}
+                                        product={item}
                                     />
-                                    </TransitionLink>
                                 </div>
                             ))
                         ) : (

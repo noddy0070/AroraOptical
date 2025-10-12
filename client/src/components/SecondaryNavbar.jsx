@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import profilePlaceholder from '../assets/images/profilePlaceholder.png';
 import CartIcon from '../assets/images/icons/CartIcon.svg'
 import WishListIcon from '../assets/images/icons/WishlistIcon.svg'
@@ -10,13 +10,19 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import navbarDropdown from '../assets/images/navbarDropDown.png'
+import { useNavigate } from 'react-router-dom';
 export default function SecondaryNavbar() {
   const inputRef = useRef(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [search, setSearch] = useState('');
   const [cartCount, setCartCount] = useState(0);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const dropdownTimeoutRef = useRef(null);
+  const searchTimeoutRef = useRef(null);
+  const navigate = useNavigate();
 
   // Fetch cart count when component mounts and when user changes
   useEffect(() => {
@@ -37,6 +43,15 @@ export default function SecondaryNavbar() {
     }
   }, [user, isAuthenticated]);
 
+  // Cleanup search timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const fetchCartCount = async () => {
     try {
       const response = await axios.get(`${baseURL}/api/user/cart/${user._id}`, {
@@ -52,9 +67,90 @@ export default function SecondaryNavbar() {
     }
   };
 
+  // Debounced search function
+  const performSearch = useCallback(async (searchTerm) => {
+    if (!searchTerm || searchTerm.trim().length < 2) {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      console.log('Navbar search for:', searchTerm);
+      const response = await axios.get(`${baseURL}/api/product/search`, {
+        params: { q: searchTerm, limit: 8 },
+        withCredentials: true
+      });
+
+      console.log('Navbar search response:', response.data);
+
+      if (response.data.success) {
+        setSearchResults(response.data.products);
+        setShowSearchResults(true);
+        console.log('Navbar search results:', response.data.products.length);
+      }
+    } catch (error) {
+      console.error('Navbar search error:', error);
+      console.error('Navbar search error response:', error.response?.data);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, []);
+
   const handleChange = () => {
     const value = inputRef.current.value;
     setSearch(value);
+
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set new timeout for debounced search
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(value);
+    }, 300); // 300ms debounce
+  };
+
+  // Handle search result click
+  const handleSearchResultClick = (product) => {
+    setShowSearchResults(false);
+    setSearch('');
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+    navigate(`/product/${product._id}`);
+  };
+
+  // Handle search input focus
+  const handleSearchFocus = () => {
+    if (searchResults.length > 0) {
+      setShowSearchResults(true);
+    }
+  };
+
+  // Handle search input blur
+  const handleSearchBlur = () => {
+    // Delay hiding results to allow clicking on results
+    setTimeout(() => {
+      setShowSearchResults(false);
+    }, 200);
+  };
+
+  // Handle Enter key press
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      if (search.trim().length > 0) {
+        navigate(`/search?q=${encodeURIComponent(search.trim())}`);
+        setShowSearchResults(false);
+        setSearch('');
+        if (inputRef.current) {
+          inputRef.current.value = '';
+        }
+      }
+    }
   };
 
   const handleDropdownEnter = (dropdownName) => {
@@ -232,7 +328,7 @@ export default function SecondaryNavbar() {
           </div>
 
           <div className='pt-[2vw] md:pt-0 md:ml-auto w-full md:w-auto gap-[2vw] md:gap-[1.5vw] flex md:flex-row flex-col-reverse items-center'>
-            <div className='flex flex-row gap-[2vw] md:gap-[.5vw] ml-auto w-full md:w-[19vw] lg:w-[17.5vw] items-center text-gray-600 font-roboto font-bold text-[14px] md:text-smallText h-[12vw] md:h-[3vw] px-[3vw] md:px-[.75vw] rounded-[10vw] md:rounded-[2.5vw] border-[1px] md:shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] shadow-[0px_2px_10px_rgba(0,_0,_0,_0.25)]'>
+            <div className='relative flex flex-row gap-[2vw] md:gap-[.5vw] ml-auto w-full md:w-[19vw] lg:w-[17.5vw] items-center text-gray-600 font-roboto font-bold text-[14px] md:text-smallText h-[12vw] md:h-[3vw] px-[3vw] md:px-[.75vw] rounded-[10vw] md:rounded-[2.5vw] border-[1px] md:shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] shadow-[0px_2px_10px_rgba(0,_0,_0,_0.25)]'>
               <img className='w-[6vw] md:w-[1.75vw] h-[6vw] md:h-[1.75vw]' src={SearchIcon} alt="Search"/>
               <input 
                 className='w-full focus:outline-none bg-transparent' 
@@ -240,7 +336,66 @@ export default function SecondaryNavbar() {
                 placeholder="What are you looking for..."
                 ref={inputRef} 
                 onChange={handleChange}
+                onFocus={handleSearchFocus}
+                onBlur={handleSearchBlur}
+                onKeyPress={handleSearchKeyPress}
               />
+              
+              {/* Search Results Dropdown */}
+              {showSearchResults && (
+                <div className='absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-[1vw] md:rounded-[0.5vw] shadow-lg z-50 max-h-[60vw] md:max-h-[20vw] overflow-y-auto'>
+                  {isSearching ? (
+                    <div className='p-[3vw] md:p-[1vw] text-center text-gray-500'>
+                      <div className='animate-spin w-[4vw] h-[4vw] md:w-[1vw] md:h-[1vw] border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-[1vw]'></div>
+                      Searching...
+                    </div>
+                  ) : searchResults.length > 0 ? (
+                    <>
+                      {searchResults.map((product) => (
+                        <div
+                          key={product._id}
+                          onClick={() => handleSearchResultClick(product)}
+                          className='p-[3vw] md:p-[1vw] hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0'
+                        >
+                          <div className='flex items-center gap-[2vw] md:gap-[0.5vw]'>
+                            <img 
+                              src={product.images[0]} 
+                              alt={product.modelTitle}
+                              className='w-[8vw] h-[8vw] md:w-[2vw] md:h-[2vw] object-cover rounded-[0.5vw]'
+                            />
+                            <div className='flex-1 min-w-0'>
+                              <h6 className='text-[3vw] md:text-[0.8vw] font-semibold text-gray-800 truncate'>
+                                {product.modelTitle}
+                              </h6>
+                              <p className='text-[2.5vw] md:text-[0.7vw] text-gray-600 truncate'>
+                                {product.brand} • {product.modelName}
+                              </p>
+                              <p className='text-[2.5vw] md:text-[0.7vw] text-blue-600 font-semibold'>
+                                ₹{product.price}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      <div className='p-[3vw] md:p-[1vw] text-center border-t border-gray-200'>
+                        <button 
+                          onClick={() => {
+                            navigate(`/search?q=${encodeURIComponent(search.trim())}`);
+                            setShowSearchResults(false);
+                          }}
+                          className='text-blue-600 text-[2.5vw] md:text-[0.7vw] font-semibold hover:text-blue-800'
+                        >
+                          View all results for "{search}"
+                        </button>
+                      </div>
+                    </>
+                  ) : search.trim().length >= 2 ? (
+                    <div className='p-[3vw] md:p-[1vw] text-center text-gray-500'>
+                      No products found for "{search}"
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </div>
 
             <div className='flex flex-row gap-[4.5vw] w-full md:w-auto md:gap-[1.5vw] items-center'>
