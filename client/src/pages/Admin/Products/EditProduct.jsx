@@ -21,8 +21,8 @@ const defaultForm = {
   description: '',
   price: 0,
   discount: '',      
-  size: [],
-  stock: [],
+  size: ['Small (50mm or less)','Medium (51 to 54mm)','Large (55 mm or more)'],
+  stock: [0,0,0],
   images: [],
   lensAttributes: [],
   frameAttributes: [],
@@ -347,9 +347,9 @@ const EditProduct=()=>{
                 </div>
 
                 {/* Button To add stocks fiels */}
-                <button onClick={() => { setForm((prev) => ({ ...prev, size: [...prev.size, ''], stock: [...prev.stock, ''], }));}} className="text-blue-500">
+                {/* <button onClick={() => { setForm((prev) => ({ ...prev, size: [...prev.size, ''], stock: [...prev.stock, ''], }));}} className="text-blue-500">
                   Add Stock 
-                </button>
+                </button> */}
 
                 {/* Button To save Product */}
                 <button disabled={loading} onClick={handleSubmit} className={`w-full mt-[1vw] py-2 rounded-lg text-white font-semibold bg-blue-600 hover:bg-blue-700`}>
