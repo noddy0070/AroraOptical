@@ -17,10 +17,10 @@ export default {
 			},
 		  },
   		fontFamily: {
-  			dyeLine: [
-  				'DyeLine',
-  				'sans-serif'
-  			],
+  			// dyeLine: [
+  			// 	'DyeLine',
+  			// 	'sans-serif'
+  			// ],
   			roboto: [
   				'Roboto',
   				'sans-serif'
