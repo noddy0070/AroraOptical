@@ -341,15 +341,18 @@ const EditProduct=()=>{
                   onImageRemove={handleImageRemove}
                 />
 
-                <div className="grid grid-cols-4 gap-[1vw]">
+                <div className="grid grid-cols-4 gap-[1vw] mb-[1vw]">
                   <ArrayInputField label="Size" name="size" values={form.size} handleChange={handleChange} />
                   <ArrayInputField label="Stock" name="stock" values={form.stock} handleChange={handleChange} />
                 </div>
 
                 {/* Button To add stocks fiels */}
-                {/* <button onClick={() => { setForm((prev) => ({ ...prev, size: [...prev.size, ''], stock: [...prev.stock, ''], }));}} className="text-blue-500">
+                <button onClick={() => { setForm((prev) => ({ ...prev, size: [...prev.size, ''], stock: [...prev.stock, ''], }));}} className="text-blue-500">
                   Add Stock 
-                </button> */}
+                </button>
+                <button onClick={() => { setForm((prev) => ({ ...prev, size:prev.size.slice(0, -1),stock: prev.stock.slice(0, -1), }));}} className="ml-[1vw] text-blue-500">
+                  Remove Stock 
+                </button>
 
                 {/* Button To save Product */}
                 <button disabled={loading} onClick={handleSubmit} className={`w-full mt-[1vw] py-2 rounded-lg text-white font-semibold bg-blue-600 hover:bg-blue-700`}>
