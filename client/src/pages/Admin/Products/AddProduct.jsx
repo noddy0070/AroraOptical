@@ -209,7 +209,7 @@ const AddProduct=()=>{
                   <FormField label="Category" name="category" value={form.category} onChange={handleChange} options={Categories} />
 
                     <FormField label="Model Name" name="modelName" value={form.modelName} onChange={handleChange} />
-                    <FormField label="Model Title" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
+                    <FormField label="Model Number" name="modelTitle" value={form.modelTitle} onChange={handleChange} />
                     {form.category != "Accessories" && (
 
                     <div className="grid grid-cols-2 gap-[1vw]">

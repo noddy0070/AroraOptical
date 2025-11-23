@@ -82,7 +82,8 @@ const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage,deleteProduct}
           <tr>
             <th className="p-2 border">UID</th>
             <th className="p-2 border">Model Name</th>
-            <th className="p-2 border">Model Code</th>
+            <th className="p-2 border">Model Number</th>
+            <th className="p-2 border">Color Code</th>
             <th className="p-2 border">Category</th>
             <th className="p-2 border">Brand</th>
             <th className="p-2 border">MRP</th>
@@ -100,6 +101,7 @@ const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage,deleteProduct}
                 {product.modelName}
                 </TransitionLink>
                 </td>
+              <td className="p-2 border text-left">{product.modelTitle}</td>
               <td className="p-2 border text-left">{product.modelCode}</td>
               <td className="p-2 border text-left">{product.category}</td>
               <td className="p-2 border text-left">{product.brand}</td>
