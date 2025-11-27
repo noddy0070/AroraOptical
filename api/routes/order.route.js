@@ -11,8 +11,6 @@ import {
   cancelOrder,
   getCourierList,
   getPickupLocations,
-  createRazorpayOrder,
-  verifyRazorpayPayment,
   getOrderStatus,
   createPhonepeOrder,
 } from '../controllers/order.controller.js';
@@ -33,8 +31,7 @@ router.get('/user-orders', authMiddleware, getUserOrders);
 router.get('/:orderId', authMiddleware, getOrder);
 router.get('/:orderId/track', authMiddleware, trackOrder);
 router.post('/:orderId/cancel', authMiddleware, cancelOrder);
-router.post('/razorpay-order', authMiddleware, createRazorpayOrder);
-router.post('/verify-razorpay', authMiddleware, verifyRazorpayPayment);
+
 
 // Admin routes
 router.get('/admin/all', authMiddleware, getAllOrders);

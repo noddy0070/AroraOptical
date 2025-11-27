@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { TitleButton2 } from '@/components/button';
 import { formatINR } from '@/components/IntToPrice';
 import axios from 'axios';
-import { baseURL, razorpayKey, razorpaySecret } from '@/url';
+import { baseURL } from '@/url';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -18,63 +18,7 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
     // Calculate total amount
     const totalAmount = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0) + deliveryPrice;
 
-    // Razorpay handler
-    // const handleRazorpayPayment = async () => {
-    //   setLoading(true);
-    //   try {
-    //     // 1. Create Razorpay order from backend
-    //     const { data } = await axios.post(`${baseURL}/api/order/razorpay-order`, {
-    //       amount: totalAmount,
-    //     }, { withCredentials: true });
-    //     if (!data.success) throw new Error('Failed to create Razorpay order');
-    //     const razorpayOrder = data.order;
-
-    //     // 2. Load Razorpay script
-    //     const script = document.createElement('script');
-    //     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    //     script.async = true;
-    //     document.body.appendChild(script);
-    //     script.onload = () => {
-    //       const options = {
-    //         key: razorpayKey,
-    //         amount: razorpayOrder.amount,
-    //         currency: razorpayOrder.currency,
-    //         name: 'Arora Optical',
-    //         description: 'Order Payment',
-    //         order_id: razorpayOrder.id,
-    //         handler: async function (response) {
-    //           // 3. Verify payment on backend
-    //           try {
-    //             const verifyRes = await axios.post(`${baseURL}/api/order/verify-razorpay`, {
-    //               razorpay_order_id: response.razorpay_order_id,
-    //               razorpay_payment_id: response.razorpay_payment_id,
-    //               razorpay_signature: response.razorpay_signature,
-    //               amount: totalAmount,
-    //               cartItems,
-    //               shippingAddress,
-    //             }, { withCredentials: true });
-    //             if (verifyRes.data.success) {
-    //               toast.success('Payment successful! Order placed.');
-    //               navigate('/thank-you');
-    //             } else {
-    //               toast.error('Payment verification failed.');
-    //             }
-    //           } catch (err) {
-    //             toast.error('Payment verification failed.');
-    //           }
-    //         },
-    //         prefill: {},
-    //         theme: { color: '#17183B' },
-    //       };
-    //       const rzp = new window.Razorpay(options);
-    //       rzp.open();
-    //     };
-    //   } catch (err) {
-    //     toast.error('Payment initiation failed.');
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
+    
     console.log(cartItems); 
     const handlePhonepePayment = async () =>{
       const data={
@@ -150,10 +94,8 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
                         btnWidth={30} 
                         btnRadius={2} 
                         btnTitle={loading ? "Processing..." : "Proceed to Payment"}
-                        // onClick={handleRazorpayPayment}  
                         onClick={handlePhonepePayment}
-                        disabled={loading}
-                    />
+                        disabled={loading}/>
             </div>
     </div>
   )
