@@ -66,6 +66,7 @@ export default function HeroSection(){
                     <TransitionLink to="/shop/sunglasses/bestsellers">
 
                         <div className='flex gap-[.1vw] group hover:cursor-pointer hover:scale-105 transition-transform duration-700'>
+                            <div>
                             <TitleButton
                                 btnTitle={"Shop"}
                                 btnRadius={3.125}
@@ -74,6 +75,10 @@ export default function HeroSection(){
                                 className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'
                                 className2='group-hover:text-black'
                             />
+                             <p className='text-regularText pt-[.875vw] pl-[.5vw] font-roboto text-center leading-[150%] text-white'>
+                                Learn More
+                            </p>
+                            </div>
                             <IconButton
                                 btnSize={4.25}
                                 iconWidth={1.875}
@@ -83,9 +88,7 @@ export default function HeroSection(){
                         </div>
                         </TransitionLink>
 
-                        <p className='text-regularText pt-[.875vw] font-roboto text-center leading-[150%] text-white'>
-                            Learn More
-                        </p>
+                       
                     </div>
                 </div>
                 <div className='absolute right-[4vw] top-[3vw] flex gap-2'>

@@ -80,7 +80,7 @@ export default function CalendarComponent({formData, setFormData}) {
   );
 
   const renderDays = () => {
-    const days = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.'];
+    const days = ['Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.','Sun.'];
     return (
       <div className="grid grid-cols-7  text-center text-mediumText font-medium text-[#3C413F] gap-[12px] pb-[12px]">
         {days.map(day => (

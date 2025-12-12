@@ -4,6 +4,16 @@ import ProductDescription from './productDescription';
 import CustomerReview from './CustomerReview';
 import axios from 'axios';
 import { baseURL } from '@/url';
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+
 export default function Product(){
     const { id } = useParams();
     const [product,setProduct]=useState(null);
@@ -21,7 +31,20 @@ export default function Product(){
         
         product==null?<Spinner/>:
         <div className='py-[4vw] mx-[2vw] font-roboto'>
-            <p className=' mb-[1.5vw] text-[.875rem]'>Root Address</p>
+          <div className='mb-[1vw]'>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+               
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{product.modelTitle}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            </div>
             <ProductDescription productToDisplay={product}/>
             {/* <CustomerReview/> */}
         </div>

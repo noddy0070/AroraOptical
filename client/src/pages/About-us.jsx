@@ -30,8 +30,8 @@ export default function AboutUs() {
       </div>
 
       {/* Second Section */}
-      <div className='flex flex-row  mx-auto  md:gap-[6vw] items-center'>
-        <div className='flex flex-col md:gap-[3.375vw]'>
+      <div className='flex flex-row  mx-auto  md:gap-[6vw] '>
+        <div className='flex flex-col md:gap-[3.375vw] mt-[8vw]'>
             <h2 className='md:text-h2Text leading-[120%] font-bold font-dyeLine'>
                 Our Mission
             </h2>
@@ -42,7 +42,7 @@ export default function AboutUs() {
 
         <img src={aboutusImage} alt='about-us' className='w-[33.125vw] h-[33.125vw] object-cover' />
 
-        <div className='flex flex-col md:gap-[3.375vw]'>
+        <div className='flex flex-col md:gap-[3.375vw] mt-[8vw]'>
             <h2 className='md:text-h2Text leading-[120%] font-bold font-dyeLine text-right'>
                 Our Vision
             </h2>

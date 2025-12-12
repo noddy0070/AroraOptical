@@ -32,6 +32,52 @@ export default function ProductDescription({productToDisplay}){
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const tags = productToDisplay.hashtags.split(",").map(tag => tag.trim());
     const images = productToDisplay.images;
+
+    // Drag scroll for tags
+    const tagsRef = useRef(null);
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    const [startX, setStartX] = useState(0);
+    const [scrollLeft, setScrollLeft] = useState(0);
+
+    const handleTagsMouseDown = (e) => {
+        setIsMouseDown(true);
+        setStartX(e.pageX - tagsRef.current.offsetLeft);
+        setScrollLeft(tagsRef.current.scrollLeft);
+    };
+
+    const handleTagsMouseLeave = () => {
+        setIsMouseDown(false);
+    };
+
+    const handleTagsMouseMove = (e) => {
+        if (!isMouseDown) return;
+        e.preventDefault();
+        const x = e.pageX - tagsRef.current.offsetLeft;
+        const walk = (x - startX) * 2;
+        tagsRef.current.scrollLeft = scrollLeft - walk;
+    };
+
+    const handleTagsMouseUp = () => {
+        setIsMouseDown(false);
+    };
+
+    // Touch events for mobile
+    const handleTagsTouchStart = (e) => {
+        setIsMouseDown(true);
+        setStartX(e.touches[0].pageX - tagsRef.current.offsetLeft);
+        setScrollLeft(tagsRef.current.scrollLeft);
+    };
+
+    const handleTagsTouchMove = (e) => {
+        if (!isMouseDown) return;
+        const x = e.touches[0].pageX - tagsRef.current.offsetLeft;
+        const walk = (x - startX) * 2;
+        tagsRef.current.scrollLeft = scrollLeft - walk;
+    };
+
+    const handleTagsTouchEnd = () => {
+        setIsMouseDown(false);
+    };
   
     const mainImageIndex = hoveredIndex !== null ? hoveredIndex : selectedIndex;
     const mainImage = images[mainImageIndex];
@@ -208,11 +254,24 @@ export default function ProductDescription({productToDisplay}){
                 src={mainImage}
                 className="h-full w-full object-cover clickable transition-all duration-500 ease-in-out p-[2vw] opacity-0 animate-fade-in "
             />
-            <div className='absolute top-[1vw] right-[1vw] flex gap-[8px] '>
-                {tags.map((tag, index) => (
-                <div className=' px-[16px]  py-[8px] rounded-[1.25vw] text-center md:min-w-[7.125vw] border-[1px] border-black text-tinyTextPhone md:text-tinyText' key={index}>{tag}</div>
-                ))}
-                <button onClick={handleWishlist} disabled={loading}>
+            <div className='absolute  top-[1vw] right-[1vw] flex z-50 gap-[8px] items-center'>
+                <div 
+                    ref={tagsRef}
+                    className='relative flex gap-[8px] overflow-x-auto hide-scrollbar scroll-smooth cursor-grab active:cursor-grabbing'
+                    style={{ maxWidth: '50vw', WebkitOverflowScrolling: 'touch' }}
+                    onMouseDown={handleTagsMouseDown}
+                    onMouseLeave={handleTagsMouseLeave}
+                    onMouseMove={handleTagsMouseMove}
+                    onMouseUp={handleTagsMouseUp}
+                    onTouchStart={handleTagsTouchStart}
+                    onTouchMove={handleTagsTouchMove}
+                    onTouchEnd={handleTagsTouchEnd}
+                >
+                    {tags.map((tag, index) => (
+                    <div className='px-[16px] py-[8px] rounded-[1.25vw] text-center line-clamp-1 whitespace-nowrap md:min-w-[7.125vw] flex-shrink-0 border-[1px] border-black text-tinyTextPhone md:text-tinyText select-none' key={index}>{tag}</div>
+                    ))}
+                </div>
+                <button onClick={handleWishlist} disabled={loading} className='flex-shrink-0'>
                     <img 
                         className='w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw]' 
                         src={isInWishlist ? WishListIconFilled : WishListIcon}
