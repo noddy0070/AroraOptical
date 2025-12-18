@@ -3,10 +3,7 @@ import mongoose from "mongoose";
 export const addProduct= async (req,res,next)=>{
     const {modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes,rx}=req.body;
     const newProduct= new Product({modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes,rx});
-    const existingProduct = await Product.findOne({ modelTitle });
-    if (existingProduct) {
-        return res.status(400).json({ message: 'Product already exists' });
-    }
+    
     try{
         await newProduct.save();
         res.status(201).json('Product created successfully');
