@@ -291,8 +291,8 @@ export default function ProductDescription({productToDisplay}){
                 {/* Product Details block */}
                 <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand} className='w-auto h-[2.5vw] mr-auto object-contain' />
                 <div>
-                    <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelTitle}</h3>
-                    <span className='leading-[150%]'>{productToDisplay.modelName}</span>
+                    <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelName}</h3>
+                    <span className='leading-[150%]'>{productToDisplay.modelTitle}</span>
                     {/* <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{formatINR(productToDisplay.price)}</span> {" "}
                      <span>{formatINR(productToDisplay.discount)}</span> </h5> */}
 

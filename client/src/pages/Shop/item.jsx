@@ -80,7 +80,7 @@ export default function Item({product}) {
                     </div>
                     <div className='p-4'>
                       <h3 className='font-semibold text-gray-800 text-tinyTextPhone md:text-smallTextPhone  mb-1 line-clamp-2'>
-                        {product.modelTitle}
+                        {product.modelName} - {product.modelTitle}
                       </h3>
                       <p className='text-gray-600 text-tinyTextPhone md:text-tinyText '>{product.brand}</p>
                       <div className='flex items-center justify-between'>
