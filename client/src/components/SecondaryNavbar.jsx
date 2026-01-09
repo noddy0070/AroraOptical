@@ -11,6 +11,14 @@ import axios from 'axios';
 import { baseURL } from '@/url';
 import navbarDropdown from '../assets/images/navbarDropDown.png'
 import { useNavigate } from 'react-router-dom';
+import { 
+  ChevronDown, 
+  ChevronUp, 
+  ShoppingBag, 
+  Eye, 
+  Glasses  
+} from "lucide-react";
+
 export default function SecondaryNavbar() {
   const inputRef = useRef(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -19,10 +27,13 @@ export default function SecondaryNavbar() {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const dropdownTimeoutRef = useRef(null);
   const searchTimeoutRef = useRef(null);
   const navigate = useNavigate();
+  const [openSunglasses, setOpenSunglasses] = useState(false);
+  const [openEyeglasses, setOpenEyeglasses] = useState(false);
 
   // Fetch cart count when component mounts and when user changes
   useEffect(() => {
@@ -399,8 +410,12 @@ export default function SecondaryNavbar() {
             </div>
 
             <div className='flex flex-row gap-[4.5vw] w-full md:w-auto md:gap-[1.5vw] items-center'>
-              <img className='block md:hidden w-[8vw] h-[8vw]' src={MenuIcon} alt="Menu"/>
-              <img className='block md:hidden w-[15vw] h-[10.75vw]' src={logo} alt="Logo"/>
+              <button onClick={() => setIsMobileMenuOpen(true)} className='block md:hidden'>
+                <img className='w-[8vw] h-[8vw]' src={MenuIcon} alt="Menu"/>
+              </button>
+              <TransitionLink to='/' className=''>
+                <img className='w-[15vw] h-[10.75vw] block md:hidden' src={logo} alt="Logo"/>
+              </TransitionLink>
 
               <img className='ml-auto w-[8vw] md:w-[1.75vw] h-[8vw] md:hidden block md:h-[1.75vw]' src={SearchIcon} alt="Search"/>
               <img className='w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw]' src={WishListIcon} alt="Wishlist"/>
@@ -409,7 +424,7 @@ export default function SecondaryNavbar() {
                 <TransitionLink to='/cart'>
                   <img className='w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw]' src={CartIcon} alt="Cart"/>
                   {cartCount > 0 && (
-                    <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-[1.25vw] h-[1.25vw] flex items-center justify-center text-[0.75vw] font-bold">
+                    <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-[4.5vw] h-[4.5vw] md:w-[1.25vw] md:h-[1.25vw] flex items-center justify-center text-smallTextPhone md:text-smallText leading-[0%] font-bold">
                       {cartCount}
                     </div>
                   )}
@@ -439,6 +454,165 @@ export default function SecondaryNavbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Sidebar */}
+      {isMobileMenuOpen && (
+        <>
+          {/* Overlay */}
+          <div 
+            className='fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden'
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          {/* Sidebar */}
+          <div className='fixed top-0 left-0 h-full w-[80vw] max-w-[400px] bg-white z-50 shadow-xl transform transition-transform duration-300 ease-in-out md:hidden overflow-y-auto'>
+            <div className='flex flex-col h-full'>
+              {/* Header */}
+              <div className='flex items-center justify-between p-[5vw] border-b border-gray-200'>
+                <TransitionLink to='/' onClick={() => setIsMobileMenuOpen(false)}>
+                  <img className='w-[30vw] h-[21.5vw]' src={logo} alt="Logo"/>
+                </TransitionLink>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className='w-[8vw] h-[8vw] flex items-center justify-center'
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[6vw] h-[6vw]">
+                    <line x1="5" y1="5" x2="19" y2="19" />
+                    <line x1="19" y1="5" x2="5" y2="19" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Menu Items */}
+              <div className="flex flex-col p-[5vw] gap-[5vw]">
+
+      {/* SHOP HEADER */}
+      <div className="flex items-center gap-[2vw] border-b border-gray-200 pb-[2vw]">
+        <ShoppingBag size={18} />
+        <h3 className="text-regularTextPhone font-bold">Shop</h3>
+      </div>
+
+      {/* ------------------- SUNGLASSES DROPDOWN ------------------- */}
+      <div className="flex flex-col">
+        <button 
+          onClick={() => setOpenSunglasses(!openSunglasses)}
+          className="flex items-center justify-between text-regularTextPhone font-semibold py-[2vw]"
+        >
+          <div className="flex items-center gap-[2vw]">
+            <Glasses size={16} />
+            <span>Sunglasses</span>
+          </div>
+
+          {openSunglasses ? <ChevronUp size={16}/> : <ChevronDown size={16} />}
+        </button>
+
+        {openSunglasses && (
+          <div className="flex flex-col gap-[1.5vw] pl-[6vw]">
+            <TransitionLink to="/shop/sunglasses/new-arrivals" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">New Arrivals</p>
+            </TransitionLink>
+
+            <TransitionLink to="/shop/sunglasses/bestsellers" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">Bestsellers</p>
+            </TransitionLink>
+
+            <TransitionLink to="/shop/sunglasses/women" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">Women</p>
+            </TransitionLink>
+
+            <TransitionLink to="/shop/sunglasses/men" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">Men</p>
+            </TransitionLink>
+
+            <TransitionLink to="/shop/sunglasses/kids" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">Kids</p>
+            </TransitionLink>
+          </div>
+        )}
+      </div>
+
+      {/* ------------------- EYEGLASSES DROPDOWN ------------------- */}
+      <div className="flex flex-col">
+        <button 
+          onClick={() => setOpenEyeglasses(!openEyeglasses)}
+          className="flex items-center justify-between text-regularTextPhone font-semibold py-[2vw]"
+        >
+          <div className="flex items-center gap-[2vw]">
+            <Eye size={16} />
+            <span>Eyeglasses</span>
+          </div>
+
+          {openEyeglasses ? <ChevronUp size={16}/> : <ChevronDown size={16} />}
+        </button>
+
+        {openEyeglasses && (
+          <div className="flex flex-col gap-[1.5vw] pl-[6vw]">
+            <TransitionLink to="/shop/eyeglasses/new-arrivals" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">New Arrivals</p>
+            </TransitionLink>
+
+            <TransitionLink to="/shop/eyeglasses/bestsellers" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">Bestsellers</p>
+            </TransitionLink>
+
+            <TransitionLink to="/shop/eyeglasses/women" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">Women</p>
+            </TransitionLink>
+
+            <TransitionLink to="/shop/eyeglasses/men" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">Men</p>
+            </TransitionLink>
+
+            <TransitionLink to="/shop/eyeglasses/kids" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-item">Kids</p>
+            </TransitionLink>
+          </div>
+        )}
+      </div>
+
+      {/* -------------------- ACCESSORIES -------------------- */}
+      <TransitionLink to="/accessories" onClick={() => setIsMobileMenuOpen(false)}>
+        <p className="sidebar-link">Accessories</p>
+      </TransitionLink>
+
+      {/* -------------------- FREE EYE TEST -------------------- */}
+      <TransitionLink to="/eye-test" onClick={() => setIsMobileMenuOpen(false)}>
+        <p className="sidebar-link">Free Eye Test</p>
+      </TransitionLink>
+
+      {/* -------------------- BLOG -------------------- */}
+      <p className="sidebar-link">Blog</p>
+
+      {/* -------------------- ABOUT US -------------------- */}
+      <TransitionLink to="/about-us" onClick={() => setIsMobileMenuOpen(false)}>
+        <p className="sidebar-link">About Us</p>
+      </TransitionLink>
+
+      {/* -------------------- USER SECTION -------------------- */}
+      <div className="mt-[5vw] pt-[4vw] border-t border-gray-200">
+        {isAuthenticated ? (
+          <TransitionLink to="/settings" onClick={() => setIsMobileMenuOpen(false)}>
+            <div className="flex items-center gap-[2vw] py-[2vw]">
+              <span className="text-regularTextPhone font-bold">{user?.name}</span>
+            </div>
+          </TransitionLink>
+        ) : (
+          <div className="flex flex-col gap-[2vw]">
+            <TransitionLink to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-link">Login</p>
+            </TransitionLink>
+
+            <TransitionLink to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+              <p className="sidebar-link">Sign Up</p>
+            </TransitionLink>
+          </div>
+        )}
+      </div>
+
+    </div>
+            </div>
+          </div>
+        </>
+      )}
     </nav>
   );
 }

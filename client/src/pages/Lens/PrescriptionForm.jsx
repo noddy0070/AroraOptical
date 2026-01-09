@@ -112,33 +112,33 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
     }
 
     return (
-        <div id='prescriptionFormMain' className=''>
-            <h1 className='font-bold font-dyeLine text-h1Text text-center'>Enter Prescription</h1>
-            <div className='mx-auto py-[1vw] px-[1vw] w-[69.75vw] flex flex-col gap-[1vw] font-roboto text-regularText'>
-                <p className="text-center">
+        <div id='prescriptionFormMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0 overflow-y-auto max-h-[100vh] md:max-h-none'>
+            <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Enter Prescription</h1>
+            <div className='mx-auto py-[4vw] md:py-[1vw] px-[5vw] md:px-[1vw] w-full md:w-[69.75vw] flex flex-col gap-[4vw] md:gap-[1vw] font-roboto text-regularTextPhone md:text-regularText'>
+                <p className="text-center text-regularTextPhone md:text-regularText">
                     We strongly recommend you to <a className="underline cursor-pointer text-primary">Upload a Photo</a> of your prescription. It's simple and eliminates any chances for Errors.
                 </p>
-                <form className="px-[1.125vw] flex flex-col gap-[1vw]">
+                <form className="px-[4.5vw] md:px-[1.125vw] flex flex-col gap-[4vw] md:gap-[1vw]">
                     {/* Prescription Name and Date */}
-                        <input className="mb-[-1.5vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]" placeholder="Enter Prescription Name" value={prescriptionForm.prescriptionName} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionName: e.target.value})} />
+                        <input className="mb-[-6vw] md:mb-[-1.5vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" placeholder="Enter Prescription Name" value={prescriptionForm.prescriptionName} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionName: e.target.value})} />
 
                     {/* Eyes Table */}
-                    <div className="flex flex-row w-full gap-[1.875vw]">
-                        <div className="grid grid-rows-3 mr-auto items-center ">
+                    <div className="flex flex-col md:flex-row w-full gap-[4vw] md:gap-[1.875vw] overflow-x-auto">
+                        <div className="grid grid-rows-3 mr-auto items-center min-w-[30vw] md:min-w-0">
                             <div className="h-px min-h-0 leading-none text-[0]"></div>
-                            <span className="font-medium">Right Eye OD</span>
-                            <span className="font-medium">Left Eye OS</span>
+                            <span className="font-medium text-regularTextPhone md:text-regularText">Right Eye OD</span>
+                            <span className="font-medium text-regularTextPhone md:text-regularText">Left Eye OS</span>
                         </div>
                         {/* Sphere */}
-                        <div className="grid grid-rows-3 w-[10vw] items-center">
-                            <span className="font-medium mt-auto  mb-[.125vw]">Sphere(SPH)</span>
-                            <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]" value={prescriptionForm.prescriptionRightSphere} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightSphere: e.target.value})}>
+                        <div className="grid grid-rows-3 w-full md:w-[10vw] items-center">
+                            <span className="font-medium mt-auto mb-[.5vw] md:mb-[.125vw] text-regularTextPhone md:text-regularText">Sphere(SPH)</span>
+                            <select className="my-[1vw] md:my-[.25vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" value={prescriptionForm.prescriptionRightSphere} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightSphere: e.target.value})}>
                                 <option value="">+/-</option>
                                 {Array.from({length: 49}, (_, i) => (i - 24) * 0.25).map(val => (
                                     <option key={val} value={val.toFixed(2)}>{val > 0 ? "+" : ""}{val.toFixed(2)}</option>
                                 ))}
                             </select>
-                            <select  className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]" value={prescriptionForm.prescriptionLeftSphere} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftSphere: e.target.value})}>
+                            <select  className="my-[1vw] md:my-[.25vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" value={prescriptionForm.prescriptionLeftSphere} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftSphere: e.target.value})}>
                                 <option value="">+/-</option>
                                 {Array.from({length: 49}, (_, i) => (i - 24) * 0.25).map(val => (
                                     <option key={val} value={val.toFixed(2)}>{val > 0 ? "+" : ""}{val.toFixed(2)}</option>
@@ -146,15 +146,15 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
                             </select>
                         </div>
                         {/* Cylinder */}
-                        <div className="grid grid-rows-3 w-[10vw] items-center">
-                            <span className="font-medium mt-auto mb-[.125vw]">Cylinder(CYL)</span>
-                            <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]" value={prescriptionForm.prescriptionRightCylinder} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightCylinder: e.target.value})}>
+                        <div className="grid grid-rows-3 w-full md:w-[10vw] items-center">
+                            <span className="font-medium mt-auto mb-[.5vw] md:mb-[.125vw] text-regularTextPhone md:text-regularText">Cylinder(CYL)</span>
+                            <select className="my-[1vw] md:my-[.25vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" value={prescriptionForm.prescriptionRightCylinder} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightCylinder: e.target.value})}>
                                 <option value="">+/-</option>
                                 {Array.from({length: 33}, (_, i) => (i - 16) * 0.25).map(val => (
                                     <option key={val} value={val.toFixed(2)}>{val > 0 ? "+" : ""}{val.toFixed(2)}</option>
                                 ))}
                             </select>
-                            <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]" value={prescriptionForm.prescriptionLeftCylinder} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftCylinder: e.target.value})}>
+                            <select className="my-[1vw] md:my-[.25vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" value={prescriptionForm.prescriptionLeftCylinder} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftCylinder: e.target.value})}>
                                 <option value="">+/-</option>
                                 {Array.from({length: 33}, (_, i) => (i - 16) * 0.25).map(val => (
                                     <option key={val} value={val.toFixed(2)}>{val > 0 ? "+" : ""}{val.toFixed(2)}</option>
@@ -162,14 +162,14 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
                             </select>
                         </div>
                         {/* Axis */}
-                        <div className="grid grid-rows-3 w-[10vw] items-center">
-                            <span className="font-medium mt-auto mb-[.125vw]">Axis <span className="text-xs text-gray-500">(0-180)</span></span>
+                        <div className="grid grid-rows-3 w-full md:w-[10vw] items-center">
+                            <span className="font-medium mt-auto mb-[.5vw] md:mb-[.125vw] text-regularTextPhone md:text-regularText">Axis <span className="text-tinyTextPhone md:text-xs text-gray-500">(0-180)</span></span>
                             <input
                                 type="number"
                                 min="1"
                                 max="180"
                                 placeholder="Right Axis"
-                                className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]"
+                                className="my-[1vw] md:my-[.25vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText"
                                 value={prescriptionForm.prescriptionRightAxis}
                                 onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightAxis: e.target.value})}
                             />
@@ -178,57 +178,55 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
                                 min="1"
                                 max="180"
                                 placeholder="Left Axis"
-                                className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]"
+                                className="my-[1vw] md:my-[.25vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText"
                                 value={prescriptionForm.prescriptionLeftAxis}
                                 onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftAxis: e.target.value})}
                             />
                         </div>
                         {/* Near(ADD) */}
-                        {form.lensType==="Bifocal"? <div className="grid grid-rows-3 w-[10vw] items-center">
-                            <span className="font-medium mt-auto mb-[.125vw]">Near(ADD)</span>
-                            <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]" value={prescriptionForm.prescriptionRightNear} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightNear: e.target.value})}>
+                        {form.lensType==="Bifocal"? <div className="grid grid-rows-3 w-full md:w-[10vw] items-center">
+                            <span className="font-medium mt-auto mb-[.5vw] md:mb-[.125vw] text-regularTextPhone md:text-regularText">Near(ADD)</span>
+                            <select className="my-[1vw] md:my-[.25vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" value={prescriptionForm.prescriptionRightNear} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightNear: e.target.value})}>
                                 <option value="">--</option>
                                 {Array.from({length: 12}, (_, i) => ((i+2) * 0.25).toFixed(2)).map(val => (
                                     <option key={val} value={val}>+{val}</option>
                                 ))}
                             </select>
-                            <select className="my-[.25vw] py-[.625vw] px-[1vw] w-full border-[1px] border-black rounded-[.5vw]" value={prescriptionForm.prescriptionLeftNear} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftNear: e.target.value})}>
+                            <select className="my-[1vw] md:my-[.25vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" value={prescriptionForm.prescriptionLeftNear} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftNear: e.target.value})}>
                                 <option value="">--</option>
                                 {Array.from({length: 12}, (_, i) => ((i+2) * 0.25).toFixed(2)).map(val => (
                                     <option key={val} value={val}>+{val}</option>
                                 ))}
                             </select>
-                        </div>:<div className="grid grid-rows-3 w-[10vw] items-center"></div>}
+                        </div>:<div className="grid grid-rows-3 w-full md:w-[10vw] items-center"></div>}
                     </div>
                     {/* Date and PD */}
-                    <div className="flex flex-row gap-[1vw] items-center">
-                        <div className="flex flex-col w-[20vw]">
-                            <span className="font-medium mb-[.25vw]">Date of prescription</span>
-                            <input className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw]" placeholder="dd-mm-yyyy" type="date" value={prescriptionForm.prescriptionDate} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionDate: e.target.value})} />
+                    <div className="flex flex-col md:flex-row gap-[4vw] md:gap-[1vw] items-start md:items-center">
+                        <div className="flex flex-col w-full md:w-[20vw]">
+                            <span className="font-medium mb-[1vw] md:mb-[.25vw] text-regularTextPhone md:text-regularText">Date of prescription</span>
+                            <input className="py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" placeholder="dd-mm-yyyy" type="date" value={prescriptionForm.prescriptionDate} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionDate: e.target.value})} />
                         </div>
-                        <div className="flex flex-col w-[28vw]">
-                            <span className="font-medium mb-[.25vw]">Pupils Distance* {prescriptionForm.prescriptionRightCylinder>=3 || prescriptionForm.prescriptionLeftCylinder>=3 ||prescriptionForm.prescriptionRightCylinder<=-3 || prescriptionForm.prescriptionLeftCylinder<=-3 ? <span className="text-xs text-gray-500">(Recommended to add left and right PD)</span> : ""}</span>
-                            {/* 2 PD Numbers checkbox above */}
-                            {/* PD row: main PD, Left PD, Right PD */}
-                            <div className="flex flex-row gap-[.5vw] items-center">
-                                    <input className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full" placeholder="63 (Average/Don`t Know)" type="text" value={prescriptionForm.prescriptionPupilsDistance} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionPupilsDistance: e.target.value})} />
+                        <div className="flex flex-col w-full md:w-[28vw]">
+                            <span className="font-medium mb-[1vw] md:mb-[.25vw] text-regularTextPhone md:text-regularText">Pupils Distance* {prescriptionForm.prescriptionRightCylinder>=3 || prescriptionForm.prescriptionLeftCylinder>=3 ||prescriptionForm.prescriptionRightCylinder<=-3 || prescriptionForm.prescriptionLeftCylinder<=-3 ? <span className="text-tinyTextPhone md:text-xs text-gray-500">(Recommended to add left and right PD)</span> : ""}</span>
+                            <div className="flex flex-row gap-[2vw] md:gap-[.5vw] items-center">
+                                    <input className="py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] w-full text-regularTextPhone md:text-regularText" placeholder="63 (Average/Don`t Know)" type="text" value={prescriptionForm.prescriptionPupilsDistance} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionPupilsDistance: e.target.value})} />
                             </div>
                         </div>
-                        <div className="flex flex-col w-[28vw]">
-                            <label className="flex flex-row items-center gap-1 mb-[.5vw] ml-auto">
-                                <input type="checkbox" checked={twoPD} onChange={e => setTwoPD(e.target.checked)} className="accent-primary w-[1vw] h-[1vw]" />
-                                <span className="text-xs">2 PD Numbers</span>
+                        <div className="flex flex-col w-full md:w-[28vw]">
+                            <label className="flex flex-row items-center gap-[1vw] md:gap-1 mb-[2vw] md:mb-[.5vw] ml-0 md:ml-auto">
+                                <input type="checkbox" checked={twoPD} onChange={e => setTwoPD(e.target.checked)} className="accent-primary w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw]" />
+                                <span className="text-tinyTextPhone md:text-xs">2 PD Numbers</span>
                             </label>
-                            <div className="flex flex-row gap-[.5vw] items-center">
+                            <div className="flex flex-row gap-[2vw] md:gap-[.5vw] items-center">
                                 {twoPD && (
                                     <>
-                                        <select className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full" value={prescriptionForm.prescriptionLeftPupilsDistance} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftPupilsDistance: e.target.value})}>
+                                        <select className="py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] w-full text-regularTextPhone md:text-regularText" value={prescriptionForm.prescriptionLeftPupilsDistance} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionLeftPupilsDistance: e.target.value})}>
                                             <option value="">Left PD</option>
                                             {Array.from({length: 35}, (_, i) => (23 + i * 0.5).toFixed(1)).map(val => (
                                                 <option key={val} value={val}>{val}</option>
                                             ))}
                                         </select>
-                                        <select className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full" value={prescriptionForm.prescriptionRightPupilsDistance} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightPupilsDistance: e.target.value})}>
+                                        <select className="py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] w-full text-regularTextPhone md:text-regularText" value={prescriptionForm.prescriptionRightPupilsDistance} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionRightPupilsDistance: e.target.value})}>
                                             <option value="">Right PD</option>
                                             {Array.from({length: 35}, (_, i) => (23 + i * 0.5).toFixed(1)).map(val => (
                                                 <option key={val} value={val}>{val}</option>
@@ -241,20 +239,20 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
                     </div>
 
                     {/* Other Details */}
-                    <div className="flex flex-col mt-[.5vw]">
-                        <span className="font-medium mb-[.25vw]">Other Details</span>
-                        <textarea className="py-[.625vw] px-[1vw] border-[1px] border-black rounded-[.5vw] w-full resize-none" rows={2} placeholder="Any extra information here that would like us to know - if you need the glasses for reading or distance, or whether your prescription has prism, etc." value={prescriptionForm.prescriptionOtherDetails} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionOtherDetails: e.target.value})} />
+                    <div className="flex flex-col mt-[2vw] md:mt-[.5vw]">
+                        <span className="font-medium mb-[1vw] md:mb-[.25vw] text-regularTextPhone md:text-regularText">Other Details</span>
+                        <textarea className="py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] w-full resize-none text-regularTextPhone md:text-regularText" rows={2} placeholder="Any extra information here that would like us to know - if you need the glasses for reading or distance, or whether your prescription has prism, etc." value={prescriptionForm.prescriptionOtherDetails} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionOtherDetails: e.target.value})} />
                     </div>
 
                     {/* Terms and Conditions */}
-                    <div className="flex flex-row items-start gap-2 mt-[.5vw]">
-                        <input type="checkbox" checked={acceptTC} onChange={e => setAcceptTC(e.target.checked)} className="accent-primary w-[1vw] h-[1vw] mt-[.25vw]" />
-                        <span className="text-xs text-[#757575]">I accept the <a className="underline cursor-pointer">Terms & Conditions</a>. I certify that the wearer is over 16 years old and that they are not registered blind or partially sighted. I also confirm that the prescription details above have been entered correctly and I am happy that no errors have been made.</span>
+                    <div className="flex flex-row items-start gap-[2vw] md:gap-2 mt-[2vw] md:mt-[.5vw]">
+                        <input type="checkbox" checked={acceptTC} onChange={e => setAcceptTC(e.target.checked)} className="accent-primary w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw] mt-[1vw] md:mt-[.25vw]" />
+                        <span className="text-tinyTextPhone md:text-xs text-[#757575]">I accept the <a className="underline cursor-pointer">Terms & Conditions</a>. I certify that the wearer is over 16 years old and that they are not registered blind or partially sighted. I also confirm that the prescription details above have been entered correctly and I am happy that no errors have been made.</span>
                     </div>
 
                     {/* Submit Button */}
-                    <button disabled={!acceptTC}  type="submit" className="mt-[1vw] w-full py-[.75vw] rounded-[.5vw] bg-darkslategrey text-white font-bold text-lg hover:bg-black transition-colors" onClick={handleSubmit}>Submit Prescription</button>
-                    {error && <p className="text-red-500 text-xs mt-[.5vw]">{error}</p>}
+                    <button disabled={!acceptTC}  type="submit" className="mt-[4vw] md:mt-[1vw] w-full py-[3vw] md:py-[.75vw] rounded-[2vw] md:rounded-[.5vw] bg-darkslategrey text-white font-bold text-h5TextPhone md:text-lg hover:bg-black transition-colors" onClick={handleSubmit}>Submit Prescription</button>
+                    {error && <p className="text-red-500 text-tinyTextPhone md:text-xs mt-[2vw] md:mt-[.5vw]">{error}</p>}
                 </form>
             </div>
                 </div>

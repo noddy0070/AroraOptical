@@ -130,33 +130,33 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
   };
 
   return (
-    <div className='flex flex-col gap-[2vw] bg-white p-[2vw] rounded-[1.75vw] mx-[2vw]'>
-        <div className='flex flex-row items-center justify-between'>
-            <p className='text-h4Text leading-[130%] font-dyeLine font-bold'>Items in Your Cart ({cartItems.length})</p>
-            <p className='text-h5Text leading-[130%] font-dyeLine font-bold text-right'>Cart Total: {formatINR(totalPrice)}</p>
+    <div className='flex flex-col gap-[6vw] md:gap-[2vw] bg-white p-[5vw] md:p-[2vw] rounded-[7vw] md:rounded-[1.75vw] mx-[5vw] md:mx-[2vw]'>
+        <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-[3vw] md:gap-0'>
+            <p className='text-h4TextPhone md:text-h4Text leading-[130%] font-dyeLine font-bold'>Items in Your Cart ({cartItems.length})</p>
+            <p className='text-h5TextPhone md:text-h5Text leading-[130%] font-dyeLine font-bold text-left md:text-right'>Cart Total: {formatINR(totalPrice)}</p>
         </div>
-        <div className='flex flex-row gap-[1.5vw]'>
-            <div className='flex flex-col gap-[1.5vw] w-[57.5vw]'>
-                <p className='text-h6Text leading-[150%] font-roboto font-bold'>Select Address</p>
+        <div className='flex flex-col md:flex-row gap-[6vw] md:gap-[1.5vw]'>
+            <div className='flex flex-col gap-[4vw] md:gap-[1.5vw] w-full md:w-[57.5vw]'>
+                <p className='text-h6TextPhone md:text-h6Text leading-[150%] font-roboto font-bold'>Select Address</p>
                 {
                   user.addressList.length>0 && user.addressList.map((address, index) => (
-                    <label key={index} className={`text-[#17183B] flex flex-row bg-[#F6F6F6] rounded-[8px] items-center justify-between cursor-pointer border gap-[24px] p-[1.5vw] `} >
-                <div className="flex gap-[16px]">
+                    <label key={index} className={`text-[#17183B] flex flex-row bg-[#F6F6F6] rounded-[2vw] md:rounded-[8px] items-center justify-between cursor-pointer border gap-[6vw] md:gap-[24px] p-[4vw] md:p-[1.5vw]`}>
+                <div className="flex gap-[4vw] md:gap-[16px]">
                   <input
                     type="radio"
                     name="selectedAddress"
-                    className='w-[1vw] h-[1vw] mt-[10px] accent-black'
+                    className='w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw] mt-[2.5vw] md:mt-[10px] accent-black'
                     checked={selectedAddressIndex === index}
                       onChange={() =>{ setSelectedAddressIndex(index), setIsDeliverable('Check Deliverability')}}
                   />
-                  <div className='flex flex-col gap-[4px]'>
-                  <span className='text-mediumText leading-[150%] font-roboto'>{address.fullName}</span>
-                  <span className='text-mediumText leading-[150%] font-roboto line-clamp-2'>{address.flat} {address.area}, {address.city} {address.state}, {address.pincode}</span>
-                  <span className='text-mediumText leading-[150%] font-roboto'>{address.mobileNumber}</span>
+                  <div className='flex flex-col gap-[1vw] md:gap-[4px]'>
+                  <span className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto'>{address.fullName}</span>
+                  <span className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto line-clamp-2'>{address.flat} {address.area}, {address.city} {address.state}, {address.pincode}</span>
+                  <span className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto'>{address.mobileNumber}</span>
                   {selectedAddressIndex === index && 
                   <button className='text-left'>
                     <span
-                      className='text-mediumText leading-[150%] font-roboto underline text-blue-500 cursor-pointer'
+                      className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto underline text-blue-500 cursor-pointer'
                       onClick={() => checkDeliverability(address)}
                     >
                       {(isDeliverable==='Delivery Available'?'Delivery Available':isDeliverable==='Not Deliverable'?'Not Deliverable':'Check Deliverability')}
@@ -164,11 +164,13 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
                   </button>}
                   </div>
                 </div>
-                <button className='ml-auto' onClick={() => handleEditAddress(index)}>
-                <img src={edit} alt="edit" className='w-[1.5vw] h-[1.5vw]' /></button>
-                <button onClick={() => handleRemoveAddress(index)}>
-                <img src={close} alt="close" className='w-[1.5vw] h-[1.5vw]' />
-                </button>
+                <div className='flex flex-row gap-[2vw] md:gap-0'>
+                    <button className='ml-auto' onClick={() => handleEditAddress(index)}>
+                    <img src={edit} alt="edit" className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]' /></button>
+                    <button onClick={() => handleRemoveAddress(index)}>
+                    <img src={close} alt="close" className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]' />
+                    </button>
+                </div>
               </label>
                   ))
                 }
@@ -178,35 +180,38 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
                     WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,1))',
                   }}/>
                                                     <button 
-                    className='w-[1.5vw] min-w-[1.5vw] h-[1.5vw] min-h-[1.5vw]'
+                    className='w-[6vw] md:w-[1.5vw] min-w-[6vw] md:min-w-[1.5vw] h-[6vw] md:h-[1.5vw] min-h-[6vw] md:min-h-[1.5vw]'
                     onClick={() => setIsAddressDialogOpen(true)}
                   >
-                    <img src={plus} alt="plus" className='w-[1.5vw] h-[1.5vw]' />
+                    <img src={plus} alt="plus" className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]' />
                   </button>
                                   <div className='border-black border-dashed w-[100%] border-[1px] h-min'  style={{
                     maskImage: 'linear-gradient(to left, rgba(0,0,0,0.2), rgba(0,0,0,1))',
                     WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,0.2), rgba(0,0,0,1))',
                   }}/>
                 </div>
-                <p className='mt-[-1vw] text-smallText leading-[150%] font-roboto font-bold text-center'>Add New Address</p>
+                <p className='mt-[-2vw] md:mt-[-1vw] text-smallTextPhone md:text-smallText leading-[150%] font-roboto font-bold text-center'>Add New Address</p>
             </div>
-            <div className='flex flex-col gap-[1.5vw] w-[37.5vw] p-[16px]'>
-              <p className='text-h6Text leading-[150%] font-roboto font-bold'>Order Summary</p>
-              <div className='flex flex-col gap-[1.5vw]'>
+            <div className='flex flex-col gap-[4vw] md:gap-[1.5vw] w-full md:w-[37.5vw] p-[4vw] md:p-[16px]'>
+              <p className='text-h6TextPhone md:text-h6Text leading-[150%] font-roboto font-bold'>Order Summary</p>
+              <div className='flex flex-col gap-[4vw] md:gap-[1.5vw]'>
                 {cartItems.map((item) => (
-                  <div className='flex flex-row gap-[1.5vw] border-[1px] border-[#f5f5f5] rounded-[8px] p-[8px]'>
-                    <img src={item.productId.images[0]} alt="item" className='w-[3.125vw] h-[3.375vw]' />
-                    <div className='flex flex-col gap-[4px]'>
-                    <p className='text-regularText leading-[150%] font-roboto font-bold'>{item.productId.modelTitle}</p>
-                    <p className='text-smallText leading-[150%] font-roboto'>{item.productId.brand}</p>
+                  <div key={item.productId._id} className='flex flex-row gap-[3vw] md:gap-[1.5vw] border-[1px] border-[#f5f5f5] rounded-[2vw] md:rounded-[8px] p-[2vw] md:p-[8px]'>
+                    <img src={item.productId.images[0]} alt="item" className='w-[25vw] md:w-[3.125vw] h-[25vw] md:h-[3.375vw] object-cover rounded-[2vw] md:rounded-none' />
+                    <div className='flex flex-col gap-[1vw] md:gap-[4px] flex-1'>
+                    <p className='text-regularTextPhone md:text-regularText leading-[150%] font-roboto font-bold'>{item.productId.modelTitle}</p>
+                    <p className='text-smallTextPhone md:text-smallText leading-[150%] font-roboto'>{item.productId.brand}</p>
                     </div>
-                    <p className='text-smallText leading-[150%] font-bold font-roboto text-right ml-auto'>{item.quantity} x {formatINR(item.totalAmount)}</p>
+                    <p className='text-smallTextPhone md:text-smallText leading-[150%] font-bold font-roboto text-right ml-auto'>{item.quantity} x {formatINR(item.totalAmount)}</p>
                   </div>
                 ))}
               </div>
                     <TitleButton2
                         disabled={isDeliverable==='Not Deliverable' || isDeliverable==='Check Deliverability'}
-                        className='mt-[1.25vw] mx-auto bg-black w-[100%]' 
+                        className='mt-[5vw] md:mt-[1.25vw] mx-auto bg-black w-full md:w-[100%]' 
+                        btnHeightPhone={12}
+                        btnWidthPhone={100}
+                        btnRadiusPhone={12}
                         btnHeight={3} 
                         btnWidth={30} 
                         btnRadius={2} 

@@ -137,6 +137,31 @@ export default function HeroSection(){
                             Whether you're browsing from home or visiting us in person, we ensure a seamless experience tailored just for you.
                         </p>
                     </div>
+                    <div className='flex flex-col items-center'>
+                        <TransitionLink to="/shop/sunglasses/bestsellers">
+                            <div className='flex gap-[.4vw] group cursor-pointer scale-100 active:scale-95 transition-transform duration-300'>
+                                <div>
+                                    <TitleButton
+                                        btnTitle={"Shop"}
+                                        btnRadiusPhone={9}
+                                        btnHeightPhone={12.5}
+                                        btnWidthPhone={47}
+                                        className='group-active:text-black group-active:bg-btnHoverColour transition-all duration-300'
+                                        className2='group-active:text-black'
+                                    />
+                                    <p className='text-regularTextPhone pt-[3.5vw] pl-[2vw] font-roboto text-center leading-[150%] text-white'>
+                                        Learn More
+                                    </p>
+                                </div>
+                                <IconButton
+                                    btnSizePhone={12.5}
+                                    iconWidthPhone={20}
+                                    paddingPhone={1}
+                                    className='group-active:text-black group-active:bg-btnHoverColour transition-all duration-300'
+                                />
+                            </div>
+                        </TransitionLink>
+                    </div>
                 </div>
             </div>
         </div>

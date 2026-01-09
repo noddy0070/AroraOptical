@@ -6,9 +6,9 @@ import { formatINR } from '@/components/IntToPrice';
 
 export default function LensThickness({amount,form,setForm,handleFocus,addProductToCart,setAmount}) {
     return (
-        <div id='lensThicknessMain' className='' >
-            <h1 className='font-bold font-dyeLine text-h1Text text-center'>Lens Thickness</h1>
-            <div className='mx-auto py-[1.5vw] px-[1vw] flex flex-row gap-[1.5vw] w-min'>
+        <div id='lensThicknessMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0'>
+            <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Lens Thickness</h1>
+            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min overflow-x-auto hide-scrollbar md:overflow-visible'>
                     {/* <LensFeatureBox onclick={()=>{
                         const updatedForm = {...form, lensThickness:"Thin"};
                         setForm(updatedForm);
@@ -49,8 +49,8 @@ export default function LensThickness({amount,form,setForm,handleFocus,addProduc
                     }} title={"Index: 1.59"} description={"Durable, ultra thin, polycarbonate lenses designed for active lifestyles or rimless frames."} 
                     price={form.lensType==="Bifocal"?200:150} />}
             </div>
-            <div className=' ml-auto mt-[4vw] mr-[2vw] items-center flex flex-row w-[68.75vw]'>
-                <h5 className='text-h5Text font-dyeLine font-bold'>Total Amount: {formatINR(amount)}</h5>
+            <div className='ml-auto mt-[8vw] md:mt-[4vw] mr-[5vw] md:mr-[2vw] items-center flex flex-row w-full md:w-[68.75vw] justify-end md:justify-start gap-[4vw] md:gap-0'>
+                <h5 className='text-h5TextPhone md:text-h5Text font-dyeLine font-bold'>Total Amount: {formatINR(amount)}</h5>
                 <CartButton/>
               </div>
         </div>

@@ -44,6 +44,8 @@ body{
 
 
 
+
+
 /* Dye Line font */
 @font-face {
   font-family: 'DyeLine';
@@ -314,4 +316,12 @@ img[onClick],
 img[onclick],
 img.cursor-pointer {
   pointer-events: auto;
+}
+
+.sidebar-item {
+  @apply text-regularTextPhone py-[1.5vw] text-gray-700;
+}
+
+.sidebar-link {
+  @apply text-regularTextPhone font-bold py-[2vw] text-left text-gray-800;
 }

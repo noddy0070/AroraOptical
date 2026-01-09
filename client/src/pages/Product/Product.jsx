@@ -30,17 +30,17 @@ export default function Product(){
     return (
         
         product==null?<Spinner/>:
-        <div className='py-[4vw] mx-[2vw] font-roboto'>
-          <div className='mb-[1vw]'>
+        <div className='py-[6vw] md:py-[4vw] mx-[5vw] md:mx-[2vw] font-roboto'>
+          <div className='mb-[3vw] md:mb-[1vw]'>
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                  <BreadcrumbLink href="/" className='text-regularTextPhone md:text-regularText'>Home</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{product.modelTitle}</BreadcrumbPage>
+                  <BreadcrumbPage className='text-regularTextPhone md:text-regularText'>{product.modelTitle}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

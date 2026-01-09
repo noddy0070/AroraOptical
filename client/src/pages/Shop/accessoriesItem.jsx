@@ -65,8 +65,8 @@ export default function AccessoriesItem({comapny, price, image, rating, title, c
     };
 
     return (
-        <div className='relative overflow-hidden font-roboto shadow-[0px_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[1.25vw]'>
-            <div className='relative overflow-hidden h-[17.3125vw] mb-[.5vw]'>
+        <div className='relative overflow-hidden font-roboto shadow-[0px_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5vw] md:rounded-[1.25vw]'>
+            <div className='relative overflow-hidden h-[69.25vw] md:h-[17.3125vw] mb-[2vw] md:mb-[.5vw]'>
                 <div className="img-container" style={{"--aspect-ratio": "100%"}}>
                     <img 
                         loading="lazy"
@@ -79,13 +79,13 @@ export default function AccessoriesItem({comapny, price, image, rating, title, c
                         src={image} 
                         alt={title}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className='object-cover z-[0] overflow-hidden max-h-[17.3125vw] transition-transform duration-700 cursor-pointer clickable w-[100%] h-[17.3125vw] rounded-t-[1.25vw] mb-[.5vw] blur-load image-loading'
+                        className='object-cover z-[0] overflow-hidden max-h-[69.25vw] md:max-h-[17.3125vw] transition-transform duration-700 cursor-pointer clickable w-[100%] h-[69.25vw] md:h-[17.3125vw] rounded-t-[5vw] md:rounded-t-[1.25vw] mb-[2vw] md:mb-[.5vw] blur-load image-loading'
                     />
                 </div>
                 <button 
                     onClick={handleWishlist}
                     disabled={loading}
-                    className='absolute right-[1.25vw] top-[1.25vw] w-[1.565vw] h-auto cursor-pointer transition-transform hover:scale-110'
+                    className='absolute right-[5vw] md:right-[1.25vw] top-[5vw] md:top-[1.25vw] w-[6.25vw] md:w-[1.565vw] h-auto cursor-pointer transition-transform hover:scale-110'
                 >
                     <img 
                         src={isInWishlist ? wishListFilled : wishList} 
@@ -96,18 +96,18 @@ export default function AccessoriesItem({comapny, price, image, rating, title, c
                 </button>
             </div>
             
-            <div className='px-[.625vw] overflow-hidden z-[2] pb-[.5vw]'>
-                <div className='flex flex-row mb-[.375vw]'>
-                    <p className='text-regularText font-medium'>{comapny}</p>
-                    <img src={star} alt='rating' className='ml-auto w-[1vw] h-[1vw]'/>
-                    <p className='text-smallText leading-[150%] ml-[2px]'>{rating}</p>
+            <div className='px-[2.5vw] md:px-[.625vw] overflow-hidden z-[2] pb-[2vw] md:pb-[.5vw]'>
+                <div className='flex flex-row mb-[1.5vw] md:mb-[.375vw]'>
+                    <p className='text-regularTextPhone md:text-regularText font-medium'>{comapny}</p>
+                    <img src={star} alt='rating' className='ml-auto w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw]'/>
+                    <p className='text-smallTextPhone md:text-smallText leading-[150%] ml-[2px]'>{rating}</p>
                 </div>
-                <h6 className='text-h6Text font-bold font-dyeLine leading-[140%]'>{title}</h6>
-                <span className='text-smallText font-light leading-[150%]'>{colour}</span>
-                <h6 className='text-h6Text mt-[.375vw] leading-[140%]'>{formatINR(price)}</h6>
+                <h6 className='text-h6TextPhone md:text-h6Text font-bold font-dyeLine leading-[140%] mb-[1vw] md:mb-0'>{title}</h6>
+                <span className='text-smallTextPhone md:text-smallText font-light leading-[150%]'>{colour}</span>
+                <h6 className='text-h6TextPhone md:text-h6Text mt-[1.5vw] md:mt-[.375vw] leading-[140%]'>{formatINR(price)}</h6>
             </div>
-            <button className='w-full px-[.90625vw] py-[.45375vw] rounded-[1.25vw] bg-[rgba(29,50,64,.5)] hover:bg-[rgba(29,50,64,.7)] transition-colors duration-300'>
-                <span className='text-regularText font-semibold leading-[150%]'>Add To Cart</span>
+            <button className='w-full px-[3.625vw] md:px-[.90625vw] py-[1.8125vw] md:py-[.45375vw] rounded-b-[5vw] md:rounded-[1.25vw] bg-[rgba(29,50,64,.5)] hover:bg-[rgba(29,50,64,.7)] transition-colors duration-300'>
+                <span className='text-regularTextPhone md:text-regularText font-semibold leading-[150%]'>Add To Cart</span>
             </button>
         </div>
     );

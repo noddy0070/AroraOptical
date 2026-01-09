@@ -128,29 +128,29 @@ export default function Accessories({category, audience}) {
 
     return (
         <div className=''>
-            <div className='relative  w-full h-[25.25vw]'>
+            <div className='relative w-full h-[100vw] md:h-[25.25vw]'>
                 <img 
                     alt='Shop Banner'
                     loading="eager"
                     fetchpriority="high"
                     sizes="100vw"
-                    className='relative hide-scrollbar w-full h-[25.25vw] object-cover clickable'
+                    className='relative hide-scrollbar w-full h-[100vw] md:h-[25.25vw] object-cover clickable'
                     src={shopBanner1}
                 />
-                <IconButton className='absolute right-[4vw] top-[3vw]' btnSize={3.0625} padding={.85} iconWidth={2.1875}/>
+                <IconButton className='absolute right-[4vw] md:right-[4vw] top-[3vw] md:top-[3vw]' btnSizePhone={12} paddingPhone={1} iconWidthPhone={20} btnSize={3.0625} padding={.85} iconWidth={2.1875}/>
             </div>
-            <section className="mb-[16px] md:mb-[32px] mt-[4vw] mx-[-12px] sm:mx-[-16px] md:mx-[0px] lg:mb-[32px] xl:mb-[48px] overflow-x-auto whitespace-nowrap md:overflow-x-visible md:whitespace-normal md:flex justify-center md:flex-row gap-[8px] md:gap-[20px] lg:gap-[24px] flex-wrap">
+            <section className="mb-[4vw] md:mb-[32px] mt-[6vw] md:mt-[4vw] mx-[5vw] md:mx-[0px] overflow-x-auto whitespace-nowrap md:overflow-x-visible md:whitespace-normal md:flex justify-center md:flex-row gap-[2vw] md:gap-[20px] lg:gap-[24px] flex-wrap hide-scrollbar">
                     {categories.map((name, index) => (
                         <div
                         key={index}
                         onClick={() => handleCategoryChange(name)}
-                        className={`inline-flex  border-[1px] mx-[4px] md:mx-0 ${
+                        className={`inline-flex border-[1px] mx-[2vw] md:mx-0 ${
                             selectedButton === index ? 'border-black' : 'border-none'
-                        } rounded-[32px] items-center justify-center relative leading-[150%]`}
+                        } rounded-[8vw] md:rounded-[32px] items-center justify-center relative leading-[150%]`}
                         >
                         <button
-                            className={` min-w-[82px] text-[12px]  md:text-[1rem] leading-tight  rounded-[32px]   ${
-                            selectedButton === index ? '  py-[9px] px-[18px]' : ' py-[8px] px-[16px]'
+                            className={`min-w-[82px] text-regularTextPhone md:text-[1rem] leading-tight rounded-[8vw] md:rounded-[32px] ${
+                            selectedButton === index ? 'py-[2.25vw] px-[4.5vw] md:py-[9px] md:px-[18px]' : 'py-[2vw] px-[4vw] md:py-[8px] md:px-[16px]'
                             }`}
                             onClick={() => setSelectedButton(index)}
                         >
@@ -159,20 +159,20 @@ export default function Accessories({category, audience}) {
                         </div>
                     ))}
                 </section> 
-            <div className='flex flex-row mx-[2vw]'>
+            <div className='flex flex-row mx-[5vw] md:mx-[2vw]'>
                      
 
                 <div className='flex flex-col flex-1'>
                     {/* Sort section */}
-                    <div className='flex flex-row items-center gap-[1vw] mb-[1vw]'>
+                    <div className='flex flex-row items-center gap-[2vw] md:gap-[1vw] mb-[3vw] md:mb-[1vw]'>
                         {/* Sort dropdown */}
-                        <div className='relative text-smallText w-[164px]' onClick={() => setIsHovered(!isHovered)}>
-                            <div className="w-full text-smallText appearance-none rounded-[2vw] focus:outline-none p-[.5vw] border-black border-[1px] cursor-pointer">
-                                <div className='flex flex-row justify-center items-center transition-transform ease-in-out gap-[.5vw]'>
+                        <div className='relative text-smallTextPhone md:text-smallText w-[41vw] md:w-[164px]' onClick={() => setIsHovered(!isHovered)}>
+                            <div className="w-full text-smallTextPhone md:text-smallText appearance-none rounded-[5vw] md:rounded-[2vw] focus:outline-none p-[1.25vw] md:p-[.5vw] border-black border-[1px] cursor-pointer">
+                                <div className='flex flex-row justify-center items-center transition-transform ease-in-out gap-[1.25vw] md:gap-[.5vw]'>
                                     <p>Sort</p>
                                     <div className="pointer-events-none transform transition-transform duration-300 rotate-180" 
                                         style={{ transform: isHovered ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-                                        <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <svg width="3.25vw" height="2vw" className="md:w-[.8125vw] md:h-[.5vw]" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path fillRule="evenodd" clipRule="evenodd" 
                                                 d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" 
                                                 fill="black"/>
@@ -182,11 +182,11 @@ export default function Accessories({category, audience}) {
                             </div>
 
                             {isHovered && (
-                                <div className="absolute w-full bg-white border border-black rounded-[.75vw] hide-scrollbar z-10"
+                                <div className="absolute w-full bg-white border border-black rounded-[3vw] md:rounded-[.75vw] hide-scrollbar z-10"
                                     style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                     {sortOptions.map((sort, index) => (
                                         <div key={index}
-                                            className="p-[.75vw] hover:bg-gray-200 cursor-pointer"
+                                            className="p-[3vw] md:p-[.75vw] hover:bg-gray-200 cursor-pointer text-smallTextPhone md:text-smallText"
                                             onClick={() => {
                                                 addSort(sort);
                                                 setIsHovered(false);
@@ -199,14 +199,14 @@ export default function Accessories({category, audience}) {
                         </div>
 
                         {/* Selected sort filters */}
-                        <div className='flex flex-row flex-wrap gap-[1vw]'>
+                        <div className='flex flex-row flex-wrap gap-[2vw] md:gap-[1vw]'>
                             {selectedSort.map((sort, index) => (
                                 <div key={sort} 
-                                    className="bg-[rgba(17,17,17,1)] gap-[.25vw] text-smallText items-center flex flex-row appearance-none rounded-[1.25vw] focus:outline-none p-[.5vw] border-black border-[1px] cursor-pointer"
+                                    className="bg-[rgba(17,17,17,1)] gap-[1vw] md:gap-[.25vw] text-smallTextPhone md:text-smallText items-center flex flex-row appearance-none rounded-[5vw] md:rounded-[1.25vw] focus:outline-none p-[1.25vw] md:p-[.5vw] border-black border-[1px] cursor-pointer"
                                     onMouseEnter={() => setHoveredSort(sort)} 
                                     onMouseLeave={() => setHoveredSort(null)}
                                 >
-                                    <div className='flex flex-row justify-center items-center font-light text-white transition-transform ease-in-out gap-[.5vw]'>
+                                    <div className='flex flex-row justify-center items-center font-light text-white transition-transform ease-in-out gap-[1.25vw] md:gap-[.5vw]'>
                                         <p>{sort}</p>
                                     </div>
                                     <div 
@@ -214,7 +214,7 @@ export default function Accessories({category, audience}) {
                                         style={{ transform: hoveredSort === sort ? 'rotate(180deg)' : 'rotate(0deg)'}}
                                         onClick={() => removeItem(sort)}
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="1vw" height="1vw" color='white'
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="4vw" height="4vw" className="md:w-[1vw] md:h-[1vw]" color='white'
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" 
                                             strokeLinecap="round" strokeLinejoin="round">
                                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -227,10 +227,10 @@ export default function Accessories({category, audience}) {
                     </div>
 
                     {/* Product grid */}
-                    <div className='grid grid-cols-2 md:grid-cols-4 gap-[1vw]'>
+                    <div className='grid grid-cols-2 md:grid-cols-4 gap-[3vw] md:gap-[1vw]'>
                         {filteredProducts.length > 0 ? (
                             filteredProducts.map((item, index) => (
-                                <div key={index} className='w-[22.875vw]'>
+                                <div key={index} className='w-full md:w-[22.875vw]'>
                                     <TransitionLink to={`/product/${item._id}`}>
                                     <AccessoriesItem 
                                         image={item.images[0]} 
@@ -245,10 +245,10 @@ export default function Accessories({category, audience}) {
                                 </div>
                             ))
                         ) : (
-                            <div className="col-span-3 flex justify-center items-center h-[20vw]">
+                            <div className="col-span-2 md:col-span-3 flex justify-center items-center h-[50vw] md:h-[20vw]">
                                 <div className="text-center">
-                                    <h4 className="text-h4Text font-dyeLine font-bold mb-[1vw]">No Accessories Found</h4>
-                                    <p className="text-regularText font-roboto text-gray-600">
+                                    <h4 className="text-h4TextPhone md:text-h4Text font-dyeLine font-bold mb-[2vw] md:mb-[1vw]">No Accessories Found</h4>
+                                    <p className="text-regularTextPhone md:text-regularText font-roboto text-gray-600">
                                         We couldn't find any products matching your criteria.
                                     </p>
                                 </div>

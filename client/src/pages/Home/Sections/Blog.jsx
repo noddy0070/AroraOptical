@@ -4,6 +4,7 @@ import blog1 from '../../../assets/images/homePage/blog1.webp'
 import blog3 from '../../../assets/images/homePage/blog3.webp'
 import './Blog.css'
 import { IconButton, TitleButton } from '../../../components/button';
+import { TransitionLink } from '@/Routes/TransitionLink';
 
 const BlogData = [
     { src: blog1, alt:"men",title:"Your Guide to Buy Eyewear Online", description:"Purchasing eyewear online is simple and convenient. Follow these easy steps to find your perfect pair."},
@@ -51,9 +52,13 @@ export default function Blog(){
                         <span className='text-center md:text-left font-roboto justify-end text-[12px] md:text-mediumText '>
                             Purchasing eyewear online is simple and convenient. Follow these easy steps to find your perfect pair.
                         </span>
-                         <div className='flex flex-row md:mt-[1vw] w-min group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 gap-[.1vw] mx-auto '>
-                            <TitleButton btnTitle={"Shop"} btnHeightPhone={12.5} btnWidthPhone={47}  btnRadiusPhone={9}  btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
-                            <IconButton btnSizePhone={12.5} iconWidthPhone={20} paddingPhone={1} btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
+                         <div className='flex flex-row md:mt-[1vw] w-min group hover:cursor-pointer scale-100 hover:scale-105 active:scale-95 transition-transform duration-300 gap-[.1vw] mx-auto '>
+                            <TransitionLink to="/shop/glasses/bestsellers">
+                                <TitleButton btnTitle={"Shop"} btnHeightPhone={12.5} btnWidthPhone={47}  btnRadiusPhone={9}  btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour group-active:text-black group-active:bg-btnHoverColour transition-all duration-300' className2='group-hover:text-black group-active:text-black'/>
+                            </TransitionLink>
+                            <TransitionLink to="/shop/glasses/bestsellers">
+                                <IconButton btnSizePhone={12.5} iconWidthPhone={20} paddingPhone={1} btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour group-active:text-black group-active:bg-btnHoverColour transition-all duration-300'/>
+                            </TransitionLink>
                         </div>
                 </div>
                 <div  ref={blogRef} className='ChooseBlog py-[7vw] w-full md:w-[61.5vw]  h-full flex flex-row  gap-[5vw] md:gap-[2vw]   hide-scrollbar' onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>

@@ -68,25 +68,61 @@ export default function Item({product}) {
     return (
         <div
                     key={product._id}
-                    className='bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer group'
+                    className='bg-white rounded-[3vw] md:rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer group relative'
                     onClick={() => navigate(`/product/${product._id}`)}
                   >
-                    <div className='aspect-square overflow-hidden rounded-t-lg'>
+                    <div className='aspect-square overflow-hidden rounded-t-[3vw] md:rounded-t-lg relative'>
                       <img
                         src={product.images[0] || productPlaceholder}
                         alt={product.modelTitle}
                         className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
                       />
+                      {/* Wishlist button for mobile */}
+                      <button
+                        onClick={handleWishlist}
+                        disabled={loading}
+                        className='absolute top-[2vw] right-[2vw] md:hidden bg-white/80 backdrop-blur-sm rounded-full p-[2vw] shadow-md z-10'
+                        style={{ touchAction: 'manipulation' }}
+                      >
+                        <img 
+                          src={isInWishlist ? wishListFilled : wishList} 
+                          alt='wishlist'
+                          className='w-[5vw] h-[5vw]'
+                        />
+                      </button>
                     </div>
-                    <div className='p-4'>
-                      <h3 className='font-semibold text-gray-800 text-tinyTextPhone md:text-smallTextPhone  mb-1 line-clamp-2'>
-                        {product.modelName} - {product.modelTitle}
-                      </h3>
-                      <p className='text-gray-600 text-tinyTextPhone md:text-tinyText '>{product.brand}</p>
-                      <div className='flex items-center justify-between'>
-                        <span className=' font-bold text-smallTextPhone md:text-mediumText'>
-                          ₹{product.price.toLocaleString()}
-                        </span>
+                    <div className='p-[3vw] md:p-4'>
+                      <div className='flex items-start justify-between gap-[2vw] md:gap-0 mb-[1.5vw] md:mb-1'>
+                        <div className='flex-1 min-w-0'>
+                          <h3 className='font-semibold text-gray-800 text-tinyTextPhone md:text-smallTextPhone mb-[1vw] md:mb-1 line-clamp-2'>
+                            {product.modelName} - {product.modelTitle}
+                          </h3>
+                          <p className='text-gray-600 text-tinyTextPhone md:text-tinyText'>{product.brand}</p>
+                        </div>
+                        {/* Desktop wishlist button */}
+                        <button
+                          onClick={handleWishlist}
+                          disabled={loading}
+                          className='hidden md:block flex-shrink-0 ml-2'
+                        >
+                          <img 
+                            src={isInWishlist ? wishListFilled : wishList} 
+                            alt='wishlist'
+                            className='w-5 h-5'
+                          />
+                        </button>
+                      </div>
+                      <div className='flex items-center justify-between mt-[2vw] md:mt-0'>
+                        <div className='flex flex-col gap-[0.5vw] md:gap-0'>
+                          <span className='font-bold text-smallTextPhone md:text-mediumText'>
+                            ₹{product.price.toLocaleString()}
+                          </span>
+                          {product.orders > 0 && (
+                            <div className='text-tinyTextPhone md:text-xs text-gray-500 md:hidden'>
+                              {product.orders} sold
+                            </div>
+                          )}
+                        </div>
                         {/* {product.discount > 0 && (
                           <span className='text-green-600 text-xs'>
                             {product.discount}% off
@@ -94,7 +130,7 @@ export default function Item({product}) {
                         )} */}
                       </div>
                       {product.orders > 0 && (
-                        <div className='text-xs text-gray-500 mt-1'>
+                        <div className='text-tinyTextPhone md:text-xs text-gray-500 mt-[1vw] md:mt-1 hidden md:block'>
                           {product.orders} sold
                         </div>
                       )}

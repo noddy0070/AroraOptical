@@ -1,6 +1,7 @@
 import React from 'react';
 import stepsPlaceholder from '../../../assets/images/homePage/stepsPlaceholder.webp';
 import { IconButton, TitleButton } from '../../../components/button';
+import { TransitionLink } from '@/Routes/TransitionLink';
 export default function Guide(){
     return (
         <div className=' py-[6vw] md:py-[7vw] md:px-[4vw] md:h-[57.3125vw]'>
@@ -17,9 +18,13 @@ export default function Guide(){
                         <span className=' font-roboto justify-end text-regularTextPhone md:text-mediumText mb-[1vw]'>
                             Purchasing eyewear online is simple and convenient. Follow these easy steps to find your perfect pair.
                         </span>
-                         <div className='flex flex-row justify-center group hover:cursor-pointer scale-100 hover:scale-105 transition-transform duration-700 gap-[.1vw] '>
-                            <TitleButton btnTitle={"Shop"} btnHeightPhone={12.5} btnWidthPhone={47}  btnRadiusPhone={9}  btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700' className2='group-hover:text-black'/>
-                            <IconButton btnSizePhone={12.5} iconWidthPhone={20} paddingPhone={1} btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour transition-all duration-700'/>
+                         <div className='flex flex-row justify-center group hover:cursor-pointer scale-100 hover:scale-105 active:scale-95 transition-transform duration-300 gap-[.1vw] '>
+                            <TransitionLink to="/shop/glasses/bestsellers">
+                                <TitleButton btnTitle={"Shop"} btnHeightPhone={12.5} btnWidthPhone={47}  btnRadiusPhone={9}  btnRadius={3.125} btnHeight={4.25} btnWidth={16} className= 'z-[2] group-hover:text-black group-hover:bg-btnHoverColour group-active:text-black group-active:bg-btnHoverColour transition-all duration-300' className2='group-hover:text-black group-active:text-black'/>
+                            </TransitionLink>
+                            <TransitionLink to="/shop/glasses/bestsellers">
+                                <IconButton btnSizePhone={12.5} iconWidthPhone={20} paddingPhone={1} btnSize={4.25} iconWidth={2.1875} padding={0.85} className='group-hover:text-black group-hover:bg-btnHoverColour group-active:text-black group-active:bg-btnHoverColour transition-all duration-300'/>
+                            </TransitionLink>
                         </div>
                     </div>
                 </div>

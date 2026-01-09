@@ -199,16 +199,16 @@ const Checkout = () => {
   console.log(step);
   return (
     <div className="min-h-screen ">
-      <div className='py-[4.5vw] px-[10vw] flex flex-row max-w-[1440px] mx-auto items-center'>
-        <div className={`flex flex-row gap-[.5vw] items-center px-[5vw] transition-all duration-500 ${step===1 ? "opacity-100" : "opacity-20"}`}>
-          <img src={locationIcon} className='w-[1.5vw] h-[1.5vw]'/>
-          <div className='flex flex-col '>
-            <p className='text-smallText leading-[103%]'>Step 1</p>
-            <p className='text-mediumText leading-[103%]'>Address</p>
+      <div className='py-[6vw] md:py-[4.5vw] px-[5vw] md:px-[10vw] flex flex-row max-w-[1440px] mx-auto items-center'>
+        <div className={`flex flex-row gap-[2vw] md:gap-[.5vw] items-center px-[3vw] md:px-[5vw] transition-all duration-500 ${step===1 ? "opacity-100" : "opacity-20"}`}>
+          <img src={locationIcon} className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]'/>
+          <div className='flex flex-col'>
+            <p className='text-smallTextPhone md:text-smallText leading-[103%]'>Step 1</p>
+            <p className='text-mediumTextPhone md:text-mediumText leading-[103%]'>Address</p>
           </div>
         </div>
         <div
-  className="w-full h-[1px] border-[1px] border-dashed border-black"
+  className="w-full h-[1px] border-[1px] border-dashed border-black hidden md:block"
   style={{
     maskImage:
       'linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0.2) 100%)',
@@ -216,11 +216,11 @@ const Checkout = () => {
       'linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0.2) 100%)',
   }}
 ></div>
-        <div className={`flex flex-row gap-[.5vw] items-center px-[5vw] transition-all duration-500 ${step===2 ? "opacity-100" : "opacity-20"}`}>
-          <img src={payment} className='w-[1.5vw] h-[1.5vw]'/>
-          <div className='flex flex-col '>
-            <p className='text-smallText leading-[103%]'>Step 2</p>
-            <p className='text-mediumText leading-[103%]'>Payment</p>
+        <div className={`flex flex-row gap-[2vw] md:gap-[.5vw] items-center px-[3vw] md:px-[5vw] transition-all duration-500 ${step===2 ? "opacity-100" : "opacity-20"}`}>
+          <img src={payment} className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]'/>
+          <div className='flex flex-col'>
+            <p className='text-smallTextPhone md:text-smallText leading-[103%]'>Step 2</p>
+            <p className='text-mediumTextPhone md:text-mediumText leading-[103%]'>Payment</p>
           </div>
         </div>
 

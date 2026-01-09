@@ -93,46 +93,46 @@ export default function WishList() {
 
     return (
         <>
-            <div className='ml-auto w-[17.5vw] p-[.75vw] items-center flex flex-row shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] font-bold rounded-[2.5vw]'>
+            <div className='ml-auto w-full md:w-[17.5vw] p-[3vw] md:p-[.75vw] items-center flex flex-row shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] font-bold rounded-[10vw] md:rounded-[2.5vw]'>
                 <input 
-                    className='text-smallText w-full focus:outline-none' 
+                    className='text-smallTextPhone md:text-smallText w-full focus:outline-none' 
                     placeholder='Search Your Wishlist'
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <img src={SearchIcon} className='w-[1.5vw] h-[1.5vw] ml-auto'/>
+                <img src={SearchIcon} className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw] ml-auto'/>
             </div>
 
-            {error && <p className='text-red-500 text-center mt-4'>{error}</p>}
+            {error && <p className='text-red-500 text-center mt-4 text-regularTextPhone md:text-regularText'>{error}</p>}
             
             {filteredItems.length === 0 && !loading && (
-                <p className='text-center mt-8 text-gray-500'>No items in your wishlist</p>
+                <p className='text-center mt-8 text-gray-500 text-regularTextPhone md:text-regularText'>No items in your wishlist</p>
             )}
 
             {filteredItems.map((item) => (
-                <div key={item._id} className='flex flex-row font-roboto text-regularText gap-[1.375vw] w-full mt-4'>
-                    <img className='w-[10.625vw] h-[11.1125vw] rounded-[.375vw] object-cover' src={item.images[0]}/>
-                    <div className='py-[1.15625vw] px-[0.625vw] flex flex-col gap-[.375vw] flex-grow'>
-                        <span className='font-medium'>{item.brand}</span>
+                <div key={item._id} className='flex flex-col md:flex-row font-roboto text-regularTextPhone md:text-regularText gap-[3vw] md:gap-[1.375vw] w-full mt-[6vw] md:mt-4'>
+                    <img className='w-full md:w-[10.625vw] h-[100vw] md:h-[11.1125vw] rounded-[1.5vw] md:rounded-[.375vw] object-cover' src={item.images[0]}/>
+                    <div className='py-[4.625vw] md:py-[1.15625vw] px-[2.5vw] md:px-[0.625vw] flex flex-col gap-[1.5vw] md:gap-[.375vw] flex-grow'>
+                        <span className='font-medium text-regularTextPhone md:text-regularText'>{item.brand}</span>
                         <div>
-                            <h6 className='font-dyeLine text-h6Text font-bold leading-[140%]'>{item.modelTitle}</h6>
-                            <span className='text-smallText font-light leading-[150%]'>{item.modelCode}</span>
+                            <h6 className='font-dyeLine text-h6TextPhone md:text-h6Text font-bold leading-[140%]'>{item.modelTitle}</h6>
+                            <span className='text-smallTextPhone md:text-smallText font-light leading-[150%]'>{item.modelCode}</span>
                         </div>
                         <div className='flex flex-row'>
-                            <img src={Star} alt='rating' className='w-[1vw] h-[1vw]'/>
-                            <p className='text-smallText leading-[150%] ml-[2px]'>{item.orders || 0}</p>
+                            <img src={Star} alt='rating' className='w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw]'/>
+                            <p className='text-smallTextPhone md:text-smallText leading-[150%] ml-[2px]'>{item.orders || 0}</p>
                         </div>
-                        <span className='text-h6Text'>₹{item.price}</span>
-                        <div className='flex flex-row gap-2 mt-2'>
+                        <span className='text-h6TextPhone md:text-h6Text'>₹{item.price}</span>
+                        <div className='flex flex-row gap-2 mt-[2vw] md:mt-2'>
                             <CartButton onClick={() => handleAddToCart(item._id)} />
                         </div>
                     </div>
                     <button 
                         onClick={() => handleRemoveFromWishlist(item._id)}
                         disabled={loading}
-                        className='self-start mt-4'
+                        className='self-start mt-[4vw] md:mt-4'
                     >
-                        <img src={DeleteIcon} className='w-[1.5vw] h-[1.5vw]'/>
+                        <img src={DeleteIcon} className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]'/>
                     </button>
                 </div>
             ))}

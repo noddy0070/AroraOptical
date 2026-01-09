@@ -123,15 +123,16 @@ export default function Cart(){
 
     return (
         <div className='bg-[#F5F5F5]'>
-        <div className='mx-[2vw] bg-white rounded-[2vw] p-[2vw] mt-[3vw]'>
-            <div className='flex flex-row items-center mb-[2vw]'>
-                <h4 className='font-dyeLine font-bold text-h4Text'>Items in your cart ({cartItems.reduce((total, item) => total + item.quantity, 0)})</h4>
-                <h5 className='ml-auto font-dyeLine font-bold text-h5Text'>Cart Total: {formatINR(finalPrice)}</h5>
+        <div className='mx-[5vw] md:mx-[2vw] bg-white rounded-[5vw] md:rounded-[2vw] p-[5vw] md:p-[2vw] mt-[6vw] md:mt-[3vw]'>
+            <div className='flex flex-col md:flex-row items-start md:items-center mb-[4vw] md:mb-[2vw] gap-[2vw] md:gap-0'>
+                <h4 className='font-dyeLine font-bold text-h4TextPhone md:text-h4Text'>Items in your cart ({cartItems.reduce((total, item) => total + item.quantity, 0)})</h4>
+                <h5 className='md:ml-auto font-dyeLine font-bold text-h5TextPhone md:text-h5Text'>Cart Total: {formatINR(finalPrice)}</h5>
             </div>
-            <div className='flex flex-row text-regularText roboto gap-[3.75vw]'>
-                <div className='flex flex-col gap-[2vw] w-[57.6875vw]  overflow-y-auto hide-scrollbar'>
-                    {error && <p className='text-red-500 text-center'>{error}</p>}
+            <div className='flex flex-col md:flex-row text-regularTextPhone md:text-regularText roboto gap-[6vw] md:gap-[3.75vw]'>
+                <div className='flex flex-col gap-[4vw] md:gap-[2vw] w-full md:w-[57.6875vw] overflow-y-auto hide-scrollbar'>
+                    {error && <p className='text-red-500 text-center text-regularTextPhone md:text-regularText'>{error}</p>}
                     {cartItems.map((item) => (
+                        console.log(item),
                         <CartItem key={item.productId._id} item={item} handleRemoveItem={handleRemoveItem} updateQuantity={updateQuantity}/>
                     ))}
                 </div>

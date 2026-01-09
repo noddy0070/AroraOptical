@@ -329,11 +329,11 @@ export default function SearchResults() {
     const isOpen = showFilterOptions.includes(id);
     
     return (
-      <div className="font-roboto flex flex-col mb-4">
+      <div className="font-roboto flex flex-col mb-[4vw] md:mb-4">
         <div className='flex border-black border-t-[1px] flex-row items-center'>
-          <p className='mr-auto font-semibold text-sm py-2'>{id}</p>
+          <p className='mr-auto font-semibold text-smallTextPhone md:text-sm py-[2vw] md:py-2'>{id}</p>
           <svg 
-            className={`cursor-pointer w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+            className={`cursor-pointer w-[4vw] md:w-4 h-[4vw] md:h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
             onClick={() => {
               setShowFilterOptions((prev) => 
                 prev.includes(id) 
@@ -355,21 +355,21 @@ export default function SearchResults() {
                 <div 
                   key={index} 
                   onClick={() => toggleFilterOption(filterType, option.colorName)} 
-                  className={`pl-4 flex flex-row gap-3 py-2 items-center cursor-pointer hover:bg-gray-100 ${options.length-1===index?'mb-3 ':''}`}
+                  className={`pl-[4vw] md:pl-4 flex flex-row gap-[3vw] md:gap-3 py-[2vw] md:py-2 items-center cursor-pointer hover:bg-gray-100 ${options.length-1===index?'mb-[3vw] md:mb-3 ':''}`}
                 >
                   <input
                     type="checkbox"
                     checked={filterColor.includes(option.colorName)} 
                     onChange={() => {}}
-                    className="w-4 h-4"
+                    className="w-[4vw] md:w-4 h-[4vw] md:h-4"
                   />
-                  <p className="text-sm">{option.colorName}</p>
+                  <p className="text-smallTextPhone md:text-sm">{option.colorName}</p>
                 </div>
               ) : (
                 <div 
                   key={index} 
                   onClick={() => toggleFilterOption(filterType, option)} 
-                  className={`pl-4 flex flex-row gap-3 py-2 items-center cursor-pointer hover:bg-gray-100 ${options.length-1===index?'mb-3 ':''}`}
+                  className={`pl-[4vw] md:pl-4 flex flex-row gap-[3vw] md:gap-3 py-[2vw] md:py-2 items-center cursor-pointer hover:bg-gray-100 ${options.length-1===index?'mb-[3vw] md:mb-3 ':''}`}
                 >
                   <input
                     type="checkbox"
@@ -381,9 +381,9 @@ export default function SearchResults() {
                       filterType === 'color' ? filterColor.includes(option) : false
                     } 
                     onChange={() => {}}
-                    className="w-4 h-4"
+                    className="w-[4vw] md:w-4 h-[4vw] md:h-4"
                   />
-                  <p className="text-sm">{option}</p>
+                  <p className="text-smallTextPhone md:text-sm">{option}</p>
                 </div>
               )
             ))}
@@ -399,8 +399,8 @@ export default function SearchResults() {
     return (
       <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
         <div className='text-center'>
-          <div className='animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4'></div>
-          <p className='text-gray-600'>Searching products...</p>
+          <div className='animate-spin w-[12vw] md:w-12 h-[12vw] md:h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-[4vw] md:mb-4'></div>
+          <p className='text-gray-600 text-regularTextPhone md:text-regularText'>Searching products...</p>
         </div>
       </div>
     );
@@ -410,42 +410,42 @@ export default function SearchResults() {
     <div className='min-h-screen bg-gray-50'>
       {/* Header */}
       <div className='bg-white shadow-sm border-b'>
-        <div className='max-w-7xl mx-auto px-4 py-6'>
-          <div className='flex flex-col md:flex-row gap-4 items-center'>
+        <div className='max-w-7xl mx-auto px-[5vw] md:px-4 py-[6vw] md:py-6'>
+          <div className='flex flex-col md:flex-row gap-[4vw] md:gap-4 items-center'>
             <div className='flex-1 w-full'>
               <form onSubmit={handleSearch} className='relative'>
-                <div className='flex items-center bg-gray-100 rounded-lg px-4 py-3'>
-                  <img src={SearchIcon} alt="Search" className='w-5 h-5 text-gray-400 mr-3' />
+                <div className='flex items-center bg-gray-100 rounded-[2vw] md:rounded-lg px-[4vw] md:px-4 py-[3vw] md:py-3'>
+                  <img src={SearchIcon} alt="Search" className='w-[5vw] md:w-5 h-[5vw] md:h-5 text-gray-400 mr-[3vw] md:mr-3' />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search for products..."
-                    className='flex-1 bg-transparent outline-none text-gray-800'
+                    className='flex-1 bg-transparent outline-none text-gray-800 text-regularTextPhone md:text-regularText'
                   />
                 </div>
               </form>
             </div>
-            <div className='text-sm text-gray-600'>
+            <div className='text-smallTextPhone md:text-sm text-gray-600 w-full md:w-auto text-left md:text-center'>
               {filteredAndSortedProducts.length} result{filteredAndSortedProducts.length !== 1 ? 's' : ''} found
             </div>
           </div>
         </div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-4 py-6'>
-        <div className='flex flex-col lg:flex-row gap-6'>
+      <div className='max-w-7xl mx-auto px-[5vw] md:px-4 py-[6vw] md:py-6'>
+        <div className='flex flex-col lg:flex-row gap-[6vw] md:gap-6'>
            {/* Filters Sidebar */}
-           <div className='lg:w-64 bg-white rounded-lg shadow-sm p-4 h-fit'>
-             <h3 className='font-semibold text-gray-800 mb-4'>Filters</h3>
+           <div className='lg:w-64 bg-white rounded-[4vw] md:rounded-lg shadow-sm p-[4vw] md:p-4 h-fit'>
+             <h3 className='font-semibold text-gray-800 mb-[4vw] md:mb-4 text-h4TextPhone md:text-h4Text'>Filters</h3>
              
              {/* Sort By */}
-             <div className='mb-6'>
-               <label className='block text-sm font-medium text-gray-700 mb-2'>Sort By</label>
+             <div className='mb-[6vw] md:mb-6'>
+               <label className='block text-smallTextPhone md:text-sm font-medium text-gray-700 mb-[2vw] md:mb-2'>Sort By</label>
                <select
                  value={sortBy}
                  onChange={(e) => setSortBy(e.target.value)}
-                 className='w-full p-2 border border-gray-300 rounded-md text-sm'
+                 className='w-full p-[2vw] md:p-2 border border-gray-300 rounded-[2vw] md:rounded-md text-smallTextPhone md:text-sm'
                >
                  <option value="relevance">Relevance</option>
                  <option value="price-low">Price: Low to High</option>
@@ -456,12 +456,12 @@ export default function SearchResults() {
              </div>
 
              {/* Audience Filter */}
-             <div className='mb-4'>
-               <div className='font-roboto flex flex-col mb-4'>
+             <div className='mb-[4vw] md:mb-4'>
+               <div className='font-roboto flex flex-col mb-[4vw] md:mb-4'>
                  <div className='flex border-black border-t-[1px] flex-row items-center'>
-                   <p className='mr-auto font-semibold text-sm py-2'>Audience</p>
+                   <p className='mr-auto font-semibold text-smallTextPhone md:text-sm py-[2vw] md:py-2'>Audience</p>
                    <svg 
-                     className={`cursor-pointer w-4 h-4 transition-transform duration-200 ${showFilterOptions.includes('Audience') ? 'rotate-180' : ''}`} 
+                     className={`cursor-pointer w-[4vw] md:w-4 h-[4vw] md:h-4 transition-transform duration-200 ${showFilterOptions.includes('Audience') ? 'rotate-180' : ''}`} 
                      onClick={() => {
                        setShowFilterOptions((prev) => 
                          prev.includes('Audience') 
@@ -482,8 +482,8 @@ export default function SearchResults() {
                        <div
                          key={audience}
                          onClick={() => setFilterAudience(audience)}
-                         className={`pl-4 flex flex-row gap-3 py-2 items-center cursor-pointer hover:bg-gray-100 ${
-                           audience === 'Unisex' ? 'mb-3' : ''
+                         className={`pl-[4vw] md:pl-4 flex flex-row gap-[3vw] md:gap-3 py-[2vw] md:py-2 items-center cursor-pointer hover:bg-gray-100 ${
+                           audience === 'Unisex' ? 'mb-[3vw] md:mb-3' : ''
                          }`}
                        >
                          <input
@@ -491,11 +491,11 @@ export default function SearchResults() {
                            name="audience"
                            checked={filterAudience === audience}
                            onChange={() => {}}
-                           className="w-4 h-4"
+                           className="w-[4vw] md:w-4 h-[4vw] md:h-4"
                          />
-                         <p className="text-sm">{audience}</p>
+                         <p className="text-smallTextPhone md:text-sm">{audience}</p>
                          {filterAudience === audience && (
-                           <img src={TickIcon} className="w-4 h-4 ml-auto" alt="Selected" />
+                           <img src={TickIcon} className="w-[4vw] md:w-4 h-[4vw] md:h-4 ml-auto" alt="Selected" />
                          )}
                        </div>
                      ))}
@@ -522,7 +522,7 @@ export default function SearchResults() {
              {/* Clear Filters */}
              <button
                onClick={clearAllFilters}
-               className='w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors text-sm'
+               className='w-full py-[2vw] md:py-2 px-[4vw] md:px-4 bg-gray-100 text-gray-700 rounded-[2vw] md:rounded-md hover:bg-gray-200 transition-colors text-smallTextPhone md:text-sm'
              >
                Clear All Filters
              </button>
@@ -531,55 +531,55 @@ export default function SearchResults() {
           {/* Results */}
           <div className='flex-1'>
             {error ? (
-              <div className='text-center py-12'>
-                <div className='text-gray-500 text-lg mb-4'>No products found</div>
-                <p className='text-gray-400 mb-6'>Try adjusting your search terms</p>
-                <TransitionLink to="/" className='bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'>
+              <div className='text-center py-[12vw] md:py-12'>
+                <div className='text-gray-500 text-h5TextPhone md:text-lg mb-[4vw] md:mb-4'>No products found</div>
+                <p className='text-gray-400 mb-[6vw] md:mb-6 text-regularTextPhone md:text-regularText'>Try adjusting your search terms</p>
+                <TransitionLink to="/" className='bg-blue-600 text-white px-[6vw] md:px-6 py-[2vw] md:py-2 rounded-[2vw] md:rounded-lg hover:bg-blue-700 transition-colors text-regularTextPhone md:text-regularText'>
                   Back to Home
                 </TransitionLink>
               </div>
              ) : filteredAndSortedProducts.length === 0 ? (
-               <div className='text-center py-12'>
-                 <div className='text-gray-500 text-lg mb-4'>No products match your filters</div>
+               <div className='text-center py-[12vw] md:py-12'>
+                 <div className='text-gray-500 text-h5TextPhone md:text-lg mb-[4vw] md:mb-4'>No products match your filters</div>
                  <button
                    onClick={clearAllFilters}
-                   className='bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
+                   className='bg-blue-600 text-white px-[6vw] md:px-6 py-[2vw] md:py-2 rounded-[2vw] md:rounded-lg hover:bg-blue-700 transition-colors text-regularTextPhone md:text-regularText'
                  >
                    Clear All Filters
                  </button>
                </div>
             ) : (
-              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+              <div className='grid grid-cols-2 md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[3vw] md:gap-6'>
                 {filteredAndSortedProducts.map((product) => (
                   <div
                     key={product._id}
-                    className='bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer group'
+                    className='bg-white rounded-[2vw] md:rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer group'
                     onClick={() => navigate(`/product/${product._id}`)}
                   >
-                    <div className='aspect-square overflow-hidden rounded-t-lg'>
+                    <div className='aspect-square overflow-hidden rounded-t-[2vw] md:rounded-t-lg'>
                       <img
                         src={product.images[0] || productPlaceholder}
                         alt={product.modelTitle}
                         className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
                       />
                     </div>
-                    <div className='p-4'>
-                      <h3 className='font-semibold text-gray-800 text-sm mb-1 line-clamp-2'>
+                    <div className='p-[4vw] md:p-4'>
+                      <h3 className='font-semibold text-gray-800 text-smallTextPhone md:text-sm mb-[1vw] md:mb-1 line-clamp-2'>
                         {product.modelTitle}
                       </h3>
-                      <p className='text-gray-600 text-xs mb-2'>{product.brand}</p>
+                      <p className='text-gray-600 text-tinyTextPhone md:text-xs mb-[2vw] md:mb-2'>{product.brand}</p>
                       <div className='flex items-center justify-between'>
-                        <span className='text-blue-600 font-bold text-sm'>
+                        <span className='text-blue-600 font-bold text-smallTextPhone md:text-sm'>
                           ₹{product.price.toLocaleString()}
                         </span>
                         {product.discount > 0 && (
-                          <span className='text-green-600 text-xs'>
+                          <span className='text-green-600 text-tinyTextPhone md:text-xs'>
                             {product.discount}% off
                           </span>
                         )}
                       </div>
                       {product.orders > 0 && (
-                        <div className='text-xs text-gray-500 mt-1'>
+                        <div className='text-tinyTextPhone md:text-xs text-gray-500 mt-[1vw] md:mt-1'>
                           {product.orders} sold
                         </div>
                       )}

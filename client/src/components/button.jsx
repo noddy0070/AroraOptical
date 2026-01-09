@@ -103,22 +103,45 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
                 </button>
       )
   }
-  export const TitleButton2 = ({ onClick={}, className = '',btnTitle,btnWidth, btnHeight,btnRadius,className2='',disabled=false }) => {
+  export const TitleButton2 = ({ onClick={}, className = '',btnTitle,btnWidth, btnHeight,btnRadius,className2='',disabled=false, btnWidthPhone, btnHeightPhone, btnRadiusPhone }) => {
     const [isHovered, setIsHovered] = useState(false);
+    const [screenWidth, setScreenWidth] = useState(null);
+
+    useEffect(() => {
+      // Set initial width
+      setScreenWidth(window.innerWidth);
+  
+      // Handle window resize
+      const handleResize = () => {
+        setScreenWidth(window.innerWidth);
+      };
+  
+      // Add event listener
+      window.addEventListener("resize", handleResize);
+  
+      // Cleanup event listener on unmount
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
     return (
         <button
         onClick={onClick}
         className={`group text-white shadow-[0px_.25vw_.375vw_rgba(0,_0,_0,_0.4)] transition-all duration-700 ease-in-out hover:bg-btnHoverColour ${className}`}
-        style={{
+        style={(screenWidth ?? 0) > 768 ? {
           width: `${btnWidth}vw`,
           height: `${btnHeight}vw`,
           borderRadius: `${btnRadius}vw`
+        } : {
+          width: btnWidthPhone ? `${btnWidthPhone}vw` : '100%',
+          height: btnHeightPhone ? `${btnHeightPhone}vw` : 'auto',
+          borderRadius: btnRadiusPhone ? `${btnRadiusPhone}vw` : '0'
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         disabled={disabled}
       >
-        <span className={`text-regularText text-center font-roboto p-[.1vw]  ${isHovered?'text-black':'text-white'}   transition-all duration-500 ${className2}`} >
+        <span className={`text-regularTextPhone md:text-regularText text-center font-roboto p-[.1vw]  ${isHovered?'text-black':'text-white'}   transition-all duration-500 ${className2}`} >
           {btnTitle}
         </span>
       </button>

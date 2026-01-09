@@ -224,13 +224,13 @@ export default function ProductDescription({productToDisplay}){
 
     return (
         <div >
-        <div className='font-roboto text-regularText flex  flex-row lg:px-[2vw] gap-[1.5vw]'>
+        <div className='font-roboto text-regularTextPhone md:text-regularText flex flex-col md:flex-row lg:px-[2vw] gap-[6vw] md:gap-[1.5vw]'>
 
             {/* Product Images */}
-            <div className='flex flex-col w-[53.6875vw] gap-[1.5vw]'> 
-            <div className='flex flex-row h-[47.75vw]  w-full gap-[1.125vw]'>
+            <div className='flex flex-col w-full md:w-[53.6875vw] gap-[3vw] md:gap-[1.5vw]'> 
+            <div className='flex flex-col-reverse md:flex-row  md:h-[47.75vw] w-full gap-[3vw] md:gap-[1.125vw]'>
                 {/* Thumbnails */}
-                <div className="flex  flex-col h-[46.75vw] overflow-y-auto gap-[1vw] hide-scrollbar">
+                <div className="flex flex-row md:flex-col   md:h-[46.75vw] overflow-y-auto gap-[2vw] md:gap-[1vw] hide-scrollbar">
                     {images.map((img, index) => {
                     // ❗ Only hide the selected image (not hovered)
 
@@ -238,7 +238,7 @@ export default function ProductDescription({productToDisplay}){
                         <img
                                 key={index}
                                 src={img}
-                                className={`h-[7vw] w-[6.875vw] bg-white  rounded-[10px] cursor-pointer clickable object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
+                                className={`h-[28vw] md:h-[7vw] w-[28vw] md:w-[6.875vw] bg-white rounded-[2.5vw] md:rounded-[10px] cursor-pointer clickable object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                                 onClick={() => setSelectedIndex(index)}
@@ -248,16 +248,16 @@ export default function ProductDescription({productToDisplay}){
                         </div>
 
             {/* Main Image with smooth transition */}
-            <div className="relative  h-full w-[45.6875vw] ml-4 overflow-hidden bg-white  rounded-[2vw]   ">
+            <div className="relative h-full w-full md:w-[45.6875vw] ml-0 md:ml-4 overflow-hidden bg-white rounded-[5vw] md:rounded-[2vw]">
             <img
                 key={mainImage} // ⚠️ important: force re-render on image change
                 src={mainImage}
-                className="h-full w-full object-cover clickable transition-all duration-500 ease-in-out p-[2vw] opacity-0 animate-fade-in "
+                className="h-full w-full object-cover clickable transition-all duration-500 ease-in-out p-[5vw] md:p-[2vw] opacity-0 animate-fade-in"
             />
-            <div className='absolute  top-[1vw] right-[1vw] flex z-50 gap-[8px] items-center'>
+            <div className='absolute top-[3vw] md:top-[1vw] right-[3vw] md:right-[1vw] flex z-50 gap-[2vw] md:gap-[8px] items-center'>
                 <div 
                     ref={tagsRef}
-                    className='relative flex gap-[8px] overflow-x-auto hide-scrollbar scroll-smooth cursor-grab active:cursor-grabbing'
+                    className='relative flex gap-[2vw] md:gap-[8px] overflow-x-auto hide-scrollbar scroll-smooth cursor-grab active:cursor-grabbing'
                     style={{ maxWidth: '50vw', WebkitOverflowScrolling: 'touch' }}
                     onMouseDown={handleTagsMouseDown}
                     onMouseLeave={handleTagsMouseLeave}
@@ -268,7 +268,7 @@ export default function ProductDescription({productToDisplay}){
                     onTouchEnd={handleTagsTouchEnd}
                 >
                     {tags.map((tag, index) => (
-                    <div className='px-[16px] py-[8px] rounded-[1.25vw] text-center line-clamp-1 whitespace-nowrap md:min-w-[7.125vw] flex-shrink-0 border-[1px] border-black text-tinyTextPhone md:text-tinyText select-none' key={index}>{tag}</div>
+                    <div className='px-[4vw] md:px-[16px] py-[2vw] md:py-[8px] rounded-[5vw] md:rounded-[1.25vw] text-center line-clamp-1 whitespace-nowrap md:min-w-[7.125vw] flex-shrink-0 border-[1px] border-black text-tinyTextPhone md:text-tinyText select-none' key={index}>{tag}</div>
                     ))}
                 </div>
                 <button onClick={handleWishlist} disabled={loading} className='flex-shrink-0'>
@@ -286,22 +286,24 @@ export default function ProductDescription({productToDisplay}){
             </div>
 
             {/* Product Description */}
-            <div className=' w-[41.8125vw] lg:w-[37.8125vw]'>
-            <div className='flex flex-col gap-[1.5vw] w-[41.8125vw] lg:w-[37.8125vw] '>
+            <div className='w-full md:w-[41.8125vw] lg:w-[37.8125vw]'>
+            <div className='flex flex-col gap-[4vw] md:gap-[1.5vw] w-full md:w-[41.8125vw] lg:w-[37.8125vw]'>
                 {/* Product Details block */}
-                <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand} className='w-auto h-[2.5vw] mr-auto object-contain' />
+                <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand} className='w-auto h-[10vw] md:h-[2.5vw] mr-auto object-contain' />
                 <div>
-                    <h3 className='  font-bold text-h3Text leading-[120%]  ' >{productToDisplay.modelName}</h3>
-                    <span className='leading-[150%]'>{productToDisplay.modelTitle}</span>
+                    <h3 className='font-bold text-h3TextPhone md:text-h3Text leading-[120%]'>{productToDisplay.modelName}</h3>
+                    <span className='text-regularTextPhone md:text-regularText leading-[150%]'>{productToDisplay.modelTitle}</span>
                     {/* <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{formatINR(productToDisplay.price)}</span> {" "}
                      <span>{formatINR(productToDisplay.discount)}</span> </h5> */}
 
-                    <h5 className='text-h5Text font-bold leading-[140%]'>{formatINR(productToDisplay.price)}</h5>
+                    <h5 className='text-h5TextPhone md:text-h5Text font-bold leading-[140%] mt-[1vw] md:mt-0'>{formatINR(productToDisplay.price)}</h5>
                 </div>
                 
                 {/* Rating block */}
-                {totalRating>0?<span>{renderStars(totalRating)} {" - "} {productToDisplay.review.length} </span>:"No Reviews"}
-                <p className='leading-[150%]'>{productToDisplay.description}</p>
+                <div className='text-regularTextPhone md:text-regularText'>
+                    {totalRating>0?<span>{renderStars(totalRating)} {" - "} {productToDisplay.review.length} </span>:"No Reviews"}
+                </div>
+                <p className='leading-[150%] text-regularTextPhone md:text-regularText'>{productToDisplay.description}</p>
                 {/* Size block */}
                 <div className='flex flex-col gap-[.5vw]'>
                     {/* <div className='flex flex-row  '>
@@ -352,8 +354,8 @@ export default function ProductDescription({productToDisplay}){
                 </div>
 
                 {/* Variant block */}
-                <div className='flex flex-col gap-[.5vw] '>
-                        <div className='flex flex-row gap-[.5vw] overflow-x-auto '>
+                <div className='flex flex-col gap-[2vw] md:gap-[.5vw]'>
+                        <div className='flex flex-row gap-[2vw] md:gap-[.5vw] overflow-x-auto hide-scrollbar'>
                             {productsModel.map((variant,index)=>{
                                 const colorAttribute = variant.frameAttributes.find(attr => attr.name === "Color");
                                 const colorValue = colorAttribute ? colorAttribute.value : null;
@@ -362,25 +364,25 @@ export default function ProductDescription({productToDisplay}){
                                 const lensColorValue = lensColorAttribute ? lensColorAttribute.value : null;
                                 return (
                                 variant._id==productToDisplay._id?
-                                <div key={index} className={`rounded-[8px] w-[12.5vw] p-[12px] bg-white border-[1px] ${variant._id==productToDisplay._id?"border-black":""    } `}>
-                                   <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[0]} />
-                                   {colorAttribute && <div className='w-full flex justify-between mb-[8px]'>
+                                <div key={index} className={`rounded-[2vw] md:rounded-[8px] w-[50vw] md:w-[12.5vw] p-[3vw] md:p-[12px] bg-white border-[1px] flex-shrink-0 ${variant._id==productToDisplay._id?"border-black":""}`}>
+                                   <img className='w-full md:w-[10vw] h-[30vw] md:h-[6vw] object-cover mx-auto mb-[2vw] md:mb-[8px]' src={variant.images[0]} />
+                                   {colorAttribute && <div className='w-full flex justify-between mb-[2vw] md:mb-[8px] text-smallTextPhone md:text-smallText'>
                                     <span>Color</span>
                                     <span>{colorValue}</span>
                                    </div>}
-                                   {lensColorAttribute && <div className='w-full flex justify-between'>
+                                   {lensColorAttribute && <div className='w-full flex justify-between text-smallTextPhone md:text-smallText'>
                                     <span>Lens Color</span>
                                     <span>{lensColorValue}</span>
                                    </div>}
                                 </div>
                                 :<TransitionLink to={`/product/${variant._id}`}>
-                                <div className={`rounded-[8px] w-[12.5vw] p-[12px] border-[1px] bg-white `}>
-                                   <img className='w-[10vw] h-[6vw] object-cover mx-auto mb-[8px]' src={variant.images[0]} />
-                                   {colorAttribute && <div className='w-full flex justify-between mb-[8px]'>
+                                <div className={`rounded-[2vw] md:rounded-[8px] w-[50vw] md:w-[12.5vw] p-[3vw] md:p-[12px] border-[1px] bg-white flex-shrink-0`}>
+                                   <img className='w-full md:w-[10vw] h-[30vw] md:h-[6vw] object-cover mx-auto mb-[2vw] md:mb-[8px]' src={variant.images[0]} />
+                                   {colorAttribute && <div className='w-full flex justify-between mb-[2vw] md:mb-[8px] text-smallTextPhone md:text-smallText'>
                                     <span>Color</span>
                                     <span>{colorValue}</span>
                                    </div>}
-                                   {lensColorAttribute && <div className='w-full flex justify-between'>
+                                   {lensColorAttribute && <div className='w-full flex justify-between text-smallTextPhone md:text-smallText'>
                                     <span>Lens Color</span>
                                     <span>{lensColorValue}</span>
                                    </div>}
@@ -391,25 +393,25 @@ export default function ProductDescription({productToDisplay}){
                 </div>
 
                 {/* Buy and add to cart button */}
-                <div className='flex flex-row gap-[1vw] mx-auto'>
+                <div className='flex flex-col md:flex-row gap-[3vw] md:gap-[1vw] mx-auto w-full md:w-auto'>
                      <button 
                         onClick={handleAddToCart}
                         disabled={loading}
-                        className= {` rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey disabled:bg-gray-400 ${productToDisplay.rx?"w-[16vw]":"w-[32vw]"}`}
+                        className= {`rounded-[14vw] md:rounded-[3.5vw] h-[16vw] md:h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey disabled:bg-gray-400 text-regularTextPhone md:text-regularText ${productToDisplay.rx?"w-full md:w-[16vw]":"w-full md:w-[32vw]"}`}
                     >
                         {loading ? 'Adding...' : 'Add to Cart'}
                     </button>
                     {productToDisplay.rx && (
-                        <TransitionLink to={`/lens/${productToDisplay._id}`}>
-                        <button className='w-[16vw] rounded-[3.5vw] h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery'>
+                        <TransitionLink to={`/lens/${productToDisplay._id}`} className='w-full md:w-auto'>
+                        <button className='w-full md:w-[16vw] rounded-[14vw] md:rounded-[3.5vw] h-[16vw] md:h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] bg-btngrery text-regularTextPhone md:text-regularText'>
                         Select Lenses
                      </button>
                         </TransitionLink>
                     )}
                 </div>
-                {error && <p className='text-red-500 text-center mt-2'>{error}</p>}
+                {error && <p className='text-red-500 text-center mt-2 text-regularTextPhone md:text-regularText'>{error}</p>}
                 {/* Notice  */}
-                <p className='text-center text-smallText'>Free shipping over Rs. 999</p>
+                <p className='text-center text-smallTextPhone md:text-smallText'>Free shipping over Rs. 999</p>
             </div>
 
 
@@ -417,16 +419,16 @@ export default function ProductDescription({productToDisplay}){
         </div>
 
         {/* Product Details */}
-        {productToDisplay.frameAttributes.length + productToDisplay.lensAttributes.length + productToDisplay.generalAttributes.length > 0 &&<div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw] '>
-            <h2 className='font-dyeLine text-h3Text font-semibold'>Product Detail</h2>
+        {productToDisplay.frameAttributes.length + productToDisplay.lensAttributes.length + productToDisplay.generalAttributes.length > 0 &&<div className='bg-white rounded-[4vw] md:rounded-[16px] mt-[6vw] md:mt-[2vw] py-[6vw] md:py-[2.25vw] px-[5vw] md:px-[3vw] flex flex-col gap-[6vw] md:gap-[2.5vw]'>
+            <h2 className='font-dyeLine text-h3TextPhone md:text-h3Text font-semibold'>Product Detail</h2>
             {
                 productToDisplay.frameAttributes.length>0 && 
                 <div>
 
-                    <h4 className='text-h4Text font-dyeLine font-semibold '>Frame</h4>
-                    <div className='flex flex-wrap gap-[2vw]'>
+                    <h4 className='text-h4TextPhone md:text-h4Text font-dyeLine font-semibold mb-[3vw] md:mb-0'>Frame</h4>
+                    <div className='flex flex-wrap gap-[4vw] md:gap-[2vw]'>
                         {productToDisplay.frameAttributes.map((item,index)=>(
-                            <div className='text-regularText' key={index}>
+                            <div className='text-regularTextPhone md:text-regularText' key={index}>
                                 <p>{item.name}</p>
                                 <p className='font-semibold'>{item.value}</p>
                                 </div>
@@ -438,10 +440,10 @@ export default function ProductDescription({productToDisplay}){
                 productToDisplay.lensAttributes.length>0 && 
                 <div>
 
-                    <h4 className='text-h4Text font-dyeLine font-semibold '>Lens</h4>
-                    <div className='flex flex-wrap gap-[2vw]'>
+                    <h4 className='text-h4TextPhone md:text-h4Text font-dyeLine font-semibold mb-[3vw] md:mb-0'>Lens</h4>
+                    <div className='flex flex-wrap gap-[4vw] md:gap-[2vw]'>
                         {productToDisplay.lensAttributes.map((item,index)=>(
-                            <div className='text-regularText' key={index}>
+                            <div className='text-regularTextPhone md:text-regularText' key={index}>
                                 <p>{item.name}</p>
                                 <p className='font-semibold'>{item.value}</p>
                                 </div>
@@ -453,10 +455,10 @@ export default function ProductDescription({productToDisplay}){
                 productToDisplay.generalAttributes.length>0 && 
                 <div>
 
-                    <h4 className='text-h4Text font-dyeLine font-semibold '>General</h4>
-                    <div className='flex flex-wrap gap-[2vw]'>
+                    <h4 className='text-h4TextPhone md:text-h4Text font-dyeLine font-semibold mb-[3vw] md:mb-0'>General</h4>
+                    <div className='flex flex-wrap gap-[4vw] md:gap-[2vw]'>
                         {productToDisplay.generalAttributes.map((item,index)=>(
-                            <div className='text-regularText' key={index}>
+                            <div className='text-regularTextPhone md:text-regularText' key={index}>
                                 <p>{item.name}</p>
                                 <p className='font-semibold'>{item.value}</p>
                                 </div>
@@ -467,28 +469,28 @@ export default function ProductDescription({productToDisplay}){
         </div>}
 
         {/* Product Description */}
-        <div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw] '>
-            <h2 className='font-dyeLine text-h3Text font-semibold'>Seller Information</h2>
-            <div className='flex flex-row  mx-auto items-center gap-[7.5vw]'>
-                <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand}  className='w-auto h-[9vw]  object-contain' />
-                <div className='w-[45vvw]'>
-                    <p className='text-regularText'>{mapBrandToDescription[productToDisplay.brand]}</p>
+        <div className='bg-white rounded-[4vw] md:rounded-[16px] mt-[6vw] md:mt-[2vw] py-[6vw] md:py-[2.25vw] px-[5vw] md:px-[3vw] flex flex-col gap-[6vw] md:gap-[2.5vw]'>
+            <h2 className='font-dyeLine text-h3TextPhone md:text-h3Text font-semibold'>Seller Information</h2>
+            <div className='flex flex-col md:flex-row mx-auto items-center gap-[6vw] md:gap-[7.5vw]'>
+                <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand}  className='w-auto h-[36vw] md:h-[9vw] object-contain' />
+                <div className='w-full md:w-[45vw]'>
+                    <p className='text-regularTextPhone md:text-regularText text-center md:text-left'>{mapBrandToDescription[productToDisplay.brand]}</p>
                 </div>
             </div>
         </div>
 
         {/* Similar Products */}
-        <div className='bg-white rounded-[16px] mt-[2vw] py-[2.25vw] px-[3vw] flex flex-col gap-[2.5vw]'>
+        <div className='bg-white rounded-[4vw] md:rounded-[16px] mt-[6vw] md:mt-[2vw] py-[6vw] md:py-[2.25vw] px-[5vw] md:px-[3vw] flex flex-col gap-[6vw] md:gap-[2.5vw]'>
             <div className='flex justify-between items-center'>
-                <h2 className='font-dyeLine text-h3Text font-semibold'>Similar Products</h2>
-                <button className='text-regularText hover:underline'>View all</button>
+                <h2 className='font-dyeLine text-h3TextPhone md:text-h3Text font-semibold'>Similar Products</h2>
+                <button className='text-regularTextPhone md:text-regularText hover:underline'>View all</button>
             </div>
-            <p className='text-regularText'>You might like these products too....</p>
+            <p className='text-regularTextPhone md:text-regularText'>You might like these products too....</p>
             
-            <div className='grid grid-cols-4 gap-[1vw]'>
+            <div className='grid grid-cols-2 md:grid-cols-4 gap-[3vw] md:gap-[1vw]'>
                 {similarProducts.map((product, index) => (
                     <TransitionLink to={`/product/${product._id}`} key={product._id}>
-                        <div className='relative bg-white rounded-[10px] overflow-hidden border border-gray-200'>
+                        <div className='relative bg-white rounded-[2.5vw] md:rounded-[10px] overflow-hidden border border-gray-200'>
                             <div className='relative aspect-w-1 aspect-h-1'>
                                 <img 
                                     src={product.images[0]} 
@@ -501,29 +503,29 @@ export default function ProductDescription({productToDisplay}){
                                         e.stopPropagation();
                                         handleWishlist(product._id);
                                     }}
-                                    className='absolute top-2 right-2'
+                                    className='absolute top-[2vw] md:top-2 right-[2vw] md:right-2'
                                 >
                                     <img 
                                         src={isInWishlist ? WishListIconFilled : WishListIcon}
                                         alt="wishlist"
-                                        className='w-[1.5vw] h-[1.5vw]'
+                                        className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]'
                                     />
                                 </button>
                             </div>
-                            <div className='p-[1vw]'>
-                                <div className='flex items-center justify-between mb-1'>
-                                    <span className='font-medium'>{product.brand}</span>
-                                    <span className='text-sm'>{product.review?.length > 0 ? `${renderStars(product.review.reduce((acc, item) => acc + item.rating, 0) / product.review.length)} • ${product.review.length}` : "No Reviews"}</span>
+                            <div className='p-[3vw] md:p-[1vw]'>
+                                <div className='flex items-center justify-between mb-[1vw] md:mb-1'>
+                                    <span className='font-medium text-smallTextPhone md:text-regularText'>{product.brand}</span>
+                                    <span className='text-tinyTextPhone md:text-sm'>{product.review?.length > 0 ? `${renderStars(product.review.reduce((acc, item) => acc + item.rating, 0) / product.review.length)} • ${product.review.length}` : "No Reviews"}</span>
                                 </div>
-                                <h3 className='font-bold text-h6Text mb-1'>{product.modelTitle}</h3>
-                                <p className='text-sm text-gray-600'>{product.modelName}</p>
-                                <div className='mt-2'>
-                                    <span className='font-bold'>{formatINR(product.discount)}</span>
+                                <h3 className='font-bold text-h6TextPhone md:text-h6Text mb-[1vw] md:mb-1'>{product.modelTitle}</h3>
+                                <p className='text-tinyTextPhone md:text-sm text-gray-600'>{product.modelName}</p>
+                                <div className='mt-[2vw] md:mt-2'>
+                                    <span className='font-bold text-smallTextPhone md:text-regularText'>{formatINR(product.discount)}</span>
                                     {product.price !== product.discount && (
-                                        <span className='ml-2 text-sm line-through text-gray-500'>{formatINR(product.price)}</span>
+                                        <span className='ml-2 text-tinyTextPhone md:text-sm line-through text-gray-500'>{formatINR(product.price)}</span>
                                     )}
                                 </div>
-                                <button className='w-full mt-2 py-2 bg-btngrery rounded-full text-sm font-medium hover:bg-gray-200 transition-colors'>
+                                <button className='w-full mt-[2vw] md:mt-2 py-[2vw] md:py-2 bg-btngrery rounded-[8vw] md:rounded-full text-smallTextPhone md:text-sm font-medium hover:bg-gray-200 transition-colors'>
                                     Add To Cart
                                 </button>
                             </div>

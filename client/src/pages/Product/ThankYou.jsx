@@ -11,10 +11,10 @@ const ThankYou = () => {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-4xl font-bold mb-4">Thank You for Your Purchase!</h1>
-      <p className="text-lg mb-2">Your payment was successful and your order has been placed.</p>
-      <p className="text-md text-gray-500">You will be redirected to the home page in 10 seconds...</p>
+    <div className="flex flex-col items-center justify-center min-h-screen px-[5vw] md:px-0">
+      <h1 className="text-h2TextPhone md:text-4xl font-bold mb-[4vw] md:mb-4 text-center">Thank You for Your Purchase!</h1>
+      <p className="text-regularTextPhone md:text-lg mb-[2vw] md:mb-2 text-center">Your payment was successful and your order has been placed.</p>
+      <p className="text-smallTextPhone md:text-md text-gray-500 text-center">You will be redirected to the home page in 10 seconds...</p>
     </div>
   );
 };
