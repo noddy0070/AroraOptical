@@ -79,6 +79,17 @@ import TermsAndConditions from "./pages/Policies/TermsAndConditions.jsx";
 import {ProtectedRoute} from "./providers/RoutesProvider.jsx";
 
 /**
+ * Page Component - Sets document title for each route
+ */
+const Page = ({ title, children }) => {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  return children;
+};
+
+/**
  * Layout Component - Handles Navigation Display Logic
  * Controls when to show/hide navigation bars based on current route
  */
@@ -222,73 +233,367 @@ export default function App() {
       {/* ========== PUBLIC ROUTES ========== */}
       {/* These routes are accessible to all users without authentication */}
       
-      <Route path="/" element={<Home />} />
-      <Route path='/signup' element={<Signup />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/shop/:category/:audience' element={<ShopURL />}/>
-      <Route path="/product/:id" element={<Product />} />
-      <Route path="/search" element={<SearchResults />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/free-eye-test" element={<FeeEyeTest />} />
-      <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
-      <Route path='/contact-us'element={<ContactUs/>}/>
-      <Route path='/refund-policy' element={<RefundPolicy/>}/>
-      <Route path='/shipping-policy' element={<ShippingPolicy/>}/>
-      <Route path='/terms-and-conditions' element={<TermsAndConditions/>}/>
-      <Route path='/about-us' element={<AboutUs/>}/>
-      <Route path='/thank-you' element={<ThankYou />} />
-      <Route path='/accessories' element={<Accessories />} />
-      <Route path='*' element={<h1>Not Found</h1>} />
+      <Route
+        path="/"
+        element={
+          <Page title="Arora Opticals | Home">
+            <Home />
+          </Page>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <Page title="Arora Opticals | Sign Up">
+            <Signup />
+          </Page>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <Page title="Arora Opticals | Login">
+            <Login />
+          </Page>
+        }
+      />
+      <Route
+        path="/shop/:category/:audience"
+        element={
+          <Page title="Arora Opticals | Shop">
+            <ShopURL />
+          </Page>
+        }
+      />
+      <Route
+        path="/product/:id"
+        element={
+          <Page title="Arora Opticals | Product Details">
+            <Product />
+          </Page>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <Page title="Arora Opticals | Search Results">
+            <SearchResults />
+          </Page>
+        }
+      />
+      <Route
+        path="/blog"
+        element={
+          <Page title="Arora Opticals | Blog">
+            <Blog />
+          </Page>
+        }
+      />
+      <Route
+        path="/free-eye-test"
+        element={
+          <Page title="Arora Opticals | Free Eye Test">
+            <FeeEyeTest />
+          </Page>
+        }
+      />
+      <Route
+        path="/privacy-policy"
+        element={
+          <Page title="Arora Opticals | Privacy Policy">
+            <PrivacyPolicy />
+          </Page>
+        }
+      />
+      <Route
+        path="/contact-us"
+        element={
+          <Page title="Arora Opticals | Contact Us">
+            <ContactUs />
+          </Page>
+        }
+      />
+      <Route
+        path="/refund-policy"
+        element={
+          <Page title="Arora Opticals | Refund Policy">
+            <RefundPolicy />
+          </Page>
+        }
+      />
+      <Route
+        path="/shipping-policy"
+        element={
+          <Page title="Arora Opticals | Shipping Policy">
+            <ShippingPolicy />
+          </Page>
+        }
+      />
+      <Route
+        path="/terms-and-conditions"
+        element={
+          <Page title="Arora Opticals | Terms and Conditions">
+            <TermsAndConditions />
+          </Page>
+        }
+      />
+      <Route
+        path="/about-us"
+        element={
+          <Page title="Arora Opticals | About Us">
+            <AboutUs />
+          </Page>
+        }
+      />
+      <Route
+        path="/thank-you"
+        element={
+          <Page title="Arora Opticals | Thank You">
+            <ThankYou />
+          </Page>
+        }
+      />
+      <Route
+        path="/accessories"
+        element={
+          <Page title="Arora Opticals | Accessories">
+            <Accessories />
+          </Page>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Page title="Arora Opticals | Page Not Found">
+            <h1>Not Found</h1>
+          </Page>
+        }
+      />
 
       {/* ========== PROTECTED USER ROUTES ========== */}
       {/* These routes require user authentication */}
       <Route element={<ProtectedRoute/>}>
-        <Route path='/cart' element={<Cart/>}/>
-        <Route path='/checkout' element={<Checkout/>}/>
-        <Route path='/order/:orderId' element={<OrderDetails/>}/>
-        <Route path='/settings' element={<Settings/>} />
-        <Route path='/lens/:id' element={<Lens/>} />
-        <Route path="/eye-test" element={<BookingForm/>}/>
+        <Route
+          path="/cart"
+          element={
+            <Page title="Arora Opticals | Cart">
+              <Cart />
+            </Page>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <Page title="Arora Opticals | Checkout">
+              <Checkout />
+            </Page>
+          }
+        />
+        <Route
+          path="/order/:orderId"
+          element={
+            <Page title="Arora Opticals | Order Details">
+              <OrderDetails />
+            </Page>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <Page title="Arora Opticals | Settings">
+              <Settings />
+            </Page>
+          }
+        />
+        <Route
+          path="/lens/:id"
+          element={
+            <Page title="Arora Opticals | Lens">
+              <Lens />
+            </Page>
+          }
+        />
+        <Route
+          path="/eye-test"
+          element={
+            <Page title="Arora Opticals | Eye Test Booking">
+              <BookingForm />
+            </Page>
+          }
+        />
       </Route>
 
       {/* ========== ADMIN ROUTES ========== */}
       {/* These routes require admin authentication and desktop access */}
       <Route element={<ProtectedRoute/>}>
-        <Route path="/admin" element={<DashBoard />}>
+        <Route
+          path="/admin"
+          element={
+            <Page title="Arora Opticals Admin | Dashboard">
+              <DashBoard />
+            </Page>
+          }
+        >
           {/* Admin Dashboard - Main admin interface */}
           {/* <Route index element={<Home2 />} /> */}
-          <Route index element={<Products/>} />
+          <Route
+            index
+            element={
+              <Page title="Arora Opticals Admin | Products">
+                <Products />
+              </Page>
+            }
+          />
           
           {/* Product Management */}
-          <Route path="products" element={<Products />} />
-          <Route path="add-product" element={<AddProduct />} />
-          <Route path="edit-product/:id" element={<EditProduct/>} />
+          <Route
+            path="products"
+            element={
+              <Page title="Arora Opticals Admin | Products">
+                <Products />
+              </Page>
+            }
+          />
+          <Route
+            path="add-product"
+            element={
+              <Page title="Arora Opticals Admin | Add Product">
+                <AddProduct />
+              </Page>
+            }
+          />
+          <Route
+            path="edit-product/:id"
+            element={
+              <Page title="Arora Opticals Admin | Edit Product">
+                <EditProduct />
+              </Page>
+            }
+          />
           
           {/* Order Management */}
-          <Route path="orders" element={<Shopping />} />
-          <Route path="order-management" element={<OrderManagement/>}/>
+          <Route
+            path="orders"
+            element={
+              <Page title="Arora Opticals Admin | Orders">
+                <Shopping />
+              </Page>
+            }
+          />
+          <Route
+            path="order-management"
+            element={
+              <Page title="Arora Opticals Admin | Order Management">
+                <OrderManagement />
+              </Page>
+            }
+          />
           
           {/* User Management */}
-          <Route path="user" element={<User />} />
-          <Route path='add-user' element={<AddUser/>}/>
-          <Route path="view-user/:id" element={<ViewUser/>} />
+          <Route
+            path="user"
+            element={
+              <Page title="Arora Opticals Admin | Users">
+                <User />
+              </Page>
+            }
+          />
+          <Route
+            path="add-user"
+            element={
+              <Page title="Arora Opticals Admin | Add User">
+                <AddUser />
+              </Page>
+            }
+          />
+          <Route
+            path="view-user/:id"
+            element={
+              <Page title="Arora Opticals Admin | View User">
+                <ViewUser />
+              </Page>
+            }
+          />
           
           {/* Analytics and Search */}
-          <Route path="analytics" element={<Trending />} />
-          <Route path="search" element={<Search />} />
+          <Route
+            path="analytics"
+            element={
+              <Page title="Arora Opticals Admin | Analytics">
+                <Trending />
+              </Page>
+            }
+          />
+          <Route
+            path="search"
+            element={
+              <Page title="Arora Opticals Admin | Search">
+                <Search />
+              </Page>
+            }
+          />
           
           {/* System Management */}
-          <Route path="attributes" element={<Attributes />} />
-          <Route path="eye-test-management" element={<EyeTestManagement/>}/>
+          <Route
+            path="attributes"
+            element={
+              <Page title="Arora Opticals Admin | Attributes">
+                <Attributes />
+              </Page>
+            }
+          />
+          <Route
+            path="eye-test-management"
+            element={
+              <Page title="Arora Opticals Admin | Eye Test Management">
+                <EyeTestManagement />
+              </Page>
+            }
+          />
           
           {/* Policy Management */}
-          <Route path="cancellation-policy" element={<CancellationPolicy/>}/>
-          <Route path="privacy-policy" element={<PrivacyPolicyAdmin/>}/>
-          <Route path="shipping-policy" element={<ShippingPolicyAdmin/>}/>
-          <Route path="terms-and-conditions" element={<TermsAndConditionsAdmin/>}/>
+          <Route
+            path="cancellation-policy"
+            element={
+              <Page title="Arora Opticals Admin | Cancellation Policy">
+                <CancellationPolicy />
+              </Page>
+            }
+          />
+          <Route
+            path="privacy-policy"
+            element={
+              <Page title="Arora Opticals Admin | Privacy Policy">
+                <PrivacyPolicyAdmin />
+              </Page>
+            }
+          />
+          <Route
+            path="shipping-policy"
+            element={
+              <Page title="Arora Opticals Admin | Shipping Policy">
+                <ShippingPolicyAdmin />
+              </Page>
+            }
+          />
+          <Route
+            path="terms-and-conditions"
+            element={
+              <Page title="Arora Opticals Admin | Terms and Conditions">
+                <TermsAndConditionsAdmin />
+              </Page>
+            }
+          />
           
           {/* Fallback for admin routes */}
-          <Route path="*" element={<p className="text-red-500 text-center">Page not found</p>} />
+          <Route
+            path="*"
+            element={
+              <Page title="Arora Opticals Admin | Page Not Found">
+                <p className="text-red-500 text-center">Page not found</p>
+              </Page>
+            }
+          />
         </Route>
       </Route>
      
