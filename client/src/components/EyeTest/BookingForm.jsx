@@ -62,6 +62,13 @@ const BookingForm = () => {
   const selectedSlotObj = availableSlots.find(s => s.value === formData.timeSlot);
   const isSelectedSlotFull = !!selectedSlotObj?.isFull;
 
+  const getSlotBookedCount = (slot) => {
+    // Be defensive: production API may serialize numbers as strings or return legacy shapes.
+    const raw = slot?.bookedCount ?? slot?.count ?? 0;
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -200,23 +207,33 @@ const BookingForm = () => {
           }) : 'Select a date'}
         </span>
         {availableSlots.map(slot => (
+          (() => {
+            const bookedCount = getSlotBookedCount(slot);
+            const capacity = Number(slot?.capacity ?? 4);
+            const isFull = typeof slot?.isFull === 'boolean'
+              ? slot.isFull
+              : bookedCount >= (Number.isFinite(capacity) ? capacity : 4);
+
+            return (
           <div
             key={slot.value}
             onClick={() => {
-              if (slot.isFull) return;
+              if (isFull) return;
               setFormData(prev => ({ ...prev, timeSlot: slot.value }));
             }}
             className={[
               'py-[.75vw] w-[17.5vw] text-center font-bold text-mediumText border-[rgba(04,43,43,.32)] border-[.0625vw] rounded-[.875vw] transition-colors duration-300',
-              slot.isFull ? 'cursor-not-allowed bg-black text-white' : 'cursor-pointer',
-              !slot.isFull && slot.bookedCount === 0 ? 'bg-green-500 text-white' : '',
-              !slot.isFull && (slot.bookedCount === 1 || slot.bookedCount === 2) ? 'bg-yellow-400 text-black' : '',
-              !slot.isFull && slot.bookedCount === 3 ? 'bg-red-600 text-white' : '',
-              formData.timeSlot === slot.value && !slot.isFull ? 'ring-2 ring-offset-2 ring-[rgba(04,43,43,1)]' : '',
+              isFull ? 'cursor-not-allowed bg-black text-white' : 'cursor-pointer',
+              !isFull && bookedCount === 0 ? 'bg-green-500 text-white' : '',
+              !isFull && (bookedCount === 1 || bookedCount === 2) ? 'bg-yellow-400 text-black' : '',
+              !isFull && bookedCount === 3 ? 'bg-red-600 text-white' : '',
+              formData.timeSlot === slot.value && !isFull ? 'ring-2 ring-offset-2 ring-[rgba(04,43,43,1)]' : '',
             ].filter(Boolean).join(' ')}
           >
             <p>{slot.display}</p>
           </div>
+            );
+          })()
         ))}
       </div>
       </div>
