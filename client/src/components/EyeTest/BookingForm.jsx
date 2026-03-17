@@ -10,13 +10,20 @@ import CalendarComponent from './CalendarComponent';
 const BookingForm = () => {
   const { user } = useSelector(state => state.auth);
   const navigate = useNavigate();
+  const toastThenRedirectHome = (type, message) => {
+    toast[type](message, {
+      autoClose: 2000,
+      onClose: () => navigate('/'),
+    });
+  };
 
   const [formData, setFormData] = useState({
-    userId: user._id,
+    userId: user?._id,
     patientName: user?.name || '',
     phoneNumber: '',
     email: user?.email || '',
-    testDate: new Date(),
+    // Force user to explicitly pick a date from calendar
+    testDate: null,
     timeSlot: '',
     specialNotes: ''
   });
@@ -25,12 +32,22 @@ const BookingForm = () => {
 
   useEffect(() => {
     // console.log('formData.testDate in BookingForm:', formData.testDate);
-    fetchAvailableSlots(formData.testDate);
+    setFormData(prev => ({ ...prev, timeSlot: '' }));
+    if (formData.testDate) {
+      fetchAvailableSlots(formData.testDate);
+    } else {
+      setAvailableSlots([]);
+    }
   }, [formData.testDate]);
 
   const fetchAvailableSlots = async (date) => {
     try {
-      const formattedDate = date.toISOString().split('T')[0];
+      if (!date) return;
+      const formattedDate = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0'),
+      ].join('-');
       const response = await fetch(`${baseURL}/api/eye-test/available-slots?date=${formattedDate}`);
       const data = await response.json();
       console.log(data);
@@ -41,8 +58,27 @@ const BookingForm = () => {
     }
   };
   console.log(formData)
+
+  const selectedSlotObj = availableSlots.find(s => s.value === formData.timeSlot);
+  const isSelectedSlotFull = !!selectedSlotObj?.isFull;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return; // hard guard against double-clicks
+    if (!formData.testDate) {
+      toast.error('Please select a date');
+      return;
+    }
+    if (!formData.timeSlot) {
+      toast.error('Please select a time slot');
+      return;
+    }
+    if (isSelectedSlotFull) {
+      toast.error('This time slot is fully booked');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -70,10 +106,9 @@ const BookingForm = () => {
         throw new Error(data.message || 'Failed to book appointment');
       }
 
-      toast.success('Eye test booked successfully!');
-      navigate('/');
+      toastThenRedirectHome('success', 'Your slot has been scheduled succesfully');
     } catch (error) {
-      toast.error(error.message || 'Failed to book eye test');
+      toastThenRedirectHome('error', 'Sorry we are not accepting eye test for now');
     } finally {
       setLoading(false);
     }
@@ -147,7 +182,7 @@ const BookingForm = () => {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !formData.testDate || !formData.timeSlot || isSelectedSlotFull}
           className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:bg-blue-300"
         >
           {loading ? 'Booking...' : 'Book Eye Test'}
@@ -165,7 +200,21 @@ const BookingForm = () => {
           }) : 'Select a date'}
         </span>
         {availableSlots.map(slot => (
-          <div onClick={()=>setFormData(prev=>({...prev,timeSlot:slot.value}))} key={slot.value}   className={`cursor-pointer py-[.75vw] w-[17.5vw] text-center font-bold text-mediumText  border-[rgba(04,43,43,.32)] border-[.0625vw] rounded-[.875vw] transition-colors duration-300  ${formData.timeSlot===slot.value?'bg-[rgba(04,43,43,1)] text-white ':'bg-white  text-[rgba(04,43,43,.32)]'}`}>
+          <div
+            key={slot.value}
+            onClick={() => {
+              if (slot.isFull) return;
+              setFormData(prev => ({ ...prev, timeSlot: slot.value }));
+            }}
+            className={[
+              'py-[.75vw] w-[17.5vw] text-center font-bold text-mediumText border-[rgba(04,43,43,.32)] border-[.0625vw] rounded-[.875vw] transition-colors duration-300',
+              slot.isFull ? 'cursor-not-allowed bg-black text-white' : 'cursor-pointer',
+              !slot.isFull && slot.bookedCount === 0 ? 'bg-green-500 text-white' : '',
+              !slot.isFull && (slot.bookedCount === 1 || slot.bookedCount === 2) ? 'bg-yellow-400 text-black' : '',
+              !slot.isFull && slot.bookedCount === 3 ? 'bg-red-600 text-white' : '',
+              formData.timeSlot === slot.value && !slot.isFull ? 'ring-2 ring-offset-2 ring-[rgba(04,43,43,1)]' : '',
+            ].filter(Boolean).join(' ')}
+          >
             <p>{slot.display}</p>
           </div>
         ))}

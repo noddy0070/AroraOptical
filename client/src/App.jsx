@@ -6,6 +6,8 @@
 // ========== REACT AND ROUTING IMPORTS ==========
 import {BrowserRouter,Routes, Route,useLocation } from "react-router-dom";
 import React,{useState,useEffect} from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // ========== NAVIGATION COMPONENTS ==========
 import PrimaryNavbar from './components/PrimaryNavbar.jsx'
@@ -226,6 +228,17 @@ export default function App() {
   return <div className="h-screen">
     
     <BrowserRouter>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+        toastStyle={{ zIndex: 999999 }}
+      />
      {/* Navigation Layout - Controls when to show/hide navbars */}
      <Layout />
 
