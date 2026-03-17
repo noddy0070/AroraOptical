@@ -41,8 +41,8 @@ const eyeTestSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-// Add index for efficient querying
-eyeTestSchema.index({ testDate: 1, timeSlot: 1 }, { unique: true });
+// Add index for efficient querying (non-unique so up to 4 bookings per slot/day are allowed)
+eyeTestSchema.index({ testDate: 1, timeSlot: 1 });
 
 const EyeTest = mongoose.model('EyeTest', eyeTestSchema);
 
