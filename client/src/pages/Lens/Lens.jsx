@@ -62,9 +62,8 @@ export default function Lens() {
     fetchProductDetails();
   },[]);
   const fetchProductDetails = async () => {
-    const response = await axios.get(`${baseURL}/api/admin/get-single-product/${productId}`,{
-      withCredentials: true
-    });
+    // Lens flow should use public product details endpoint
+    const response = await axios.get(`${baseURL}/api/product/${productId}`);
     setProduct(response.data);
     setAmount(response.data.price);
   }

@@ -7,7 +7,8 @@ const ShippingPolicy = () => {
      const [date,setDate] = useState(new Date(null));
     
      useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-policy/682e6724fb2ffba94269d8cc`)
+    	// Public shipping policy fetch (read-only)
+    	axios.get(`${baseURL}/api/policy/682e6724fb2ffba94269d8cc`)
             .then((res) => {
             setPolicy(res.data.message);
             setDate(new Date(res.data.message.updatedAt));

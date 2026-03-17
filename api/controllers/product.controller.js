@@ -1,20 +1,62 @@
 import Product from "../models/product.model.js";
 import mongoose from "mongoose";
-export const addProduct= async (req,res,next)=>{
-    const {modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes,rx}=req.body;
-    const newProduct= new Product({modelName,modelTitle,modelCode,brand,isSellable,category,gender,description,price,taxRate,discount,hashtags,images,size,stock,lensAttributes,frameAttributes,generalAttributes,rx});
-    
-    try{
-        await newProduct.save();
-        res.status(201).json('Product created successfully');
-    }catch(error){
-        next(error);
-    }
-}
+import * as XLSX from "xlsx";
+
+export const addProduct = async (req, res, next) => {
+  const {
+    modelName,
+    modelTitle,
+    modelCode,
+    brand,
+    isSellable,
+    category,
+    gender,
+    description,
+    price,
+    taxRate,
+    discount,
+    hashtags,
+    images,
+    size,
+    stock,
+    lensAttributes,
+    frameAttributes,
+    generalAttributes,
+    rx,
+  } = req.body;
+  const newProduct = new Product({
+    modelName,
+    modelTitle,
+    modelCode,
+    brand,
+    isSellable,
+    category,
+    gender,
+    description,
+    price,
+    taxRate,
+    discount,
+    hashtags,
+    images,
+    size,
+    stock,
+    lensAttributes,
+    frameAttributes,
+    generalAttributes,
+    rx,
+  });
+
+  try {
+    await newProduct.save();
+    res.status(201).json("Product created successfully");
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getProducts = async (req, res, next) => {
   try {
-    const { category, gender, newArrivals, bestsellers, accessories } = req.query;
+    const { category, gender, brand, newArrivals, bestsellers, accessories, limit } = req.query;
     let query = {};
     console.log('category',category);
     // Add filters if they exist
@@ -40,6 +82,11 @@ export const getProducts = async (req, res, next) => {
       query.gender = { $in: [genderMap[gender.toLowerCase()], 'Unisex'] };
     }
 
+    // Optional brand filter
+    if (brand) {
+      query.brand = brand;
+    }
+
     // Check if new arrivals filter is requested
     if (newArrivals === 'true') {
       // Case-insensitive regex pattern for various "new arrival" hashtag formats
@@ -49,11 +96,17 @@ export const getProducts = async (req, res, next) => {
     }
     
     let products;
+    const parsedLimit =
+      typeof limit === "string" && limit.trim().length > 0 ? Number.parseInt(limit, 10) : undefined;
+    const safeLimit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : undefined;
+
     if (bestsellers === 'true') {
       // Get products sorted by orders (highest to lowest) and limit to top sellers
-      products = await Product.find(query).sort({ orders: -1 }).limit(20);
+      products = await Product.find(query).sort({ orders: -1 }).limit(safeLimit ?? 20);
     } else {
-      products = await Product.find(query);
+      const q = Product.find(query);
+      if (safeLimit) q.limit(safeLimit);
+      products = await q;
     }
     
     res.status(200).json({
@@ -292,6 +345,151 @@ export const searchProducts = async (req, res, next) => {
       success: false, 
       message: 'Server error during search',
       error: error.message
+    });
+  }
+};
+
+export const bulkAddProducts = async (req, res) => {
+  try {
+    const { products } = req.body;
+
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payload: products array is required",
+      });
+    }
+
+    const requiredFields = [
+      "category",
+      "modelName",
+      "modelCode",
+      "gender",
+      "price",
+    ];
+
+    const invalidIndex = products.findIndex((product) =>
+      requiredFields.some((field) => {
+        const value = product[field];
+        return (
+          value === undefined ||
+          value === null ||
+          (typeof value === "string" && value.trim() === "")
+        );
+      })
+    );
+
+    if (invalidIndex !== -1) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Excel format: missing required fields",
+        index: invalidIndex,
+      });
+    }
+
+    const productsToInsert = products.map((p) => ({
+      modelTitle: p.modelTitle,
+      modelName: p.modelName,
+      modelCode: p.modelCode,
+      brand: p.brand || "Arora Opticals",
+      isSellable: p.isSellable ?? "true",
+      category: p.category,
+      gender: p.gender,
+      description: p.description || "",
+      price: p.price,
+      taxRate: p.taxRate ?? 18,
+      discount: p.discount ?? 0,
+      hashtags: p.hashtags || "",
+      images: Array.isArray(p.images) ? p.images : [],
+      size: Array.isArray(p.size) ? p.size : [],
+      stock: Array.isArray(p.stock) ? p.stock : [],
+      lensAttributes: Array.isArray(p.lensAttributes)
+        ? p.lensAttributes
+        : [],
+      frameAttributes: Array.isArray(p.frameAttributes)
+        ? p.frameAttributes
+        : [],
+      generalAttributes: Array.isArray(p.generalAttributes)
+        ? p.generalAttributes
+        : [],
+      rx: p.rx ?? false,
+    }));
+
+    const inserted = await Product.insertMany(productsToInsert);
+
+    return res.status(201).json({
+      success: true,
+      insertedCount: inserted.length,
+    });
+  } catch (error) {
+    console.error("bulkAddProducts error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Invalid Excel format",
+    });
+  }
+};
+
+export const getProductTemplate = async (req, res) => {
+  try {
+    const headers = [
+      "Category",
+      "Model Name",
+      "Model Number",
+      "Color Code",
+      "Gender",
+      "Description",
+      "Price",
+      "Discount",
+      "Advertising Hashtags",
+      "Lens Color",
+      "Lens Base Color",
+      "Lens Width",
+      "Lens Treatment",
+      "Frame Color",
+      "Bridge Size",
+      "Fit",
+      "Exact Size",
+      "Shape",
+      "Temple Color",
+      "Frame Material",
+      "Temple Material",
+      "Image1",
+      "Image2",
+      "Image3",
+      "Image4",
+      "Image5",
+      "Image6",
+      "Image7",
+      "Image8",
+      "Image9",
+      "Image10",
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet([headers]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+
+    const buffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "buffer",
+    });
+
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="product-template.xlsx"'
+    );
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    return res.status(200).send(buffer);
+  } catch (error) {
+    console.error("getProductTemplate error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to generate Excel template",
     });
   }
 };

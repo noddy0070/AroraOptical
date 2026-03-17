@@ -13,6 +13,7 @@ import { TransitionLink } from '@/Routes/TransitionLink';
 const ecommerceSection = [
   { id: "Product List" },
   { id: "Add Product" },
+  { id: "Bulk Upload" },
 ];
 
 const categorySection = [
@@ -37,7 +38,7 @@ const orderSection = [
 const homeSection = [
   // { id: 'Dashboard', path: ['/Admin'], icon: DashboardIcon, subSections: [] },
   // { id: 'Analytics', path: ['/Admin'], icon: AnalyticsIcon, subSections: [] },
-  { id: 'Ecommerce', path: ['/Admin/products', '/Admin/add-product'], icon: EcommerceIcon, subSections: ecommerceSection },
+  { id: 'Ecommerce', path: ['/Admin/products', '/Admin/add-product', '/Admin/products/bulk-upload'], icon: EcommerceIcon, subSections: ecommerceSection },
   { id: 'Attributes', path: ['/Admin/attributes'], icon: AttributesIcon, subSections: attributesSection },
   { id: 'User', path: ['/Admin/user', '/Admin/add-user'], icon: UserIcon, subSections: userSection },
   { id: 'Order', path: ['/Admin/orders', '/Admin/order-management'], icon: OrderIcon, subSections: orderSection },

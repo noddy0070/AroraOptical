@@ -6,7 +6,8 @@ const PrivacyPolicy = () => {
      const [date,setDate] = useState(new Date(null));
     
      useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-policy/682e6778fb2ffba94269d8ce`)
+    	// Public privacy policy fetch (read-only)
+    	axios.get(`${baseURL}/api/policy/682e6778fb2ffba94269d8ce`)
             .then((res) => {
             setPolicy(res.data.message);
             setDate(new Date(res.data.message.updatedAt));

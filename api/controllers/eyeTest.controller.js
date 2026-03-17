@@ -88,7 +88,7 @@ export const bookEyeTest = async (req, res, next) => {
 // Get all eye tests (for admin)
 export const getAllEyeTests = async (req, res, next) => {
   try {
-    const { status, date } = req.query;
+    const { status, date, startDate, endDate } = req.query;
     let query = {};
 
 
@@ -106,9 +106,25 @@ export const getAllEyeTests = async (req, res, next) => {
       };
     }
 
+    // Filter by date range (preferred)
+    if (startDate || endDate) {
+      const range = {};
+      if (startDate) {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        range.$gte = start;
+      }
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        range.$lte = end;
+      }
+      query.testDate = range;
+    }
+
     const eyeTests = await EyeTest.find(query)
       .populate('userId', 'name email')
-      .sort({ testDate: 1, timeSlot: 1 });
+      .sort({ testDate: -1, timeSlot: -1 });
 
     // Format time slots for display
     const formattedTests = eyeTests.map(test => {

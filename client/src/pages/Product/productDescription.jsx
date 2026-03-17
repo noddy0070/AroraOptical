@@ -101,9 +101,8 @@ export default function ProductDescription({productToDisplay}){
     const [productsModel,setProductsModel] =useState([]);
     
     useEffect(()=>{
-        axios.post(`${baseURL}/api/admin/get-products-color`,{modelName:productToDisplay.modelName}, {
-            withCredentials: true
-          })
+        axios
+          .post(`${baseURL}/api/product/get-color`, { modelName: productToDisplay.modelName })
         .then((res) => {
             setProductsModel(res.data.message);
             })
@@ -133,7 +132,7 @@ export default function ProductDescription({productToDisplay}){
         // Fetch similar products based on category and brand
         const fetchSimilarProducts = async () => {
             try {
-                const response = await axios.get(`${baseURL}/api/admin/get-products`, {
+                const response = await axios.get(`${baseURL}/api/product/get`, {
                     params: {
                         category: productToDisplay.category,
                         brand: productToDisplay.brand,

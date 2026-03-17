@@ -44,6 +44,7 @@ import Home2 from './pages/Admin/Home.jsx';
 import Products from "./pages/Admin/Products/Products.jsx";
 import AddProduct from "./pages/Admin/Products/AddProduct.jsx";
 import EditProduct from "./pages/Admin/Products/EditProduct.jsx";
+import BulkUploadProducts from "./pages/Admin/Products/BulkUploadProducts.jsx";
 
 // ========== ADMIN - ORDER MANAGEMENT ==========
 import Shopping from "./pages/Admin/Shopping.jsx";
@@ -467,6 +468,14 @@ export default function App() {
             element={
               <Page title="Arora Opticals Admin | Edit Product">
                 <EditProduct />
+              </Page>
+            }
+          />
+          <Route
+            path="products/bulk-upload"
+            element={
+              <Page title="Arora Opticals Admin | Bulk Upload Products">
+                <BulkUploadProducts />
               </Page>
             }
           />

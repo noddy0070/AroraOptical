@@ -2,38 +2,138 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify';
+import axios from 'axios';
+import { baseURL } from '@/url';
+import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, format } from 'date-fns';
 
 const EyeTestManagement = () => {
   const [eyeTests, setEyeTests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterDate, setFilterDate] = useState(new Date());
+  const [filterMode, setFilterMode] = useState('week'); // week | month | custom
+  const [anchorDate, setAnchorDate] = useState(new Date());
+  const [customRange, setCustomRange] = useState([null, null]);
   const [filterStatus, setFilterStatus] = useState('');
   const [selectedTest, setSelectedTest] = useState(null);
 
   useEffect(() => {
     fetchEyeTests();
-  }, [filterDate, filterStatus]);
+  }, [filterMode, anchorDate, customRange, filterStatus]);
+
+  const getDateRange = () => {
+    if (filterMode === 'month') {
+      return {
+        start: startOfMonth(anchorDate),
+        end: endOfMonth(anchorDate),
+      };
+    }
+
+    if (filterMode === 'custom') {
+      const [start, end] = customRange;
+      return { start, end };
+    }
+
+    // week (default)
+    return {
+      start: startOfWeek(anchorDate, { weekStartsOn: 1 }),
+      end: endOfWeek(anchorDate, { weekStartsOn: 1 }),
+    };
+  };
+
+  const getRangeLabel = () => {
+    const { start, end } = getDateRange();
+    if (!(start instanceof Date) || Number.isNaN(start.getTime())) return '';
+    if (!(end instanceof Date) || Number.isNaN(end.getTime())) return '';
+
+    // Same month -> "Mar 01–Mar 07, 2026"; cross-month -> "Mar 30, 2026–Apr 05, 2026"
+    const sameMonth = start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear();
+    return sameMonth
+      ? `${format(start, 'MMM dd')}–${format(end, 'MMM dd, yyyy')}`
+      : `${format(start, 'MMM dd, yyyy')}–${format(end, 'MMM dd, yyyy')}`;
+  };
+
+  const IconButton = ({ title, onClick, className = '', children, disabled = false }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      title={title}
+      aria-label={title}
+      className={`inline-flex items-center justify-center w-9 h-9 rounded-full border border-transparent transition-colors
+        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+        disabled:opacity-50 disabled:cursor-not-allowed
+        ${className}`}
+    >
+      {children}
+    </button>
+  );
+
+  const CheckIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M20 6L9 17l-5-5"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+
+  const XIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M18 6L6 18M6 6l12 12"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+
+  const InfoIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 16v-5"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12 8h.01"
+        stroke="currentColor"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+    </svg>
+  );
 
   const fetchEyeTests = async () => {
     try {
+      setLoading(true);
       const queryParams = new URLSearchParams();
-      if (filterDate) {
-        queryParams.append('date', filterDate.toISOString().split('T')[0]);
-      }
-      if (filterStatus) {
-        queryParams.append('status', filterStatus);
-      }
+      const { start, end } = getDateRange();
 
-      const response = await fetch(`/api/eye-test/all?${queryParams}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
+      if (start instanceof Date && !Number.isNaN(start.getTime())) {
+        queryParams.append('startDate', start.toISOString().split('T')[0]);
+      }
+      if (end instanceof Date && !Number.isNaN(end.getTime())) {
+        queryParams.append('endDate', end.toISOString().split('T')[0]);
       }
 
-      setEyeTests(data);
+      if (filterStatus) queryParams.append('status', filterStatus);
+
+      const response = await axios.get(`${baseURL}/api/eye-test/all?${queryParams.toString()}`, {
+        withCredentials: true,
+      });
+      setEyeTests(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error('Failed to fetch eye tests');
     } finally {
       setLoading(false);
@@ -42,28 +142,17 @@ const EyeTestManagement = () => {
 
   const updateTestStatus = async (testId, newStatus, testResults = null) => {
     try {
-      const response = await fetch(`/api/eye-test/status/${testId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          status: newStatus,
-          testResults,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
+      await axios.put(
+        `${baseURL}/api/eye-test/status/${testId}`,
+        { status: newStatus, testResults },
+        { withCredentials: true }
+      );
 
       toast.success('Test status updated successfully');
       fetchEyeTests();
       setSelectedTest(null);
     } catch (error) {
-      toast.error(error.message || 'Failed to update test status');
+      toast.error(error?.response?.data?.message || error.message || 'Failed to update test status');
     }
   };
 
@@ -84,13 +173,54 @@ const EyeTestManagement = () => {
       {/* Filters */}
       <div className="flex gap-4 mb-6">
         <div>
-          <label className="block text-sm font-medium mb-1">Filter by Date</label>
-          <DatePicker
-            selected={filterDate}
-            onChange={setFilterDate}
+          <label className="block text-sm font-medium mb-1">View</label>
+          <select
+            value={filterMode}
+            onChange={(e) => {
+              const next = e.target.value;
+              setFilterMode(next);
+              if (next !== 'custom') setCustomRange([null, null]);
+            }}
             className="p-2 border rounded"
-            dateFormat="MMMM d, yyyy"
-          />
+          >
+            <option value="week">Week</option>
+            <option value="month">Month</option>
+            <option value="custom">Custom range</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            {filterMode === 'month'
+              ? 'Select Month'
+              : filterMode === 'custom'
+              ? 'Select Range'
+              : 'Select Week'}
+          </label>
+          {filterMode === 'custom' ? (
+            <DatePicker
+              selectsRange
+              startDate={customRange[0]}
+              endDate={customRange[1]}
+              onChange={(update) => setCustomRange(update)}
+              className="p-2 border rounded"
+              dateFormat="MMMM d, yyyy"
+              isClearable
+            />
+          ) : (
+            <DatePicker
+              selected={anchorDate}
+              onChange={setAnchorDate}
+              className="p-2 border rounded"
+              dateFormat={filterMode === 'month' ? 'MMMM yyyy' : 'MMMM d, yyyy'}
+              showMonthYearPicker={filterMode === 'month'}
+            />
+          )}
+          {(filterMode === 'week' || filterMode === 'month') && (
+            <div className="mt-1 text-xs text-gray-500">
+              Showing: <span className="font-medium text-gray-700">{getRangeLabel()}</span>
+            </div>
+          )}
         </div>
 
         <div>
@@ -117,6 +247,7 @@ const EyeTestManagement = () => {
           <table className="min-w-full bg-white border rounded-lg">
             <thead className="bg-gray-50">
               <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
@@ -128,7 +259,12 @@ const EyeTestManagement = () => {
               {eyeTests.map((test) => (
                 <tr key={test._id}>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium">{test.timeSlot}</div>
+                    <div className="text-sm font-medium">
+                      {test.testDate ? format(new Date(test.testDate), 'dd MMM yyyy') : '—'}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm font-medium">{test.displayTime || test.timeSlot}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm">{test.patientName}</div>
@@ -147,26 +283,29 @@ const EyeTestManagement = () => {
                     <div className="flex space-x-2">
                       {test.status === 'Scheduled' && (
                         <>
-                          <button
+                          <IconButton
+                            title="Mark as Completed"
                             onClick={() => updateTestStatus(test._id, 'Completed')}
-                            className="text-green-600 hover:text-green-800"
+                            className="text-green-700 hover:bg-green-50"
                           >
-                            Complete
-                          </button>
-                          <button
+                            <CheckIcon />
+                          </IconButton>
+                          <IconButton
+                            title="Mark as No Show"
                             onClick={() => updateTestStatus(test._id, 'No Show')}
-                            className="text-red-600 hover:text-red-800"
+                            className="text-red-700 hover:bg-red-50"
                           >
-                            No Show
-                          </button>
+                            <XIcon />
+                          </IconButton>
                         </>
                       )}
-                      <button
+                      <IconButton
+                        title="View Details"
                         onClick={() => setSelectedTest(test)}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-blue-700 hover:bg-blue-50"
                       >
-                        Details
-                      </button>
+                        <InfoIcon />
+                      </IconButton>
                     </div>
                   </td>
                 </tr>

@@ -40,7 +40,8 @@ export default function Shop({category, audience}) {
                 const isBestsellers = audience.toLowerCase() === "bestsellers";
                 const isAccessories = audience.toLowerCase() === "accessories";
                 
-                const response = await axios.get(`${baseURL}/api/admin/get-products`, {
+                // Public shop listing should use public product API (admin routes require auth)
+                const response = await axios.get(`${baseURL}/api/product/get`, {
                     params: {
                         category: category,
                         gender: isNewArrivals || isBestsellers ? "" : genderParam,

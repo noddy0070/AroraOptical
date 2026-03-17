@@ -18,7 +18,8 @@ export default function Product(){
     const { id } = useParams();
     const [product,setProduct]=useState(null);
     useEffect(()=>{
-        axios.get(`${baseURL}/api/admin/get-single-product/${id}`)
+        // Use public product endpoint for storefront product page
+        axios.get(`${baseURL}/api/product/${id}`)
         .then((res) => {
           setProduct(res.data);
             })

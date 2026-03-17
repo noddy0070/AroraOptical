@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   startOfMonth, endOfMonth, startOfWeek, endOfWeek,
-  addDays, addMonths, subMonths, format, isBefore, isAfter
+  addDays, addMonths, subMonths, format, isBefore, isAfter, isSameDay
 } from 'date-fns';
 
 export default function CalendarComponent({formData, setFormData}) {
@@ -107,16 +107,18 @@ export default function CalendarComponent({formData, setFormData}) {
         const isDisabled = isBefore(currentDay, today) || isAfter(currentDay, maxDate);
         const isNotCurrentMonth = currentDay.getMonth() !== currentMonth.getMonth();
         const isSelected = selectedDate && format(currentDay, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
+        const isToday = isSameDay(currentDay, today);
+        const isAvailableDay = !isDisabled && !isNotCurrentMonth;
 
         days.push(
           <div
             key={currentDay.getTime()}
-            className={`text-center w-[70px] h-[70px] text-h6Text cursor-pointer flex items-center justify-center rounded-full mb-[12px] 
-                transition-colors duration-300
-              ${isDisabled || isNotCurrentMonth ? 'text-gray-300' : 'text-[#BFC9C9]'}
-              ${isSelected ? 'bg-[rgba(04,43,43,0.09)] font-bold  text-[#263238]' : ''}
-              
-              ${!isDisabled && !isNotCurrentMonth ? 'hover:bg-[rgba(04,43,43,0.09)]   text-[#263238]' : ''}
+            className={`text-center w-[70px] h-[70px] text-h6Text cursor-pointer flex items-center justify-center rounded-full mb-[12px]
+              transition-all duration-200
+              ${isDisabled || isNotCurrentMonth ? 'text-gray-300 cursor-not-allowed' : 'text-[#263238]'}
+              ${isAvailableDay && !isSelected ? 'bg-[rgba(04,43,43,0.08)] ring-1 ring-[rgba(04,43,43,0.25)] hover:bg-[rgba(04,43,43,0.14)]' : ''}
+              ${isToday && !isSelected ? 'ring-2 ring-[rgba(04,43,43,0.85)]' : ''}
+              ${isSelected ? 'bg-[rgba(04,43,43,1)] text-white font-bold ring-2 ring-[rgba(04,43,43,1)]' : ''}
             `}
             onClick={() => {
               if (!isDisabled && !isNotCurrentMonth) {
@@ -152,6 +154,20 @@ export default function CalendarComponent({formData, setFormData}) {
 
   return (
     <div className="w-full p-[1.5vw]">
+      <div className="flex items-center gap-3 mb-[10px] text-[12px] text-[#263238]">
+        <div className="flex items-center gap-2">
+          <span className="inline-block w-4 h-4 rounded-full bg-[rgba(04,43,43,0.08)] ring-1 ring-[rgba(04,43,43,0.25)]" />
+          <span>Available (next 3 months)</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="inline-block w-4 h-4 rounded-full bg-transparent ring-2 ring-[rgba(04,43,43,0.85)]" />
+          <span>Today</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="inline-block w-4 h-4 rounded-full bg-[rgba(04,43,43,1)]" />
+          <span>Selected</span>
+        </div>
+      </div>
       {renderHeader()}
       {renderDays()}
       {renderCells()}

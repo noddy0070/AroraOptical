@@ -44,12 +44,8 @@ export default function Accessories({category, audience}) {
             try {
                 setLoading(true);
     
-                
-                const response = await axios.get(`${baseURL}/api/admin/get-accessories`, {
-                    params: {
-                        category: category,
-                    }
-                });
+                // Use public accessories endpoint
+                const response = await axios.get(`${baseURL}/api/product/accessories`);
 
                 if (response.data.success) {
                     if(response.data.products.length > 0){

@@ -13,6 +13,7 @@ import imageRouter from './routes/image.route.js';
 import eyeTestRouter from './routes/eyeTest.route.js';
 import orderRouter from './routes/order.route.js';
 import productRouter from './routes/product.route.js';
+import policyPublicRouter from './routes/policy.route.js';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -101,6 +102,7 @@ app.use('/api/image', imageRouter);    // Image uploads
 app.use('/api/eye-test', eyeTestRouter); // Eye test booking
 app.use('/api/order', orderRouter);    // Order management
 app.use('/api/product', productRouter); // Product management and search
+app.use('/api/policy', policyPublicRouter); // Public read-only policy access
 
 // ========== ERROR HANDLER ==========
 // Centralized error handler for all API errors

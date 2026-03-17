@@ -6,7 +6,8 @@ const RefundPolicy = () => {
      const [date,setDate] = useState(new Date(null));
     
      useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-policy/682e66a5424de8081226383e`)
+    	// Public refund policy fetch (read-only)
+    	axios.get(`${baseURL}/api/policy/682e66a5424de8081226383e`)
             .then((res) => {
             setPolicy(res.data.message);
             setDate(new Date(res.data.message.updatedAt));
