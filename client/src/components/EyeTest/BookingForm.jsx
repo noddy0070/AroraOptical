@@ -134,8 +134,8 @@ const BookingForm = () => {
       <img src={eyeTestBanner} alt="Eye Test Banner" className="w-full h-auto mb-6" />
       <div className='p-[2vw]'>
 
-      <div className='flex flex-row gap-[2vw] justify-center '>
-      <form onSubmit={handleSubmit} className="space-y-4 w-[25vw] mt-[1vw] ">
+      <div className='flex flex-col md:flex-row gap-[2vw] justify-center '>
+      <form onSubmit={handleSubmit} className="space-y-4 w-full md:w-[25vw] mt-[1vw] ">
       <h2 className="text-h4Text font-semibold mb-[1vw]">Patient Details</h2>
 
         <div className="">
@@ -198,7 +198,7 @@ const BookingForm = () => {
       <div className=' '>
       <CalendarComponent formData={formData} setFormData={setFormData}/>
       </div>
-      <div className=' flex flex-col gap-[.75vw] w-[25vw] mt-[1-+vw] '>
+      <div className=' flex flex-row md:flex-col gap-[.75vw] w-full md:w-[25vw] mt-[1-+vw] '>
         <span className='text-[#192020] text-mediumText '>
           {formData.testDate ? new Date(formData.testDate).toLocaleDateString('en-US', { 
             weekday: 'long', 
@@ -206,6 +206,7 @@ const BookingForm = () => {
             month: 'long' 
           }) : 'Select a date'}
         </span>
+        <div className='flex flex-row md:flex-col flex-wrap gap-[.75vw]'>
         {availableSlots.map(slot => (
           (() => {
             const bookedCount = getSlotBookedCount(slot);
@@ -222,7 +223,7 @@ const BookingForm = () => {
               setFormData(prev => ({ ...prev, timeSlot: slot.value }));
             }}
             className={[
-              'py-[.75vw] w-[17.5vw] text-center font-bold text-mediumText border-[rgba(04,43,43,.32)] border-[.0625vw] rounded-[.875vw] transition-colors duration-300',
+              'py-[.75vw] w-[17.5vw] whitespace-nowrap text-center font-bold text-mediumText border-[rgba(04,43,43,.32)] border-[.0625vw] rounded-[.875vw] transition-colors duration-300',
               isFull ? 'cursor-not-allowed bg-black text-white' : 'cursor-pointer',
               !isFull && bookedCount === 0 ? 'bg-green-500 text-white' : '',
               !isFull && (bookedCount === 1 || bookedCount === 2) ? 'bg-yellow-400 text-black' : '',
@@ -235,6 +236,7 @@ const BookingForm = () => {
             );
           })()
         ))}
+        </div>
       </div>
       </div>
       </div>

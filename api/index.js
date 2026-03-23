@@ -6,6 +6,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import dns from 'dns';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import adminRouter from './routes/admin.route.js';
@@ -24,6 +25,16 @@ import './utils/passport.js'; // import passport config
 
 // Load environment variables from .env file
 dotenv.config();
+
+// Work around DNS resolvers that refuse SRV lookups used by mongodb+srv URIs.
+// You can override via DNS_SERVERS env, e.g. "8.8.8.8,1.1.1.1".
+const dnsServers = (process.env.DNS_SERVERS || '8.8.8.8,1.1.1.1')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+if (dnsServers.length > 0) {
+  dns.setServers(dnsServers);
+}
 
 // Debug log for environment variables (for development only)
 console.log('Server Environment:', {

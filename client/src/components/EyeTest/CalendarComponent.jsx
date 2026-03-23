@@ -113,7 +113,7 @@ export default function CalendarComponent({formData, setFormData}) {
         days.push(
           <div
             key={currentDay.getTime()}
-            className={`text-center w-[70px] h-[70px] text-h6Text cursor-pointer flex items-center justify-center rounded-full mb-[12px]
+            className={`text-center size-[30px] md:size-[40px] lg:size-[50px] xl:size-[70px]  text-h6Text cursor-pointer flex items-center justify-center rounded-full mb-[12px]
               transition-all duration-200
               ${isDisabled || isNotCurrentMonth ? 'text-gray-300 cursor-not-allowed' : 'text-[#263238]'}
               ${isAvailableDay && !isSelected ? 'bg-[rgba(04,43,43,0.08)] ring-1 ring-[rgba(04,43,43,0.25)] hover:bg-[rgba(04,43,43,0.14)]' : ''}
