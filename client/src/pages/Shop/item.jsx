@@ -15,7 +15,6 @@ export default function Item({product}) {
     const [loading, setLoading] = useState(false);
     const { user, isAuthenticated } = useSelector((state) => state.auth);   
     const navigate = useNavigate();
-    console.log('product', product);
     // Check if item is in wishlist on component mount
     useEffect(() => {
         const checkWishlist = async () => {

@@ -27,6 +27,8 @@ import SearchResults from "./pages/Search/SearchResults.jsx";
 // ========== AUTHENTICATION PAGES ==========
 import Signup from "./pages/Auth/SignUp";
 import Login from "./pages/Auth/Login.jsx"
+import ForgotPassword from "./pages/Auth/ForgotPassword.jsx";
+import ResetPassword from "./pages/Auth/ResetPassword.jsx";
 
 // ========== USER PAGES (PROTECTED) ==========
 import Settings from "./pages/Settings/Setting.jsx";
@@ -101,7 +103,7 @@ const Layout = () => {
   const [isMobileView, setIsMobileView] = useState(false);
 
   // Routes where navigation bars should be hidden (exact matches)
-  const hideNavbarsExact = ["/login", "/signup",];
+  const hideNavbarsExact = ["/login", "/signup", "/forgot-password", "/reset-password"];
 
   // Check if current route should hide navigation bars
   const shouldHideNavbar =
@@ -158,7 +160,7 @@ const Layout2 = () => {
   const [isMobileView, setIsMobileView] = useState(false);
 
   // Routes where footer should be hidden (exact matches)
-  const hideNavbarsExact = ["/login", "/signup","/admin"];
+  const hideNavbarsExact = ["/login", "/signup", "/forgot-password", "/reset-password", "/admin"];
 
   // Check if current route should hide footer
   const shouldHideNavbar =
@@ -268,6 +270,22 @@ export default function App() {
         element={
           <Page title="Arora Opticals | Login">
             <Login />
+          </Page>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <Page title="Arora Opticals | Forgot password">
+            <ForgotPassword />
+          </Page>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <Page title="Arora Opticals | Reset password">
+            <ResetPassword />
           </Page>
         }
       />

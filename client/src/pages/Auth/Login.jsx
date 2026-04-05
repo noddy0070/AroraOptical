@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '@/redux/slice/authSlice';
 import axios from "axios";
@@ -20,10 +20,19 @@ export default function Login(){
     });
     const [showPassword, setShowPassword] = useState(false);
     const navigate=useNavigate();
+    const location = useLocation();
     const dispatch=useDispatch();
     const [error, setError] = useState('');
+    const [infoBanner, setInfoBanner] = useState('');
     const [loading,setLoading] = useState(false);
     const {user} =useSelector((state)=>state.auth);
+
+    useEffect(() => {
+        if (location.state?.resetMessage) {
+            setInfoBanner(location.state.resetMessage);
+            navigate(location.pathname, { replace: true, state: {} });
+        }
+    }, [location.state, location.pathname, navigate]);
 
     const validateForm = () => {
         let errors = {};
@@ -148,6 +157,11 @@ export default function Login(){
                                     </button>
                                     {formErrors.password && <p className='text-red-500 text-sm mt-1'>{formErrors.password}</p>}
                                 </div>
+                                <div className="text-right -mt-[1vw] md:-mt-[0.25vw]">
+                                    <TransitionLink to="/forgot-password">
+                                        <span className="text-sm underline text-[#505050]">Forgot password?</span>
+                                    </TransitionLink>
+                                </div>
                                 <button 
                                     disabled={loading} 
                                     className='border p-[2vw] md:p-[.75vw] rounded-[8vw] mt-[2vw] md:mt-[1vw] md:rounded-[2vw] bg-black text-white disabled:bg-gray-400 disabled:cursor-not-allowed'
@@ -162,6 +176,7 @@ export default function Login(){
                                     <img src={google} className='h-[5vw] w-[5vw] md:h-[1.5vw] md:w-[1.5vw]'/><p>Sign in with Google</p>
                                 </button>
                             </a>
+                            {infoBanner && <p className='text-green-700 text-center'>{infoBanner}</p>}
                             {error && <p className='text-red-500 text-center'>{error}</p>}
                             <div className='font-roboto text-regularTextPhone md:text-regularText'>
                                 <p className='text-center leading-[150%]'>Don't have an account? <TransitionLink to='/signup'><span className='underline'>SignUp</span></TransitionLink> | <span className='underline'><TransitionLink to='/'>Home</TransitionLink></span></p>

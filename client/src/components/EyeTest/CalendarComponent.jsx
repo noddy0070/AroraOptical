@@ -122,15 +122,7 @@ export default function CalendarComponent({formData, setFormData}) {
             `}
             onClick={() => {
               if (!isDisabled && !isNotCurrentMonth) {
-                // console.log('Date clicked:', currentDay);
-                // console.log('Date formatted:', format(currentDay, 'yyyy-MM-dd'));
-                // console.log('Date value:', currentDay);
-                
-                // Create a new date object to avoid reference issues
                 const selectedDay = new Date(currentDay);
-                // console.log('Selected day:', selectedDay);
-                // console.log('Selected day formatted:', format(selectedDay, 'yyyy-MM-dd'));
-                
                 setSelectedDate(selectedDay);
                 setFormData(prev => {
                   console.log('Previous formData:', prev);
