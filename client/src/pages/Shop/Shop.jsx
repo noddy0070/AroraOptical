@@ -31,6 +31,7 @@ export default function Shop({category, audience}) {
         const fetchProducts = async () => {
             try {
                 setLoading(true);
+                console.log('category', category);
                 // Convert audience to gender parameter
                 const genderParam = audience.toLowerCase() === "everyone" || audience.toLowerCase() === "glasses" ? "" : audience.toLowerCase();
                 console.log('genderParam',genderParam);

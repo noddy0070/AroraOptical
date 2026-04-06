@@ -1,11 +1,11 @@
-import React, { Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import HeroSection from './Sections/HeroSection';
 import Categories from './Sections/Categories';
 
 // Lazy load other sections
 const Discover = lazy(() => import('./Sections/Discover'));
 const Trending = lazy(() => import('./Sections/Trending'));
-const Brands = lazy(() => import('./Sections/Brands'));
+// const Brands = lazy(() => import('./Sections/Brands'));
 const FreeEyeTest = lazy(() => import('./Sections/FreeEyeTest'));
 const Guide = lazy(() => import('./Sections/Guide'));
 const Blog = lazy(() => import('./Sections/Blog'));

@@ -26,6 +26,7 @@ export default function AboutUs() {
         We understood in the start that resolving the vision needs is the first priority in our organization, and after understanding the vision needs, we offer the lenses which will fulfill their needs accordingly.<br/> <br/> 
         The main aim of our organization in after sale services to resolve any kind of problem which a consumer facing with their specs or sunglasses.
         </p>
+        
       </div>
 
       {/* Second Section */}

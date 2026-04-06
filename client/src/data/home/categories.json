@@ -1,0 +1,40 @@
+{
+  "CategoriesData": [
+    {
+      "src": "/assets/images/home/categories/sunglasses.png",
+      "alt": "Sunglasses",
+      "title": "Sunglasses",
+      "link": "/shop/glasses/men"
+    },
+    {
+      "src": "/assets/images/home/categories/eyeglasses.png",
+      "alt": "Eyeglasses",
+      "title": "Eyeglasses",
+      "link": "/shop/glasses/men"
+    },
+    {
+      "src": "/assets/images/home/categories/computer-glasses.png",
+      "alt": "Computer Glasses",
+      "title": "Computer Glasses",
+      "link": "/shop/glasses/men"
+    },
+    {
+      "src": "/assets/images/home/categories/men.png",
+      "alt": "Men",
+      "title": "Men",
+      "link": "/shop/glasses/men"
+    },
+    {
+      "src": "/assets/images/home/categories/women.png",
+      "alt": "Women",
+      "title": "Women",
+      "link": "/shop/glasses/women"
+    },
+    {
+      "src": "/assets/images/home/categories/kids.png",
+      "alt": "Kids",
+      "title": "Kids",
+      "link": "/shop/glasses/kids"
+    }
+  ]
+}
