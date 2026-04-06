@@ -113,41 +113,43 @@ export default function Categories() {
           ))}
         </div>
       </div>
-      <div className=" md:px-[4vw] bg-offwhitebg select-none mx-[-5vw]  md:mx-[-2vw] overflow-hidden flex items-center ">
+      <div className=" md:px-[4vw] bg-offwhitebg select-none mx-[-5vw] gap-[6vw] md:gap-0  md:mx-[-2vw] overflow-hidden flex flex-col md:flex-row items-center ">
         <div className=" justify-center flex flex-col gap-[4vw] md:gap-[1.5vw]">
-          <h2 className="text-h4TextPhone text-left md:text-h2Text leading-[120%]  font-roboto font-bold md:max-w-[25vw]">
+          <h2 className="text-h4TextPhone text-center md:text-left md:text-h2Text leading-[120%]  font-roboto font-bold md:max-w-[25vw]">
             Fresh Arrivals And New Selections
           </h2>
-          <div className="flex flex-row w-min  gap-[4px] group">
-            <TitleButton
-              className2="text-[12px] md:text-regularText group-hover:text-black "
-              className="group-hover:bg-btnHoverColour"
-              btnHeightPhone={8}
-              btnRadiusPhone={6}
-              btnWidthPhone={22}
-              btnHeight={4.25}
-              btnWidth={13}
-              btnRadius={3.125}
-              btnTitle={"Shop All"}
-            />
+          <TransitionLink to="/shop/glasses/men">
+            <div className="flex-row w-min hidden md:flex  gap-[4px] group">
+                <TitleButton
+                className2="text-[12px] md:text-regularText group-hover:text-black "
+                className="group-hover:bg-btnHoverColour"
+                btnHeightPhone={8}
+                btnRadiusPhone={6}
+                btnWidthPhone={22}
+                btnHeight={4.25}
+                btnWidth={13}
+                btnRadius={3.125}
+                btnTitle={"Shop All"}
+                />
 
-            <IconButton
-              className="z-[10] shadow-[0px_1.6006783246994019px_2.4px_rgba(0,_0,_0,_0.4)] group-hover:bg-btnHoverColour group-hover:text-black"
-              btnSizePhone={6}
-              paddingPhone={1}
-              iconWidthPhone={12}
-              btnSize={4.25}
-              padding={1.25}
-              iconWidth={2.1875}
-            />
-          </div>
+                <IconButton
+                className="z-[10] shadow-[0px_1.6006783246994019px_2.4px_rgba(0,_0,_0,_0.4)] group-hover:bg-btnHoverColour group-hover:text-black"
+                btnSizePhone={6}
+                paddingPhone={1}
+                iconWidthPhone={12}
+                btnSize={4.25}
+                padding={1.25}
+                iconWidth={2.1875}
+                />
+            </div>
+          </TransitionLink>
         </div>
-        <div className="border-darkslategrey h-[11.1vw] border-solid border-[.5px] mx-[4vw]">
+        <div className="hidden md:block border-darkslategrey h-[11.1vw] border-solid border-[.5px] mx-[4vw]">
         </div>
-        <div className="flex gap-[1.5vw] overflow-auto hide-scrollbar">
+        <div className="flex gap-[4vw] md:gap-[1.5vw] mr-auto px-[5vw] md:px-0 overflow-auto hide-scrollbar">
             {products.length > 0 ? (
                                         products.map((item, index) => (
-                                            <div className=" shrink-0  max-w-[360px] " key={index} >
+                                            <div className=" shrink-0 max-w-[61.25vw] md:max-w-[360px] " key={index} >
                                                 <Item 
                                                     product={item}
                                                 />
@@ -164,6 +166,31 @@ export default function Categories() {
                                         </div>
                                     )}
         </div>
+        <TransitionLink to="/shop/glasses/men"> 
+        <div className="flex-row w-min flex  md:hidden  gap-[4px] group">
+            <TitleButton
+              className2="text-[12px] md:text-regularText group-hover:text-black "
+              className="group-hover:bg-btnHoverColour"
+              btnHeightPhone={10}
+              btnRadiusPhone={6}
+              btnWidthPhone={32}
+              btnHeight={4.25}
+              btnWidth={13}
+              btnRadius={3.125}
+              btnTitle={"Shop All"}
+            />
+
+            <IconButton
+              className="z-[10] shadow-[0px_1.6006783246994019px_2.4px_rgba(0,_0,_0,_0.4)] group-hover:bg-btnHoverColour group-hover:text-black"
+              btnSizePhone={10}
+              paddingPhone={1}
+              iconWidthPhone={20}
+              btnSize={4.25}
+              padding={1.25}
+              iconWidth={2.1875}
+            />
+          </div>
+          </TransitionLink>
       </div>
     </section>
   );
