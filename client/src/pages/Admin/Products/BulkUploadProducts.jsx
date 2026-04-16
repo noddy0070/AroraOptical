@@ -131,8 +131,8 @@ const BulkUploadProducts = () => {
     }
 
     return {
-      modelTitle: String(row["Model Name"] || "").trim(),
-      modelName: String(row["Model Number"] || "").trim(),
+      modelTitle: String(row["Model Number"] || "").trim(),
+      modelName: String(row["Model Name"] || "").trim(),
       modelCode: String(row["Color Code"] || "").trim(),
       brand: "Arora Opticals",
       isSellable: "true",
