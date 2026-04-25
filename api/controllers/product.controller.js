@@ -58,7 +58,6 @@ export const getProducts = async (req, res, next) => {
   try {
     const { category, gender, brand, newArrivals, bestsellers, accessories, limit } = req.query;
     let query = {};
-    console.log('category',category);
     // Add filters if they exist
     if (category) {
       if(category==='accessories'){
@@ -228,7 +227,6 @@ export const searchProducts = async (req, res, next) => {
   try {
     const { q, limit = 20 } = req.query;
     
-    console.log('Search request received:', { q, limit });
     
     if (!q || q.trim().length === 0) {
       return res.status(400).json({ 
@@ -238,15 +236,12 @@ export const searchProducts = async (req, res, next) => {
     }
 
     const searchTerm = q.trim();
-    console.log('Searching for:', searchTerm);
     
     // First, let's check if there are any products at all
     const totalProducts = await Product.countDocuments();
-    console.log('Total products in database:', totalProducts);
     
     // Get a sample product to check the structure
     const sampleProduct = await Product.findOne();
-    console.log('Sample product structure:', sampleProduct ? Object.keys(sampleProduct.toObject()) : 'No products found');
     
     // Create search query for multiple fields
     const searchQuery = {
@@ -302,7 +297,6 @@ export const searchProducts = async (req, res, next) => {
       .limit(parseInt(limit))
       .sort({ orders: -1, createdAt: -1 });
 
-    console.log('Products found without isSellable filter:', products.length);
 
     // If no results, try with isSellable filter
     if (products.length === 0) {
@@ -310,7 +304,6 @@ export const searchProducts = async (req, res, next) => {
       products = await Product.find(searchQuery)
         .limit(parseInt(limit))
         .sort({ orders: -1, createdAt: -1 });
-      console.log('Products found with isSellable filter:', products.length);
     }
 
     // If still no results, try without any filters
@@ -325,7 +318,6 @@ export const searchProducts = async (req, res, next) => {
       products = await Product.find(simpleQuery)
         .limit(parseInt(limit))
         .sort({ orders: -1, createdAt: -1 });
-      console.log('Products found with simple query:', products.length);
     }
 
     res.status(200).json({
@@ -412,7 +404,7 @@ export const bulkAddProducts = async (req, res) => {
       generalAttributes: Array.isArray(p.generalAttributes)
         ? p.generalAttributes
         : [],
-      rx: p.rx ?? false,
+      rx: p.rx,
     }));
 
     const inserted = await Product.insertMany(productsToInsert);
@@ -430,66 +422,68 @@ export const bulkAddProducts = async (req, res) => {
   }
 };
 
-export const getProductTemplate = async (req, res) => {
-  try {
-    const headers = [
-      "Category",
-      "Model Name",
-      "Model Number",
-      "Color Code",
-      "Gender",
-      "Description",
-      "Price",
-      "Discount",
-      "Advertising Hashtags",
-      "Lens Color",
-      "Lens Base Color",
-      "Lens Width",
-      "Lens Treatment",
-      "Frame Color",
-      "Bridge Size",
-      "Fit",
-      "Exact Size",
-      "Shape",
-      "Temple Color",
-      "Frame Material",
-      "Temple Material",
-      "Image1",
-      "Image2",
-      "Image3",
-      "Image4",
-      "Image5",
-      "Image6",
-      "Image7",
-      "Image8",
-      "Image9",
-      "Image10",
-    ];
+// export const getProductTemplate = async (req, res) => {
+//   try {
+//     const headers = [
+//       "Category",
+//       "Model Name",
+//       "Model Number",
+//       "Color Code",
+//       "Brand",
+//       "RX",
+//       "Gender",
+//       "Description",
+//       "Price",
+//       "Discount",
+//       "Advertising Hashtags",
+//       "Lens Color",
+//       "Lens Base Color",
+//       "Lens Width",
+//       "Lens Treatment",
+//       "Frame Color",
+//       "Bridge Size",
+//       "Fit",
+//       "Exact Size",
+//       "Shape",
+//       "Temple Color",
+//       "Frame Material",
+//       "Temple Material",
+//       "Image1",
+//       "Image2",
+//       "Image3",
+//       "Image4",
+//       "Image5",
+//       "Image6",
+//       "Image7",
+//       "Image8",
+//       "Image9",
+//       "Image10",
+//     ];
 
-    const worksheet = XLSX.utils.aoa_to_sheet([headers]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+//     const worksheet = XLSX.utils.aoa_to_sheet([headers]);
+//     const workbook = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
 
-    const buffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "buffer",
-    });
+//     const buffer = XLSX.write(workbook, {
+//       bookType: "xlsx",
+//       type: "buffer",
+//     });
 
-    res.setHeader(
-      "Content-Disposition",
-      'attachment; filename="product-template.xlsx"'
-    );
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
+//     res.setHeader(
+//       "Content-Disposition",
+//       'attachment; filename="product-template.xlsx"'
+//     );
+//     res.setHeader(
+//       "Content-Type",
+//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//     );
 
-    return res.status(200).send(buffer);
-  } catch (error) {
-    console.error("getProductTemplate error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to generate Excel template",
-    });
-  }
-};
+//     return res.status(200).send(buffer);
+//   } catch (error) {
+//     console.error("getProductTemplate error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Failed to generate Excel template",
+//     });
+//   }
+// };

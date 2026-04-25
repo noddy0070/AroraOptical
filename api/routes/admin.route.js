@@ -8,7 +8,6 @@ import {
   deleteProduct,
   getAccessories,
   bulkAddProducts,
-  getProductTemplate,
 } from "../controllers/product.controller.js";
 import {
   addAttributes,
@@ -37,14 +36,9 @@ router.post(
   verifyAdmin,
   bulkAddProducts
 );
-router.get(
-  "/product-template",
-  authMiddleware,
-  verifyAdmin,
-  getProductTemplate
-);
+
 router.delete(
-  "/delete-product/:id",
+  "/delete-product/:id",  
   authMiddleware,
   verifyAdmin,
   deleteProduct
