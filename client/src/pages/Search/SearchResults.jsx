@@ -38,26 +38,16 @@ export default function SearchResults() {
     setLoading(true);
     setError(null);
     try {
-      console.log('Performing search for:', query);
-      console.log('API URL:', `${baseURL}/api/product/search`);
+    
       
       const response = await axios.get(`${baseURL}/api/product/search`, {
         params: { q: query, limit: 50 },
         withCredentials: true
       });
 
-      console.log('Search response:', response.data);
 
       if (response.data.success) {
         setProducts(response.data.products);
-        console.log('Products found:', response.data.products.length);
-        if (response.data.products.length > 0) {
-          console.log('Sample product structure:', response.data.products[0]);
-          console.log('Sample product frameAttributes:', response.data.products[0].frameAttributes);
-        }
-        if (response.data.debug) {
-          console.log('Debug info:', response.data.debug);
-        }
       } else {
         setError('No products found');
       }
@@ -96,15 +86,6 @@ export default function SearchResults() {
   const filterProducts = (products) => {
     let filtered = products;
     
-    console.log('Filtering products with:', {
-      filterAudience,
-      filterMaterial,
-      filterShape,
-      filterSize,
-      filterBrand,
-      filterColor
-    });
-    
     // Filter by audience - try multiple approaches
     if (filterAudience !== 'All') {
       filtered = filtered.filter(product => {
@@ -134,7 +115,6 @@ export default function SearchResults() {
         
         return textFields.includes(filterAudience.toLowerCase());
       });
-      console.log('After audience filter:', filtered.length);
     }
     
     // Filter by material
@@ -163,7 +143,6 @@ export default function SearchResults() {
           textFields.includes(material.toLowerCase())
         );
       });
-      console.log('After material filter:', filtered.length);
     }
     
     // Filter by shape
@@ -192,7 +171,6 @@ export default function SearchResults() {
           textFields.includes(shape.toLowerCase())
         );
       });
-      console.log('After shape filter:', filtered.length);
     }
     
     // Filter by size
@@ -225,7 +203,6 @@ export default function SearchResults() {
           textFields.includes(size.toLowerCase())
         );
       });
-      console.log('After size filter:', filtered.length);
     }
     
     // Filter by brand
@@ -233,7 +210,6 @@ export default function SearchResults() {
       filtered = filtered.filter(product => 
         filterBrand.includes(product.brand)
       );
-      console.log('After brand filter:', filtered.length);
     }
     
     // Filter by color
@@ -262,10 +238,8 @@ export default function SearchResults() {
           textFields.includes(color.toLowerCase())
         );
       });
-      console.log('After color filter:', filtered.length);
     }
     
-    console.log('Final filtered products:', filtered.length);
     return filtered;
   };
 

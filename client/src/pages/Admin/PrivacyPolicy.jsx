@@ -36,7 +36,6 @@ const PrivacyPolicyAdmin=()=>{
               setForm(policy);
             }
         },[policy])
-        console.log(form);
 
   
       // Handles change of data in the form
@@ -60,7 +59,6 @@ const PrivacyPolicyAdmin=()=>{
       // handle submition of form i.e product is added to database
       const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Started Updating Privacy Policy...")
       
         try {
           const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6778fb2ffba94269d8ce`, form, {
@@ -73,16 +71,7 @@ const PrivacyPolicyAdmin=()=>{
           console.error('Error Updating Privacy Policy:', error);
           alert(error.response?.data?.message || 'An error occurred while Updating the user.');
         }
-        console.log("Finished Updating Privacy Policy...")
       };
-      
-     
-    
-
-      
-      console.log(form)
-     
-      
       
     return (
       (policy &&   <div className="w-full px-[2vw] py-[2vw] flex flex-col gap-[1vw] ">

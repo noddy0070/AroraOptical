@@ -32,7 +32,6 @@ const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,set
         setForm({...form, prescriptionId: prescriptionId});
     }
 
-    console.log(prescriptions);
   return (
     <div id='prescriptionFormMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0'>
             <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Saved Prescription</h1>

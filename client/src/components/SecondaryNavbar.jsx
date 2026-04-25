@@ -88,18 +88,15 @@ export default function SecondaryNavbar() {
 
     setIsSearching(true);
     try {
-      console.log('Navbar search for:', searchTerm);
       const response = await axios.get(`${baseURL}/api/product/search`, {
         params: { q: searchTerm, limit: 8 },
         withCredentials: true
       });
 
-      console.log('Navbar search response:', response.data);
 
       if (response.data.success) {
         setSearchResults(response.data.products);
         setShowSearchResults(true);
-        console.log('Navbar search results:', response.data.products.length);
       }
     } catch (error) {
       console.error('Navbar search error:', error);

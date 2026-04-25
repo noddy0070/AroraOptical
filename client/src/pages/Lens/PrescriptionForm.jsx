@@ -54,7 +54,6 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
         const leftSphereCylinderSum = leftSphere + leftCylinder;
         if (sphereCylinderSum < -6 || sphereCylinderSum > 6 || leftSphereCylinderSum < -6 || leftSphereCylinderSum > 6) {
             setError('The sum of power must be between -6 and +6');
-            console.log(sphereCylinderSum,leftSphereCylinderSum);
             return;
         }
         if(prescriptionForm.prescriptionPupilsDistance==="" || prescriptionForm.prescriptionRightAxis==="" || prescriptionForm.prescriptionLeftAxis==="" 

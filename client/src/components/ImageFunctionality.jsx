@@ -38,7 +38,6 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
     const parts = urlObj.pathname.split('/'); // Split by '/'
     const fileName = parts.pop(); // Get 't8jn7rgvzfpc5tuz2qx2.png'
     const publicId = fileName.replace(/\.[^/.]+$/, ''); // strip extension
-    console.log("publicId",publicId);
     return publicId;
   } catch {
     return null;
@@ -51,7 +50,6 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
     try {
       const timestamp = Math.floor(Date.now() / 1000);
       const publicId= extractPublicIdFromUrl(image_url);
-      console.log(publicId);
       // 🔍 Check if the server is reachable
       await axios.get(`${baseURL}/api/image/health`).catch(() => {
         throw new Error('⚠️ Backend server is not running. Start the server before making requests.');
@@ -67,7 +65,6 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       });
   
       const { signature, api_key } = signatureResponse.data;
-      console.log(signature,api_key);
   
       if (!signature || !api_key) {
         alert('❌ Failed to get signature. Please check the server response.');
@@ -81,12 +78,10 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       formData.append('signature', signature);
       formData.append('api_key', api_key);
   
-        console.log("id",publicId);
       const deleteResponse =await axios.post(`${baseURL}/api/image/delete-image`, { public_id: publicId }, {
         withCredentials: true
       });
 
-      console.log(deleteResponse.data);
       if (deleteResponse.data.result === 'ok') {
         alert('✅ Image deleted successfully!');
         setUploadedImages((prevImages) =>
@@ -132,7 +127,6 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       setUploading(false);
     }
   };
-console.log(uploadedImages)
   
 
   return (

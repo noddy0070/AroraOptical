@@ -109,8 +109,6 @@ export default function Profile({user}){
         }
     }
 
-    // console.log(formData);
-
       return (
         <>
                     <div className='flex flex-row gap-[6vw] md:gap-[2.5vw] items-center'>

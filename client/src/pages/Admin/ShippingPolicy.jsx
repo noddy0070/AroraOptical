@@ -36,7 +36,6 @@ const ShippingPolicyAdmin=()=>{
               setForm(policy);
             }
         },[policy])
-        console.log(form);
 
   
       // Handles change of data in the form
@@ -60,7 +59,6 @@ const ShippingPolicyAdmin=()=>{
       // handle submition of form i.e product is added to database
       const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Started Updating Shipping Policy...")
       
         try {
           const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6724fb2ffba94269d8cc`, form, {
@@ -73,16 +71,7 @@ const ShippingPolicyAdmin=()=>{
           console.error('Error Updating Shipping Policy:', error);
           alert(error.response?.data?.message || 'An error occurred while Updating the user.');
         }
-        console.log("Finished Updating Shipping Policy...")
       };
-      
-     
-    
-
-      
-      console.log(form)
-     
-      
       
     return (
       (policy &&   <div className="w-full px-[2vw] py-[2vw] flex flex-col gap-[1vw] ">

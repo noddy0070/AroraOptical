@@ -36,7 +36,6 @@ const CancellationPolicy=()=>{
               setForm(policy);
             }
         },[policy])
-        console.log(form);
 
   
       // Handles change of data in the form
@@ -60,7 +59,6 @@ const CancellationPolicy=()=>{
       // handle submition of form i.e product is added to database
       const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Started Updating Cancellation Policy...")
       
         try {
           const response = await axios.post(`${baseURL}/api/admin/update-policy/682e66a5424de8081226383e`, form, {
@@ -73,17 +71,8 @@ const CancellationPolicy=()=>{
           console.error('Error Updating Cancellation Policy:', error);
           alert(error.response?.data?.message || 'An error occurred while Updating the user.');
         }
-        console.log("Finished Updating Cancellation Policy...")
       };
-      
      
-    
-
-      
-      console.log(form)
-     
-      
-      
     return (
       (policy &&   <div className="w-full px-[2vw] py-[2vw] flex flex-col gap-[1vw] ">
 

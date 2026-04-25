@@ -237,7 +237,7 @@ export default function ProductDescription({productToDisplay}){
                         <img
                                 key={index}
                                 src={img}
-                                className={`h-[28vw] md:h-[7vw] w-[28vw] md:w-[6.875vw] bg-white rounded-[2.5vw] md:rounded-[10px] cursor-pointer clickable object-cover ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
+                                className={`h-[28vw] md:h-[7vw] w-[28vw] md:w-[6.875vw] bg-white rounded-[2.5vw] md:rounded-[10px] cursor-pointer clickable object-contain ${index==selectedIndex?"border-[2px] border-black":"border-[1px] border-gray-600"}`}
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                                 onClick={() => setSelectedIndex(index)}
@@ -251,7 +251,7 @@ export default function ProductDescription({productToDisplay}){
             <img
                 key={mainImage} // ⚠️ important: force re-render on image change
                 src={mainImage}
-                className="h-full w-full object-cover clickable transition-all duration-500 ease-in-out p-[5vw] md:p-[2vw] opacity-0 animate-fade-in"
+                className="h-full w-full object-contain clickable transition-all duration-500 ease-in-out p-[5vw] md:p-[2vw] opacity-0 animate-fade-in"
             />
             <div className='absolute top-[3vw] md:top-[1vw] right-[3vw] md:right-[1vw] flex z-50 gap-[2vw] md:gap-[8px] items-center'>
                 <div 

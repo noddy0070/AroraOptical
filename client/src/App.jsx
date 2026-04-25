@@ -5,7 +5,7 @@
 
 // ========== REACT AND ROUTING IMPORTS ==========
 import {BrowserRouter,Routes, Route,useLocation } from "react-router-dom";
-import React,{useState,useEffect} from "react";
+import {useState,useEffect} from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -40,9 +40,7 @@ import Lens from "./pages/Lens/Lens.jsx";
 import BookingForm from "./components/EyeTest/BookingForm.jsx";
 
 // ========== ADMIN PAGES ==========
-import Admin from "./pages/Admin/Admin.jsx";
 import DashBoard from "./pages/Admin/Dashboard.jsx";
-import Home2 from './pages/Admin/Home.jsx';
 
 // ========== ADMIN - PRODUCT MANAGEMENT ==========
 import Products from "./pages/Admin/Products/Products.jsx";

@@ -125,8 +125,6 @@ export default function CalendarComponent({formData, setFormData}) {
                 const selectedDay = new Date(currentDay);
                 setSelectedDate(selectedDay);
                 setFormData(prev => {
-                  console.log('Previous formData:', prev);
-                  console.log('Updating formData with date:', selectedDay);
                   return { ...prev, testDate: selectedDay };
                 });
               }

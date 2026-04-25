@@ -10,6 +10,7 @@ const REQUIRED_FIELDS = [
   "Model Name",
   "Model Number",
   "Color Code",
+  "Brand",
   "Gender",
   "Price",
 ];
@@ -129,12 +130,13 @@ const BulkUploadProducts = () => {
         value: String(row["Gender"]).trim(),
       });
     }
-
+    let rx=String(row["RX"])
     return {
       modelTitle: String(row["Model Number"] || "").trim(),
       modelName: String(row["Model Name"] || "").trim(),
       modelCode: String(row["Color Code"] || "").trim(),
-      brand: "Arora Opticals",
+      brand: String(row["Brand"] || "Arora Opticals").trim(),
+      rx:String(rx.toLowerCase()=='true'?true:false),
       isSellable: "true",
       category: String(row["Category"] || "").trim(),
       gender: String(row["Gender"] || "").trim(),
@@ -149,7 +151,6 @@ const BulkUploadProducts = () => {
       lensAttributes,
       frameAttributes,
       generalAttributes,
-      rx: false,
     };
   };
 

@@ -27,7 +27,6 @@ export default function Accessories({category, audience}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const location = useLocation();
-    console.log(location);
     const categoryDefault="accessories"
     const [selectedButton, setSelectedButton] = useState(categories.indexOf(categoryDefault))
 
@@ -37,8 +36,6 @@ export default function Accessories({category, audience}) {
         setSelectedCategory(category);
       };
 
-    // console.log('products',products);
-    console.log(selectedCategory);
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -120,7 +117,6 @@ export default function Accessories({category, audience}) {
         return <div className="text-red-600 text-center">{error}</div>;
     }
 
-    console.log(filteredProducts);
 
     return (
         <div className=''>

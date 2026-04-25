@@ -31,7 +31,6 @@ const BookingForm = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // console.log('formData.testDate in BookingForm:', formData.testDate);
     setFormData(prev => ({ ...prev, timeSlot: '' }));
     if (formData.testDate) {
       fetchAvailableSlots(formData.testDate);
@@ -50,14 +49,12 @@ const BookingForm = () => {
       ].join('-');
       const response = await fetch(`${baseURL}/api/eye-test/available-slots?date=${formattedDate}`);
       const data = await response.json();
-      console.log(data);
       setAvailableSlots(data);
     } catch (error) {
       console.error('Error fetching slots:', error);
       toast.error('Failed to fetch available time slots');
     }
   };
-  console.log(formData)
 
   const selectedSlotObj = availableSlots.find(s => s.value === formData.timeSlot);
   const isSelectedSlotFull = !!selectedSlotObj?.isFull;

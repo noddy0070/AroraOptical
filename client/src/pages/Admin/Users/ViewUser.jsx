@@ -6,28 +6,22 @@ import { FormField } from "@/components/ProductFields";
 
 const ViewUser = () => {
      const { id } = useParams();
-     console.log(id);
      const [userDetail,setUserDetails]=useState({});
      
      useEffect(()=>{
         if (!id) return; 
-        console.log("started");
         axios.get(`${baseURL}/api/admin/get-user/${id}`, {
           withCredentials: true
         })
         .then((res) => {
           setUserDetails(res.data.message);
-          console.log(res.data);
             })
         .catch((err) => {
           console.error('Failed to fetch products:', err);
         });
      },[id])
-     console.log(userDetail);
-
     const handleChange = (e ) => {
         const { name, value } = e.target;
-
       };
 
   return (

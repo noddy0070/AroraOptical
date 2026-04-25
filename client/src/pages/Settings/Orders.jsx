@@ -28,7 +28,6 @@ export default function Orders() {
             
             if (response.data.success) {
                 setOrders(response.data.orders);
-                console.log('Orders data:', response.data.orders);
             }
         } catch (error) {
             console.error('Error fetching orders:', error);

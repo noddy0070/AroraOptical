@@ -18,7 +18,6 @@ const Admin = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if(username === adminDetails[0].username && password === adminDetails[0].password){
-            console.log("Login Successful");
             navigate("/Admin/Dashboard");
         }else{
             setError("Invalid Credentials");

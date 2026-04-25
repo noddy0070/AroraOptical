@@ -24,17 +24,14 @@ export default function Shop({category, audience}) {
     const [activeFilters, setActiveFilters] = useState({Audience:[],Brands:[],Shapes:[],"Frame Type":[],"Frame Material":[],"Colors":[],"Sizes":[]});
     const [clearTrigger, setClearTrigger] = useState(0);
 
-    console.log('products',products);
 
     useEffect(() => {
         
         const fetchProducts = async () => {
             try {
                 setLoading(true);
-                console.log('category', category);
                 // Convert audience to gender parameter
                 const genderParam = audience.toLowerCase() === "everyone" || audience.toLowerCase() === "glasses" ? "" : audience.toLowerCase();
-                console.log('genderParam',genderParam);
                 
                 // Check if this is a new arrivals or bestsellers request
                 const isNewArrivals = audience.toLowerCase() === "new-arrivals";
@@ -84,21 +81,18 @@ export default function Shop({category, audience}) {
     // Handle filter changes from Filters component
     const handleFiltersChange = (filters) => {
         setActiveFilters(filters);
-        console.log('Filters changed:', filters);
     };
 
     // Handle clear all filters
     const handleClearAllFilters = () => {
         setActiveFilters({Audience:[],Brands:[],Shapes:[],"Frame Type":[],"Frame Material":[],"Colors":[],"Sizes":[]});
         setClearTrigger(prev => prev + 1); // Trigger clear in Filters component
-        console.log('All filters cleared from Shop component');
     };
 
     // Filter products based on active filters
     const filterProducts = (products, filters) => {
         let filtered = [...products];
         
-        console.log('Filtering products with:', filters);
         
         // Filter by audience
         if (filters.Audience && filters.Audience.length > 0) {
@@ -167,7 +161,6 @@ export default function Shop({category, audience}) {
                     textFields.includes(audience.toLowerCase())
                 );
             });
-            console.log('After audience filter:', filtered.length);
         }
         
         // Filter by brand
@@ -175,7 +168,6 @@ export default function Shop({category, audience}) {
             filtered = filtered.filter(product => 
                 filters.Brands.includes(product.brand)
             );
-            console.log('After brand filter:', filtered.length);
         }
         
         // Filter by shape
@@ -199,7 +191,6 @@ export default function Shop({category, audience}) {
                     return textFields.includes(shape.toLowerCase());
                 })
             );
-            console.log('After shape filter:', filtered.length);
         }
         
         // Filter by frame type
@@ -223,7 +214,6 @@ export default function Shop({category, audience}) {
                     return textFields.includes(type.toLowerCase());
                 })
             );
-            console.log('After frame type filter:', filtered.length);
         }
         
         // Filter by frame material
@@ -247,7 +237,6 @@ export default function Shop({category, audience}) {
                     return textFields.includes(material.toLowerCase());
                 })
             );
-            console.log('After frame material filter:', filtered.length);
         }
         
         // Filter by colors
@@ -271,7 +260,6 @@ export default function Shop({category, audience}) {
                     return textFields.includes(color.toLowerCase());
                 })
             );
-            console.log('After color filter:', filtered.length);
         }
         
         // Filter by size
@@ -304,10 +292,8 @@ export default function Shop({category, audience}) {
                     textFields.includes(size.toLowerCase())
                 );
             });
-            console.log('After size filter:', filtered.length);
         }
         
-        console.log('Final filtered products:', filtered.length);
         return filtered;
     };
 

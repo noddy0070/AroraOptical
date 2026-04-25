@@ -50,14 +50,12 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
     } 
     else {
     try {
-      console.log(addressData);
       const response = await axios.post(
         `${baseURL}/api/user/address/add/${user._id}`,
         { address: addressData },
         { withCredentials: true }
       );
       if (response.data.success) {
-        console.log(response.data);
         // Refetch user data
         const userRes = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
         dispatch(loginSuccess({ user: userRes.data.user }));
@@ -103,7 +101,6 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
 
   const checkDeliverability = async (address) => {
     try {
-      console.log(address);
       // Replace with your store's pickup pincode
       const pickupPincode = '284001';
       const deliveryPincode = address.pincode;
@@ -114,7 +111,6 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
       if (response.data.success && response.data.serviceability.data && response.data.serviceability.data.available_courier_companies.length > 0) {
         setIsDeliverable('Delivery Available');
         setDeliveryPrice(response.data.serviceability.data.available_courier_companies[0].rate);
-        console.log(response.data.serviceability.data.available_courier_companies);
         toast.success(`Delivery available! Price: ₹${response.data.serviceability.data.available_courier_companies[0].rate}`);
       } else {
         setIsDeliverable('Not Deliverable');

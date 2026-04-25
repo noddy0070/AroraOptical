@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { TitleButton2 } from '@/components/button';
 import { formatINR } from '@/components/IntToPrice';
 import axios from 'axios';
 import { baseURL } from '@/url';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
@@ -12,14 +10,11 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
     const [loading, setLoading] = useState(false);
     const {user} =useSelector((state)=>state.auth);
 
-    const navigate = useNavigate();
-    console.log(shippingAddress);
 
     // Calculate total amount
     const totalAmount = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0) + deliveryPrice;
 
     
-    console.log(cartItems); 
     const handlePhonepePayment = async () =>{
       const data={
         cartItems,
@@ -31,7 +26,6 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
       try{
         const response = await axios.post(`${baseURL}/api/order/create-phonepe`, data, { withCredentials: true });
         window.location.href = response.data.checkoutPageUrl;
-        console.log(response.message)
       }catch(error){
         console.log("error in phonepe payment",error)
       }

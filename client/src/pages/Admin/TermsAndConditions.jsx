@@ -40,7 +40,6 @@ const TermsAndConditions = () => {
     } catch (error) {
       console.error('Failed to fetch policy:', error);
       // If policy doesn't exist, keep the default policy data
-      console.log('Policy not found, using default data');
     }
   };
 
@@ -49,15 +48,11 @@ const TermsAndConditions = () => {
     setMessage(''); // Clear any existing messages
     
     try {
-      console.log('Attempting to update Terms and Conditions policy...');
-      console.log('Policy data:', policy);
-      
       // First try to update the existing policy
       const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6780fb2ffba94269d8cf`, policy, {
         withCredentials: true
       });
       
-      console.log('Update response:', response);
       setMessage('Terms and Conditions updated successfully!');
       setIsEditing(false);
       setTimeout(() => setMessage(''), 3000);
@@ -69,14 +64,12 @@ const TermsAndConditions = () => {
       // If update fails, try to create a new policy
       if (error.response?.status === 404 || error.response?.status === 400) {
         try {
-          console.log('Policy not found, attempting to create new policy...');
           const createResponse = await axios.post(`${baseURL}/api/admin/add-cancellation-policy`, {
             ...policy,
             name: "TermsAndConditions"
           }, {
             withCredentials: true
           });
-          console.log('Create response:', createResponse);
           setMessage('Terms and Conditions created successfully!');
           setIsEditing(false);
           setTimeout(() => setMessage(''), 3000);

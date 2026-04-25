@@ -37,7 +37,6 @@ import {Size as size, Colors as color, Material as frameMaterial, Type as frameT
     const clearAllFilters = () => {
         setFiltersSelected(getInitialFilterState(productCategory));
         setShowFilterOptions([]); // Close all filter sections
-        console.log('All filters cleared');
         // Also call parent's clear function if provided
         if (onClearAll) {
             onClearAll();
@@ -56,7 +55,6 @@ import {Size as size, Colors as color, Material as frameMaterial, Type as frameT
         if (clearTrigger) {
             setFiltersSelected(getInitialFilterState(productCategory));
             setShowFilterOptions([]);
-            console.log('Filters cleared from parent trigger');
         }
     }, [clearTrigger, productCategory]);
 
@@ -67,7 +65,6 @@ import {Size as size, Colors as color, Material as frameMaterial, Type as frameT
     }, [productCategory]);
     
     // Debug: Log filter changes
-    console.log('Current filters selected:', filtersSelected);
     
   const renderFilterOptions = (options, id) => {
     const isOpen = showFilterOptions.includes(id);

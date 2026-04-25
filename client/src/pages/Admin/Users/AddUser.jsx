@@ -55,7 +55,6 @@ const AddUser=()=>{
       // handle submition of form i.e product is added to database
       const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Started adding user...")
       
         try {
           const response = await axios.post(`${baseURL}/api/admin/add-user`, form, {
@@ -69,16 +68,7 @@ const AddUser=()=>{
           console.error('Error Adding User:', error);
           alert(error.response?.data?.message || 'An error occurred while adding the user.');
         }
-        console.log("Finished Adding User...")
       };
-      
-     
-    
-
-      
-      console.log(form)
-     
-      
       
     return (
         <div className="w-full px-[2vw] py-[2vw] flex flex-col gap-[1vw] ">

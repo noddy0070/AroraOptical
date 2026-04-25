@@ -119,7 +119,6 @@ export default function Cart(){
             setLoading(false);
         }
     };
-    console.log(cartItems);
 
     return (
         <div className='bg-[#F5F5F5]'>
@@ -132,7 +131,6 @@ export default function Cart(){
                 <div className='flex flex-col gap-[4vw] md:gap-[2vw] w-full md:w-[57.6875vw] overflow-y-auto hide-scrollbar'>
                     {error && <p className='text-red-500 text-center text-regularTextPhone md:text-regularText'>{error}</p>}
                     {cartItems.map((item) => (
-                        console.log(item),
                         <CartItem key={item.productId._id} item={item} handleRemoveItem={handleRemoveItem} updateQuantity={updateQuantity}/>
                     ))}
                 </div>

@@ -22,7 +22,6 @@ export default function LensThickness({amount,form,setForm,handleFocus,addProduc
                     <LensFeatureBox onclick={()=>{
                         const updatedForm = {...form, lensThickness:"Medium"};
                         setForm(updatedForm);
-                        console.log("Setting lensThickness to Medium:", updatedForm);
                         if(updatedForm.lensType==="Zero Power"){
                             setTimeout(() => addProductToCart(updatedForm), 0);
                         } else {
@@ -32,7 +31,6 @@ export default function LensThickness({amount,form,setForm,handleFocus,addProduc
                     {form.lensType!="Bifocal" && <LensFeatureBox onclick={()=>{
                         const updatedForm = {...form, lensThickness:"Thick"};
                         setForm(updatedForm);
-                        console.log("Setting lensThickness to Thick:", updatedForm);
                         let newAmount = amount;
                         if(form.lensType==="Bifocal"){
                             newAmount = amount + 200;

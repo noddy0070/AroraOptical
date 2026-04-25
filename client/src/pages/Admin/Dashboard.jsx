@@ -1,14 +1,14 @@
-import React, { useRef,useState,useEffect } from 'react';
+import { useRef,useState,useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import SearchIcon2 from '../../assets/images/icons/SearchIcon.svg'
-import { AnalyticsIcon,AttributesIcon,CancellationPolicyIcon,CategoryIcon,DashboardIcon,EcommerceIcon,FAQIcon,HelpCenterIcon,OrderIcon,PrivacyPolicyIcon,SettingsIcon,ShippingAndDeliveryIcon,TermsAndConditionIcon,UserIcon} from './Icons';
+import { AttributesIcon,CancellationPolicyIcon,CategoryIcon,DashboardIcon,EcommerceIcon,FAQIcon,HelpCenterIcon,OrderIcon,PrivacyPolicyIcon,SettingsIcon,ShippingAndDeliveryIcon,TermsAndConditionIcon,UserIcon} from './Icons';
 import ChatIcon from '../../assets/images/icons/chatIcon.svg'
 import NotificationIcon from '../../assets/images/icons/notificationIcon.svg'
 import logo from '../../assets/images/AroraOpticalLogo.png';
-
+import { useSelector } from "react-redux";
 import './Dashboard.css';
 import { TransitionLink } from '@/Routes/TransitionLink';
-
+import { toTitleCase } from '../../../shared/pipes/strFormatting';
 
 const ecommerceSection = [
   { id: "Product List" },
@@ -16,10 +16,10 @@ const ecommerceSection = [
   { id: "Bulk Upload" },
 ];
 
-const categorySection = [
-  { id: "Category List" },
-  { id: "New Category" }
-];
+// const categorySection = [
+//   { id: "Category List" },
+//   { id: "New Category" }
+// ];
 
 const attributesSection = [
   { id: "Attributes" },
@@ -88,6 +88,7 @@ const DashBoard = () => {
   };
 
   const [active, setActive] = useState(getActiveSections());
+  const user=useSelector((state)=>state.auth.user);
 
   useEffect(() => {
     setActive(getActiveSections());
@@ -96,7 +97,6 @@ const DashBoard = () => {
   const handleChange = () => {
     const value = inputRef.current.value;
     setSearch(value);
-    console.log(value);
   };
 
   return (
@@ -117,7 +117,7 @@ const DashBoard = () => {
           <div className='flex flex-row gap-[2vw] w-[46.875vw] items-center text-gray-600 font-roboto font-bold text-[14px] h-[3vw] px-[.75vw] rounded-[2.5vw] shadow-[0px_2px_10px_rgba(0,_0,_0,_0.25)] border-[1px]'>
             <img className='w-[1.75vw] h-[1.75vw]' src={SearchIcon2} />
             <input
-              className='focus:outline-none'
+              className='focus:outline-none bg-[#F5F5F5]'
               type="text"
               defaultValue="Search Here"
               ref={inputRef}
@@ -127,13 +127,16 @@ const DashBoard = () => {
             />
           </div>
           <div className='flex gap-[2vw]'>
-            <img className='w-[1.25vw] h-auto' src={NotificationIcon} />
-            <img className='w-[1.25vw] h-auto' src={ChatIcon} />
+            <button>
+              <img className='w-[1.5vw] h-auto' src={NotificationIcon} />
+            </button>
+            <button>
+              <img className='w-[1.5vw] h-auto' src={ChatIcon} />
+            </button>
             <div className='flex gap-[.75vw] items-center'>
-              <div className='w-[2.5vw] h-[2.5vw] rounded-full bg-gray-500' />
               <div className='flex flex-col font-roboto leading-[120%]'>
-                <p className='text-regularText font-bold'>Name</p>
-                <p className='text-tinyText'>Role</p>
+                <p className='text-regularText font-bold'>{toTitleCase(user?.name)}</p>
+                <p className='text-tinyText'>Admin</p>
               </div>
             </div>
           </div>

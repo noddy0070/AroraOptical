@@ -139,7 +139,6 @@ const AddressDialougeBox = ({ isOpen, onClose, handleAddressSubmit, isEditAddres
 
   if (!isOpen) return null;
 
-  console.log(formData);
   return (
     <div className="fixed inset-0 bg-black font-roboto pt-[200px] bg-opacity-50 flex items-center justify-center z-50 min-h-screen overflow-y-auto p-[2vw]" onClick={onClose}>
       <div className="bg-white rounded-[.5vw] w-[600px] " onClick={(e) => e.stopPropagation()}>

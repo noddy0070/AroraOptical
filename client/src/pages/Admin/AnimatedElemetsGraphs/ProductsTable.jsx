@@ -17,7 +17,6 @@ const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage,deleteProduct}
     if (sortConfig.key === key && sortConfig.direction === 'ascending') direction = 'descending';
     setSortConfig({ key, direction });
   };
-  console.log("tableData",tableData);
   const filteredProducts = tableData?.filter(product => {
     return (
       (selectedBrand ? product.brand === selectedBrand : true) &&
@@ -38,7 +37,6 @@ const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage,deleteProduct}
 
 
   const finalSortedProducts = sortOrder === 'ascending' ? sortedProducts : [...sortedProducts].reverse();
-  console.log("final", finalSortedProducts)
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProducts = finalSortedProducts.slice(indexOfFirstItem, indexOfLastItem);
@@ -106,7 +104,7 @@ const Table = ({tableData,itemsPerPage,currentPage,setCurrentPage,deleteProduct}
               <td className="p-2 border text-left">{product.category}</td>
               <td className="p-2 border text-left">{product.brand}</td>
               <td className="p-2 border text-left">{formatINR(product.price)}</td>
-              <td className="p-2 border text-left">{formatINR(product.discount)}</td>
+              <td className="p-2 border text-left">%{product.discount??0}</td>
               <td className="p-2 border text-left">{product.orders}</td>
               <td className="py-2  border text-left">
                 <div key={index} className='flex justify-center gap-[.625vw] items-center'>                

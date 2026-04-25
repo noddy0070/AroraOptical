@@ -134,7 +134,6 @@ const AddProduct=()=>{
       // handle submition of form i.e product is added to database
       const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Started submitting product...")
       
         try {
           const response = await axios.post(`${baseURL}/api/admin/add-product`, form, {
@@ -149,7 +148,6 @@ const AddProduct=()=>{
           console.error('Error submitting product:', error);
           alert(error.response?.data?.message || 'An error occurred while submitting the product.');
         }
-        console.log("Finished submitting product...")
       };
       
       // Adds Images to form after addition of every image
@@ -194,10 +192,6 @@ const AddProduct=()=>{
         setLensAttributes(lenses);
         setGeneralAttributes(generals);
       };
-      console.log("form", form);
-    
-     
-      
 
     return (
         <div className="w-full px-[2vw] py-[2vw] flex flex-col gap-[1vw] ">

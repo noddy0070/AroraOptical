@@ -22,7 +22,6 @@ const PrivacyPolicy = () => {
           month: "long",
           year: "numeric",
         });
-        console.log(policy)
   return (
     (policy && <div className='w-full'>
       <section className='w-full bg-darkslategrey text-white  px-[5vw] md:px-[6vw] py-[10vw] md:py-[6.25vw]'>

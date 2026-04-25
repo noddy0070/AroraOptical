@@ -6,6 +6,10 @@ import SearchIcon2 from "../../../assets/images/icons/SearchIcon.svg";
 import axios from "axios";
 import { baseURL } from "@/url";
 
+const productTemplateHref = new URL(
+  "../../../assets/templates/product-template.xlsx",
+  import.meta.url
+).href;
 
 const Products = () => {
   const [productsPerPage, setProductsPerPage] = useState(10);
@@ -22,7 +26,6 @@ const Products = () => {
   const handleChangeSearch = () => {
     const value = inputRef.current.value;
     setSearch(value);
-    console.log(value);
   };
 
   useEffect(() => {
@@ -32,7 +35,6 @@ const Products = () => {
       })
       .then((res) => {
         setProducts(res.data.products);
-        console.log(res.data);
       })
       .catch((err) => {
         console.error("Failed to fetch products:", err);
@@ -76,45 +78,15 @@ const Products = () => {
   const handleDownloadTemplate = async () => {
     try {
       setIsDownloadingTemplate(true);
-      const response = await axios.get(
-        `${baseURL}/api/admin/product-template`,
-        {
-          responseType: "blob",
-          withCredentials: true,
-        }
-      );
-
-      const contentType =
-        response.headers?.["content-type"] ||
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-      const blob = new Blob([response.data], { type: contentType });
-      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = url;
+      link.href = productTemplateHref;
       link.download = "product-template.xlsx";
       document.body.appendChild(link);
       link.click();
       link.remove();
-      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Failed to download template:", error);
-      const status = error?.response?.status;
-      const data = error?.response?.data;
-      if (data instanceof Blob) {
-        try {
-          const text = await data.text();
-          const parsed = JSON.parse(text);
-          alert(parsed?.message || `Failed to download template (HTTP ${status})`);
-          return;
-        } catch {
-          // fall through
-        }
-      }
-      alert(
-        status
-          ? `Failed to download Excel template (HTTP ${status}).`
-          : "Failed to download Excel template. Please try again."
-      );
+      alert("Failed to download Excel template. Please try again.");
     } finally {
       setIsDownloadingTemplate(false);
     }

@@ -147,8 +147,6 @@ const EditProduct=()=>{
       setGeneralAttributes(generals);
     };
 
-    console.log("form", form);
-
     // Function to handle all the changes
     const handleChange = (e, index, attrName) => {
       const { name, value } = e.target;

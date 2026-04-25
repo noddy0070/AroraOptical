@@ -12,7 +12,6 @@ import PrescriptionForm from './PrescriptionForm';
 import SavedPrescription from './SavedPrescription';
 import BlueFilterLens from './BlueFilterLens';
 import LensTint from './LensTint';
-import { TransitionLink } from '../../Routes/TransitionLink';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import { useSelector } from 'react-redux';
@@ -23,7 +22,6 @@ export default function Lens() {
   const navigate = useNavigate();
   const location = useLocation();
   const productId=location.pathname.split('/')[2];
-  console.log(productId);
 
   const {user} = useSelector((state) => state.auth);
   const [amount, setAmount] = useState(0);
@@ -40,11 +38,6 @@ export default function Lens() {
     lensThickness:"",
     prescriptionId:"",
   });
-  useEffect(()=>{
-    console.log(form);
-  },[form]);
-
-
 
   const calculatePosition = (id) => {
     const element = document.getElementById(id);
@@ -145,8 +138,6 @@ export default function Lens() {
 
   const addProductToCart = async (updatedFormData = form, updatedAmount = amount) => {
     try {
-      console.log("Current form state:", updatedFormData);
-      console.log("lensThickness value:", updatedFormData.lensThickness);
       const response = await axios.post(`${baseURL}/api/user/cart/add`, {
           userId: user._id,
           productId: productId,
@@ -171,7 +162,6 @@ export default function Lens() {
       console.error('Add to cart error:', error);
   }
   }
-  console.log(subFocusedPrescription);
       
     return (
         <section className="min-h-screen flex flex-col md:flex-row bg-white-100 overflow-hidden">
