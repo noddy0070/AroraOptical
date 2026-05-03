@@ -253,7 +253,7 @@ export default function ProductDescription({productToDisplay}){
                 src={mainImage}
                 className="h-full w-full object-contain clickable transition-all duration-500 ease-in-out p-[5vw] md:p-[2vw] opacity-0 animate-fade-in"
             />
-            <div className='absolute top-[3vw] md:top-[1vw] right-[3vw] md:right-[1vw] flex z-50 gap-[2vw] md:gap-[8px] items-center'>
+            <div className='absolute top-[3vw] md:top-[1vw] right-[3vw] md:right-[1vw] flex z-20 gap-[2vw] md:gap-[8px] items-center'>
                 <div 
                     ref={tagsRef}
                     className='relative flex gap-[2vw] md:gap-[8px] overflow-x-auto hide-scrollbar scroll-smooth cursor-grab active:cursor-grabbing'

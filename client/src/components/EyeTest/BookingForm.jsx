@@ -222,7 +222,7 @@ const BookingForm = () => {
             className={[
               'py-[.75vw] w-[17.5vw] whitespace-nowrap text-center font-bold text-mediumText border-[rgba(04,43,43,.32)] border-[.0625vw] rounded-[.875vw] transition-colors duration-300',
               isFull ? 'cursor-not-allowed bg-black text-white' : 'cursor-pointer',
-              !isFull && bookedCount === 0 ? 'bg-green-500 text-white' : '',
+              !isFull && bookedCount === 0 ? 'bg-[rgba(04,43,43,0.08)] text-black' : '',
               !isFull && (bookedCount === 1 || bookedCount === 2) ? 'bg-yellow-400 text-black' : '',
               !isFull && bookedCount === 3 ? 'bg-red-600 text-white' : '',
               formData.timeSlot === slot.value && !isFull ? 'ring-2 ring-offset-2 ring-[rgba(04,43,43,1)]' : '',

@@ -176,7 +176,7 @@ export default function SecondaryNavbar() {
 
   const renderDropdown = () => (
     <div 
-      className="absolute w-screen left-[-2vw] top-full z-10 px-[6vw] bg-white border-t flex flex-row gap-[7vw] border-gray-200 shadow-lg transform opacity-100 transition-all duration-200 ease-in-out"
+      className="absolute w-screen left-[-2vw] top-full px-[6vw] z-100 bg-white border-t flex flex-row gap-[7vw] border-gray-200 shadow-lg transform opacity-100 transition-all duration-200 ease-in-out"
       onMouseEnter={() => handleDropdownEnter(activeDropdown)}
       onMouseLeave={handleDropdownLeave}
     >
