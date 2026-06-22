@@ -12,24 +12,47 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
 
 
     // Calculate total amount
-    const totalAmount = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0) + deliveryPrice;
+
+    // Change it to correct the total delivery price
+    // const totalAmount = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0) + deliveryPrice;
+    const totalAmount = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0) + (deliveryPrice || 0);
 
     
-    const handlePhonepePayment = async () =>{
-      const data={
+    const handlePhonepePayment = async () => {
+      if (paymentMethod === 'cash on delivery') {
+        return;
+      }
+
+      const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+      if (isLocalhost) {
+        alert(
+          'PhonePe live payments cannot complete from localhost (QR/UPI will fail). ' +
+          'Please checkout from https://www.aroraopticals.com/checkout'
+        );
+        return;
+      }
+
+      setLoading(true);
+      const data = {
         cartItems,
-        totalAmount:totalAmount*100,
+        totalAmount: Math.round(totalAmount * 100),
         shippingAddress,
-        userId:user._id,
-        notes:'None for now'  
-      }
-      try{
+        userId: user._id,
+        notes: 'None for now',
+      };
+
+      try {
         const response = await axios.post(`${baseURL}/api/order/create-phonepe`, data, { withCredentials: true });
-        window.location.href = response.data.checkoutPageUrl;
-      }catch(error){
-        console.log("error in phonepe payment",error)
+        if (response.data?.checkoutPageUrl) {
+          window.location.assign(response.data.checkoutPageUrl);
+        }
+      } catch (error) {
+        console.error('error in phonepe payment', error);
+        alert(error.response?.data?.message || 'Unable to start payment. Please try again.');
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
   return (
     <div className='mx-[5vw] md:mx-[5vw] px-[5vw] md:px-[12vw] py-[6vw] md:py-[1.875vw] bg-[#FAFAFA] flex flex-col md:flex-row gap-[6vw] md:gap-[2vw]'>

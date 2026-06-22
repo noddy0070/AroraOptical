@@ -5,15 +5,57 @@ import shiprocketAPI from '../utils/shiprocket.js';
 
 import dotenv from 'dotenv';
 import crypto from 'crypto';
-import { StandardCheckoutClient, StandardCheckoutPayRequest,Env } from 'pg-sdk-node';
+import { StandardCheckoutClient, StandardCheckoutPayRequest, Env, MetaInfo } from 'pg-sdk-node';
 dotenv.config();
 
 
 // PhonePe Instance - Lazy initialization to handle missing env vars
 let phonepeClient = null;
+let activePhonepeEnv = null;
+
+const getPhonepeEnv = () => {
+  const envName = (process.env.PHONEPE_ENV || 'PRODUCTION').toUpperCase();
+  return envName === 'SANDBOX' ? Env.SANDBOX : Env.PRODUCTION;
+};
+
+const buildPhonePePayRequest = (order, finalAmount, redirectUrl, shippingAddress, userId) => {
+  const request = StandardCheckoutPayRequest
+    .builder()
+    .merchantOrderId(order._id.toString())
+    .amount(finalAmount)
+    .redirectUrl(redirectUrl)
+    .metaInfo(
+      MetaInfo.builder()
+        .udf1(userId?.toString() || '')
+        .udf2(shippingAddress?.mobileNumber || '')
+        .udf3(shippingAddress?.email || '')
+        .build()
+    )
+    .message(`Order ${order._id}`)
+    .expireAfter(1200)
+    .build();
+
+  const mobileNumber = shippingAddress?.mobileNumber?.replace(/\D/g, '').slice(-10);
+  if (mobileNumber) {
+    request.prefillUserLoginDetails = { phoneNumber: mobileNumber };
+  }
+
+  // QR often fails on localhost/unverified origins; keep UPI intent + collect enabled.
+  request.paymentFlow.paymentModeConfig = {
+    version: 'V2',
+    enabledPaymentModes: [
+      { type: 'UPI', flows: ['INTENT', 'COLLECT'] },
+      { type: 'CARD', types: ['CREDIT_CARD', 'DEBIT_CARD'] },
+      { type: 'NET_BANKING' },
+    ],
+  };
+
+  return request;
+};
 
 const getPhonepeClient = () => {
-  if (!phonepeClient) {
+  const selectedEnv = getPhonepeEnv();
+  if (!phonepeClient || activePhonepeEnv !== selectedEnv) {
     try {
       // Validate required environment variables
       if (!process.env.PHONEPE_CLIENT_ID || !process.env.PHONEPE_CLIENT_SECRET || !process.env.PHONEPE_CLIENT_VERSION) {
@@ -29,9 +71,10 @@ const getPhonepeClient = () => {
         process.env.PHONEPE_CLIENT_ID,
         process.env.PHONEPE_CLIENT_SECRET,
         process.env.PHONEPE_CLIENT_VERSION,
-        Env.PRODUCTION
+        selectedEnv
       );
-      console.log('PhonePe client initialized successfully');
+      activePhonepeEnv = selectedEnv;
+      console.log(`PhonePe client initialized (${selectedEnv})`);
     } catch (error) {
       console.error('Failed to initialize PhonePe client:', error);
       throw error;
@@ -47,7 +90,7 @@ export const checkPhonepeHealth = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'PhonePe service is available',
-      environment: 'PRODUCTION'
+      environment: getPhonepeEnv()
     });
   } catch (error) {
     res.status(500).json({
@@ -62,7 +105,7 @@ export const checkPhonepeHealth = async (req, res) => {
       }
     });
   }
-};5
+};
 
 // Create new order
 export const createOrder = async (req, res) => {
@@ -500,7 +543,7 @@ export const createPhonepeOrder = async (req, res) => {
       }
       // Map product to order model format
       const mappedProduct = {
-        productId: item._id,
+        productId: item.productId?._id || item.productId || item._id,
         quantity: item.quantity,
         price: item.totalAmount,
         prescriptionId: item.prescriptionId || null,
@@ -515,7 +558,13 @@ export const createPhonepeOrder = async (req, res) => {
       mappedProducts.push(mappedProduct);
     }
 
-    const finalAmount = totalAmount;
+    const finalAmount = Math.round(Number(totalAmount));
+    if (!Number.isFinite(finalAmount) || finalAmount < 100) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid total amount. Minimum order value is ₹1.'
+      });
+    }
   
     // Create order in database first
     const order = new Order({
@@ -534,8 +583,24 @@ export const createPhonepeOrder = async (req, res) => {
     });
     
     await order.save();
-    const redirectUrl = `${process.env.PHONEPE_REDIRECT_URL}?merchantOrderId=${order._id}`
-    const request = StandardCheckoutPayRequest.builder().merchantOrderId(order._id).amount(finalAmount).redirectUrl(redirectUrl).build();
+
+    const redirectBase = process.env.PHONEPE_REDIRECT_URL;
+    if (!redirectBase) {
+      return res.status(500).json({
+        success: false,
+        message: 'PHONEPE_REDIRECT_URL is not configured',
+      });
+    }
+
+    if (getPhonepeEnv() === Env.PRODUCTION && redirectBase.startsWith('http://')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Production PhonePe requires a public HTTPS redirect URL. Set PHONEPE_REDIRECT_URL to your deployed backend, e.g. https://your-api.com/api/order/status',
+      });
+    }
+
+    const redirectUrl = `${redirectBase}?merchantOrderId=${order._id}`;
+    const request = buildPhonePePayRequest(order, finalAmount, redirectUrl, shippingAddress, userId);
 
     // Get PhonePe client with error handling
     let client;
@@ -551,13 +616,31 @@ export const createPhonepeOrder = async (req, res) => {
     }
 
     const response = await client.pay(request);
-    console.log("response",response);
+    order.paymentDetails.transactionId = response.orderId;
+    await order.save();
+
+    console.log('PhonePe checkout created', {
+      merchantOrderId: order._id.toString(),
+      phonePeOrderId: response.orderId,
+      amountPaise: finalAmount,
+      redirectUrl,
+    });
+
     return res.json({
       checkoutPageUrl: response.redirectUrl
-    })
+    });
     
   } catch (error) {
     console.error('Create PhonePe order error:', error);
+
+    if (error?.type === 'UnauthorizedAccess' || error?.httpStatusCode === 401) {
+      return res.status(401).json({
+        success: false,
+        message: 'PhonePe authentication failed. Check PHONEPE_CLIENT_ID, PHONEPE_CLIENT_SECRET, PHONEPE_CLIENT_VERSION, and PHONEPE_ENV (use PRODUCTION for live credentials, SANDBOX for test credentials).',
+        environment: getPhonepeEnv(),
+      });
+    }
+
     res.status(500).json({ 
       success: false, 
       message: 'Failed to create PhonePe order',

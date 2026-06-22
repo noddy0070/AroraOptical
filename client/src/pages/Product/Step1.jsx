@@ -143,7 +143,11 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
                     name="selectedAddress"
                     className='w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw] mt-[2.5vw] md:mt-[10px] accent-black'
                     checked={selectedAddressIndex === index}
-                      onChange={() =>{ setSelectedAddressIndex(index), setIsDeliverable('Check Deliverability')}}
+                      onChange={() => {
+                        setSelectedAddressIndex(index);
+                        setShippingAddress(user.addressList[index]);
+                        setIsDeliverable('Check Deliverability');
+                      }}
                   />
                   <div className='flex flex-col gap-[1vw] md:gap-[4px]'>
                   <span className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto'>{address.fullName}</span>
@@ -212,7 +216,10 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
                         btnWidth={30} 
                         btnRadius={2} 
                         btnTitle={"Proceed to Payment"}
-                        onClick={() => {setStep(2)}}  
+                        onClick={() => {
+                          setShippingAddress(user.addressList[selectedAddressIndex]);
+                          setStep(2);
+                        }}
                     />
             </div>
 
