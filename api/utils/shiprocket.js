@@ -97,7 +97,7 @@ class ShiprocketAPI {
       // sub_total = sum of (unit price × qty) for each line item
       // Shiprocket validates: sub_total + shipping_charges - total_discount = payable amount
       const orderItems = orderData.products.map(product => {
-        const qty = product.quantity || 1;
+        const qty = Number(product.quantity) > 0 ? Number(product.quantity) : 1;
         // product.price is the line total (unitPrice × qty); Shiprocket needs per-unit price
         const unitPrice = Math.round(Number(product.price) / qty) || 0;
         return {
@@ -113,6 +113,7 @@ class ShiprocketAPI {
       const itemsSubTotal = orderItems.reduce(
         (sum, item) => sum + item.selling_price * item.units, 0
       );
+      const totalQty = orderItems.reduce((sum, item) => sum + item.units, 0);
 
       const shipmentData = {
         order_id:        orderData.orderId,
@@ -159,7 +160,7 @@ class ShiprocketAPI {
         length:  20,
         breadth: 15,
         height:  8,
-        weight:  0.5,
+        weight:  0.5 * totalQty,
       };
 
       // Validate required fields before hitting the API
