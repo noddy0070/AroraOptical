@@ -34,8 +34,13 @@ const ProtectedRoute = () => {
     return <Navigate to="/" replace />;
   }
 
-  // Product managers are locked out of everything except product/attribute pages
+  // Product managers are locked out of the dashboard and everything outside their allowed paths
   if (user?.role === 'product-manager' && location.pathname.toLowerCase().includes('/admin')) {
+    const lower = location.pathname.toLowerCase();
+    // Redirect index /admin → /admin/products (dashboard is super-admin only)
+    if (lower === '/admin') {
+      return <Navigate to="/Admin/products" replace />;
+    }
     if (!isAllowedForProductManager(location.pathname)) {
       return <Navigate to="/Admin/products" replace />;
     }

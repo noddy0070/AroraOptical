@@ -42,6 +42,7 @@ import BookingForm from "./components/EyeTest/BookingForm.jsx";
 
 // ========== ADMIN PAGES ==========
 import DashBoard from "./pages/Admin/Dashboard.jsx";
+import AdminHome from "./pages/Admin/Home.jsx";
 
 // ========== ADMIN - PRODUCT MANAGEMENT ==========
 import Products from "./pages/Admin/Products/Products.jsx";
@@ -474,12 +475,11 @@ export default function App() {
           }
         >
           {/* Admin Dashboard - Main admin interface */}
-          {/* <Route index element={<Home2 />} /> */}
           <Route
             index
             element={
-              <Page title="Arora Opticals Admin | Products">
-                <Products />
+              <Page title="Arora Opticals Admin | Dashboard">
+                <AdminHome />
               </Page>
             }
           />

@@ -23,6 +23,7 @@ import {
   deleteUser,
 } from "../controllers/user.controller.js";
 import { addPolicy, updatePolicy, getPolicy } from "../controllers/policy.controller.js";
+import { getAdminStats } from "../controllers/admin.controller.js";
 import { authMiddleware } from "../middleware/auth.js";
 import { verifyAdmin } from "../middleware/verifyAdmin.js";
 import { authorize } from "../middleware/authorize.js";
@@ -33,6 +34,9 @@ const router = express.Router();
 const anyAdmin = ['admin', 'super-admin', 'product-manager'];
 // Roles that can manage users, orders, policies, and settings (super-admin only)
 const superAdminOnly = ['admin', 'super-admin'];
+
+// ── Dashboard Stats (super-admin only) ──────────────────────────────────────
+router.get("/stats", authMiddleware, authorize(...superAdminOnly), getAdminStats);
 
 // ── Products (product-manager + super-admin) ────────────────────────────────
 router.post("/add-product",              authMiddleware, authorize(...anyAdmin), addProduct);

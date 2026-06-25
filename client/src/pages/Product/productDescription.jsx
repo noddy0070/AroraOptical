@@ -1,12 +1,9 @@
-import React,{useState,useRef,useEffect} from 'react';
+import {useState,useRef,useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import placeholder from "../../assets/images/CategoryPlaceholder.png";
-import categoryPlaceholder from '../../assets/images/CategoryPlaceholder.png';
 import WishListIcon from '../../assets/images/icons/WishlistIcon.svg'
 import WishListIconFilled from '../../assets/images/icons/WishlistIconFilled.svg'
 import './product.css';
-import { IconButton } from '../../components/button';
 import { renderStars } from '@/components/RenderStarts';
 import { toast } from 'react-toastify';
 import axios from 'axios';
