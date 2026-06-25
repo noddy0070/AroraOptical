@@ -398,7 +398,7 @@ const OrderManagement = () => {
               <section>
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Shipping & Tracking</h4>
-                  {drawer.shiprocket?.shipmentId && (
+                  {drawer.shippingDetails?.waybill && (
                     <button
                       onClick={() => fetchTracking(drawer._id)}
                       disabled={trackingLoading}
@@ -410,22 +410,23 @@ const OrderManagement = () => {
                   )}
                 </div>
 
-                {drawer.shiprocket?.shipmentId ? (
+                {drawer.shippingDetails?.waybill ? (
                   <div className="bg-gray-50 rounded-xl p-4 space-y-2.5 text-sm">
-                    <Row label="Shipment ID" value={drawer.shiprocket.shipmentId} />
-                    {drawer.shiprocket.awbCode    && <Row label="AWB"     value={drawer.shiprocket.awbCode} />}
-                    {drawer.shiprocket.courierName && <Row label="Courier" value={drawer.shiprocket.courierName} />}
-                    {drawer.shiprocket.trackingUrl && (
-                      <Row
-                        label="Track"
-                        value={
-                          <a href={drawer.shiprocket.trackingUrl} target="_blank" rel="noreferrer"
-                             className="text-indigo-600 underline underline-offset-2 hover:text-indigo-800 text-xs">
-                            Open tracker ↗
-                          </a>
-                        }
-                      />
+                    <Row label="Waybill" value={drawer.shippingDetails.waybill} />
+                    {drawer.shippingDetails.carrier  && <Row label="Carrier" value={drawer.shippingDetails.carrier} />}
+                    {drawer.shippingDetails.status   && <Row label="Status"  value={drawer.shippingDetails.status} />}
+                    {drawer.shippingDetails.manifestPending && (
+                      <Row label="Action" value={<span className="text-red-500 font-semibold text-xs">Manifest failed — re-run needed</span>} />
                     )}
+                    <Row
+                      label="Track"
+                      value={
+                        <a href={`https://www.delhivery.com/track/package/${drawer.shippingDetails.waybill}`} target="_blank" rel="noreferrer"
+                           className="text-indigo-600 underline underline-offset-2 hover:text-indigo-800 text-xs">
+                          Open tracker ↗
+                        </a>
+                      }
+                    />
 
                     {trackingLoading && (
                       <div className="flex items-center gap-2 pt-2 text-gray-400 text-xs">

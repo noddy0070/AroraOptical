@@ -17,11 +17,11 @@ import { mapBrandToLogo, mapBrandToDescription } from '@/data/brandMap';
 import {toTitleCase} from '../../../shared/pipes/strFormatting';
 
 export default function ProductDescription({productToDisplay}){
-    const [selectedSize, setSelectedSize] = useState('');
-    const [isHovered, setIsHovered] = useState(false);
-    const [isDetailClicked, setIsDetailClicked] = useState(true);
-    const [isShipingClicked, setIsShipingClicked] = useState(true);
-    const [isReturnClicked, setIsReturnClicked] = useState(true);
+    // const [selectedSize, setSelectedSize] = useState('');
+    // const [isHovered, setIsHovered] = useState(false);
+    // const [isDetailClicked, setIsDetailClicked] = useState(true);
+    // const [isShipingClicked, setIsShipingClicked] = useState(true);
+    // const [isReturnClicked, setIsReturnClicked] = useState(true);
     const [isInWishlist, setIsInWishlist] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');

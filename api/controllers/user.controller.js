@@ -100,28 +100,20 @@ export const addToCart = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    console.log(totalAmount);
-
-    // Check if product already exists in cart
-    const existingCartItem = user.cart.find(item => 
+    // Check if product already exists in cart with same lens options
+    const existingCartItem = user.cart.find(item =>
       item.productId.toString() === productId
     );
 
     if (existingCartItem && existingCartItem.lensType==lensType && existingCartItem.lensCoating==lensCoating && existingCartItem.lensThickness==lensThickness) {
-      // Update quantity if product exists
       existingCartItem.quantity += quantity;
     } else {
-      // Add new product to cart
-      console.log(totalAmount);
-      console.log(lensThickness);
-      console.log('here we are');
       if(prescriptionId){
         user.cart.push({ productId, quantity, lensType, lensCoating, lensThickness, prescriptionId, totalAmount });
       }else{
         user.cart.push({ productId, quantity, lensType, lensCoating, lensThickness, totalAmount });
       }
     }
-    console.log(user.cart);
     await user.save();
     res.status(200).json({ success: true, message: 'Product added to cart successfully' });
   } catch (error) {

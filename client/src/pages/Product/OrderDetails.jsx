@@ -223,8 +223,8 @@ const OrderDetails = () => {
               </div>
             </div>
 
-            {/* Shiprocket Tracking */}
-            {order.shiprocket.shipmentId && (
+            {/* Delivery Tracking */}
+            {order.shippingDetails?.waybill && (
               <div className="bg-white rounded-[4vw] md:rounded-lg shadow p-[6vw] md:p-6">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-[4vw] md:mb-4 gap-[3vw] md:gap-0">
                   <h2 className="text-h4TextPhone md:text-xl font-bold">Delivery Tracking</h2>
@@ -237,33 +237,29 @@ const OrderDetails = () => {
                   </button>
                 </div>
 
-                {/* Shiprocket Details */}
+                {/* Delhivery Details */}
                 <div className="space-y-[3vw] md:space-y-3 mb-[4vw] md:mb-4">
-                  {order.shiprocket.awbCode && (
-                    <div className="flex justify-between">
-                      <span className="font-semibold text-regularTextPhone md:text-regularText">AWB Number:</span>
-                      <span className="font-mono text-smallTextPhone md:text-regularText">{order.shiprocket.awbCode}</span>
-                    </div>
-                  )}
-                  {order.shiprocket.courierName && (
+                  <div className="flex justify-between">
+                    <span className="font-semibold text-regularTextPhone md:text-regularText">Waybill:</span>
+                    <span className="font-mono text-smallTextPhone md:text-regularText">{order.shippingDetails.waybill}</span>
+                  </div>
+                  {order.shippingDetails.carrier && (
                     <div className="flex justify-between">
                       <span className="text-regularTextPhone md:text-regularText">Courier:</span>
-                      <span className="text-regularTextPhone md:text-regularText">{order.shiprocket.courierName}</span>
+                      <span className="text-regularTextPhone md:text-regularText">{order.shippingDetails.carrier}</span>
                     </div>
                   )}
-                  {order.shiprocket.trackingUrl && (
-                    <div className="flex justify-between">
-                      <span className="text-regularTextPhone md:text-regularText">Tracking:</span>
-                      <a
-                        href={order.shiprocket.trackingUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline text-regularTextPhone md:text-regularText"
-                      >
-                        Track Package
-                      </a>
-                    </div>
-                  )}
+                  <div className="flex justify-between">
+                    <span className="text-regularTextPhone md:text-regularText">Tracking:</span>
+                    <a
+                      href={`https://www.delhivery.com/track/package/${order.shippingDetails.waybill}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline text-regularTextPhone md:text-regularText"
+                    >
+                      Track Package
+                    </a>
+                  </div>
                 </div>
 
                 {/* Tracking Updates */}

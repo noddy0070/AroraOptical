@@ -1,7 +1,7 @@
 import Order from '../models/order.model.js';
 import User from '../models/user.model.js';
 import Product from '../models/product.model.js';
-import shiprocketAPI from '../utils/shiprocket.js';
+import * as delhiveryAPI from '../utils/delhivery.js';
 
 import dotenv from 'dotenv';
 import crypto from 'crypto';
@@ -152,40 +152,7 @@ export const createOrder = async (req, res) => {
 
     await order.save();
 
-    // Create Shiprocket shipment
-    try {
-      const shipmentData = {
-        orderId: order._id.toString(),
-        shippingAddress,
-        products: await Promise.all(products.map(async (item) => {
-          const product = await Product.findById(item.productId);
-          return {
-            productId: product,
-            quantity: item.quantity,
-            price: product.price
-          };
-        })),
-        totalPrice,
-        deliveryCharges,
-        discountAmount,
-        paymentDetails
-      };
-
-      const shiprocketResponse = await shiprocketAPI.createShipment(shipmentData);
-      
-      // Update order with Shiprocket details
-      order.shiprocket.orderId = shiprocketResponse.order_id;
-      order.shiprocket.shipmentId = shiprocketResponse.shipment_id;
-      order.shiprocket.status = shiprocketResponse.status;
-      order.shiprocket.statusCode = shiprocketResponse.status_code;
-      order.shiprocket.lastUpdate = new Date();
-      
-      await order.save();
-
-    } catch (shiprocketError) {
-      console.error('Shiprocket integration error:', shiprocketError);
-      // Continue with order creation even if Shiprocket fails
-    }
+    triggerDelhiveryForOrder(order); // non-blocking
 
     // Update user's orders
     await User.findByIdAndUpdate(userId, {
@@ -310,22 +277,6 @@ export const updateOrderStatus = async (req, res) => {
     order.status = status;
     if (notes) order.notes = notes;
 
-    // If status is being updated to Shipped, generate AWB
-    if (status === 'Shipped' && order.shiprocket.shipmentId && !order.shiprocket.awbCode) {
-      try {
-        const awbResponse = await shiprocketAPI.generateAWB(
-          order.shiprocket.shipmentId,
-          order.shiprocket.courierId || '1' // Default courier ID
-        );
-        
-        order.shiprocket.awbCode = awbResponse.awb_code;
-        order.shiprocket.courierName = awbResponse.courier_name;
-        order.shiprocket.trackingUrl = awbResponse.tracking_url;
-        order.shiprocket.lastUpdate = new Date();
-      } catch (awbError) {
-        console.error('AWB generation error:', awbError);
-      }
-    }
 
     await order.save();
 
@@ -353,29 +304,38 @@ export const trackOrder = async (req, res) => {
 
     let trackingInfo = null;
 
-    // Track via Shiprocket if available
-    if (order.shiprocket.shipmentId) {
+    if (order.shippingDetails?.waybill) {
       try {
-        trackingInfo = await shiprocketAPI.trackShipment(order.shiprocket.shipmentId);
-        
-        // Update order with latest tracking info
-        if (trackingInfo.data && trackingInfo.data.length > 0) {
-          const latestUpdate = trackingInfo.data[0];
-          order.shiprocket.status = latestUpdate.status;
-          order.shiprocket.statusCode = latestUpdate.status_code;
-          order.shiprocket.lastUpdate = new Date();
-          await order.save();
+        const raw = await delhiveryAPI.trackShipment(order.shippingDetails.waybill);
+        const scans = raw?.ShipmentData?.[0]?.Shipment?.Scans || [];
+
+        // Normalise to the shape both admin and customer pages expect:
+        // trackingInfo.data[0].activities — array of { activity, status, location, date, timestamp }
+        const activities = scans.map(s => ({
+          activity:  s.ScanDetail?.Scan || '',
+          status:    s.ScanDetail?.Scan || '',
+          location:  s.ScanDetail?.ScannedLocation || '',
+          date:      s.ScanDetail?.ScanDateTime || '',
+          timestamp: s.ScanDetail?.ScanDateTime || '',
+        }));
+
+        trackingInfo = { data: [{ activities }] };
+
+        const latest = raw?.ShipmentData?.[0]?.Shipment?.Status;
+        if (latest?.Status) {
+          await Order.findByIdAndUpdate(orderId, {
+            $set: {
+              'shippingDetails.status':     latest.Status,
+              'shippingDetails.lastUpdate': new Date(),
+            },
+          });
         }
       } catch (trackingError) {
-        console.error('Tracking error:', trackingError);
+        console.error('Delhivery tracking error:', trackingError.message);
       }
     }
 
-    res.status(200).json({
-      success: true,
-      order,
-      trackingInfo
-    });
+    res.status(200).json({ success: true, order, trackingInfo });
 
   } catch (error) {
     console.error('Track order error:', error);
@@ -386,33 +346,33 @@ export const trackOrder = async (req, res) => {
 // Check delivery serviceability
 export const checkServiceability = async (req, res) => {
   try {
-    const {
-      pickupPincode,
-      deliveryPincode,
-      weight = 0.5,
-      cod = 0,
-      declaredValue,
-    } = req.query;
+    const { deliveryPincode, weight = 0.5, cod = 0 } = req.query;
 
-    if (!pickupPincode || !deliveryPincode) {
-      return res.status(400).json({
-        success: false,
-        message: 'Pickup and delivery pincodes are required'
-      });
+    if (!deliveryPincode) {
+      return res.status(400).json({ success: false, message: 'Delivery pincode is required' });
     }
 
-    const serviceability = await shiprocketAPI.checkServiceability(
-      pickupPincode,
-      deliveryPincode,
-      weight,
-      Number(cod),
-      declaredValue ? Number(declaredValue) : undefined
-    );
+    const result      = await delhiveryAPI.checkServiceability(deliveryPincode);
+    const pincodeData = result?.delivery_codes?.[0]?.postal_code;
 
-    res.status(200).json({
-      success: true,
-      serviceability
-    });
+    if (!pincodeData) {
+      return res.status(200).json({ success: true, serviceable: false, deliveryRate: 0 });
+    }
+
+    const isCOD           = Number(cod) === 1;
+    const isServiceable   = pincodeData.pre_paid === 'Y' || pincodeData.cod === 'Y';
+    const isCODAvailable  = pincodeData.cod === 'Y';
+
+    if (!isServiceable || (isCOD && !isCODAvailable)) {
+      return res.status(200).json({ success: true, serviceable: false, deliveryRate: 0 });
+    }
+
+    // Simple weight-based rate: ₹60 for first 0.5 kg + ₹30 per additional 0.5 kg slab + ₹25 COD surcharge
+    const weightKg    = Math.max(0.5, parseFloat(weight) || 0.5);
+    const slabs       = Math.ceil(weightKg / 0.5);
+    const deliveryRate = 60 + (slabs - 1) * 30 + (isCOD ? 25 : 0);
+
+    res.status(200).json({ success: true, serviceable: true, deliveryRate, serviceability: result });
 
   } catch (error) {
     console.error('Serviceability check error:', error);
@@ -439,15 +399,6 @@ export const cancelOrder = async (req, res) => {
       });
     }
 
-    // Cancel Shiprocket shipment if exists
-    if (order.shiprocket.shipmentId) {
-      try {
-        await shiprocketAPI.cancelShipment(order.shiprocket.shipmentId);
-      } catch (cancelError) {
-        console.error('Shiprocket cancellation error:', cancelError);
-      }
-    }
-
     order.status = 'Cancelled';
     if (reason) order.notes = reason;
     await order.save();
@@ -464,37 +415,6 @@ export const cancelOrder = async (req, res) => {
   }
 };
 
-// Get courier list
-export const getCourierList = async (req, res) => {
-  try {
-    const couriers = await shiprocketAPI.getCourierList();
-    
-    res.status(200).json({
-      success: true,
-      couriers
-    });
-
-  } catch (error) {
-    console.error('Get courier list error:', error);
-    res.status(500).json({ success: false, message: 'Failed to fetch courier list' });
-  }
-};
-
-// Get pickup locations
-export const getPickupLocations = async (req, res) => {
-  try {
-    const locations = await shiprocketAPI.getPickupLocations();
-    
-    res.status(200).json({
-      success: true,
-      locations
-    });
-
-  } catch (error) {
-    console.error('Get pickup locations error:', error);
-    res.status(500).json({ success: false, message: 'Failed to fetch pickup locations' });
-  }
-};
 
 
 
@@ -703,7 +623,7 @@ export const getOrderStatus = async (req, res) => {
         await user.save();
       }
 
-      triggerShiprocketForOrder(order); // non-blocking
+      triggerDelhiveryForOrder(order); // non-blocking
 
       return res.redirect(process.env.PHONEPE_FRONTEND_URL + '/thank-you')
     }else{
@@ -725,75 +645,67 @@ export const getOrderStatus = async (req, res) => {
   }
 };
 
-// --- Shiprocket trigger (fire-and-forget; never blocks the main response) ---
-const triggerShiprocketForOrder = async (order) => {
+// --- Delhivery trigger (fire-and-forget; never blocks the main response) ---
+const triggerDelhiveryForOrder = async (order) => {
   try {
     const populated = await Order.findById(order._id)
       .populate('products.productId', 'modelName modelCode');
     if (!populated) return;
 
-    // Step 1: Create order in Shiprocket
-    const shiprocketResponse = await shiprocketAPI.createShipment({
-      orderId: populated._id.toString(),
+    const delhiveryResponse = await delhiveryAPI.createShipment({
+      orderId:        populated._id.toString(),
       shippingAddress: populated.shippingAddress,
-      products: populated.products,
+      products:       populated.products,
       paymentDetails: populated.paymentDetails,
-      deliveryCharges: populated.deliveryCharges || 0,
-      codCharges: populated.codCharges || 0,
-      discountAmount: populated.discountAmount || 0,
-      totalPrice: populated.totalPrice,
+      totalPrice:     populated.totalPrice,
     });
 
-    const shipmentId = shiprocketResponse.shipment_id;
+    const waybill = delhiveryResponse.packages[0].waybill;
 
-    const updateData = {
-      'shiprocket.orderId':    shiprocketResponse.order_id?.toString() || '',
-      'shiprocket.shipmentId': shipmentId?.toString() || '',
-      'shiprocket.status':     shiprocketResponse.status || 'NEW',
-      'shiprocket.lastUpdate': new Date(),
-    };
-
-    // Step 2: Auto-assign courier and generate AWB
-    try {
-      const awbResponse = await shiprocketAPI.assignCourier(shipmentId);
-      // Shiprocket nests the AWB data under response.data
-      const awbData = awbResponse?.response?.data || awbResponse;
-      if (awbData?.awb_code) {
-        updateData['shiprocket.awbCode']     = awbData.awb_code;
-        updateData['shiprocket.courierName'] = awbData.courier_name || '';
-        updateData['shiprocket.courierId']   = awbData.courier_company_id?.toString() || '';
-        updateData['shiprocket.status']      = 'AWB_ASSIGNED';
-        console.log('[Shiprocket] AWB assigned:', awbData.awb_code, '| Courier:', awbData.courier_name);
-
-        // Step 3: Schedule pickup
-        try {
-          await shiprocketAPI.schedulePickup(shipmentId);
-          updateData['shiprocket.status'] = 'PICKUP_SCHEDULED';
-          console.log('[Shiprocket] Pickup scheduled for shipment:', shipmentId);
-        } catch (pickupErr) {
-          console.warn('[Shiprocket] Pickup scheduling failed (non-fatal):', pickupErr.message);
-        }
-      } else {
-        console.warn('[Shiprocket] AWB not assigned — no courier available for this pincode.');
-      }
-    } catch (awbErr) {
-      console.warn('[Shiprocket] AWB assignment failed (non-fatal):', awbErr.message);
-    }
-
-    await Order.findByIdAndUpdate(order._id, { $set: updateData });
-
-    console.log('[Shiprocket] Processing complete:', {
-      orderId:    updateData['shiprocket.orderId'],
-      shipmentId: updateData['shiprocket.shipmentId'],
-      awbCode:    updateData['shiprocket.awbCode'],
-      courier:    updateData['shiprocket.courierName'],
-      status:     updateData['shiprocket.status'],
+    await Order.findByIdAndUpdate(order._id, {
+      $set: {
+        'shippingDetails.carrier':         'Delhivery',
+        'shippingDetails.waybill':         waybill,
+        'shippingDetails.status':          delhiveryResponse.packages[0].status || 'manifested',
+        'shippingDetails.manifestPending': false,
+        'shippingDetails.lastUpdate':      new Date(),
+      },
     });
+
+    console.log('[Delhivery] Order manifested:', { orderId: populated._id.toString(), waybill });
   } catch (err) {
-    console.error('[Shiprocket] Integration error (non-fatal):', err.message);
+    console.error('[Delhivery] Integration error (non-fatal):', err.message);
     if (err.response?.data) {
-      console.error('[Shiprocket] API response body:', JSON.stringify(err.response.data, null, 2));
+      console.error('[Delhivery] API response:', JSON.stringify(err.response.data, null, 2));
     }
+
+    // When the warehouse name is wrong, fetch and log the registered names so the fix is obvious
+    if (err.message?.includes('ClientWarehouse')) {
+      try {
+        const locData = await delhiveryAPI.getPickupLocations();
+        const registered = (locData?.warehouses || locData?.data || []).map(w => w.name || w.registered_name).filter(Boolean);
+        console.error(
+          '[Delhivery] ❌ DELHIVERY_PICKUP_LOCATION is wrong.\n' +
+          `   Current value : "${process.env.DELHIVERY_PICKUP_LOCATION}"\n` +
+          `   Registered names in your account: ${JSON.stringify(registered)}\n` +
+          '   Fix: set DELHIVERY_PICKUP_LOCATION to one of the names above (exact case).'
+        );
+      } catch (locErr) {
+        console.error('[Delhivery] Could not fetch warehouse list:', locErr.message);
+      }
+    }
+
+    // Flag order for admin to manually re-manifest
+    try {
+      await Order.findByIdAndUpdate(order._id, {
+        $set: {
+          'shippingDetails.carrier':         'Delhivery',
+          'shippingDetails.manifestPending': true,
+          'shippingDetails.status':          'MANIFEST_FAILED',
+          'shippingDetails.lastUpdate':      new Date(),
+        },
+      });
+    } catch (_) { /* best-effort */ }
   }
 };
 
@@ -858,7 +770,7 @@ export const createCODOrder = async (req, res) => {
     await order.save();
     await saveOrderToUser(userId, order._id);
 
-    triggerShiprocketForOrder(order); // non-blocking
+    triggerDelhiveryForOrder(order); // non-blocking
 
     return res.status(201).json({ success: true, message: 'Order placed successfully', orderId: order._id });
   } catch (error) {
@@ -884,6 +796,18 @@ export const deleteOrder = async (req, res) => {
   } catch (error) {
     console.error('Delete order error:', error);
     res.status(500).json({ success: false, message: 'Failed to delete order' });
+  }
+};
+
+// List Delhivery registered warehouses — helps verify DELHIVERY_PICKUP_LOCATION
+export const getDelhiveryWarehouses = async (req, res) => {
+  try {
+    const data = await delhiveryAPI.getPickupLocations();
+    const names = (data?.warehouses || data?.data || []).map(w => w.name || w.registered_name);
+    res.status(200).json({ success: true, warehouses: data, names });
+  } catch (error) {
+    console.error('Delhivery warehouse fetch error:', error.response?.data || error.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch Delhivery warehouses', error: error.message });
   }
 };
 
