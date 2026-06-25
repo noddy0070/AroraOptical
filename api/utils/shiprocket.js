@@ -46,7 +46,7 @@ class ShiprocketAPI {
       const params = {
         pickup_postcode:   pickupPincode,
         delivery_postcode: deliveryPincode,
-        weight:            weight,
+        weight:            weight || .5 ,
         cod:               cod,           // 0 = prepaid, 1 = COD
         is_return:         0,
         shipping_dangerous_goods: 0,

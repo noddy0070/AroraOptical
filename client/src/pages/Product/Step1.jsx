@@ -42,7 +42,7 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
     try {
       const pickupPincode = '462023';
       const deliveryPincode = address.pincode;
-      const weight = 0.5 * cartItems.length;
+      const weight = 0.5 * cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
       const declaredValue = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0);
       const response = await axios.get(`${baseURL}/api/order/serviceability`, {
         params: { pickupPincode, deliveryPincode, weight, cod: 1, declaredValue },
