@@ -40,17 +40,23 @@ class ShiprocketAPI {
   }
 
   // Check courier serviceability
-  async checkServiceability(pickupPincode, deliveryPincode, weight = 0.5) {
+  async checkServiceability(pickupPincode, deliveryPincode, weight = 0.5, cod = 0, declaredValue) {
     try {
       const headers = await this.getHeaders();
+      const params = {
+        pickup_postcode:   pickupPincode,
+        delivery_postcode: deliveryPincode,
+        weight:            weight,
+        cod:               cod,           // 0 = prepaid, 1 = COD
+        is_return:         0,
+        shipping_dangerous_goods: 0,
+        secure_shipment:   0,
+      };
+      if (declaredValue) params.declared_value = declaredValue;
+
       const response = await axios.get(`${this.baseURL}/external/courier/serviceability`, {
         headers,
-        params: {
-          pickup_postcode: pickupPincode,
-          delivery_postcode: deliveryPincode,
-          weight: weight,
-          cod: 1
-        }
+        params,
       });
       return response.data;
     } catch (error) {
@@ -145,7 +151,7 @@ class ShiprocketAPI {
         payment_method:      orderData.paymentDetails.method === 'COD' ? 'COD' : 'Prepaid',
         shipping_charges:    Number(orderData.deliveryCharges)  || 0,
         giftwrap_charges:    0,
-        transaction_charges: 0,
+        transaction_charges: Number(orderData.codCharges)       || 0,
         total_discount:      Number(orderData.discountAmount)   || 0,
         sub_total:           itemsSubTotal,
 

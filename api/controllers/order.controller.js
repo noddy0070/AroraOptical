@@ -40,16 +40,6 @@ const buildPhonePePayRequest = (order, finalAmount, redirectUrl, shippingAddress
     request.prefillUserLoginDetails = { phoneNumber: mobileNumber };
   }
 
-  // QR often fails on localhost/unverified origins; keep UPI intent + collect enabled.
-  request.paymentFlow.paymentModeConfig = {
-    version: 'V2',
-    enabledPaymentModes: [
-      { type: 'UPI', flows: ['INTENT', 'COLLECT'] },
-      { type: 'CARD', types: ['CREDIT_CARD', 'DEBIT_CARD'] },
-      { type: 'NET_BANKING' },
-    ],
-  };
-
   return request;
 };
 
@@ -396,20 +386,27 @@ export const trackOrder = async (req, res) => {
 // Check delivery serviceability
 export const checkServiceability = async (req, res) => {
   try {
-    const { pickupPincode, deliveryPincode, weight = 0.5 } = req.query;
-    console.log(pickupPincode, deliveryPincode, weight);
+    const {
+      pickupPincode,
+      deliveryPincode,
+      weight = 0.5,
+      cod = 0,
+      declaredValue,
+    } = req.query;
 
     if (!pickupPincode || !deliveryPincode) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Pickup and delivery pincodes are required' 
+      return res.status(400).json({
+        success: false,
+        message: 'Pickup and delivery pincodes are required'
       });
     }
 
     const serviceability = await shiprocketAPI.checkServiceability(
       pickupPincode,
       deliveryPincode,
-      weight
+      weight,
+      Number(cod),
+      declaredValue ? Number(declaredValue) : undefined
     );
 
     res.status(200).json({
@@ -742,6 +739,7 @@ const triggerShiprocketForOrder = async (order) => {
       products: populated.products,
       paymentDetails: populated.paymentDetails,
       deliveryCharges: populated.deliveryCharges || 0,
+      codCharges: populated.codCharges || 0,
       discountAmount: populated.discountAmount || 0,
       totalPrice: populated.totalPrice,
     });
@@ -826,7 +824,7 @@ const saveOrderToUser = async (userId, orderId) => {
 // Cash on Delivery order
 export const createCODOrder = async (req, res) => {
   try {
-    const { cartItems, shippingAddress, totalAmount, deliveryCharges, userId, notes } = req.body;
+    const { cartItems, shippingAddress, totalAmount, deliveryCharges, codCharges, userId, notes } = req.body;
 
     if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
       return res.status(400).json({ success: false, message: 'Cart items are required' });
@@ -846,6 +844,7 @@ export const createCODOrder = async (req, res) => {
       totalPrice: finalAmountRupees,
       finalAmount: finalAmountRupees,
       deliveryCharges: Number(deliveryCharges) || 0,
+      codCharges: Number(codCharges) || 0,
       shippingAddress,
       paymentDetails: {
         method: 'COD',

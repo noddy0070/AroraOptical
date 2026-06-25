@@ -12,8 +12,11 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
     const [loading, setLoading] = useState(false);
     const { user } = useSelector((state) => state.auth);
 
-    const totalAmount = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0) + (deliveryPrice || 0);
     const isCOD = paymentMethod === 'cash on delivery';
+    const cartSubtotal = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0);
+    // COD surcharge: ₹40 or 2.5% of cart value, whichever is higher
+    const codCharges = isCOD ? Math.max(40, Math.round(cartSubtotal * 0.025)) : 0;
+    const totalAmount = cartSubtotal + (deliveryPrice || 0) + codCharges;
 
     const handleCODOrder = async () => {
         setLoading(true);
@@ -22,8 +25,9 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
                 `${baseURL}/api/order/create-cod`,
                 {
                     cartItems,
-                    totalAmount,        // rupees — no conversion needed for COD
+                    totalAmount,        // rupees — includes delivery + COD charges
                     deliveryCharges: deliveryPrice || 0,
+                    codCharges,
                     shippingAddress,
                     userId: user._id,
                     notes: 'None for now',
@@ -142,6 +146,12 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
                         <p className='text-regularTextPhone md:text-regularText leading-[150%] font-roboto'>Delivery Charges</p>
                         <p className='text-regularTextPhone md:text-regularText ml-auto text-right leading-[150%] font-roboto'>{formatINR(deliveryPrice)}</p>
                     </div>
+                    {isCOD && (
+                        <div className='flex flex-row'>
+                            <p className='text-regularTextPhone md:text-regularText leading-[150%] font-roboto'>COD Charges</p>
+                            <p className='text-regularTextPhone md:text-regularText ml-auto text-right leading-[150%] font-roboto'>{formatINR(codCharges)}</p>
+                        </div>
+                    )}
                     <div className='w-full h-[1px] border-dashed border-black border-[1px]'></div>
                     <div className='flex flex-row'>
                         <p className='text-regularTextPhone md:text-regularText leading-[150%] font-roboto font-bold'>Total Amount</p>
