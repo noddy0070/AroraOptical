@@ -51,8 +51,8 @@ class ShiprocketAPI {
         is_return:         0,
         shipping_dangerous_goods: 0,
         secure_shipment:   0,
+        declared_value:    Math.max(1, Number(declaredValue) || 1),
       };
-      if (declaredValue) params.declared_value = declaredValue;
 
       const response = await axios.get(`${this.baseURL}/external/courier/serviceability`, {
         headers,
