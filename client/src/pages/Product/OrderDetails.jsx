@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { baseURL } from '@/url';
+import { toTitleCase } from '../../../shared/pipes/strFormatting';
 
 const OrderDetails = () => {
   const { orderId } = useParams();
@@ -159,7 +160,7 @@ const OrderDetails = () => {
             <div className="bg-white rounded-[4vw] md:rounded-lg shadow p-[6vw] md:p-6">
               <h2 className="text-h4TextPhone md:text-xl font-bold mb-[4vw] md:mb-4">Shipping Address</h2>
               <div className="space-y-[2vw] md:space-y-2">
-                <p className="font-semibold text-regularTextPhone md:text-regularText">{order.shippingAddress.name}</p>
+                <p className="font-semibold text-regularTextPhone md:text-regularText">{toTitleCase(order.shippingAddress.name || order.shippingAddress.fullName)}</p>
                 <p className="text-regularTextPhone md:text-regularText">{order.shippingAddress.address}</p>
                 <p className="text-regularTextPhone md:text-regularText">{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipcode}</p>
                 <p className="text-regularTextPhone md:text-regularText">Phone: {order.shippingAddress.phone}</p>

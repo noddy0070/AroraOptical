@@ -11,6 +11,7 @@ import axios from 'axios';
 import { baseURL } from '@/url';
 import navbarDropdown from '../assets/images/navbarDropDown.png'
 import { useNavigate } from 'react-router-dom';
+import { toTitleCase } from '../../shared/pipes/strFormatting';
 import { 
   ChevronDown, 
   ChevronUp, 
@@ -433,7 +434,7 @@ export default function SecondaryNavbar() {
                   <div className='hidden md:flex flex-row gap-[.5vw] items-center'>
                     {/* <img className='w-[2vw] h-[2vw]' src={profilePlaceholder} alt="Profile"/> */}
                     <span className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
-                      {user?.name}
+                      {toTitleCase(user?.name)}
                     </span>
                   </div>
                 </TransitionLink>
@@ -589,7 +590,7 @@ export default function SecondaryNavbar() {
         {isAuthenticated ? (
           <TransitionLink to="/settings" onClick={() => setIsMobileMenuOpen(false)}>
             <div className="flex items-center gap-[2vw] py-[2vw]">
-              <span className="text-regularTextPhone font-bold">{user?.name}</span>
+              <span className="text-regularTextPhone font-bold">{toTitleCase(user?.name)}</span>
             </div>
           </TransitionLink>
         ) : (

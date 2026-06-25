@@ -6,6 +6,7 @@ import AddressDialougeBox from '@/components/AddressDialougeBox';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { baseURL } from '@/url';
+import { toTitleCase } from '../../../shared/pipes/strFormatting';
 import { loginSuccess } from '@/redux/slice/authSlice';
 import { formatINR } from '@/components/IntToPrice';
 import { TitleButton2 } from '@/components/button';
@@ -150,7 +151,7 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
                       }}
                   />
                   <div className='flex flex-col gap-[1vw] md:gap-[4px]'>
-                  <span className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto'>{address.fullName}</span>
+                  <span className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto'>{toTitleCase(address.fullName)}</span>
                   <span className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto line-clamp-2'>{address.flat} {address.area}, {address.city} {address.state}, {address.pincode}</span>
                   <span className='text-mediumTextPhone md:text-mediumText leading-[150%] font-roboto'>{address.mobileNumber}</span>
                   {selectedAddressIndex === index && 

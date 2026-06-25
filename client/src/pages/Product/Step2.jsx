@@ -23,6 +23,7 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
                 {
                     cartItems,
                     totalAmount,        // rupees — no conversion needed for COD
+                    deliveryCharges: deliveryPrice || 0,
                     shippingAddress,
                     userId: user._id,
                     notes: 'None for now',
@@ -47,6 +48,7 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
         const data = {
             cartItems,
             totalAmount: totalAmountPaise,
+            deliveryCharges: deliveryPrice || 0,
             shippingAddress,
             userId: user._id,
             notes: 'None for now',

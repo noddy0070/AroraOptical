@@ -508,6 +508,7 @@ export const createPhonepeOrder = async (req, res) => {
       cartItems,
       shippingAddress,
       totalAmount,
+      deliveryCharges,
       notes,
       userId,
     } = req.body;
@@ -574,6 +575,7 @@ export const createPhonepeOrder = async (req, res) => {
       products: mappedProducts,
       totalPrice: finalAmountRupees,
       finalAmount: finalAmountRupees,
+      deliveryCharges: Number(deliveryCharges) || 0,
       shippingAddress,
       paymentDetails: {
         method: 'PhonePe',
@@ -733,6 +735,7 @@ const triggerShiprocketForOrder = async (order) => {
       .populate('products.productId', 'modelName modelCode');
     if (!populated) return;
 
+    // Step 1: Create order in Shiprocket
     const shiprocketResponse = await shiprocketAPI.createShipment({
       orderId: populated._id.toString(),
       shippingAddress: populated.shippingAddress,
@@ -743,19 +746,50 @@ const triggerShiprocketForOrder = async (order) => {
       totalPrice: populated.totalPrice,
     });
 
-    await Order.findByIdAndUpdate(order._id, {
-      $set: {
-        'shiprocket.orderId':    shiprocketResponse.order_id?.toString()   || '',
-        'shiprocket.shipmentId': shiprocketResponse.shipment_id?.toString() || '',
-        'shiprocket.status':     shiprocketResponse.status || '',
-        'shiprocket.lastUpdate': new Date(),
-      },
-    });
+    const shipmentId = shiprocketResponse.shipment_id;
 
-    console.log('[Shiprocket] Order created successfully:', {
-      orderId:    shiprocketResponse.order_id,
-      shipmentId: shiprocketResponse.shipment_id,
-      status:     shiprocketResponse.status,
+    const updateData = {
+      'shiprocket.orderId':    shiprocketResponse.order_id?.toString() || '',
+      'shiprocket.shipmentId': shipmentId?.toString() || '',
+      'shiprocket.status':     shiprocketResponse.status || 'NEW',
+      'shiprocket.lastUpdate': new Date(),
+    };
+
+    // Step 2: Auto-assign courier and generate AWB
+    try {
+      const awbResponse = await shiprocketAPI.assignCourier(shipmentId);
+      // Shiprocket nests the AWB data under response.data
+      const awbData = awbResponse?.response?.data || awbResponse;
+      if (awbData?.awb_code) {
+        updateData['shiprocket.awbCode']     = awbData.awb_code;
+        updateData['shiprocket.courierName'] = awbData.courier_name || '';
+        updateData['shiprocket.courierId']   = awbData.courier_company_id?.toString() || '';
+        updateData['shiprocket.status']      = 'AWB_ASSIGNED';
+        console.log('[Shiprocket] AWB assigned:', awbData.awb_code, '| Courier:', awbData.courier_name);
+
+        // Step 3: Schedule pickup
+        try {
+          await shiprocketAPI.schedulePickup(shipmentId);
+          updateData['shiprocket.status'] = 'PICKUP_SCHEDULED';
+          console.log('[Shiprocket] Pickup scheduled for shipment:', shipmentId);
+        } catch (pickupErr) {
+          console.warn('[Shiprocket] Pickup scheduling failed (non-fatal):', pickupErr.message);
+        }
+      } else {
+        console.warn('[Shiprocket] AWB not assigned — no courier available for this pincode.');
+      }
+    } catch (awbErr) {
+      console.warn('[Shiprocket] AWB assignment failed (non-fatal):', awbErr.message);
+    }
+
+    await Order.findByIdAndUpdate(order._id, { $set: updateData });
+
+    console.log('[Shiprocket] Processing complete:', {
+      orderId:    updateData['shiprocket.orderId'],
+      shipmentId: updateData['shiprocket.shipmentId'],
+      awbCode:    updateData['shiprocket.awbCode'],
+      courier:    updateData['shiprocket.courierName'],
+      status:     updateData['shiprocket.status'],
     });
   } catch (err) {
     console.error('[Shiprocket] Integration error (non-fatal):', err.message);
@@ -792,7 +826,7 @@ const saveOrderToUser = async (userId, orderId) => {
 // Cash on Delivery order
 export const createCODOrder = async (req, res) => {
   try {
-    const { cartItems, shippingAddress, totalAmount, userId, notes } = req.body;
+    const { cartItems, shippingAddress, totalAmount, deliveryCharges, userId, notes } = req.body;
 
     if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
       return res.status(400).json({ success: false, message: 'Cart items are required' });
@@ -811,6 +845,7 @@ export const createCODOrder = async (req, res) => {
       products: mapCartToProducts(cartItems),
       totalPrice: finalAmountRupees,
       finalAmount: finalAmountRupees,
+      deliveryCharges: Number(deliveryCharges) || 0,
       shippingAddress,
       paymentDetails: {
         method: 'COD',

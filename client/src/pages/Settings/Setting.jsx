@@ -13,6 +13,7 @@ import axios from 'axios';
 import { baseURL } from '@/url';
 import { useNavigate } from 'react-router';
 import { logout } from '@/redux/slice/authSlice';
+import { toTitleCase } from '../../../shared/pipes/strFormatting';
 export default function Settings(){
     const [activeTab, setActiveTab] = useState('profile');
     const navigate=useNavigate();
@@ -59,7 +60,7 @@ export default function Settings(){
                 <div className='w-full md:hidden flex flex-col gap-[4vw]'>
                     <div className='w-full items-center flex flex-row gap-[4vw]'>
                         <img src={ProfilePic} className='w-[12vw] h-[12vw]'></img>
-                        <h5 className='text-h5TextPhone font-dyeLine font-bold'>Hey, {user?.name?.split(' ')[0] || 'User'}</h5>
+                        <h5 className='text-h5TextPhone font-dyeLine font-bold'>Hey, {toTitleCase(user?.name?.split(' ')[0]) || 'User'}</h5>
                     </div>
                     <div className='relative w-full'>
                         <select 
@@ -91,7 +92,7 @@ export default function Settings(){
                 <div className='hidden md:flex md:w-[25.125vw] md:flex-col md:gap-[1.875vw] md:px-[.75vw]'>
                     <div className='w-full items-center flex flex-row gap-[1.5vw]'>
                         <img src={ProfilePic} className='w-[3vw] h-[3vw]'></img>
-                        <h5 className='text-h5Text font-dyeLine font-bold'>Hey, {user?.name?.split(' ')[0] || 'User'}</h5>
+                        <h5 className='text-h5Text font-dyeLine font-bold'>Hey, {toTitleCase(user?.name?.split(' ')[0]) || 'User'}</h5>
                     </div>
                     <div  onClick={()=>setActiveTab('profile')} className={`w-[10.875vw] cursor-pointer flex flex-row gap-[.5vw] items-center ${activeTab=='profile'?"text-[#030972]":"text-black"}`}>
                         <img src={ProfileIcon} className='w-[1.625vw] h-[1.625vw]'></img>

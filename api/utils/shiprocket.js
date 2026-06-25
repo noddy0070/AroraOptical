@@ -201,7 +201,31 @@ class ShiprocketAPI {
     }
   }
 
-  // Generate AWB
+  // Auto-assign courier and generate AWB (Shiprocket picks best courier based on dashboard rules)
+  async assignCourier(shipmentId) {
+    const headers = await this.getHeaders();
+    const response = await axios.post(
+      `${this.baseURL}/external/courier/assign/awb`,
+      { shipment_id: shipmentId },
+      { headers }
+    );
+    console.log('[Shiprocket] AWB response:', JSON.stringify(response.data, null, 2));
+    return response.data;
+  }
+
+  // Schedule pickup for an assigned shipment
+  async schedulePickup(shipmentId) {
+    const headers = await this.getHeaders();
+    const response = await axios.post(
+      `${this.baseURL}/external/orders/schedule-pickup`,
+      { shipment_id: [shipmentId] },
+      { headers }
+    );
+    console.log('[Shiprocket] Pickup schedule response:', JSON.stringify(response.data, null, 2));
+    return response.data;
+  }
+
+  // Generate AWB (legacy — kept for backwards compat)
   async generateAWB(shipmentId, courierId) {
     try {
       const headers = await this.getHeaders();
@@ -209,7 +233,6 @@ class ShiprocketAPI {
         shipment_id: shipmentId,
         courier_id: courierId
       }, { headers });
-
       return response.data;
     } catch (error) {
       console.error('Generate AWB error:', error.response?.data || error.message);
@@ -284,7 +307,7 @@ class ShiprocketAPI {
   async verifyPickupLocation(pickupLocationName = 'Primary') {
     try {
       const locations = await this.getPickupLocations();
-      console.log('[Shiprocket] Raw pickup locations response:', JSON.stringify(locations, null, 2));
+      // console.log('[Shiprocket] Raw pickup locations response:', JSON.stringify(locations, null, 2));
 
       // Shiprocket API returns different shapes depending on version — try all known ones
       const list =

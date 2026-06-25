@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { baseURL } from '@/url';
+import { toTitleCase } from '../../../shared/pipes/strFormatting';
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 const EyeIcon = () => (
@@ -362,12 +363,12 @@ const OrderManagement = () => {
               <section>
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Customer</h4>
                 <div className="bg-gray-50 rounded-xl p-4 space-y-2.5 text-sm">
-                  <Row label="Name" value={drawer.userId?.name || drawer.shippingAddress.fullName} />
+                  <Row label="Name" value={toTitleCase(drawer.userId?.name || drawer.shippingAddress.fullName)} />
                   <Row label="Email" value={drawer.userId?.email} />
                   <Row label="Phone" value={drawer.shippingAddress.mobileNumber} />
                   <div className="pt-1 border-t border-gray-200">
                     <p className="text-xs text-gray-400 mb-1 mt-2">Shipping address</p>
-                    <p className="text-gray-700">{drawer.shippingAddress.fullName}</p>
+                    <p className="text-gray-700">{toTitleCase(drawer.shippingAddress.fullName)}</p>
                     <p className="text-gray-600">{drawer.shippingAddress.flat}, {drawer.shippingAddress.area}</p>
                     <p className="text-gray-600">{drawer.shippingAddress.city}, {drawer.shippingAddress.state} – {drawer.shippingAddress.pincode}</p>
                   </div>
