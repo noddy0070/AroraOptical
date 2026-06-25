@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import plus from '@/assets/images/checkout/plus.svg';
 import close from '@/assets/images/checkout/close.svg';
 import edit from '@/assets/images/checkout/edit.svg';
@@ -40,24 +40,17 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
     setDeliveryRate(null);
     setDeliveryPrice(null);
     try {
-      const pickupPincode = '462023';
       const deliveryPincode = address.pincode;
       const weight = 0.5 * cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
-      const declaredValue = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0);
       const response = await axios.get(`${baseURL}/api/order/serviceability`, {
-        params: { pickupPincode, deliveryPincode, weight, cod: 1, declaredValue },
+        params: { deliveryPincode, weight, cod: 1 },
       });
-      const couriers = response.data.serviceability?.data?.available_courier_companies || [];
-      if (response.data.success && couriers.length > 0) {
-        const sorted = [...couriers].sort((a, b) => a.rate - b.rate);
-        const cheapest = sorted[0];
-        console.log('[Delivery] All couriers (sorted by rate):',
-          sorted.map(c => ({ name: c.courier_name, rate: c.rate, eta: c.estimated_delivery_days, id: c.courier_company_id }))
-        );
-        console.log('[Delivery] Selected:', { name: cheapest.courier_name, rate: cheapest.rate, eta: cheapest.estimated_delivery_days });
+        console.log('Deliverability check response:', response.data);
+
+      if (response.data.success && response.data.serviceable) {
         setDeliveryStatus('available');
-        setDeliveryRate(cheapest.rate);
-        setDeliveryPrice(cheapest.rate);
+        setDeliveryRate(response.data.deliveryRate);
+        setDeliveryPrice(response.data.deliveryRate);
       } else {
         setDeliveryStatus('unavailable');
       }
@@ -67,12 +60,12 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
     }
   }, [cartItems, setDeliveryPrice]);
 
-  // Auto-check when selected address changes
+  // Auto-check when selected address or cart changes
   useEffect(() => {
     if (user.addressList.length > 0 && user.addressList[selectedAddressIndex]) {
       checkDeliverability(user.addressList[selectedAddressIndex]);
     }
-  }, [selectedAddressIndex, user.addressList]);
+  }, [selectedAddressIndex, user.addressList, checkDeliverability]);
 
   const handleAddressSubmit = async (addressData) => {
     if (!user || !user._id) return;

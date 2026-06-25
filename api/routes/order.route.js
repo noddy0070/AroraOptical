@@ -9,21 +9,18 @@ import {
   trackOrder,
   checkServiceability,
   cancelOrder,
-  getCourierList,
-  getPickupLocations,
   getOrderStatus,
   createPhonepeOrder,
   createCODOrder,
   createMockOrder,
   deleteOrder,
+  getDelhiveryWarehouses,
 } from '../controllers/order.controller.js';
 
 const router = express.Router();
 
 // Public routes
 router.get('/serviceability', checkServiceability);
-router.get('/couriers', getCourierList);
-router.get('/pickup-locations', getPickupLocations);
 
 // Protected routes (require authentication)
 router.post('/create', authMiddleware, createOrder);
@@ -39,6 +36,7 @@ router.post('/:orderId/cancel', authMiddleware, cancelOrder);
 
 
 // Admin routes
+router.get('/admin/delhivery-warehouses', authMiddleware, getDelhiveryWarehouses);
 router.get('/admin/all', authMiddleware, getAllOrders);
 router.put('/admin/:orderId/status', authMiddleware, updateOrderStatus);
 router.delete('/admin/:orderId', authMiddleware, deleteOrder);

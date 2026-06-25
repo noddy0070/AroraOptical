@@ -17,11 +17,11 @@ import { mapBrandToLogo, mapBrandToDescription } from '@/data/brandMap';
 
 
 export default function ProductDescription({productToDisplay}){
-    const [selectedSize, setSelectedSize] = useState('');
-    const [isHovered, setIsHovered] = useState(false);
-    const [isDetailClicked, setIsDetailClicked] = useState(true);
-    const [isShipingClicked, setIsShipingClicked] = useState(true);
-    const [isReturnClicked, setIsReturnClicked] = useState(true);
+    // const [selectedSize, setSelectedSize] = useState('');
+    // const [isHovered, setIsHovered] = useState(false);
+    // const [isDetailClicked, setIsDetailClicked] = useState(true);
+    // const [isShipingClicked, setIsShipingClicked] = useState(true);
+    // const [isReturnClicked, setIsReturnClicked] = useState(true);
     const [isInWishlist, setIsInWishlist] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -292,7 +292,7 @@ export default function ProductDescription({productToDisplay}){
                 <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand} className='w-auto h-[10vw] md:h-[2.5vw] mr-auto object-contain' />
                 <div>
                     <h3 className='font-bold text-h3TextPhone md:text-h3Text leading-[120%]'>{productToDisplay.modelName}</h3>
-                    <span className='text-regularTextPhone md:text-regularText leading-[150%]'>{productToDisplay.modelTitle}</span>
+                    <span className='text-regularTextPhone md:text-regularText leading-[150%]'><pre>{productToDisplay.modelCode} - {productToDisplay.modelTitle}</pre></span>
                     {/* <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{formatINR(productToDisplay.price)}</span> {" "}
                      <span>{formatINR(productToDisplay.discount)}</span> </h5> */}
 
