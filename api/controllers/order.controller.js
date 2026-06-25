@@ -624,7 +624,7 @@ export const createPhonepeOrder = async (req, res) => {
     console.log('PhonePe checkout created', {
       merchantOrderId: order._id.toString(),
       phonePeOrderId: response.orderId,
-      amountPaise: finalAmount,
+      amountPaise: finalAmountPaise,
       redirectUrl,
     });
 
@@ -704,8 +704,7 @@ export const getOrderStatus = async (req, res) => {
         await user.save();
       }
 
-      // TODO: Integrate Shiprocket API in the next phase
-      // triggerShiprocketOrderCreation(order);
+      triggerShiprocketForOrder(order); // non-blocking
 
       return res.redirect(process.env.PHONEPE_FRONTEND_URL + '/thank-you')
     }else{
@@ -724,6 +723,45 @@ export const getOrderStatus = async (req, res) => {
       message: 'Failed to check order status',
       error: error.message
     });
+  }
+};
+
+// --- Shiprocket trigger (fire-and-forget; never blocks the main response) ---
+const triggerShiprocketForOrder = async (order) => {
+  try {
+    const populated = await Order.findById(order._id)
+      .populate('products.productId', 'modelName modelCode');
+    if (!populated) return;
+
+    const shiprocketResponse = await shiprocketAPI.createShipment({
+      orderId: populated._id.toString(),
+      shippingAddress: populated.shippingAddress,
+      products: populated.products,
+      paymentDetails: populated.paymentDetails,
+      deliveryCharges: populated.deliveryCharges || 0,
+      discountAmount: populated.discountAmount || 0,
+      totalPrice: populated.totalPrice,
+    });
+
+    await Order.findByIdAndUpdate(order._id, {
+      $set: {
+        'shiprocket.orderId':    shiprocketResponse.order_id?.toString()   || '',
+        'shiprocket.shipmentId': shiprocketResponse.shipment_id?.toString() || '',
+        'shiprocket.status':     shiprocketResponse.status || '',
+        'shiprocket.lastUpdate': new Date(),
+      },
+    });
+
+    console.log('[Shiprocket] Order created successfully:', {
+      orderId:    shiprocketResponse.order_id,
+      shipmentId: shiprocketResponse.shipment_id,
+      status:     shiprocketResponse.status,
+    });
+  } catch (err) {
+    console.error('[Shiprocket] Integration error (non-fatal):', err.message);
+    if (err.response?.data) {
+      console.error('[Shiprocket] API response body:', JSON.stringify(err.response.data, null, 2));
+    }
   }
 };
 
@@ -786,13 +824,32 @@ export const createCODOrder = async (req, res) => {
     await order.save();
     await saveOrderToUser(userId, order._id);
 
-    // TODO: Integrate Shiprocket API in the next phase
-    // triggerShiprocketOrderCreation(order);
+    triggerShiprocketForOrder(order); // non-blocking
 
     return res.status(201).json({ success: true, message: 'Order placed successfully', orderId: order._id });
   } catch (error) {
     console.error('Create COD order error:', error);
     res.status(500).json({ success: false, message: 'Failed to place order' });
+  }
+};
+
+// Delete order (admin only)
+export const deleteOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+    // Remove the order reference from the user's orders array
+    await User.findByIdAndUpdate(order.userId, {
+      $pull: { orders: { orderId: order._id } },
+    });
+    await Order.findByIdAndDelete(orderId);
+    return res.status(200).json({ success: true, message: 'Order deleted successfully' });
+  } catch (error) {
+    console.error('Delete order error:', error);
+    res.status(500).json({ success: false, message: 'Failed to delete order' });
   }
 };
 

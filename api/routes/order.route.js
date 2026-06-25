@@ -15,6 +15,7 @@ import {
   createPhonepeOrder,
   createCODOrder,
   createMockOrder,
+  deleteOrder,
 } from '../controllers/order.controller.js';
 
 const router = express.Router();
@@ -40,5 +41,6 @@ router.post('/:orderId/cancel', authMiddleware, cancelOrder);
 // Admin routes
 router.get('/admin/all', authMiddleware, getAllOrders);
 router.put('/admin/:orderId/status', authMiddleware, updateOrderStatus);
+router.delete('/admin/:orderId', authMiddleware, deleteOrder);
 
 export default router; 

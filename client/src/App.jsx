@@ -21,6 +21,7 @@ import Blog from "./pages/Home/Sections/Blog";
 import FeeEyeTest from "./pages/Home/Sections/FreeEyeTest";
 import AboutUs from "./pages/About-us.jsx";
 import ThankYou from "./pages/Product/ThankYou";
+import PaymentFailed from "./pages/Product/PaymentFailed";
 import Accessories from "./pages/Shop/Accessories.jsx";
 import SearchResults from "./pages/Search/SearchResults.jsx";
 
@@ -380,6 +381,14 @@ export default function App() {
         element={
           <Page title="Arora Opticals | Thank You">
             <ThankYou />
+          </Page>
+        }
+      />
+      <Route
+        path="/failed"
+        element={
+          <Page title="Arora Opticals | Payment Failed">
+            <PaymentFailed />
           </Page>
         }
       />
