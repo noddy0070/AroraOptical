@@ -15,6 +15,7 @@ import LensTint from './LensTint';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const lensData=[{id:'lensType',img:lensTypeImg},{id:'lensCoating',img:lensCoatingImg},{id:'lensThickness',img:lensThicknessImg},{id:'prescription',img:prescriptionImg}];
 
@@ -153,7 +154,7 @@ export default function Lens() {
 
       if (response.data.success) {
           // Show success message or update UI
-          alert('Product added to cart successfully!');
+          toast.success('Added to cart!');
           // Dispatch custom event for cart update
           window.dispatchEvent(new CustomEvent('cartUpdated'));
           navigate('/cart');

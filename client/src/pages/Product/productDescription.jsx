@@ -8,6 +8,7 @@ import WishListIconFilled from '../../assets/images/icons/WishlistIconFilled.svg
 import './product.css';
 import { IconButton } from '../../components/button';
 import { renderStars } from '@/components/RenderStarts';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { formatINR } from '@/components/IntToPrice';
 import { baseURL } from '@/url';
@@ -175,7 +176,7 @@ export default function ProductDescription({productToDisplay}){
 
             if (response.data.success) {
                 // Show success message or update UI
-                alert('Product added to cart successfully!');
+                toast.success('Added to cart!');
                 // Dispatch custom event for cart update
                 window.dispatchEvent(new CustomEvent('cartUpdated'));
             }

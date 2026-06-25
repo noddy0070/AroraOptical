@@ -6,6 +6,7 @@ import Star from '../../assets/images/star.png';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import { CartButton } from '../../components/button';
+import { toast } from 'react-toastify';
 
 export default function WishList() {
     const [wishlistItems, setWishlistItems] = useState([]);
@@ -75,7 +76,7 @@ export default function WishList() {
             if (response.data.success) {
                 // Optionally remove from wishlist after adding to cart
                 await handleRemoveFromWishlist(productId);
-                alert('Product added to cart successfully!');
+                toast.success('Added to cart!');
             }
         } catch (error) {
             console.error('Error adding to cart:', error);
