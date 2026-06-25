@@ -1,5 +1,7 @@
 import User from "../models/user.model.js";
 
+const ADMIN_ROLES = ['admin', 'super-admin', 'product-manager'];
+
 const verifyAdmin = async (req, res, next) => {
   try {
     if (!req.user?.id) {
@@ -16,12 +18,13 @@ const verifyAdmin = async (req, res, next) => {
         .json({ success: false, message: "Authentication required" });
     }
 
-    if (user.role !== "admin") {
+    if (!ADMIN_ROLES.includes(user.role)) {
       return res
         .status(403)
         .json({ success: false, message: "Admin access required" });
     }
 
+    req.userRole = user.role;
     next();
   } catch (error) {
     console.error("verifyAdmin error:", error);

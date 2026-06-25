@@ -1,7 +1,7 @@
-import { useRef,useState,useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import SearchIcon2 from '../../assets/images/icons/SearchIcon.svg'
-import { AttributesIcon,CancellationPolicyIcon,CategoryIcon,DashboardIcon,EcommerceIcon,FAQIcon,HelpCenterIcon,OrderIcon,PrivacyPolicyIcon,SettingsIcon,ShippingAndDeliveryIcon,TermsAndConditionIcon,UserIcon} from './Icons';
+import { AttributesIcon, CancellationPolicyIcon, CategoryIcon, DashboardIcon, EcommerceIcon, FAQIcon, HelpCenterIcon, OrderIcon, PrivacyPolicyIcon, SettingsIcon, ShippingAndDeliveryIcon, TermsAndConditionIcon, UserIcon } from './Icons';
 import ChatIcon from '../../assets/images/icons/chatIcon.svg'
 import NotificationIcon from '../../assets/images/icons/notificationIcon.svg'
 import logo from '../../assets/images/AroraOpticalLogo.png';
@@ -16,11 +16,6 @@ const ecommerceSection = [
   { id: "Bulk Upload" },
 ];
 
-// const categorySection = [
-//   { id: "Category List" },
-//   { id: "New Category" }
-// ];
-
 const attributesSection = [
   { id: "Attributes" },
 ];
@@ -34,13 +29,18 @@ const orderSection = [
   { id: "Order Management" },
 ];
 
-const homeSection = [
-  // { id: 'Dashboard', path: ['/Admin'], icon: DashboardIcon, subSections: [] },
-  // { id: 'Analytics', path: ['/Admin'], icon: AnalyticsIcon, subSections: [] },
+// Full sidebar for super-admin / admin
+const homeSectionFull = [
   { id: 'Ecommerce', path: ['/Admin/products', '/Admin/add-product', '/Admin/products/bulk-upload'], icon: EcommerceIcon, subSections: ecommerceSection },
   { id: 'Attributes', path: ['/Admin/attributes'], icon: AttributesIcon, subSections: attributesSection },
   { id: 'User', path: ['/Admin/user', '/Admin/add-user'], icon: UserIcon, subSections: userSection },
   { id: 'Order', path: ['/Admin/order-management'], icon: OrderIcon, subSections: orderSection },
+];
+
+// Restricted sidebar for product-manager
+const homeSectionPM = [
+  { id: 'Ecommerce', path: ['/Admin/products', '/Admin/add-product', '/Admin/products/bulk-upload'], icon: EcommerceIcon, subSections: ecommerceSection },
+  { id: 'Attributes', path: ['/Admin/attributes'], icon: AttributesIcon, subSections: attributesSection },
 ];
 
 const settingsSection = [
@@ -56,18 +56,31 @@ const supportSection = [
   { id: 'Terms and Conditions', path: ['/Admin/terms-and-conditions'], icon: TermsAndConditionIcon, subSections: [] },
 ];
 
-const mainSections = [
-  { id: 'Home', subSections: homeSection },
-  { id: 'Extras', subSections: settingsSection },
-  { id: 'Support', subSections: supportSection },
-];
+const buildSections = (role) => {
+  const isProductManager = role === 'product-manager';
+  const home = { id: 'Home', subSections: isProductManager ? homeSectionPM : homeSectionFull };
+  if (isProductManager) return [home];
+  return [
+    home,
+    { id: 'Extras', subSections: settingsSection },
+    { id: 'Support', subSections: supportSection },
+  ];
+};
 
+const ROLE_LABELS = {
+  'super-admin': 'Super Admin',
+  'admin': 'Admin',
+  'product-manager': 'Product Manager',
+};
 
 const DashBoard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const inputRef = useRef(null);
   const [search, setSearch] = useState('');
+  const user = useSelector((state) => state.auth.user);
+
+  const mainSections = buildSections(user?.role);
 
   const getActiveSections = () => {
     for (const main of mainSections) {
@@ -87,7 +100,6 @@ const DashBoard = () => {
   };
 
   const [active, setActive] = useState(getActiveSections());
-  const user=useSelector((state)=>state.auth.user);
 
   useEffect(() => {
     setActive(getActiveSections());
@@ -135,7 +147,7 @@ const DashBoard = () => {
             <div className='flex gap-[.75vw] items-center'>
               <div className='flex flex-col font-roboto leading-[120%]'>
                 <p className='text-regularText font-bold'>{toTitleCase(user?.name)}</p>
-                <p className='text-tinyText'>Admin</p>
+                <p className='text-tinyText'>{ROLE_LABELS[user?.role] ?? 'Admin'}</p>
               </div>
             </div>
           </div>
@@ -185,14 +197,14 @@ const DashBoard = () => {
           </div>
         </div>
         <div className="w-[81vw] " style={{
-     background: `
-      linear-gradient(90deg, rgba(0,0,0,0.15) 0%, rgba(255,255,255,1) 2%, rgba(255,255,255,1) 98%, rgba(0,0,0,0.15) 100%),
-      linear-gradient(0deg, rgba(0,0,0,0.15) 0%, rgba(255,255,255,1) 2%, rgba(255,255,255,1) 98%, rgba(0,0,0,0.15) 100%)
-    `,
-    backgroundBlendMode: 'darken'
-  }}>
-        <Outlet /> {/* This will render the matched child route */}
-      </div>
+          background: `
+            linear-gradient(90deg, rgba(0,0,0,0.15) 0%, rgba(255,255,255,1) 2%, rgba(255,255,255,1) 98%, rgba(0,0,0,0.15) 100%),
+            linear-gradient(0deg, rgba(0,0,0,0.15) 0%, rgba(255,255,255,1) 2%, rgba(255,255,255,1) 98%, rgba(0,0,0,0.15) 100%)
+          `,
+          backgroundBlendMode: 'darken'
+        }}>
+          <Outlet />
+        </div>
       </div>
     </div>
   );

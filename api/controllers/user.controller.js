@@ -60,8 +60,8 @@ export const addUser= async (req,res,next)=>{
 }
 
 export const getUser = async (req, res, next) => {
-  const { id } = req.params;  
-  if (!mongoose.Types.ObjectId.isValid(id)) { 
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid product ID" });
   }
   try {
@@ -70,6 +70,23 @@ export const getUser = async (req, res, next) => {
   } catch (err) {
     console.error('Error fetching product:', err);
     res.status(500).json({ message: 'Server error fetching product' });
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ success: false, message: "Invalid user ID" });
+  }
+  try {
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, message: "User deleted successfully" });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ success: false, message: 'Server error deleting user' });
   }
 };
 

@@ -14,7 +14,7 @@ import { formatINR } from '@/components/IntToPrice';
 import { baseURL } from '@/url';
 import { TransitionLink } from '@/Routes/TransitionLink';
 import { mapBrandToLogo, mapBrandToDescription } from '@/data/brandMap';
-
+import {toTitleCase} from '../../../shared/pipes/strFormatting';
 
 export default function ProductDescription({productToDisplay}){
     const [selectedSize, setSelectedSize] = useState('');
@@ -267,8 +267,8 @@ export default function ProductDescription({productToDisplay}){
                     onTouchMove={handleTagsTouchMove}
                     onTouchEnd={handleTagsTouchEnd}
                 >
-                    {tags.map((tag, index) => (
-                    <div className='px-[4vw] md:px-[16px] py-[2vw] md:py-[8px] rounded-[5vw] md:rounded-[1.25vw] text-center line-clamp-1 whitespace-nowrap md:min-w-[7.125vw] flex-shrink-0 border-[1px] border-black text-tinyTextPhone md:text-tinyText select-none' key={index}>{tag}</div>
+                    {tags.slice(0, 3).map((tag, index) => (
+                    <div className='px-[4vw] md:px-[16px] py-[2vw] md:py-[8px] rounded-[5vw] md:rounded-[1.25vw] text-center line-clamp-1 whitespace-nowrap md:min-w-[7.125vw] flex-shrink-0 border-[1px] border-black text-tinyTextPhone md:text-tinyText select-none font-medium' key={index}>{toTitleCase(tag)}</div>
                     ))}
                 </div>
                 <button onClick={handleWishlist} disabled={loading} className='flex-shrink-0'>
@@ -292,7 +292,7 @@ export default function ProductDescription({productToDisplay}){
                 <img src={mapBrandToLogo[productToDisplay.brand]} alt={productToDisplay.brand} className='w-auto h-[10vw] md:h-[2.5vw] mr-auto object-contain' />
                 <div>
                     <h3 className='font-bold text-h3TextPhone md:text-h3Text leading-[120%]'>{productToDisplay.modelName}</h3>
-                    <span className='text-regularTextPhone md:text-regularText leading-[150%]'>{productToDisplay.modelTitle}</span>
+                    <span className='text-regularTextPhone md:text-regularText leading-[150%]'><pre>{productToDisplay.modelCode} - {productToDisplay.modelTitle}</pre></span>
                     {/* <h5 className='text-h5Text font-bold leading-[140%]'><span className='line-through'>{formatINR(productToDisplay.price)}</span> {" "}
                      <span>{formatINR(productToDisplay.discount)}</span> </h5> */}
 
