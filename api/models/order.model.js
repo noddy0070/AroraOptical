@@ -99,6 +99,17 @@ const orderSchema = new mongoose.Schema({
   notes: {
     type: String,
   },
+  shiprocket: {
+    orderId:     { type: String },
+    shipmentId:  { type: String },
+    status:      { type: String },
+    statusCode:  { type: Number },
+    awbCode:     { type: String },
+    courierName: { type: String },
+    courierId:   { type: String },
+    trackingUrl: { type: String },
+    lastUpdate:  { type: Date },
+  },
 }, { timestamps: true });
 
 // Instance method to add product to order with prescription

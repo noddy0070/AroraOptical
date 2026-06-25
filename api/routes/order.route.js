@@ -13,6 +13,8 @@ import {
   getPickupLocations,
   getOrderStatus,
   createPhonepeOrder,
+  createCODOrder,
+  createMockOrder,
 } from '../controllers/order.controller.js';
 
 const router = express.Router();
@@ -25,6 +27,8 @@ router.get('/pickup-locations', getPickupLocations);
 // Protected routes (require authentication)
 router.post('/create', authMiddleware, createOrder);
 router.post('/create-phonepe', authMiddleware, createPhonepeOrder);
+router.post('/create-cod', authMiddleware, createCODOrder);
+router.post('/create-mock', authMiddleware, createMockOrder);
 router.get('/status', getOrderStatus);
 
 router.get('/user-orders', authMiddleware, getUserOrders);

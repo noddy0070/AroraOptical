@@ -275,14 +275,14 @@ const OrderManagement = () => {
                 <div className="space-y-2 text-sm">
                   <div><strong>Name:</strong> {selectedOrder.userId?.name}</div>
                   <div><strong>Email:</strong> {selectedOrder.userId?.email}</div>
-                  <div><strong>Phone:</strong> {selectedOrder.shippingAddress.phone}</div>
+                  <div><strong>Phone:</strong> {selectedOrder.shippingAddress.mobileNumber}</div>
                 </div>
 
                 <h4 className="font-semibold mb-2 mt-4">Shipping Address</h4>
                 <div className="space-y-1 text-sm">
-                  <div>{selectedOrder.shippingAddress.name}</div>
-                  <div>{selectedOrder.shippingAddress.address}</div>
-                  <div>{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.zipcode}</div>
+                  <div>{selectedOrder.shippingAddress.fullName}</div>
+                  <div>{selectedOrder.shippingAddress.flat}, {selectedOrder.shippingAddress.area}</div>
+                  <div>{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.pincode}</div>
                 </div>
               </div>
 
@@ -309,7 +309,7 @@ const OrderManagement = () => {
                 </div>
 
                 {/* Shiprocket Info */}
-                {selectedOrder.shiprocket.shipmentId && (
+                {selectedOrder.shiprocket?.shipmentId && (
                   <div className="mb-4">
                     <h4 className="font-semibold mb-2">Shiprocket Information</h4>
                     <div className="space-y-1 text-sm">

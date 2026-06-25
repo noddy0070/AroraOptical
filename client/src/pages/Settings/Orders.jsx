@@ -103,7 +103,7 @@ export default function Orders() {
                                 <p className={`font-bold text-h6TextPhone md:text-regularText ${getOrderStatus(order.status).color}`}>
                                     {getOrderStatus(order.status).text}
                                 </p>
-                                <p className='text-smallTextPhone md:text-sm'>Total: ₹{order.finalAmount/100}</p>
+                                <p className='text-smallTextPhone md:text-sm'>Total: ₹{order.finalAmount}</p>
                             </div>
                         </div>
 

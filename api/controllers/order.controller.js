@@ -558,25 +558,27 @@ export const createPhonepeOrder = async (req, res) => {
       mappedProducts.push(mappedProduct);
     }
 
-    const finalAmount = Math.round(Number(totalAmount));
-    if (!Number.isFinite(finalAmount) || finalAmount < 100) {
+    const finalAmountPaise = Math.round(Number(totalAmount));
+    if (!Number.isFinite(finalAmountPaise) || finalAmountPaise < 100) {
       return res.status(400).json({
         success: false,
         message: 'Invalid total amount. Minimum order value is ₹1.'
       });
     }
-  
+    // Store monetary values in rupees; PhonePe SDK expects paise
+    const finalAmountRupees = Math.round(finalAmountPaise / 100);
+
     // Create order in database first
     const order = new Order({
       userId,
       products: mappedProducts,
-      totalPrice:finalAmount,
-      finalAmount,
+      totalPrice: finalAmountRupees,
+      finalAmount: finalAmountRupees,
       shippingAddress,
       paymentDetails: {
         method: 'PhonePe',
         status: 'Pending',
-        amount: finalAmount
+        amount: finalAmountRupees
       },
       notes,
       status: 'Pending'
@@ -600,7 +602,7 @@ export const createPhonepeOrder = async (req, res) => {
     }
 
     const redirectUrl = `${redirectBase}?merchantOrderId=${order._id}`;
-    const request = buildPhonePePayRequest(order, finalAmount, redirectUrl, shippingAddress, userId);
+    const request = buildPhonePePayRequest(order, finalAmountPaise, redirectUrl, shippingAddress, userId);
 
     // Get PhonePe client with error handling
     let client;
@@ -688,44 +690,155 @@ export const getOrderStatus = async (req, res) => {
       order.status = 'Confirmed';
       order.paymentDetails.status = 'Completed';
       await order.save();
-      
+
       // Find the user and update their cart and orders
       const user = await User.findById(order.userId);
       if (user) {
-        // Store cart items before clearing
         const cartItems = [...user.cart];
-        
-        // Clear the user's cart
         user.cart = [];
-        
-        // Add the order to user's orders with cart items
         user.orders.push({
           orderId: order._id,
           date: new Date(),
-          items: cartItems // Include the cart items in the order
+          items: cartItems,
         });
-        
         await user.save();
-        console.log('Cart cleared and order with items added to user orders');
       }
-      
-      return res.redirect(process.env.PHONEPE_FRONTEND_URL)
+
+      // TODO: Integrate Shiprocket API in the next phase
+      // triggerShiprocketOrderCreation(order);
+
+      return res.redirect(process.env.PHONEPE_FRONTEND_URL + '/thank-you')
     }else{
       // Update order status for failed payment
       order.status = 'Failed';
       order.paymentDetails.status = 'Failed';
       await order.save();
       
-      return res.redirect(process.env.PHONEPE_FRONTEND_URL+'/failed')
+      return res.redirect(process.env.PHONEPE_FRONTEND_URL + '/failed')
     }
 
   } catch (error) {
     console.error('Get order status error:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Failed to check order status',
-      error: error.message 
+      error: error.message
     });
+  }
+};
+
+// --- Shared helper to build a cart snapshot from cart items ---
+const mapCartToProducts = (cartItems) =>
+  cartItems.map((item) => ({
+    productId: item.productId?._id || item.productId,
+    quantity: item.quantity,
+    price: item.totalAmount,
+    prescriptionId: item.prescriptionId || null,
+    lensOptions: {
+      lensType:      item.lensType      === 'None' ? null : item.lensType,
+      lensCoating:   item.lensCoating   === 'None' ? null : item.lensCoating,
+      lensThickness: item.lensThickness === 'None' ? null : item.lensThickness,
+      lensTint:      item.lensTint      === 'None' ? null : item.lensTint,
+    },
+  }));
+
+const saveOrderToUser = async (userId, orderId) => {
+  const user = await User.findById(userId);
+  if (!user) return;
+  const cartSnapshot = [...user.cart];
+  user.cart = [];
+  user.orders.push({ orderId, date: new Date(), items: cartSnapshot });
+  await user.save();
+};
+
+// Cash on Delivery order
+export const createCODOrder = async (req, res) => {
+  try {
+    const { cartItems, shippingAddress, totalAmount, userId, notes } = req.body;
+
+    if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+      return res.status(400).json({ success: false, message: 'Cart items are required' });
+    }
+    if (!shippingAddress) {
+      return res.status(400).json({ success: false, message: 'Shipping address is required' });
+    }
+
+    const finalAmountRupees = Math.round(Number(totalAmount));
+    if (!Number.isFinite(finalAmountRupees) || finalAmountRupees < 1) {
+      return res.status(400).json({ success: false, message: 'Invalid order amount' });
+    }
+
+    const order = new Order({
+      userId,
+      products: mapCartToProducts(cartItems),
+      totalPrice: finalAmountRupees,
+      finalAmount: finalAmountRupees,
+      shippingAddress,
+      paymentDetails: {
+        method: 'COD',
+        status: 'Pending',
+        amount: finalAmountRupees,
+      },
+      notes,
+      status: 'Confirmed',
+    });
+
+    await order.save();
+    await saveOrderToUser(userId, order._id);
+
+    // TODO: Integrate Shiprocket API in the next phase
+    // triggerShiprocketOrderCreation(order);
+
+    return res.status(201).json({ success: true, message: 'Order placed successfully', orderId: order._id });
+  } catch (error) {
+    console.error('Create COD order error:', error);
+    res.status(500).json({ success: false, message: 'Failed to place order' });
+  }
+};
+
+// Mock payment — dev/staging only; simulates an instant confirmed payment
+export const createMockOrder = async (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ success: false, message: 'Not found' });
+  }
+
+  try {
+    const { cartItems, shippingAddress, totalAmount, userId, notes } = req.body;
+
+    if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+      return res.status(400).json({ success: false, message: 'Cart items are required' });
+    }
+    if (!shippingAddress) {
+      return res.status(400).json({ success: false, message: 'Shipping address is required' });
+    }
+
+    // totalAmount arrives in paise (same payload as the PhonePe flow) so convert
+    const finalAmountPaise = Math.round(Number(totalAmount));
+    const finalAmountRupees = Math.round(finalAmountPaise / 100);
+
+    const order = new Order({
+      userId,
+      products: mapCartToProducts(cartItems),
+      totalPrice: finalAmountRupees,
+      finalAmount: finalAmountRupees,
+      shippingAddress,
+      paymentDetails: {
+        method: 'PhonePe',
+        status: 'Completed',
+        transactionId: `MOCK_${userId}_${Date.now()}`,
+        amount: finalAmountRupees,
+      },
+      notes,
+      status: 'Confirmed',
+    });
+
+    await order.save();
+    await saveOrderToUser(userId, order._id);
+
+    return res.status(201).json({ success: true, message: 'Mock order created', orderId: order._id });
+  } catch (error) {
+    console.error('Create mock order error:', error);
+    res.status(500).json({ success: false, message: 'Failed to create mock order' });
   }
 };
 
