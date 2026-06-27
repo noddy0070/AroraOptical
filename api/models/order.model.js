@@ -28,26 +28,10 @@ const orderSchema = new mongoose.Schema({
       },
       // Lens customization options (if applicable)
       lensOptions: {
-        lensType: {
-          type: String,
-          enum: ['Single Vision', 'Bifocal', 'Progressive', 'Computer', 'Reading'],
-          required: false,
-        },
-        lensCoating: {
-          type: String,
-          enum: ['Anti-Reflective', 'Blue Light Filter', 'Photochromic', 'None'],
-          required: false,
-        },
-        lensThickness: {
-          type: String,
-          enum: ['Standard', 'Thin', 'Ultra Thin'],
-          required: false,
-        },
-        lensTint: {
-          type: String,
-          enum: ['None', 'Grey', 'Brown', 'Green'],
-          required: false,
-        },
+        lensType: { type: String, required: false },
+        lensCoating: { type: String, required: false },
+        lensThickness: { type: String, required: false },
+        lensTint: { type: String, required: false },
       },
     },
   ],

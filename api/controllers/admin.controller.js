@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
+import Notification from "../models/notification.model.js";
 
 export const getAdminStats = async (req, res) => {
   try {
@@ -50,5 +51,28 @@ export const getAdminStats = async (req, res) => {
   } catch (err) {
     console.error('getAdminStats error:', err);
     res.status(500).json({ success: false, message: 'Failed to fetch stats' });
+  }
+};
+
+export const getNotifications = async (req, res) => {
+  try {
+    const [notifications, unreadCount] = await Promise.all([
+      Notification.find().sort({ createdAt: -1 }).limit(15),
+      Notification.countDocuments({ read: false }),
+    ]);
+    res.status(200).json({ success: true, notifications, unreadCount });
+  } catch (err) {
+    console.error('getNotifications error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+  }
+};
+
+export const markNotificationsRead = async (req, res) => {
+  try {
+    await Notification.updateMany({ read: false }, { $set: { read: true } });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('markNotificationsRead error:', err);
+    res.status(500).json({ success: false, message: 'Failed to mark notifications as read' });
   }
 };

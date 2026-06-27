@@ -127,9 +127,8 @@ export default function Settings(){
                         <h6 className='text-h6Text font-roboto font-bold'>Logout</h6>
                     </button>
                 </div>
-                <div className='w-full md:w-[61.5625vw] flex flex-col gap-[6vw] md:gap-[1.5vw] px-0 md:px-[.75vw] py-0 md:py-[.875vw]'>
+                <div className='w-full md:w-[61.5625vw] flex flex-col gap-[6vw] md:gap-[1.5vw] bg-white border border-gray-200 rounded-[4vw] md:rounded-2xl shadow-sm px-[5vw] md:px-[2vw] py-[6vw] md:py-[2vw]'>
                 {tabs[activeTab]}
-
                 </div>
                 
             </div>

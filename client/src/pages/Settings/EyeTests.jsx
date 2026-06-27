@@ -55,9 +55,13 @@ export default function EyeTests() {
         </p>
       )}
       {!loading && tests.length === 0 && !error && (
-        <p className="text-center mt-8 text-gray-500 text-regularTextPhone md:text-regularText">
-          You have no scheduled eye tests.
-        </p>
+        <div className='flex flex-col items-center justify-center py-[12vw] md:py-12 text-gray-400'>
+          <svg xmlns="http://www.w3.org/2000/svg" className='w-[16vw] md:w-16 h-[16vw] md:h-16 mb-[4vw] md:mb-4 opacity-40' fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <p className='font-semibold text-regularTextPhone md:text-regularText text-gray-500'>No scheduled eye tests</p>
+          <p className='text-smallTextPhone md:text-sm text-gray-400 mt-[2vw] md:mt-2'>Book a free eye test and it will appear here.</p>
+        </div>
       )}
       {tests.map((test) => (
         <div

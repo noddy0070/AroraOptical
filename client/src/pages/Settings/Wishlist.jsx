@@ -106,8 +106,18 @@ export default function WishList() {
 
             {error && <p className='text-red-500 text-center mt-4 text-regularTextPhone md:text-regularText'>{error}</p>}
             
-            {filteredItems.length === 0 && !loading && (
-                <p className='text-center mt-8 text-gray-500 text-regularTextPhone md:text-regularText'>No items in your wishlist</p>
+            {filteredItems.length === 0 && !loading && !error && (
+                <div className='flex flex-col items-center justify-center py-[12vw] md:py-12 text-gray-400'>
+                    <svg xmlns="http://www.w3.org/2000/svg" className='w-[16vw] md:w-16 h-[16vw] md:h-16 mb-[4vw] md:mb-4 opacity-40' fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <p className='font-semibold text-regularTextPhone md:text-regularText text-gray-500'>
+                        {searchQuery ? 'No items match your search' : 'Your wishlist is empty'}
+                    </p>
+                    {!searchQuery && (
+                        <p className='text-smallTextPhone md:text-sm text-gray-400 mt-[2vw] md:mt-2'>Save items you love by tapping the heart icon on any product.</p>
+                    )}
+                </div>
             )}
 
             {filteredItems.map((item) => (

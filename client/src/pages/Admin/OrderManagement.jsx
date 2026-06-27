@@ -60,6 +60,12 @@ const StatusBadge = ({ label, styleMap }) => (
   </span>
 );
 
+const LensIcon = () => (
+  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <circle cx="9" cy="12" r="5" />
+    <circle cx="15" cy="12" r="5" />
+  </svg>
+);
 const TruckIcon = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -82,6 +88,7 @@ const OrderManagement = () => {
   const [totalOrders, setTotalOrders]     = useState(0);
 
   const [drawer, setDrawer]               = useState(null);   // selected order for side panel
+  const [lensModal, setLensModal]         = useState(null);   // order for lens options modal
   const [confirmDelete, setConfirmDelete] = useState(null);   // order id pending deletion
   const [deleting, setDeleting]           = useState(false);
   const [statusUpdating, setStatusUpdating] = useState(false);
@@ -221,7 +228,7 @@ const OrderManagement = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/70">
-                  {['Order', 'Customer', 'Items', 'Amount', 'Order Status', 'Payment', 'Date', ''].map((h) => (
+                  {['Order', 'Customer', 'Items', 'Amount', 'Order Status', 'Payment', 'Date', 'Lens', ''].map((h) => (
                     <th key={h} className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
@@ -266,6 +273,19 @@ const OrderManagement = () => {
                     {/* Date */}
                     <td className="px-5 py-4 whitespace-nowrap text-gray-500 text-xs">
                       {formatDate(order.createdAt)}
+                    </td>
+                    {/* Lens */}
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      {order.products.some(p => p.lensOptions?.lensType || p.lensOptions?.lensCoating) ? (
+                        <button
+                          onClick={() => setLensModal(order)}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 ring-1 ring-emerald-200 rounded-full transition-colors"
+                        >
+                          <LensIcon /> View
+                        </button>
+                      ) : (
+                        <span className="text-xs text-gray-300">—</span>
+                      )}
                     </td>
                     {/* Actions */}
                     <td className="px-5 py-4 whitespace-nowrap">
@@ -503,6 +523,104 @@ const OrderManagement = () => {
         </div>
       )}
 
+      {/* ── Lens Options Modal ─────────────────────────────────────────── */}
+      {lensModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setLensModal(null)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wider font-medium">Lens Options</p>
+                <p className="font-mono font-bold text-gray-800 text-lg">#{lensModal._id.slice(-8).toUpperCase()}</p>
+              </div>
+              <button onClick={() => setLensModal(null)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
+                <XIcon />
+              </button>
+            </div>
+            <div className="overflow-y-auto flex-1 px-6 py-5 space-y-8">
+              {lensModal.products
+                .filter(p => p.lensOptions?.lensType || p.lensOptions?.lensCoating)
+                .map((product, i) => (
+                  <div key={i} className="space-y-4">
+                    {/* Product header */}
+                    <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
+                      {product.productId?.images?.[0] && (
+                        <img src={product.productId.images[0]} alt="" className="w-12 h-12 rounded-xl object-cover shrink-0" />
+                      )}
+                      <div>
+                        <p className="font-semibold text-gray-800 text-sm">{product.productId?.modelName || 'Product'}</p>
+                        <p className="text-xs text-gray-400">Qty: {product.quantity}</p>
+                      </div>
+                    </div>
+
+                    {/* Lens selections */}
+                    <div>
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Lens Selections</p>
+                      <div className="bg-gray-50 rounded-xl p-4 grid grid-cols-2 gap-x-6 gap-y-3">
+                        {product.lensOptions.lensType && <LensRow label="Lens Type" value={product.lensOptions.lensType} />}
+                        {product.lensOptions.lensCoating && <LensRow label="Coating" value={product.lensOptions.lensCoating} />}
+                        {product.lensOptions.lensThickness && <LensRow label="Thickness" value={`Index ${product.lensOptions.lensThickness === 'Medium' ? '1.56' : '1.59'} (${product.lensOptions.lensThickness})`} />}
+                        {product.lensOptions.lensTint && <LensRow label="Tint" value={product.lensOptions.lensTint} />}
+                      </div>
+                    </div>
+
+                    {/* Prescription */}
+                    {product.prescriptionId ? (
+                      <div>
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Prescription</p>
+                        <div className="bg-gray-50 rounded-xl p-4 space-y-4">
+                          <div className="flex flex-wrap gap-4 text-xs">
+                            <span><span className="text-gray-400">Name: </span><span className="font-semibold text-gray-700">{product.prescriptionId.prescriptionName}</span></span>
+                            <span><span className="text-gray-400">Date: </span><span className="font-semibold text-gray-700">{product.prescriptionId.prescriptionDate}</span></span>
+                            <span><span className="text-gray-400">Type: </span><span className="font-semibold text-gray-700">{product.prescriptionId.prescriptionType}</span></span>
+                            {product.prescriptionId.pupillaryDistance?.main && (
+                              <span><span className="text-gray-400">PD: </span><span className="font-semibold text-gray-700">{product.prescriptionId.pupillaryDistance.main}</span></span>
+                            )}
+                          </div>
+                          <table className="w-full text-xs border-collapse">
+                            <thead>
+                              <tr className="border-b border-gray-200">
+                                <th className="py-1.5 pr-4 text-left text-gray-400 font-semibold w-20">Eye</th>
+                                <th className="py-1.5 px-3 text-center text-gray-400 font-semibold">Sphere</th>
+                                <th className="py-1.5 px-3 text-center text-gray-400 font-semibold">Cylinder</th>
+                                <th className="py-1.5 px-3 text-center text-gray-400 font-semibold">Axis</th>
+                                <th className="py-1.5 px-3 text-center text-gray-400 font-semibold">Add</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {[['Right (OD)', product.prescriptionId.rightEye], ['Left (OS)', product.prescriptionId.leftEye]].map(([label, eye]) => (
+                                <tr key={label} className="border-b border-gray-100 last:border-0">
+                                  <td className="py-2 pr-4 font-semibold text-gray-700">{label}</td>
+                                  <td className="py-2 px-3 text-center text-gray-600">{fmtRx(eye?.sphere)}</td>
+                                  <td className="py-2 px-3 text-center text-gray-600">{fmtRx(eye?.cylinder)}</td>
+                                  <td className="py-2 px-3 text-center text-gray-600">{eye?.axis ?? '—'}</td>
+                                  <td className="py-2 px-3 text-center text-gray-600">{fmtRx(eye?.add)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                          {product.prescriptionId.prescriptionImage && (
+                            <a href={product.prescriptionId.prescriptionImage} target="_blank" rel="noreferrer"
+                               className="inline-flex items-center gap-1 text-xs text-indigo-600 underline underline-offset-2 hover:text-indigo-800">
+                              View uploaded prescription image ↗
+                            </a>
+                          )}
+                          {product.prescriptionId.otherDetails && (
+                            <p className="text-xs text-gray-500 italic">{product.prescriptionId.otherDetails}</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : product.lensOptions.lensType !== 'Zero Power' && (
+                      <p className="text-xs text-gray-400 italic">No prescription linked to this item.</p>
+                    )}
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Delete Confirmation Dialog ──────────────────────────────────── */}
       {confirmDelete && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
@@ -546,5 +664,19 @@ const Row = ({ label, value }) => (
     <span className="text-gray-700 text-right text-xs font-medium">{value}</span>
   </div>
 );
+
+// Lens option row inside the lens modal grid
+const LensRow = ({ label, value }) => (
+  <div>
+    <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{label}</p>
+    <p className="text-xs text-gray-700 font-medium mt-0.5">{value || '—'}</p>
+  </div>
+);
+
+// Format a prescription numeric value (show sign explicitly)
+const fmtRx = (v) => {
+  if (v == null) return '—';
+  return v > 0 ? `+${v.toFixed(2)}` : v.toFixed(2);
+};
 
 export default OrderManagement;

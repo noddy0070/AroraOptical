@@ -1,6 +1,7 @@
 import Order from '../models/order.model.js';
 import User from '../models/user.model.js';
 import Product from '../models/product.model.js';
+import Notification from '../models/notification.model.js';
 import * as delhiveryAPI from '../utils/delhivery.js';
 
 import dotenv from 'dotenv';
@@ -193,6 +194,7 @@ export const getAllOrders = async (req, res) => {
     const orders = await Order.find(query)
       .populate('userId', 'name email')
       .populate('products.productId', 'modelName modelCode brand price images')
+      .populate('products.prescriptionId', 'prescriptionName prescriptionDate prescriptionType rightEye leftEye pupillaryDistance prescriptionImage otherDetails source')
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
@@ -623,6 +625,8 @@ export const getOrderStatus = async (req, res) => {
         await user.save();
       }
 
+      const phonepeCustomerName = order.shippingAddress?.fullName || order.shippingAddress?.name || 'Customer';
+      createOrderNotification(order, phonepeCustomerName); // non-blocking
       triggerDelhiveryForOrder(order); // non-blocking
 
       return res.redirect(process.env.PHONEPE_FRONTEND_URL + '/thank-you')
@@ -642,6 +646,22 @@ export const getOrderStatus = async (req, res) => {
       message: 'Failed to check order status',
       error: error.message
     });
+  }
+};
+
+// --- Notification helper (fire-and-forget) ---
+const createOrderNotification = async (order, customerName) => {
+  try {
+    await Notification.create({
+      type: 'new_order',
+      message: `New order placed by ${customerName}`,
+      orderId: order._id,
+      customerName,
+      amount: order.finalAmount,
+      paymentMethod: order.paymentDetails?.method || 'COD',
+    });
+  } catch (err) {
+    console.error('[Notification] Failed to create notification:', err.message);
   }
 };
 
@@ -770,6 +790,8 @@ export const createCODOrder = async (req, res) => {
     await order.save();
     await saveOrderToUser(userId, order._id);
 
+    const customerName = shippingAddress.fullName || shippingAddress.name || 'Customer';
+    createOrderNotification(order, customerName); // non-blocking
     triggerDelhiveryForOrder(order); // non-blocking
 
     return res.status(201).json({ success: true, message: 'Order placed successfully', orderId: order._id });
@@ -849,6 +871,9 @@ export const createMockOrder = async (req, res) => {
 
     await order.save();
     await saveOrderToUser(userId, order._id);
+
+    const mockCustomerName = shippingAddress.fullName || shippingAddress.name || 'Customer';
+    createOrderNotification(order, mockCustomerName); // non-blocking
 
     return res.status(201).json({ success: true, message: 'Mock order created', orderId: order._id });
   } catch (error) {

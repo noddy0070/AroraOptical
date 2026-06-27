@@ -41,7 +41,7 @@ export default function Lens() {
   });
 
   const calculatePosition = (id) => {
-    const element = document.getElementById(id);
+    const element = document.getElementById(`sidebar-${id}`);
     const focusedElement = document.getElementById("focused");
     if (element && focusedElement) {
       const elementRect = element.getBoundingClientRect(); // Target element position
@@ -193,7 +193,7 @@ export default function Lens() {
                 {lensData.map((item) => (
                   <button
                     key={item.id}
-                    id={item.id}
+                    id={`sidebar-${item.id}`}
                     className={`z-[2] w-[7.875vw] h-[7.875vw] flex flex-col items-center justify-center bg-white rounded-full`}
                     disabled={isDisabled(item.id)}  
                     onClick={() =>{handleFocus(item.id);
@@ -224,7 +224,6 @@ export default function Lens() {
                   <line x1="19" y1="5" x2="5" y2="19" />
                 </svg>
               </button>
-</div>
               <div className="relative w-full mt-[6vw] md:mt-[3vw] h-auto md:h-[28.625vw]">
             <div className="relative h-auto md:h-[28.625vw]">
             {/* Mobile: Show current step only */}
@@ -302,8 +301,7 @@ export default function Lens() {
           </div>
           </div>        
             </div>
-              
-              
+            </div>
         </section>
     )
 }

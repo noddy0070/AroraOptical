@@ -45,7 +45,7 @@ export default function Cart(){
 
     const calculateTotalPrice = (items) => {
         const total = items.reduce((acc, item) => {
-            return acc + (item.productId.price * item.quantity);
+            return acc + ((item.totalAmount ?? item.productId.price) * item.quantity);
         }, 0);
         setTotalPrice(total);
     };

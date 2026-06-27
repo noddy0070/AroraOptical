@@ -97,35 +97,45 @@ const XSmall = () => (
   </svg>
 );
 
+// ── Time ago helper ───────────────────────────────────────────────────────────
+const timeAgo = (dateStr) => {
+  const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+  if (diff < 60)  return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+};
+
 // ── NotificationPanel ─────────────────────────────────────────────────────────
-const NotificationPanel = ({ orders, loading, onClose, navigate }) => (
+const NotificationPanel = ({ notifications, loading, onClose, navigate }) => (
   <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50 overflow-hidden">
     <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
       <p className="text-sm font-bold text-gray-800">Notifications</p>
       <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors"><XSmall /></button>
     </div>
 
-    <div className="max-h-72 overflow-y-auto divide-y divide-gray-50">
+    <div className="max-h-80 overflow-y-auto divide-y divide-gray-50">
       {loading ? (
         <div className="flex justify-center py-8">
           <div className="w-5 h-5 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
         </div>
-      ) : orders.length === 0 ? (
-        <div className="py-8 text-center text-xs text-gray-400">No pending orders</div>
-      ) : orders.map((o) => (
+      ) : notifications.length === 0 ? (
+        <div className="py-8 text-center text-xs text-gray-400">No notifications yet</div>
+      ) : notifications.map((n) => (
         <button
-          key={o._id}
+          key={n._id}
           onClick={() => { navigate('/Admin/order-management'); onClose(); }}
-          className="w-full flex items-start gap-3 px-4 py-3 hover:bg-gray-50 text-left transition-colors"
+          className={`w-full flex items-start gap-3 px-4 py-3 hover:bg-gray-50 text-left transition-colors ${!n.read ? 'bg-indigo-50/40' : ''}`}
         >
-          <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${ORDER_STATUS_DOT[o.status] ?? 'bg-gray-300'}`} />
+          <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${!n.read ? 'bg-indigo-500' : 'bg-gray-300'}`} />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-gray-800 truncate">
-              Order #{o._id.slice(-8).toUpperCase()}
+              New order — {n.customerName}
             </p>
-            <p className="text-[10px] text-gray-400 mt-0.5">
-              {o.status} · {formatPrice(o.finalAmount)}
+            <p className="text-[10px] text-gray-500 mt-0.5 truncate">
+              {n.paymentMethod} · {formatPrice(n.amount)}
             </p>
+            <p className="text-[10px] text-gray-400 mt-0.5">{timeAgo(n.createdAt)}</p>
           </div>
         </button>
       ))}
@@ -284,29 +294,43 @@ const DashBoard = () => {
   }, []);
 
   // ── Notification state ────────────────────────────────────────────────────
-  const [notifOpen, setNotifOpen]       = useState(false);
-  const [notifOrders, setNotifOrders]   = useState([]);
-  const [notifLoading, setNotifLoading] = useState(false);
-  const [notifFetched, setNotifFetched] = useState(false);
-  const notifRef                        = useRef(null);
+  const [notifOpen, setNotifOpen]           = useState(false);
+  const [notifications, setNotifications]   = useState([]);
+  const [unreadCount, setUnreadCount]       = useState(0);
+  const [notifLoading, setNotifLoading]     = useState(false);
+  const notifRef                            = useRef(null);
 
-  const fetchNotifications = useCallback(async () => {
-    if (notifFetched) return;
+  // Poll unread count every 30 s
+  const fetchUnreadCount = useCallback(async () => {
+    try {
+      const { data } = await axios.get(`${baseURL}/api/admin/notifications`, { withCredentials: true });
+      if (data.success) setUnreadCount(data.unreadCount ?? 0);
+    } catch { /* silent */ }
+  }, []);
+
+  useEffect(() => {
+    fetchUnreadCount();
+    const id = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(id);
+  }, [fetchUnreadCount]);
+
+  // Fetch full list + mark read when bell is opened
+  const openNotifications = async () => {
     setNotifLoading(true);
     try {
-      const { data } = await axios.get(`${baseURL}/api/order/admin/all`, {
-        params: { page: 1, limit: 8, status: 'Pending' },
-        withCredentials: true,
-      });
-      if (data.success) setNotifOrders(data.orders ?? []);
-    } catch { /* network error — notifications stay empty */ }
-    finally { setNotifLoading(false); setNotifFetched(true); }
-  }, [notifFetched]);
+      const { data } = await axios.get(`${baseURL}/api/admin/notifications`, { withCredentials: true });
+      if (data.success) setNotifications(data.notifications ?? []);
+      await axios.put(`${baseURL}/api/admin/notifications/mark-read`, {}, { withCredentials: true });
+      setUnreadCount(0);
+    } catch { /* silent */ }
+    finally { setNotifLoading(false); }
+  };
 
   const toggleNotif = () => {
-    setNotifOpen((o) => !o);
+    const opening = !notifOpen;
+    setNotifOpen(opening);
     setSearchOpen(false);
-    if (!notifFetched) fetchNotifications();
+    if (opening) openNotifications();
   };
 
   // Close notification on outside click
@@ -315,8 +339,6 @@ const DashBoard = () => {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
-
-  const unreadCount = notifOrders.length;
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -399,7 +421,7 @@ const DashBoard = () => {
 
             {notifOpen && (
               <NotificationPanel
-                orders={notifOrders}
+                notifications={notifications}
                 loading={notifLoading}
                 onClose={() => setNotifOpen(false)}
                 navigate={navigate}

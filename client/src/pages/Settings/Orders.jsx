@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import SearchIcon from '../../assets/images/icons/SearchIcon.svg';
 import Star from '../../assets/images/star.png';
 import axios from 'axios';
@@ -11,6 +12,7 @@ export default function Orders() {
     const [error, setError] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const { user } = useSelector((state) => state.auth);
+    const navigate = useNavigate();
 
     // Fetch orders on component mount
     useEffect(() => {
@@ -27,7 +29,7 @@ export default function Orders() {
             });
             
             if (response.data.success) {
-                setOrders(response.data.orders);
+                setOrders(response.data.orders || []);
             }
         } catch (error) {
             console.error('Error fetching orders:', error);
@@ -59,12 +61,15 @@ export default function Orders() {
         }
     };
 
-    // Filter orders based on search query
-    const filteredOrders = orders.filter(order => {
+    // Only keep entries where orderId was successfully populated
+    const validOrders = (orders || []).filter(o => o.orderId);
+
+    const filteredOrders = validOrders.filter(order => {
         if (!order.items) return false;
-        return order.items.some(item => 
-            item.productId?.modelTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.productId?.modelCode?.toLowerCase().includes(searchQuery.toLowerCase())
+        if (!searchQuery) return true;
+        return order.items.some(item =>
+            (item.productId?.modelTitle || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (item.productId?.modelCode || '').toLowerCase().includes(searchQuery.toLowerCase())
         );
     });
 
@@ -83,8 +88,17 @@ export default function Orders() {
             {loading && <p className='text-center mt-8 text-regularTextPhone md:text-regularText'>Loading orders...</p>}
             {error && <p className='text-red-500 text-center mt-4 text-regularTextPhone md:text-regularText'>{error}</p>}
             
-            {filteredOrders.length === 0 && !loading && (
-                <p className='text-center mt-8 text-gray-500 text-regularTextPhone md:text-regularText'>No orders found</p>
+            {!loading && validOrders.length === 0 && (
+                <div className='flex flex-col items-center justify-center py-[12vw] md:py-12 text-gray-400'>
+                    <svg xmlns="http://www.w3.org/2000/svg" className='w-[16vw] md:w-16 h-[16vw] md:h-16 mb-[4vw] md:mb-4 opacity-40' fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <p className='font-semibold text-regularTextPhone md:text-regularText text-gray-500'>No orders yet</p>
+                    <p className='text-smallTextPhone md:text-sm text-gray-400 mt-[2vw] md:mt-2'>Your orders will appear here once you place one.</p>
+                </div>
+            )}
+            {!loading && validOrders.length > 0 && filteredOrders.length === 0 && (
+                <p className='text-center mt-8 text-gray-500 text-regularTextPhone md:text-regularText'>No orders match your search</p>
             )}
 
             {filteredOrders.map((orderItem, index) => {
@@ -147,9 +161,12 @@ export default function Orders() {
                                         <p className='text-regularTextPhone md:text-regularText leading-[150%]'>
                                             Delivery expected in 5-7 days
                                         </p>
-                                        <a className='mt-[2vw] md:mt-auto ml-0 md:ml-auto underline text-[rgba(3,9,114,1)]'>
+                                        <button
+                                            onClick={() => navigate(`/order/${order._id}`)}
+                                            className='mt-[2vw] md:mt-auto ml-0 md:ml-auto underline text-[rgba(3,9,114,1)] cursor-pointer'
+                                        >
                                             <p className='text-regularTextPhone md:text-regularText'>Track Order</p>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
