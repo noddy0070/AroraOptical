@@ -313,9 +313,9 @@ const BookingForm = () => {
               ) : (
                 <>
                   <div className="flex items-center gap-3 text-[11px] text-gray-500 mb-4">
-                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gray-100 ring-1 ring-gray-300 inline-block" /> Available</span>
-                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" /> Filling up</span>
-                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gray-900 inline-block" /> Full</span>
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-400 inline-block" /> Available</span>
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-orange-400 inline-block" /> Filling up</span>
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gray-300 inline-block" /> Full</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2.5">
                     {availableSlots.map((slot) => {
@@ -327,17 +327,20 @@ const BookingForm = () => {
                       const isSelected = formData.timeSlot === slot.value && !isFull;
 
                       let tileCls = 'relative rounded-xl border px-2.5 py-2.5 text-center text-xs font-semibold transition-all ';
+                      let subCls  = 'text-[10px] mt-0.5 font-normal ';
 
                       if (isFull) {
-                        tileCls += 'bg-gray-900 text-white border-gray-900 cursor-not-allowed opacity-60';
+                        tileCls += 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed';
+                        subCls  += 'text-gray-400';
                       } else if (isSelected) {
                         tileCls += 'bg-gray-900 text-white border-gray-900 shadow-md ring-2 ring-offset-1 ring-gray-900 cursor-pointer';
+                        subCls  += 'text-white/80';
                       } else if (bookedCount === 0) {
-                        tileCls += 'bg-gray-50 text-gray-700 border-gray-200 hover:border-gray-900 hover:bg-gray-100 cursor-pointer';
-                      } else if (bookedCount <= 2) {
-                        tileCls += 'bg-amber-50 text-amber-800 border-amber-200 hover:border-amber-400 cursor-pointer';
+                        tileCls += 'bg-green-50 text-green-800 border-green-300 hover:border-green-500 hover:bg-green-100 cursor-pointer';
+                        subCls  += 'text-green-600';
                       } else {
-                        tileCls += 'bg-red-50 text-red-700 border-red-200 hover:border-red-400 cursor-pointer';
+                        tileCls += 'bg-orange-50 text-orange-700 border-orange-300 hover:border-orange-500 hover:bg-orange-100 cursor-pointer';
+                        subCls  += 'text-orange-500';
                       }
 
                       return (
@@ -347,7 +350,7 @@ const BookingForm = () => {
                           className={tileCls}
                         >
                           <p className="font-bold text-[11px]">{slot.display}</p>
-                          <p className={`text-[10px] mt-0.5 font-normal ${isFull ? 'text-white/60' : isSelected ? 'text-white/80' : 'text-gray-400'}`}>
+                          <p className={subCls}>
                             {slotLabel(bookedCount, capacity)}
                           </p>
                           {isSelected && (

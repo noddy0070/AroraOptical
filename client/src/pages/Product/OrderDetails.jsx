@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { baseURL } from '@/url';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
+
+const fmtRx = (v) => {
+  if (v == null) return '—';
+  const n = parseFloat(v);
+  return isNaN(n) ? '—' : n > 0 ? `+${n.toFixed(2)}` : n.toFixed(2);
+};
 
 const OrderDetails = () => {
   const { orderId } = useParams();
@@ -135,24 +141,114 @@ const OrderDetails = () => {
             {/* Products */}
             <div className="bg-white rounded-[4vw] md:rounded-lg shadow p-[6vw] md:p-6">
               <h2 className="text-h4TextPhone md:text-xl font-bold mb-[4vw] md:mb-4">Order Items</h2>
-              <div className="space-y-[4vw] md:space-y-4">
-                {order.products.map((item, index) => (
-                  <div key={index} className="flex flex-col md:flex-row items-start md:items-center space-x-0 md:space-x-4 gap-[3vw] md:gap-0">
-                    <img
-                      src={item.productId.images[0]}
-                      alt={item.productId.modelName}
-                      className="w-full md:w-16 h-[100vw] md:h-16 object-cover rounded-[2vw] md:rounded"
-                    />
-                    <div className="flex-1 w-full">
-                      <h3 className="font-semibold text-regularTextPhone md:text-regularText">{item.productId.modelName}</h3>
-                      <p className="text-smallTextPhone md:text-gray-600">{item.productId.modelCode}</p>
-                      <p className="text-tinyTextPhone md:text-sm text-gray-500">Qty: {item.quantity}</p>
+              <div className="space-y-[6vw] md:space-y-6">
+                {order.products.map((item, index) => {
+                  const lens = item.lensOptions || {};
+                  const hasLens = lens.lensType && lens.lensType !== 'None';
+                  const rx = item.prescriptionId;
+                  return (
+                    <div key={index} className="border border-gray-100 rounded-[3vw] md:rounded-xl overflow-hidden">
+                      {/* Product row */}
+                      <div className="flex flex-row items-center gap-[3vw] md:gap-4 p-[3vw] md:p-4">
+                        <Link to={`/product/${item.productId?._id}`} className="shrink-0" onClick={e => e.stopPropagation()}>
+                          <img
+                            src={item.productId?.images?.[0]}
+                            alt={item.productId?.modelName}
+                            className="w-[18vw] h-[18vw] md:w-16 md:h-16 object-cover rounded-[2vw] md:rounded-lg hover:opacity-80 transition-opacity"
+                          />
+                        </Link>
+                        <div className="flex-1 min-w-0">
+                          <Link
+                            to={`/product/${item.productId?._id}`}
+                            className="font-semibold text-regularTextPhone md:text-regularText hover:text-indigo-600 hover:underline underline-offset-2 transition-colors"
+                          >
+                            {item.productId?.modelName}
+                          </Link>
+                          <p className="text-smallTextPhone md:text-sm text-gray-500">{item.productId?.modelCode}</p>
+                          <p className="text-tinyTextPhone md:text-xs text-gray-400 mt-[1vw] md:mt-0.5">Qty: {item.quantity}</p>
+                        </div>
+                        <p className="font-semibold text-regularTextPhone md:text-regularText shrink-0">₹{(item.price * item.quantity).toLocaleString()}</p>
+                      </div>
+
+                      {/* Lens options */}
+                      {hasLens && (
+                        <div className="border-t border-gray-100 bg-gray-50 px-[3vw] md:px-4 py-[3vw] md:py-3">
+                          <p className="text-[2.5vw] md:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-[2vw] md:mb-2">Lens Selection</p>
+                          <div className="flex flex-wrap gap-[2vw] md:gap-2">
+                            {lens.lensType && lens.lensType !== 'None' && (
+                              <span className="text-[2.8vw] md:text-xs bg-blue-50 text-blue-700 border border-blue-200 px-[2vw] md:px-2.5 py-[.8vw] md:py-1 rounded-full font-medium">
+                                {lens.lensType}
+                              </span>
+                            )}
+                            {lens.lensCoating && lens.lensCoating !== 'None' && (
+                              <span className="text-[2.8vw] md:text-xs bg-purple-50 text-purple-700 border border-purple-200 px-[2vw] md:px-2.5 py-[.8vw] md:py-1 rounded-full font-medium">
+                                {lens.lensCoating}
+                              </span>
+                            )}
+                            {lens.lensThickness && lens.lensThickness !== 'None' && (
+                              <span className="text-[2.8vw] md:text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-[2vw] md:px-2.5 py-[.8vw] md:py-1 rounded-full font-medium">
+                                {lens.lensThickness} thickness
+                              </span>
+                            )}
+                            {lens.lensTint && lens.lensTint !== 'None' && (
+                              <span className="text-[2.8vw] md:text-xs bg-orange-50 text-orange-700 border border-orange-200 px-[2vw] md:px-2.5 py-[.8vw] md:py-1 rounded-full font-medium">
+                                {lens.lensTint} tint
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Prescription */}
+                      {rx && (
+                        <div className="border-t border-gray-100 bg-gray-50/60 px-[3vw] md:px-4 py-[3vw] md:py-3">
+                          <p className="text-[2.5vw] md:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-[2vw] md:mb-2">Prescription</p>
+                          <div className="flex flex-wrap gap-[3vw] md:gap-4 text-[2.8vw] md:text-xs text-gray-500 mb-[2vw] md:mb-3">
+                            <span>Name: <span className="font-semibold text-gray-700">{rx.prescriptionName}</span></span>
+                            <span>Date: <span className="font-semibold text-gray-700">{rx.prescriptionDate}</span></span>
+                            {rx.source && <span>Source: <span className="font-semibold text-gray-700">{rx.source}</span></span>}
+                            {rx.pupillaryDistance?.main && <span>PD: <span className="font-semibold text-gray-700">{rx.pupillaryDistance.main}</span></span>}
+                          </div>
+                          {(rx.rightEye?.sphere != null || rx.leftEye?.sphere != null) && (
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-[2.5vw] md:text-xs border-collapse">
+                                <thead>
+                                  <tr className="bg-gray-100 text-gray-500">
+                                    <th className="text-left px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 font-semibold rounded-tl-lg"></th>
+                                    <th className="text-center px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 font-semibold">SPH</th>
+                                    <th className="text-center px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 font-semibold">CYL</th>
+                                    <th className="text-center px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 font-semibold">AXIS</th>
+                                    <th className="text-center px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 font-semibold rounded-tr-lg">ADD</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {[['Right (OD)', rx.rightEye], ['Left (OS)', rx.leftEye]].map(([label, eye]) => (
+                                    <tr key={label} className="border-t border-gray-100">
+                                      <td className="px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 font-semibold text-gray-700">{label}</td>
+                                      <td className="text-center px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 text-gray-600">{fmtRx(eye?.sphere)}</td>
+                                      <td className="text-center px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 text-gray-600">{fmtRx(eye?.cylinder)}</td>
+                                      <td className="text-center px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 text-gray-600">{eye?.axis ?? '—'}</td>
+                                      <td className="text-center px-[2vw] md:px-3 py-[1.5vw] md:py-1.5 text-gray-600">{fmtRx(eye?.add)}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                          {rx.prescriptionImage && (
+                            <a href={rx.prescriptionImage} target="_blank" rel="noreferrer"
+                               className="inline-flex items-center gap-1 text-[2.5vw] md:text-xs text-indigo-600 underline underline-offset-2 hover:text-indigo-800 mt-[2vw] md:mt-2">
+                              View prescription image ↗
+                            </a>
+                          )}
+                          {rx.otherDetails && (
+                            <p className="text-[2.5vw] md:text-xs text-gray-500 italic mt-[1vw] md:mt-1">{rx.otherDetails}</p>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-left md:text-right w-full md:w-auto">
-                      <p className="font-semibold text-regularTextPhone md:text-regularText">₹{item.price * item.quantity}</p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

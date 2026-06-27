@@ -275,6 +275,26 @@ export const updateEyeTestStatus = async (req, res, next) => {
   }
 };
 
+// Cancel eye test (user action — only their own, only if Scheduled)
+export const cancelEyeTest = async (req, res, next) => {
+  try {
+    const eyeTest = await EyeTest.findById(req.params.id);
+    if (!eyeTest) return res.status(404).json({ success: false, message: 'Eye test not found' });
+    if (eyeTest.userId.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+    if (eyeTest.status !== 'Scheduled') {
+      return res.status(400).json({ success: false, message: 'Only scheduled tests can be cancelled' });
+    }
+    eyeTest.status = 'Cancelled';
+    eyeTest.cancellationReason = req.body.reason || 'Cancelled by user';
+    await eyeTest.save();
+    res.status(200).json({ success: true, message: 'Eye test cancelled' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Get eye test details
 export const getEyeTestDetails = async (req, res, next) => {
   try {

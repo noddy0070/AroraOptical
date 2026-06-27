@@ -243,7 +243,8 @@ export const getOrder = async (req, res) => {
 
     const order = await Order.findById(orderId)
       .populate('userId', 'name email')
-      .populate('products.productId', 'modelName modelCode brand price images');
+      .populate('products.productId', 'modelName modelCode brand price images')
+      .populate('products.prescriptionId', 'prescriptionName prescriptionDate source rightEye leftEye pupillaryDistance prescriptionImage otherDetails');
 
     if (!order) {
       return res.status(404).json({ success: false, message: 'Order not found' });

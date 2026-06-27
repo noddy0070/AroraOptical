@@ -7,7 +7,8 @@ import {
   getAllEyeTests,
   getUserEyeTests,
   updateEyeTestStatus,
-  getEyeTestDetails
+  getEyeTestDetails,
+  cancelEyeTest
 } from '../controllers/eyeTest.controller.js';
 
 const router = express.Router();
@@ -19,6 +20,7 @@ router.get('/available-slots', getAvailableTimeSlots);
 router.post('/book',  bookEyeTest);
 router.get('/user-tests',authMiddleware,  getUserEyeTests);
 router.get('/details/:id' , authMiddleware, getEyeTestDetails);
+router.put('/cancel/:id', authMiddleware, cancelEyeTest);
 
 // Admin routes
 router.get('/all',authMiddleware,  getAllEyeTests);

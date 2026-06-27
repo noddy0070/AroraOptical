@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 import { baseURL } from '@/url';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
 
@@ -398,19 +399,101 @@ const OrderManagement = () => {
               {/* Products */}
               <section>
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Items</h4>
-                <div className="space-y-2">
-                  {drawer.products.map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-                      {item.productId?.images?.[0] && (
-                        <img src={item.productId.images[0]} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-800 text-sm truncate">{item.productId?.modelName || 'Product'}</p>
-                        <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
+                <div className="space-y-3">
+                  {drawer.products.map((item, i) => {
+                    const lens = item.lensOptions || {};
+                    const hasLens = lens.lensType && lens.lensType !== 'None';
+                    const rx = item.prescriptionId;
+                    return (
+                      <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+                        {/* Product row */}
+                        <div className="flex items-center gap-3 p-3 bg-gray-50">
+                          {item.productId?.images?.[0] && (
+                            <Link to={`/product/${item.productId._id}`} target="_blank" rel="noreferrer" className="shrink-0">
+                              <img src={item.productId.images[0]} alt="" className="w-12 h-12 rounded-lg object-cover hover:opacity-80 transition-opacity" />
+                            </Link>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <Link
+                              to={`/product/${item.productId?._id}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="font-semibold text-gray-800 text-sm truncate hover:text-indigo-600 hover:underline underline-offset-2 transition-colors"
+                            >
+                              {item.productId?.modelName || 'Product'}
+                            </Link>
+                            <p className="text-xs text-gray-400">{item.productId?.modelCode}</p>
+                            <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
+                          </div>
+                          <p className="text-sm font-semibold text-gray-700 shrink-0">{formatPrice(item.price * item.quantity)}</p>
+                        </div>
+
+                        {/* Lens options */}
+                        {hasLens && (
+                          <div className="border-t border-gray-100 px-3 py-2.5">
+                            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Lens Selection</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {lens.lensType && lens.lensType !== 'None' && (
+                                <span className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-full font-medium">{lens.lensType}</span>
+                              )}
+                              {lens.lensCoating && lens.lensCoating !== 'None' && (
+                                <span className="text-[10px] bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-full font-medium">{lens.lensCoating}</span>
+                              )}
+                              {lens.lensThickness && lens.lensThickness !== 'None' && (
+                                <span className="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">{lens.lensThickness} thickness</span>
+                              )}
+                              {lens.lensTint && lens.lensTint !== 'None' && (
+                                <span className="text-[10px] bg-orange-50 text-orange-700 border border-orange-200 px-2 py-0.5 rounded-full font-medium">{lens.lensTint} tint</span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Prescription */}
+                        {rx && (
+                          <div className="border-t border-gray-100 px-3 py-2.5">
+                            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Prescription</p>
+                            <div className="flex flex-wrap gap-3 text-[10px] text-gray-500 mb-2">
+                              <span>Name: <span className="font-semibold text-gray-700">{rx.prescriptionName}</span></span>
+                              <span>Date: <span className="font-semibold text-gray-700">{rx.prescriptionDate}</span></span>
+                              {rx.source && <span>Type: <span className="font-semibold text-gray-700">{rx.source}</span></span>}
+                              {rx.pupillaryDistance?.main && <span>PD: <span className="font-semibold text-gray-700">{rx.pupillaryDistance.main}</span></span>}
+                            </div>
+                            {(rx.rightEye?.sphere != null || rx.leftEye?.sphere != null) && (
+                              <table className="w-full text-[10px] border-collapse mb-1.5">
+                                <thead>
+                                  <tr className="bg-gray-100 text-gray-400">
+                                    <th className="text-left px-2 py-1 font-semibold"></th>
+                                    <th className="text-center px-2 py-1 font-semibold">SPH</th>
+                                    <th className="text-center px-2 py-1 font-semibold">CYL</th>
+                                    <th className="text-center px-2 py-1 font-semibold">AXIS</th>
+                                    <th className="text-center px-2 py-1 font-semibold">ADD</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {[['Right (OD)', rx.rightEye], ['Left (OS)', rx.leftEye]].map(([label, eye]) => (
+                                    <tr key={label} className="border-t border-gray-100">
+                                      <td className="px-2 py-1 font-semibold text-gray-700">{label}</td>
+                                      <td className="text-center px-2 py-1 text-gray-600">{fmtRx(eye?.sphere)}</td>
+                                      <td className="text-center px-2 py-1 text-gray-600">{fmtRx(eye?.cylinder)}</td>
+                                      <td className="text-center px-2 py-1 text-gray-600">{eye?.axis ?? '—'}</td>
+                                      <td className="text-center px-2 py-1 text-gray-600">{fmtRx(eye?.add)}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            )}
+                            {rx.prescriptionImage && (
+                              <a href={rx.prescriptionImage} target="_blank" rel="noreferrer"
+                                 className="inline-flex items-center gap-1 text-[10px] text-indigo-600 underline underline-offset-2 hover:text-indigo-800">
+                                View prescription image ↗
+                              </a>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <p className="text-sm font-semibold text-gray-700 shrink-0">{formatPrice(item.price * item.quantity)}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
 
