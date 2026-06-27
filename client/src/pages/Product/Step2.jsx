@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
-const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
+const Step2 = ({ cartItems, shippingAddress, deliveryPrice }) => {
     const [paymentMethod, setPaymentMethod] = useState("upi");
     const [loading, setLoading] = useState(false);
     const { user } = useSelector((state) => state.auth);
@@ -15,7 +15,7 @@ const Step2 = ({ cartItems, setStep, shippingAddress, deliveryPrice }) => {
     const isCOD = paymentMethod === 'cash on delivery';
     const cartSubtotal = cartItems.reduce((acc, item) => acc + (item.totalAmount * item.quantity), 0);
     // COD surcharge: ₹40 or 2.5% of cart value, whichever is higher
-    const codCharges = isCOD ? Math.max(40, Math.round(cartSubtotal * 0.025)) : 0;
+    const codCharges = isCOD ? Math.max(40, Math.round(cartSubtotal * 0.021)) : 0;
     const totalAmount = cartSubtotal + (deliveryPrice || 0) + codCharges;
 
     const handleCODOrder = async () => {

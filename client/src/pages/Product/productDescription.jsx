@@ -86,6 +86,7 @@ export default function ProductDescription({productToDisplay}){
 
 
     const [reviews, setReviews] = useState(productToDisplay.reviews || []);
+    const [showReviewForm, setShowReviewForm] = useState(false);
     const [newReviewRating, setNewReviewRating] = useState(0);
     const [newReviewComment, setNewReviewComment] = useState('');
     const [reviewSubmitting, setReviewSubmitting] = useState(false);
@@ -504,19 +505,65 @@ export default function ProductDescription({productToDisplay}){
         </div>
 
         {/* Reviews Section */}
-        <div className='bg-white rounded-[4vw] md:rounded-[16px] mt-[6vw] md:mt-[2vw] py-[6vw] md:py-[2.25vw] px-[5vw] md:px-[3vw] flex flex-col gap-[6vw] md:gap-[2.5vw]'>
-            <div className='flex justify-between items-center'>
-                <h2 className='font-dyeLine text-h3TextPhone md:text-h3Text font-semibold'>Customer Reviews</h2>
-                {totalRating > 0 && (
-                    <div className='flex items-center gap-[1vw] md:gap-[4px]'>
-                        {renderStars(totalRating)}
-                        <span className='text-regularTextPhone md:text-regularText ml-[1vw] md:ml-[4px]'>{totalRating.toFixed(1)} ({reviews.length})</span>
-                    </div>
-                )}
+        <div className='bg-white rounded-[4vw] md:rounded-[16px] mt-[6vw] md:mt-[2vw] py-[6vw] md:py-[2.25vw] px-[5vw] md:px-[3vw] flex flex-col gap-[6vw] md:gap-[2vw]'>
+
+            {/* Header */}
+            <div className='flex justify-between items-start'>
+                <div>
+                    <h2 className='font-dyeLine text-h3TextPhone md:text-h3Text font-bold'>Customer Reviews</h2>
+                    <p className='text-tinyTextPhone md:text-sm text-gray-500 mt-[1vw] md:mt-[4px]'>Share your experience to help other shoppers.</p>
+                </div>
+                <button
+                    onClick={() => {
+                        if (!isAuthenticated) { navigate('/login'); return; }
+                        setShowReviewForm(v => !v);
+                    }}
+                    className='flex-shrink-0 px-[5vw] md:px-[1.5vw] py-[2.5vw] md:py-[10px] bg-[#f5e4be] text-black rounded-[8vw] md:rounded-full text-regularTextPhone md:text-regularText font-medium hover:bg-[#ebd5a5] transition-colors'
+                >Rate Now</button>
             </div>
 
-            {/* Add Review Form */}
-            {isAuthenticated ? (
+            {/* Rating Overview + Breakdown */}
+            <div className='flex flex-col md:flex-row gap-[4vw] md:gap-[4vw] items-center md:items-start'>
+                {/* Big number */}
+                <div className='flex flex-col items-center gap-[1vw] md:gap-[4px]'>
+                    <span className='text-[14vw] md:text-[4vw] font-bold leading-none'>{reviews.length > 0 ? totalRating.toFixed(1) : '—'}</span>
+                    <div className='flex gap-[1vw] md:gap-[3px]'>
+                        {[1, 2, 3, 4, 5].map(s => (
+                            <span key={s} className={`text-[5vw] md:text-[1.1vw] ${s <= Math.round(totalRating) ? 'text-yellow-400' : 'text-gray-200'}`}>★</span>
+                        ))}
+                    </div>
+                    <span className='text-tinyTextPhone md:text-sm text-gray-400'>of {reviews.length} reviews</span>
+                </div>
+
+                {/* Breakdown bars */}
+                <div className='flex-1 w-full flex flex-col gap-[2vw] md:gap-[8px]'>
+                    {[
+                        { label: 'Excellent', stars: 5 },
+                        { label: 'Good', stars: 4 },
+                        { label: 'Average', stars: 3 },
+                        { label: 'Below Average', stars: 2 },
+                        { label: 'Poor', stars: 1 },
+                    ].map(({ label, stars }) => {
+                        const count = reviews.filter(r => r.rating === stars).length;
+                        const percent = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+                        return (
+                            <div key={stars} className='flex items-center gap-[2vw] md:gap-[10px]'>
+                                <span className='text-tinyTextPhone md:text-sm text-gray-500 w-[22vw] md:w-[7.5vw] text-right flex-shrink-0'>{label}</span>
+                                <div className='flex-1 h-[2.5vw] md:h-[7px] bg-gray-100 rounded-full overflow-hidden'>
+                                    <div
+                                        className='h-full bg-yellow-400 rounded-full transition-all duration-500'
+                                        style={{ width: `${percent}%` }}
+                                    />
+                                </div>
+                                <span className='text-tinyTextPhone md:text-sm text-gray-400 w-[5vw] md:w-[1.5vw] text-left flex-shrink-0'>{count}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Write Review Form — toggled by Rate Now */}
+            {showReviewForm && (
                 <div className='border border-gray-200 rounded-[2vw] md:rounded-[8px] p-[4vw] md:p-[1.5vw] bg-gray-50'>
                     <h3 className='font-semibold text-regularTextPhone md:text-regularText mb-[3vw] md:mb-[1vw]'>Write a Review</h3>
                     <div className='flex gap-[2vw] md:gap-[6px] mb-[3vw] md:mb-[1vw]'>
@@ -526,7 +573,7 @@ export default function ProductDescription({productToDisplay}){
                                 onClick={() => setNewReviewRating(star)}
                                 onMouseEnter={() => setHoveredStar(star)}
                                 onMouseLeave={() => setHoveredStar(0)}
-                                className={`text-[8vw] md:text-[1.75vw] transition-colors ${star <= (hoveredStar || newReviewRating) ? 'text-black' : 'text-gray-300'}`}
+                                className={`text-[9vw] md:text-[2vw] transition-colors ${star <= (hoveredStar || newReviewRating) ? 'text-yellow-400' : 'text-gray-300'}`}
                             >★</button>
                         ))}
                     </div>
@@ -546,31 +593,35 @@ export default function ProductDescription({productToDisplay}){
                         {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
                     </button>
                 </div>
-            ) : (
-                <p className='text-regularTextPhone md:text-regularText text-gray-500'>
-                    <button onClick={() => navigate('/login')} className='underline text-darkslategrey'>Sign in</button> to write a review.
-                </p>
             )}
 
             {/* Reviews List */}
             {reviews.length > 0 ? (
-                <div className='flex flex-col gap-[4vw] md:gap-[1.5vw]'>
+                <div className='flex flex-row gap-[4vw] md:gap-[1.5vw] overflow-x-auto hide-scrollbar pb-[1vw] md:pb-[4px]'>
                     {reviews.map((review, index) => (
-                        <div key={review._id || index} className='border-b border-gray-100 pb-[4vw] md:pb-[1.5vw] last:border-b-0 last:pb-0'>
-                            <div className='flex items-center gap-[1vw] md:gap-[4px] mb-[1vw] md:mb-[4px]'>
-                                <span className='flex gap-[0.5vw] md:gap-[2px]'>
-                                    {[1, 2, 3, 4, 5].map(s => (
-                                        <span key={s} className={`text-[4vw] md:text-[0.9vw] ${s <= review.rating ? 'text-black' : 'text-gray-300'}`}>★</span>
-                                    ))}
-                                </span>
-                                <span className='text-tinyTextPhone md:text-sm text-gray-400 ml-auto'>
-                                    {new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                </span>
+                        <div key={review._id || index} className='min-w-[80vw] md:min-w-[30vw] flex-shrink-0 flex flex-col gap-[2vw] md:gap-[10px] border border-gray-100 rounded-[2.5vw] md:rounded-[10px] p-[4vw] md:p-[1.25vw]'>
+                            {/* Stars */}
+                            <div className='flex gap-[1vw] md:gap-[3px]'>
+                                {[1, 2, 3, 4, 5].map(s => (
+                                    <span key={s} className={`text-[5vw] md:text-[1.1vw] ${s <= review.rating ? 'text-yellow-400' : 'text-gray-200'}`}>★</span>
+                                ))}
                             </div>
-                            <p className='font-semibold text-regularTextPhone md:text-regularText'>{review.userId?.name || 'Anonymous'}</p>
-                            {review.comment && (
-                                <p className='text-regularTextPhone md:text-regularText text-gray-700 mt-[1vw] md:mt-[4px]'>{review.comment}</p>
-                            )}
+                            {/* Quote */}
+                            <p className='text-regularTextPhone md:text-regularText text-gray-700 italic line-clamp-4 flex-1'>
+                                "{review.comment || 'No comment provided.'}"
+                            </p>
+                            {/* Reviewer */}
+                            <div className='flex items-center gap-[3vw] md:gap-[10px] mt-auto'>
+                                <div className='w-[10vw] md:w-[2.5vw] h-[10vw] md:h-[2.5vw] rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center text-gray-500 text-smallTextPhone md:text-sm font-semibold'>
+                                    {(review.userId?.name || 'A')[0].toUpperCase()}
+                                </div>
+                                <div>
+                                    <p className='font-semibold text-smallTextPhone md:text-regularText leading-tight'>{review.userId?.name || 'Anonymous'}</p>
+                                    <p className='text-tinyTextPhone md:text-sm text-gray-400'>
+                                        {new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
