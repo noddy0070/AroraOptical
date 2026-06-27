@@ -6,6 +6,46 @@ import brownTintImg from '../assets/images/lensPage/brownTint.png';
 import { IconButton, TitleButton } from './button';
 import { formatINR } from './IntToPrice';
 
+export const formatCoatingLabel = (coating) => {
+  if (!coating) return 'Coating';
+  if (coating === 'Clear-Vision') return 'Clear Vision';
+  if (coating === 'Photochromatic') return 'Photochromatic';
+  if (coating.startsWith('Blue-Filter/')) return `Blue Filter (${coating.split('/')[1]})`;
+  if (coating.startsWith('Solid-Tinted-Lens/')) return `Solid Tint (${coating.split('/')[1]})`;
+  if (coating.startsWith('Gradient-Tinted-Lens/')) return `Gradient Tint (${coating.split('/')[1]})`;
+  return coating;
+};
+
+export const PriceBreakdown = ({ base = 0, coatingLabel = '', coatingPrice = null, thicknessLabel = '', thicknessPrice = null }) => {
+  const total = base + (coatingPrice ?? 0) + (thicknessPrice ?? 0);
+  return (
+    <div className="flex flex-col gap-[1.5vw] md:gap-[.35vw] min-w-[45vw] md:min-w-[14vw]">
+      <div className="flex flex-col gap-[1vw] md:gap-[.2vw] text-[3.2vw] md:text-[.75vw] text-gray-500 font-roboto">
+        <div className="flex justify-between gap-[4vw] md:gap-[1vw]">
+          <span>Frame</span>
+          <span className="font-medium">{formatINR(base)}</span>
+        </div>
+        {coatingPrice !== null && (
+          <div className="flex justify-between gap-[4vw] md:gap-[1vw]">
+            <span>{coatingLabel || 'Coating'}</span>
+            <span className="font-medium">{coatingPrice === 0 ? 'Free' : `+${formatINR(coatingPrice)}`}</span>
+          </div>
+        )}
+        {thicknessPrice !== null && (
+          <div className="flex justify-between gap-[4vw] md:gap-[1vw]">
+            <span>Thickness{thicknessLabel ? ` (${thicknessLabel})` : ''}</span>
+            <span className="font-medium">{thicknessPrice === 0 ? 'Free' : `+${formatINR(thicknessPrice)}`}</span>
+          </div>
+        )}
+      </div>
+      <div className="flex justify-between gap-[4vw] md:gap-[1vw] border-t border-gray-300 pt-[1vw] md:pt-[.25vw] text-[3.8vw] md:text-[.9vw] font-bold font-dyeLine text-gray-800">
+        <span>Total</span>
+        <span>{formatINR(total)}</span>
+      </div>
+    </div>
+  );
+};
+
 export const LensFeatureBox=({ img=placeholder, title, description,price,classNameLearnMore='',onclick = () => {} })=> {
     const [hover, setHover] = useState(false);
     return (
@@ -30,7 +70,7 @@ export const LensFeatureBox=({ img=placeholder, title, description,price,classNa
 }
 
 
-export const  LensTintBox=({form,setForm, handleFocus, img=placeholder, title, description,price,classNameLearnMore='',onclick = () => {},setAmount,amount })=> {
+export const  LensTintBox=({form,setForm, handleFocus, img=placeholder, title, description,price,classNameLearnMore='',onclick = () => {},setAmount,amount,setCoatingPrice })=> {
     const [hover, setHover] = useState(false);
     const [selectedColor,setSelectedColor]=useState('Grey');
     const [selectedTitle,setSelectedTitle]=useState(title=='Solid Tint'?'Solid-Tinted-Lens/':'Gradient-Tinted-Lens/');
@@ -73,7 +113,7 @@ export const  LensTintBox=({form,setForm, handleFocus, img=placeholder, title, d
                         </div>
                     </div>
                     <TitleButton btnTitle='Confirm' btnWidthPhone={40} btnHeightPhone={10} btnRadiusPhone={5} btnWidth={10} btnHeight={2.5} btnRadius={1.25} className='mx-auto' className2='text-clip'  
-                    onClick={()=>{setForm({...form,lensCoating:(selectedTitle + selectedColor)});handleFocus("lensThickness");setAmount(amount+price)}} />
+                    onClick={()=>{setForm({...form,lensCoating:(selectedTitle + selectedColor)});handleFocus("lensThickness");setAmount(amount+price);if(setCoatingPrice)setCoatingPrice(price);}} />
                 </div>
             
             </div>

@@ -2,11 +2,10 @@ import { useState } from 'react';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import { useSelector,useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginSuccess } from '@/redux/slice/authSlice';
 
-export default function PrescriptionForm({form,setSubFocusedPrescription}) {
+export default function PrescriptionForm({form,setSubFocusedPrescription,onPrescriptionAdded}) {
     const { user } = useSelector(state => state.auth);
     const [twoPD, setTwoPD] = useState(false);
     const [acceptTC, setAcceptTC] = useState(false);
@@ -29,8 +28,6 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
     });
     const [error, setError] = useState("");
     const dispatch = useDispatch();
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,7 +62,9 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
         setError("");
         
         try{
-            const response = await axios.post(`${baseURL}/api/user/prescription/add`, prescriptionForm, {
+            const response = await axios.post(`${baseURL}/api/user/prescription/add`, {
+                ...prescriptionForm,
+            }, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json'
@@ -92,6 +91,7 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
                 })
                 setAcceptTC(false);
                 setTwoPD(false);
+                onPrescriptionAdded?.();
                 setSubFocusedPrescription("");
                 updateUser();
 
@@ -114,9 +114,6 @@ export default function PrescriptionForm({form,setSubFocusedPrescription}) {
         <div id='prescriptionFormMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0 overflow-y-auto max-h-[100vh] md:max-h-none'>
             <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Enter Prescription</h1>
             <div className='mx-auto py-[4vw] md:py-[1vw] px-[5vw] md:px-[1vw] w-full md:w-[69.75vw] flex flex-col gap-[4vw] md:gap-[1vw] font-roboto text-regularTextPhone md:text-regularText'>
-                <p className="text-center text-regularTextPhone md:text-regularText">
-                    We strongly recommend you to <a className="underline cursor-pointer text-primary">Upload a Photo</a> of your prescription. It's simple and eliminates any chances for Errors.
-                </p>
                 <form className="px-[4.5vw] md:px-[1.125vw] flex flex-col gap-[4vw] md:gap-[1vw]">
                     {/* Prescription Name and Date */}
                         <input className="mb-[-6vw] md:mb-[-1.5vw] py-[2.5vw] md:py-[.625vw] px-[4vw] md:px-[1vw] w-full border-[1px] border-black rounded-[2vw] md:rounded-[.5vw] text-regularTextPhone md:text-regularText" placeholder="Enter Prescription Name" value={prescriptionForm.prescriptionName} onChange={(e) => setPrescriptionForm({...prescriptionForm, prescriptionName: e.target.value})} />

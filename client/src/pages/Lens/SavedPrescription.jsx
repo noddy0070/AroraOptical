@@ -3,11 +3,10 @@ import { useSelector,useDispatch } from 'react-redux';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import { loginSuccess } from '@/redux/slice/authSlice';
-import { TitleButton2 } from '@/components/button';
-import { CartButton } from '@/components/button';
-import { formatINR } from '@/components/IntToPrice';
+import { TitleButton2, CartButton } from '@/components/button';
+import { PriceBreakdown, formatCoatingLabel } from '@/components/lensFeatureBox';
 
-const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,setForm,amount} ) => {
+const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,setForm,amount,refreshKey=0,basePrice=0,coatingPrice=null,thicknessPrice=null} ) => {
     const [prescriptions,setPrescriptions]=useState([]);
     const [selectedPrescription, setSelectedPrescription] = useState('');
     const dispatch = useDispatch();
@@ -16,7 +15,7 @@ const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,set
         updateUser();
         getPrescriptions();
 
-    },[]);
+    },[refreshKey]);
     const updateUser = async () => {
         const userRes = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
         dispatch(loginSuccess({ user: userRes.data.user }));
@@ -54,8 +53,14 @@ const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,set
                 </label>
                ))}
                     
-                    <div className='ml-auto mt-[8vw] md:mt-[4vw] mr-[5vw] md:mr-[2vw] items-center flex flex-row w-full md:w-[68.75vw] justify-end md:justify-start gap-[4vw] md:gap-0'>
-                        <h5 className='text-h5TextPhone md:text-h5Text font-dyeLine font-bold'>Total Amount: {formatINR(amount)}</h5>
+                    <div className='ml-auto mt-[8vw] md:mt-[4vw] mr-[5vw] md:mr-[2vw] items-center flex flex-row w-full md:w-[68.75vw] justify-end md:justify-start gap-[4vw] md:gap-[2vw]'>
+                        <PriceBreakdown
+                            base={basePrice}
+                            coatingLabel={form.lensCoating ? formatCoatingLabel(form.lensCoating) : null}
+                            coatingPrice={form.lensCoating ? coatingPrice : null}
+                            thicknessLabel={form.lensThickness || null}
+                            thicknessPrice={form.lensThickness ? thicknessPrice : null}
+                        />
                         <CartButton onClick={() => {
                             const updatedForm = {...form, prescriptionId:selectedPrescription};
                             setForm(updatedForm);

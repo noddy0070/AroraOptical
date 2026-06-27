@@ -363,6 +363,7 @@ export const addPrescription = async (req, res) => {
         right: prescriptionForm.prescriptionRightPupilsDistance,
       },
       otherDetails: prescriptionForm.prescriptionOtherDetails,
+      ...(prescriptionForm.prescriptionImage ? { prescriptionImage: prescriptionForm.prescriptionImage } : {}),
       termsAccepted: true,
       source: 'Manual Entry',
     };
@@ -375,6 +376,33 @@ export const addPrescription = async (req, res) => {
   } catch (error) {
     console.error('Add prescription error:', error);
     res.status(500).json({ success: false, message: 'Failed to add prescription' });
+  }
+};
+
+export const addPhotoPrescription = async (req, res) => {
+  try {
+    const { userId, prescriptionImage } = req.body;
+    if (!prescriptionImage) {
+      return res.status(400).json({ success: false, message: 'Prescription image is required' });
+    }
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+    const newPrescription = new Prescription({
+      userId,
+      prescriptionName: `Photo Upload - ${today.toLocaleDateString('en-IN')}`,
+      prescriptionDate: dateStr,
+      prescriptionImage,
+      termsAccepted: true,
+      source: 'Image Upload',
+    });
+    await newPrescription.save();
+    const user = await User.findById(userId);
+    user.prescriptions.push(newPrescription._id);
+    await user.save();
+    res.status(200).json({ success: true, prescriptionId: newPrescription._id, message: 'Photo prescription saved' });
+  } catch (error) {
+    console.error('Add photo prescription error:', error);
+    res.status(500).json({ success: false, message: 'Failed to save photo prescription' });
   }
 };
 
