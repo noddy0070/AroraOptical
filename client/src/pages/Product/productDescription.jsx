@@ -85,16 +85,43 @@ export default function ProductDescription({productToDisplay}){
     };
 
 
+    const [reviews, setReviews] = useState(productToDisplay.reviews || []);
+    const [newReviewRating, setNewReviewRating] = useState(0);
+    const [newReviewComment, setNewReviewComment] = useState('');
+    const [reviewSubmitting, setReviewSubmitting] = useState(false);
+    const [reviewError, setReviewError] = useState('');
+    const [hoveredStar, setHoveredStar] = useState(0);
+
     const [totalRating, setTotalRating] = useState(0);
     useEffect(() => {
-    if (productToDisplay?.review?.length > 0) {
-        const sum = productToDisplay.review.reduce((acc, item) => acc + item.rating, 0);
-        const average = sum / productToDisplay.review.length;
-        setTotalRating(average);
-    } else {
-        setTotalRating(0); // or null
-    }
-    }, [productToDisplay.review]);
+        if (reviews.length > 0) {
+            const sum = reviews.reduce((acc, item) => acc + item.rating, 0);
+            setTotalRating(sum / reviews.length);
+        } else {
+            setTotalRating(0);
+        }
+    }, [reviews]);
+
+    const handleSubmitReview = async () => {
+        if (newReviewRating === 0) return;
+        setReviewSubmitting(true);
+        setReviewError('');
+        try {
+            const response = await axios.post(
+                `${baseURL}/api/product/${productToDisplay._id}/review`,
+                { userId: user._id, rating: newReviewRating, comment: newReviewComment },
+                { withCredentials: true }
+            );
+            setReviews(prev => [...prev, response.data.review]);
+            setNewReviewRating(0);
+            setNewReviewComment('');
+            toast.success('Review submitted!');
+        } catch (error) {
+            setReviewError(error.response?.data?.message || 'Failed to submit review');
+        } finally {
+            setReviewSubmitting(false);
+        }
+    };
 
     const [productsModel,setProductsModel] =useState([]);
     
@@ -298,7 +325,7 @@ export default function ProductDescription({productToDisplay}){
                 
                 {/* Rating block */}
                 <div className='text-regularTextPhone md:text-regularText'>
-                    {totalRating>0?<span>{renderStars(totalRating)} {" - "} {productToDisplay.review.length} </span>:"No Reviews"}
+                    {totalRating > 0 ? <span>{renderStars(totalRating)} {" - "} {reviews.length} reviews</span> : "No Reviews"}
                 </div>
                 <p className='leading-[150%] text-regularTextPhone md:text-regularText'>{productToDisplay.description}</p>
                 {/* Size block */}
@@ -476,6 +503,86 @@ export default function ProductDescription({productToDisplay}){
             </div>
         </div>
 
+        {/* Reviews Section */}
+        <div className='bg-white rounded-[4vw] md:rounded-[16px] mt-[6vw] md:mt-[2vw] py-[6vw] md:py-[2.25vw] px-[5vw] md:px-[3vw] flex flex-col gap-[6vw] md:gap-[2.5vw]'>
+            <div className='flex justify-between items-center'>
+                <h2 className='font-dyeLine text-h3TextPhone md:text-h3Text font-semibold'>Customer Reviews</h2>
+                {totalRating > 0 && (
+                    <div className='flex items-center gap-[1vw] md:gap-[4px]'>
+                        {renderStars(totalRating)}
+                        <span className='text-regularTextPhone md:text-regularText ml-[1vw] md:ml-[4px]'>{totalRating.toFixed(1)} ({reviews.length})</span>
+                    </div>
+                )}
+            </div>
+
+            {/* Add Review Form */}
+            {isAuthenticated ? (
+                <div className='border border-gray-200 rounded-[2vw] md:rounded-[8px] p-[4vw] md:p-[1.5vw] bg-gray-50'>
+                    <h3 className='font-semibold text-regularTextPhone md:text-regularText mb-[3vw] md:mb-[1vw]'>Write a Review</h3>
+                    <div className='flex gap-[2vw] md:gap-[6px] mb-[3vw] md:mb-[1vw]'>
+                        {[1, 2, 3, 4, 5].map(star => (
+                            <button
+                                key={star}
+                                onClick={() => setNewReviewRating(star)}
+                                onMouseEnter={() => setHoveredStar(star)}
+                                onMouseLeave={() => setHoveredStar(0)}
+                                className={`text-[8vw] md:text-[1.75vw] transition-colors ${star <= (hoveredStar || newReviewRating) ? 'text-black' : 'text-gray-300'}`}
+                            >★</button>
+                        ))}
+                    </div>
+                    <textarea
+                        className='w-full border border-gray-300 rounded-[1.5vw] md:rounded-[6px] p-[2vw] md:p-[8px] text-regularTextPhone md:text-regularText resize-none focus:outline-none focus:border-gray-400 bg-white'
+                        rows={3}
+                        placeholder='Share your experience with this product...'
+                        value={newReviewComment}
+                        onChange={(e) => setNewReviewComment(e.target.value)}
+                    />
+                    {reviewError && <p className='text-red-500 text-tinyTextPhone md:text-sm mt-[1vw] md:mt-[4px]'>{reviewError}</p>}
+                    <button
+                        onClick={handleSubmitReview}
+                        disabled={reviewSubmitting || newReviewRating === 0}
+                        className='mt-[2vw] md:mt-[8px] px-[6vw] md:px-[1.5vw] py-[2.5vw] md:py-[8px] bg-darkslategrey text-white rounded-[8vw] md:rounded-full text-regularTextPhone md:text-regularText disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'
+                    >
+                        {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+                    </button>
+                </div>
+            ) : (
+                <p className='text-regularTextPhone md:text-regularText text-gray-500'>
+                    <button onClick={() => navigate('/login')} className='underline text-darkslategrey'>Sign in</button> to write a review.
+                </p>
+            )}
+
+            {/* Reviews List */}
+            {reviews.length > 0 ? (
+                <div className='flex flex-col gap-[4vw] md:gap-[1.5vw]'>
+                    {reviews.map((review, index) => (
+                        <div key={review._id || index} className='border-b border-gray-100 pb-[4vw] md:pb-[1.5vw] last:border-b-0 last:pb-0'>
+                            <div className='flex items-center gap-[1vw] md:gap-[4px] mb-[1vw] md:mb-[4px]'>
+                                <span className='flex gap-[0.5vw] md:gap-[2px]'>
+                                    {[1, 2, 3, 4, 5].map(s => (
+                                        <span key={s} className={`text-[4vw] md:text-[0.9vw] ${s <= review.rating ? 'text-black' : 'text-gray-300'}`}>★</span>
+                                    ))}
+                                </span>
+                                <span className='text-tinyTextPhone md:text-sm text-gray-400 ml-auto'>
+                                    {new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                </span>
+                            </div>
+                            <p className='font-semibold text-regularTextPhone md:text-regularText'>{review.userId?.name || 'Anonymous'}</p>
+                            {review.comment && (
+                                <p className='text-regularTextPhone md:text-regularText text-gray-700 mt-[1vw] md:mt-[4px]'>{review.comment}</p>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className='flex flex-col items-center py-[6vw] md:py-[3vw] text-gray-400'>
+                    <span className='text-[14vw] md:text-[3.5vw] leading-none mb-[2vw] md:mb-[8px]'>☆</span>
+                    <p className='text-regularTextPhone md:text-regularText font-medium text-gray-600'>No reviews yet</p>
+                    <p className='text-smallTextPhone md:text-smallText mt-[1vw] md:mt-[4px]'>Be the first to review this product</p>
+                </div>
+            )}
+        </div>
+
         {/* Similar Products */}
         <div className='bg-white rounded-[4vw] md:rounded-[16px] mt-[6vw] md:mt-[2vw] py-[6vw] md:py-[2.25vw] px-[5vw] md:px-[3vw] flex flex-col gap-[6vw] md:gap-[2.5vw]'>
             <div className='flex justify-between items-center'>
@@ -517,9 +624,13 @@ export default function ProductDescription({productToDisplay}){
                                 <h3 className='font-bold text-h6TextPhone md:text-h6Text mb-[1vw] md:mb-1'>{product.modelTitle}</h3>
                                 <p className='text-tinyTextPhone md:text-sm text-gray-600'>{product.modelName}</p>
                                 <div className='mt-[2vw] md:mt-2'>
-                                    <span className='font-bold text-smallTextPhone md:text-regularText'>{formatINR(product.discount)}</span>
-                                    {product.price !== product.discount && (
-                                        <span className='ml-2 text-tinyTextPhone md:text-sm line-through text-gray-500'>{formatINR(product.price)}</span>
+                                    {product.discount > 0 ? (
+                                        <>
+                                            <span className='font-bold text-smallTextPhone md:text-regularText'>{formatINR(product.discount)}</span>
+                                            <span className='ml-2 text-tinyTextPhone md:text-sm line-through text-gray-500'>{formatINR(product.price)}</span>
+                                        </>
+                                    ) : (
+                                        <span className='font-bold text-smallTextPhone md:text-regularText'>{formatINR(product.price)}</span>
                                     )}
                                 </div>
                                 <button className='w-full mt-[2vw] md:mt-2 py-[2vw] md:py-2 bg-btngrery rounded-[8vw] md:rounded-full text-smallTextPhone md:text-sm font-medium hover:bg-gray-200 transition-colors'>

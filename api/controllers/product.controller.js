@@ -1,4 +1,5 @@
 import Product from "../models/product.model.js";
+import Review from "../models/review.model.js";
 import mongoose from "mongoose";
 import * as XLSX from "xlsx";
 
@@ -147,16 +148,44 @@ export const getProductsColor = async (req, res, next) => {
 
 
 export const getSingleProduct = async (req, res, next) => {
-  const { attributeId } = req.params;  
-  if (!mongoose.Types.ObjectId.isValid(attributeId)) { 
+  const { attributeId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(attributeId)) {
     return res.status(400).json({ message: "Invalid product ID" });
   }
   try {
-    const product = await Product.findById(attributeId );
+    const product = await Product.findById(attributeId).populate({
+      path: 'reviews',
+      populate: { path: 'userId', select: 'name' }
+    });
     res.status(200).json(product);
   } catch (err) {
     console.error('Error fetching product:', err);
     res.status(500).json({ message: 'Server error fetching product' });
+  }
+};
+
+export const addReview = async (req, res, next) => {
+  const { attributeId } = req.params;
+  const { userId, rating, comment } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(attributeId)) {
+    return res.status(400).json({ message: "Invalid product ID" });
+  }
+
+  try {
+    const existing = await Review.findOne({ userId, productId: attributeId });
+    if (existing) {
+      return res.status(400).json({ message: 'You have already reviewed this product' });
+    }
+
+    const review = new Review({ userId, productId: attributeId, rating, comment });
+    await review.save();
+    await Product.findByIdAndUpdate(attributeId, { $push: { reviews: review._id } });
+    await review.populate({ path: 'userId', select: 'name' });
+
+    res.status(201).json({ success: true, review });
+  } catch (err) {
+    next(err);
   }
 };
 

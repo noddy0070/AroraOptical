@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import plus from '@/assets/images/checkout/plus.svg';
 import close from '@/assets/images/checkout/close.svg';
 import edit from '@/assets/images/checkout/edit.svg';
@@ -34,38 +34,40 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
     setTotalPrice(cartItems.reduce((total, item) => total + item.totalAmount * item.quantity, 0));
   }, [cartItems]);
 
-  const checkDeliverability = useCallback(async (address) => {
-    if (!address?.pincode) return;
-    setDeliveryStatus('loading');
-    setDeliveryRate(null);
-    setDeliveryPrice(null);
-    try {
-      const deliveryPincode = address.pincode;
-      const weight = 0.5 * cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
-      const response = await axios.get(`${baseURL}/api/order/serviceability`, {
-        params: { deliveryPincode, weight, cod: 1 },
-      });
-        console.log('Deliverability check response:', response.data);
-
-      if (response.data.success && response.data.serviceable) {
-        setDeliveryStatus('available');
-        setDeliveryRate(response.data.deliveryRate);
-        setDeliveryPrice(response.data.deliveryRate);
-      } else {
-        setDeliveryStatus('unavailable');
-      }
-    } catch (error) {
-      setDeliveryStatus('unavailable');
-      console.error('Deliverability check failed:', error);
-    }
-  }, [cartItems, setDeliveryPrice]);
-
   // Auto-check when selected address or cart changes
   useEffect(() => {
-    if (user.addressList.length > 0 && user.addressList[selectedAddressIndex]) {
-      checkDeliverability(user.addressList[selectedAddressIndex]);
-    }
-  }, [selectedAddressIndex, user.addressList, checkDeliverability]);
+    const address = user.addressList[selectedAddressIndex];
+    if (!address?.pincode) return;
+
+    let cancelled = false;
+
+    const check = async () => {
+      setDeliveryStatus('loading');
+      setDeliveryRate(null);
+      setDeliveryPrice(null);
+      try {
+        const totalQuantity = cartItems.reduce((total, item) => total + (Number(item.quantity) || 1), 0);
+        const weight = 0.5 * totalQuantity;
+        const response = await axios.get(`${baseURL}/api/order/serviceability`, {
+          params: { deliveryPincode: address.pincode, weight, cod: 1 },
+        });
+        if (cancelled) return;
+        if (response.data.success && response.data.serviceable) {
+          setDeliveryStatus('available');
+          setDeliveryRate(response.data.deliveryRate);
+          setDeliveryPrice(response.data.deliveryRate);
+        } else {
+          setDeliveryStatus('unavailable');
+        }
+      } catch (error) {
+        if (!cancelled) setDeliveryStatus('unavailable');
+        console.error('Deliverability check failed:', error);
+      }
+    };
+
+    check();
+    return () => { cancelled = true; };
+  }, [selectedAddressIndex, user.addressList, cartItems, setDeliveryPrice]);
 
   const handleAddressSubmit = async (addressData) => {
     if (!user || !user._id) return;
