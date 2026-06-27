@@ -34,44 +34,44 @@ export default function CalendarComponent({formData, setFormData}) {
   };
 
   const renderHeader = () => (
-    <div className="flex justify-center gap-[24px] items-center mb-[12px]">
-      <button 
+    <div className="flex justify-center gap-4 items-center mb-2">
+      <button
         onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
         disabled={isBackButtonDisabled()}
-        className={`transition-colors duration-300 pr-[3px] w-[45px] h-[45px] rounded-full flex items-center justify-center ${
-          isBackButtonDisabled() 
-            ? 'text-gray-300 bg-gray-100 cursor-not-allowed' 
+        className={`transition-colors duration-300 pr-[3px] w-8 h-8 rounded-full flex items-center justify-center ${
+          isBackButtonDisabled()
+            ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
             : 'text-gray-500 bg-[rgba(04,43,43,0.09)] hover:bg-[rgba(04,43,43,1)]'
         }`}
       >
-        <svg width="12" height="22" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path 
-            d="M10.5654 20.312L1.71892 10.7847L10.5654 1.25733" 
-            stroke={isBackButtonDisabled() ? "#D1D5DB" : "#BDC6C6"} 
-            strokeWidth="1.95493" 
+        <svg width="8" height="14" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M10.5654 20.312L1.71892 10.7847L10.5654 1.25733"
+            stroke={isBackButtonDisabled() ? "#D1D5DB" : "#BDC6C6"}
+            strokeWidth="1.95493"
             strokeLinecap="round"
           />
         </svg>
       </button>
-      
-      <h4 className="text-h5Text text-[#263238] text-center leading-[100%] font-normal">
+
+      <h4 className="text-sm font-semibold text-[#263238] text-center leading-none">
         {format(currentMonth, 'MMMM yyyy')}
       </h4>
-      
-      <button 
+
+      <button
         onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
         disabled={isNextButtonDisabled()}
-        className={`transition-colors duration-300 pl-[3px] w-[45px] h-[45px] rounded-full flex items-center justify-center ${
-          isNextButtonDisabled() 
-            ? 'text-gray-300 bg-gray-100 cursor-not-allowed' 
+        className={`transition-colors duration-300 pl-[3px] w-8 h-8 rounded-full flex items-center justify-center ${
+          isNextButtonDisabled()
+            ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
             : 'text-gray-500 bg-[rgba(04,43,43,0.09)] hover:bg-[rgba(04,43,43,1)]'
         }`}
       >
-        <svg className='rotate-180' width="12" height="22" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path 
-            d="M10.5654 20.312L1.71892 10.7847L10.5654 1.25733" 
-            stroke={isNextButtonDisabled() ? "#D1D5DB" : "#BDC6C6"} 
-            strokeWidth="1.95493" 
+        <svg className='rotate-180' width="8" height="14" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M10.5654 20.312L1.71892 10.7847L10.5654 1.25733"
+            stroke={isNextButtonDisabled() ? "#D1D5DB" : "#BDC6C6"}
+            strokeWidth="1.95493"
             strokeLinecap="round"
           />
         </svg>
@@ -80,11 +80,11 @@ export default function CalendarComponent({formData, setFormData}) {
   );
 
   const renderDays = () => {
-    const days = ['Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.','Sun.'];
+    const days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
     return (
-      <div className="grid grid-cols-7  text-center text-mediumText font-medium text-[#3C413F] gap-[12px] pb-[12px]">
+      <div className="grid grid-cols-7 text-center text-[10px] font-medium text-[#3C413F] gap-1 pb-1">
         {days.map(day => (
-          <div key={day} className="py-1 ">{day}</div>
+          <div key={day} className="py-0.5">{day}</div>
         ))}
       </div>
     );
@@ -113,7 +113,7 @@ export default function CalendarComponent({formData, setFormData}) {
         days.push(
           <div
             key={currentDay.getTime()}
-            className={`text-center size-[30px] md:size-[40px] lg:size-[50px] xl:size-[70px]  text-h6Text cursor-pointer flex items-center justify-center rounded-full mb-[12px]
+            className={`text-center size-6 text-[11px] cursor-pointer flex items-center justify-center rounded-full mb-1
               transition-all duration-200
               ${isDisabled || isNotCurrentMonth ? 'text-gray-300 cursor-not-allowed' : 'text-[#263238]'}
               ${isAvailableDay && !isSelected ? 'bg-[rgba(04,43,43,0.08)] ring-1 ring-[rgba(04,43,43,0.25)] hover:bg-[rgba(04,43,43,0.14)]' : ''}
@@ -135,7 +135,7 @@ export default function CalendarComponent({formData, setFormData}) {
         );
         day = addDays(day, 1);
       }
-      rows.push(<div key={day.getTime()} className="grid grid-cols-7 gap-[12px] ">{days}</div>);
+      rows.push(<div key={day.getTime()} className="grid grid-cols-7 gap-1 justify-items-center">{days}</div>);
       days = [];
     }
 
@@ -143,18 +143,18 @@ export default function CalendarComponent({formData, setFormData}) {
   };
 
   return (
-    <div className="w-full p-[1.5vw]">
-      <div className="flex items-center gap-3 mb-[10px] text-[12px] text-[#263238]">
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-4 h-4 rounded-full bg-[rgba(04,43,43,0.08)] ring-1 ring-[rgba(04,43,43,0.25)]" />
-          <span>Available (next 3 months)</span>
+    <div className="w-full p-2">
+      <div className="flex items-center gap-3 mb-2 text-[10px] text-[#263238]">
+        <div className="flex items-center gap-1.5">
+          <span className="inline-block w-3 h-3 rounded-full bg-[rgba(04,43,43,0.08)] ring-1 ring-[rgba(04,43,43,0.25)]" />
+          <span>Available</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-4 h-4 rounded-full bg-transparent ring-2 ring-[rgba(04,43,43,0.85)]" />
+        <div className="flex items-center gap-1.5">
+          <span className="inline-block w-3 h-3 rounded-full bg-transparent ring-2 ring-[rgba(04,43,43,0.85)]" />
           <span>Today</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-4 h-4 rounded-full bg-[rgba(04,43,43,1)]" />
+        <div className="flex items-center gap-1.5">
+          <span className="inline-block w-3 h-3 rounded-full bg-[rgba(04,43,43,1)]" />
           <span>Selected</span>
         </div>
       </div>

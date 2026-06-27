@@ -158,8 +158,8 @@ const BookingForm = () => {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* ── Hero banner ─────────────────────────────────────────────────────── */}
-      <div className="relative w-full h-64 md:h-80 overflow-hidden">
+      {/* ── Hero banner — full viewport height ──────────────────────────────── */}
+      <div className="relative w-full h-[50vh] md:h-min overflow-hidden">
         <img
           src={eyeTestBanner}
           alt="Eye Test Banner"
@@ -175,175 +175,149 @@ const BookingForm = () => {
         </div>
       </div>
 
-      {/* ── Why section ─────────────────────────────────────────────────────── */}
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-6 py-6 grid grid-cols-3 gap-6">
-          {[
-            { icon: '🔬', title: 'Professional Testing', desc: 'Certified optometrists with modern equipment' },
-            { icon: '⏱️', title: '30-Minute Session',    desc: 'Comprehensive exam, no rush' },
-            { icon: '🆓', title: 'Completely Free',      desc: 'No hidden charges or obligations' },
-          ].map(({ icon, title, desc }) => (
-            <div key={title} className="flex items-start gap-3">
-              <span className="text-2xl mt-0.5">{icon}</span>
-              <div>
-                <p className="text-sm font-bold text-gray-800">{title}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
-              </div>
+      {/* ── Main content — 3-column single row ───────────────────────────────── */}
+      <div className="max-w-screen-xl mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+          {/* Column 1 — Patient details */}
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-100">
+              <h2 className="text-base font-bold text-gray-900">Patient Details</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Fill in your information to confirm the booking</p>
             </div>
-          ))}
-        </div>
-      </div>
+            <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
 
-      {/* ── Main content ─────────────────────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+              <Field label="Full Name" icon={<UserIcon />}>
+                <input
+                  type="text"
+                  name="patientName"
+                  value={formData.patientName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter your full name"
+                  className={inputCls}
+                />
+              </Field>
 
-          {/* Left — Patient details form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-              <div className="px-6 py-5 border-b border-gray-100">
-                <h2 className="text-base font-bold text-gray-900">Patient Details</h2>
-                <p className="text-xs text-gray-400 mt-0.5">Fill in your information to confirm the booking</p>
-              </div>
-              <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+              <Field label="Phone Number" icon={<PhoneIcon />}>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  required
+                  placeholder="+91 98765 43210"
+                  className={inputCls}
+                />
+              </Field>
 
-                <Field label="Full Name" icon={<UserIcon />}>
-                  <input
-                    type="text"
-                    name="patientName"
-                    value={formData.patientName}
-                    onChange={handleChange}
-                    required
-                    placeholder="Enter your full name"
-                    className={inputCls}
-                  />
-                </Field>
+              <Field label="Email Address" icon={<MailIcon />}>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="you@example.com"
+                  className={inputCls}
+                />
+              </Field>
 
-                <Field label="Phone Number" icon={<PhoneIcon />}>
-                  <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleChange}
-                    required
-                    placeholder="+91 98765 43210"
-                    className={inputCls}
-                  />
-                </Field>
+              <Field label="Special Notes (optional)">
+                <textarea
+                  name="specialNotes"
+                  value={formData.specialNotes}
+                  onChange={handleChange}
+                  rows={3}
+                  placeholder="Any concerns, allergies, or special requirements…"
+                  className={`${inputCls} resize-none`}
+                />
+              </Field>
 
-                <Field label="Email Address" icon={<MailIcon />}>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="you@example.com"
-                    className={inputCls}
-                  />
-                </Field>
-
-                <Field label="Special Notes (optional)">
-                  <textarea
-                    name="specialNotes"
-                    value={formData.specialNotes}
-                    onChange={handleChange}
-                    rows={3}
-                    placeholder="Any concerns, allergies, or special requirements…"
-                    className={`${inputCls} resize-none`}
-                  />
-                </Field>
-
-                {/* Booking summary */}
-                {(formData.testDate || formData.timeSlot) && (
-                  <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Booking Summary</p>
-                    {formData.testDate && (
-                      <div className="flex items-center gap-2 text-sm text-gray-700">
-                        <CalendarIcon />
-                        <span className="font-medium">{formattedSelectedDate}</span>
-                      </div>
-                    )}
-                    {formData.timeSlot && selectedSlotObj && (
-                      <div className="flex items-center gap-2 text-sm text-gray-700">
-                        <ClockIcon />
-                        <span className="font-medium">{selectedSlotObj.display}</span>
-                        {isSelectedSlotFull && (
-                          <span className="text-xs text-red-600 font-semibold ml-1">(Full — pick another slot)</span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={!canBook}
-                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all shadow-sm ${
-                    canBook
-                      ? 'bg-gray-900 hover:bg-gray-800 text-white'
-                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  }`}
-                >
-                  {loading ? (
-                    <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Booking…</>
-                  ) : (
-                    <><CheckIcon /> Confirm Appointment</>
+              {/* Booking summary */}
+              {(formData.testDate || formData.timeSlot) && (
+                <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Booking Summary</p>
+                  {formData.testDate && (
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <CalendarIcon />
+                      <span className="font-medium">{formattedSelectedDate}</span>
+                    </div>
                   )}
-                </button>
+                  {formData.timeSlot && selectedSlotObj && (
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <ClockIcon />
+                      <span className="font-medium">{selectedSlotObj.display}</span>
+                      {isSelectedSlotFull && (
+                        <span className="text-xs text-red-600 font-semibold ml-1">(Full — pick another slot)</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
 
-                {!formData.testDate && (
-                  <p className="text-center text-xs text-gray-400">Select a date on the calendar to continue</p>
+              <button
+                type="submit"
+                disabled={!canBook}
+                className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all shadow-sm ${
+                  canBook
+                    ? 'bg-gray-900 hover:bg-gray-800 text-white'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                {loading ? (
+                  <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Booking…</>
+                ) : (
+                  <><CheckIcon /> Confirm Appointment</>
                 )}
-              </form>
+              </button>
+
+              {!formData.testDate && (
+                <p className="text-center text-xs text-gray-400">Select a date on the calendar to continue</p>
+              )}
+            </form>
+          </div>
+
+          {/* Column 2 — Calendar */}
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h2 className="text-base font-bold text-gray-900">Select a Date</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Appointments available up to 3 months ahead</p>
+            </div>
+            <div className="px-4 py-4">
+              <CalendarComponent formData={formData} setFormData={setFormData} />
             </div>
           </div>
 
-          {/* Right — Calendar + time slots */}
-          <div className="lg:col-span-3 space-y-5">
-
-            {/* Calendar card */}
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100">
-                <h2 className="text-base font-bold text-gray-900">Select a Date</h2>
-                <p className="text-xs text-gray-400 mt-0.5">Appointments available up to 3 months ahead</p>
-              </div>
-              <div className="px-4 py-4">
-                <CalendarComponent formData={formData} setFormData={setFormData} />
-              </div>
+          {/* Column 3 — Time slots */}
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h2 className="text-base font-bold text-gray-900">Available Time Slots</h2>
+              {formattedSelectedDate
+                ? <p className="text-xs text-gray-500 mt-0.5">{formattedSelectedDate}</p>
+                : <p className="text-xs text-gray-400 mt-0.5">Pick a date first</p>
+              }
             </div>
 
-            {/* Time slots card */}
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                <div>
-                  <h2 className="text-base font-bold text-gray-900">Available Time Slots</h2>
-                  {formattedSelectedDate && (
-                    <p className="text-xs text-gray-500 mt-0.5">{formattedSelectedDate}</p>
-                  )}
+            <div className="px-6 py-5">
+              {!formData.testDate ? (
+                <div className="flex flex-col items-center justify-center py-10 text-gray-400 gap-2">
+                  <CalendarIcon />
+                  <p className="text-sm font-medium">Pick a date to see time slots</p>
                 </div>
-                {formData.testDate && (
-                  <div className="flex items-center gap-3 text-[11px] text-gray-500">
-                    <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-gray-100 ring-1 ring-gray-300 inline-block" /> Available</span>
-                    <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" /> Filling up</span>
-                    <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-gray-900 inline-block" /> Full</span>
+              ) : availableSlots.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-10 text-gray-400 gap-2">
+                  <p className="text-2xl">🕐</p>
+                  <p className="text-sm font-medium">No slots available for this date</p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 text-[11px] text-gray-500 mb-4">
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gray-100 ring-1 ring-gray-300 inline-block" /> Available</span>
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" /> Filling up</span>
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gray-900 inline-block" /> Full</span>
                   </div>
-                )}
-              </div>
-
-              <div className="px-6 py-5">
-                {!formData.testDate ? (
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-400 gap-2">
-                    <CalendarIcon />
-                    <p className="text-sm font-medium">Pick a date to see time slots</p>
-                  </div>
-                ) : availableSlots.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-400 gap-2">
-                    <span className="text-3xl">🕐</span>
-                    <p className="text-sm font-medium">No slots available for this date</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 gap-2.5">
                     {availableSlots.map((slot) => {
                       const bookedCount = getSlotBookedCount(slot);
                       const capacity    = Number(slot?.capacity ?? 4);
@@ -352,7 +326,7 @@ const BookingForm = () => {
                         : bookedCount >= (Number.isFinite(capacity) ? capacity : 4);
                       const isSelected = formData.timeSlot === slot.value && !isFull;
 
-                      let tileCls = 'relative rounded-xl border px-3 py-3 text-center text-sm font-semibold transition-all ';
+                      let tileCls = 'relative rounded-xl border px-2.5 py-2.5 text-center text-xs font-semibold transition-all ';
 
                       if (isFull) {
                         tileCls += 'bg-gray-900 text-white border-gray-900 cursor-not-allowed opacity-60';
@@ -372,13 +346,13 @@ const BookingForm = () => {
                           onClick={() => { if (!isFull) setFormData((prev) => ({ ...prev, timeSlot: slot.value })); }}
                           className={tileCls}
                         >
-                          <p className="font-bold">{slot.display}</p>
+                          <p className="font-bold text-[11px]">{slot.display}</p>
                           <p className={`text-[10px] mt-0.5 font-normal ${isFull ? 'text-white/60' : isSelected ? 'text-white/80' : 'text-gray-400'}`}>
                             {slotLabel(bookedCount, capacity)}
                           </p>
                           {isSelected && (
-                            <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white">
-                              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center text-white">
+                              <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
@@ -387,8 +361,8 @@ const BookingForm = () => {
                       );
                     })}
                   </div>
-                )}
-              </div>
+                </>
+              )}
             </div>
           </div>
         </div>

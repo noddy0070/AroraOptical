@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Profile from './Profile';
 import WishList from './Wishlist';
 import Orders from './Orders';
+import Prescriptions from './Prescriptions';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import { useNavigate } from 'react-router';
@@ -26,6 +27,7 @@ export default function Settings(){
             "profile": <Profile user={user}/>,
             "orders": <Orders/>,
             "wishlist": <WishList/>,
+            "prescriptions": <Prescriptions/>,
             "eyeTests": <EyeTests/>
         }
     const handleLogOut=async ()=>{
@@ -71,6 +73,7 @@ export default function Settings(){
                             <option value="profile">Profile</option>
                             <option value="orders">Orders</option>
                             <option value="wishlist">Wishlist</option>
+                            <option value="prescriptions">Prescriptions</option>
                             <option value="eyeTests">Scheduled Eye Tests</option>
                         </select>
                         <div className="pointer-events-none absolute right-[4vw] top-1/2 -translate-y-1/2">
@@ -113,6 +116,15 @@ export default function Settings(){
                         <h6 className='text-h6Text font-roboto font-bold'>Wishlist</h6>
                         <svg xmlns="http://www.w3.org/2000/svg" className='ml-auto w-[1vw] h-[.8vw]' width="100%" height="100%" viewBox="0 0 10 16" fill="#FFFFFF">
                             <path  fill="#000000" fillRule="evenodd" clipRule="evenodd" d="M9.79184 7.49475C10.0701 7.77382 10.0701 8.2262 9.79184 8.50527L2.52855 15.7907C2.25033 16.0698 1.79933 16.0698 1.52111 15.7907L1.18523 15.4538C0.907007 15.1748 0.907007 14.7223 1.18523 14.4433L7.60891 8.00001L1.18523 1.55673C0.907007 1.27766 0.907007 0.825275 1.18523 0.546206L1.52111 0.209302C1.79933 -0.069767 2.25033 -0.069767 2.52855 0.209302L9.79184 7.49475Z"/>
+                        </svg>
+                    </div>
+                    <div onClick={()=>setActiveTab('prescriptions')} className={`w-[10.875vw] cursor-pointer flex flex-row gap-[.5vw] items-center ${activeTab=='prescriptions'?"text-[#030972]":"text-black"}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" className='w-[1.625vw] h-[1.625vw]' fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <h6 className='text-h6Text font-roboto font-bold'>Prescriptions</h6>
+                        <svg xmlns="http://www.w3.org/2000/svg" className='ml-auto w-[1vw] h-[.8vw]' width="100%" height="100%" viewBox="0 0 10 16" fill="#FFFFFF">
+                            <path fill="#000000" fillRule="evenodd" clipRule="evenodd" d="M9.79184 7.49475C10.0701 7.77382 10.0701 8.2262 9.79184 8.50527L2.52855 15.7907C2.25033 16.0698 1.79933 16.0698 1.52111 15.7907L1.18523 15.4538C0.907007 15.1748 0.907007 14.7223 1.18523 14.4433L7.60891 8.00001L1.18523 1.55673C0.907007 1.27766 0.907007 0.825275 1.18523 0.546206L1.52111 0.209302C1.79933 -0.069767 2.25033 -0.069767 2.52855 0.209302L9.79184 7.49475Z"/>
                         </svg>
                     </div>
                     <div onClick={()=>setActiveTab('eyeTests')} className={`w-[10.875vw] cursor-pointer flex flex-row gap-[.5vw] items-center ${activeTab=='eyeTests'?"text-[#030972]":"text-black"}`}>
