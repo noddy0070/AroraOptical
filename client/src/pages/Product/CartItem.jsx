@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { mapBrandToLogo } from '@/data/brandMap';
 import { formatINR } from '@/components/IntToPrice';
-import close from '../../assets/images/icons/close.svg';
 import subtract from '../../assets/images/icons/subtract.svg';
 import add from '../../assets/images/icons/add.svg';
 import edit from '../../assets/images/icons/Edit.svg';
@@ -10,131 +8,165 @@ import axios from 'axios';
 import { baseURL } from '@/url';
 import { useSelector } from 'react-redux';
 
-const lensThicknessMap={
+const lensThicknessMap = {
     "Medium": "1.56",
-    "Thick": "1.59",
-}
+    "Thick":  "1.59",
+};
 
-const CartItem = ({item, handleRemoveItem, updateQuantity}) => {
-   const [prescription,setPrescription]=useState(['']);
-   const { user } = useSelector(state => state.auth);
-   useEffect(()=>{
-    const fetchPrescription=async()=>{
-        const response=await axios.get(`${baseURL}/api/user/prescription/${user._id}`);
-        setPrescription(response.data.prescriptions);
-    }
-    fetchPrescription();
-   },[user._id]);  
-   const filteredPrescription=prescription.filter(prescription=>prescription._id===item.prescriptionId);
-   console.log(filteredPrescription);
+const CartItem = ({ item, handleRemoveItem, updateQuantity }) => {
+    const [prescription, setPrescription] = useState([]);
+    const { user } = useSelector(state => state.auth);
 
-  return (
-    <div key={item.productId._id} className='flex flex-col gap-[5vw] md:gap-[1.25vw] border-b-[1px] border-gray-400 py-[6vw] md:py-[1.5vw]'>  
-                            <div className='flex flex-col md:flex-row gap-[4vw] md:gap-[1vw]'>
-                                <img src={item.productId.images[0]} className='w-full md:w-[17.1875vw] max-w-none md:max-w-[275px] max-h-none md:max-h-[288px] h-[100vw] md:h-[18vw] rounded-[5.5vw] md:rounded-[clamp(0px,1.375vw,22px)] object-cover' />
-                                <div className='w-full my-0 md:my-[.5vw]'>
-                                    <div className='flex flex-row gap-between mb-[3vw] md:mb-[1.25vw]'>
-                                        <img src={mapBrandToLogo[item.productId.brand]} className='h-[9vw] md:h-[2.25vw] w-auto'/>
-                                        <div className='flex flex-row w-auto ml-auto justify-end gap-[2vw] md:gap-[.5vw] items-center'>
-                                            <p onClick={() => handleRemoveItem(item.productId._id)} className='cursor-pointer font-bold text-black opacity-70 text-regularTextPhone md:text-regularText'>Remove</p>
-                                            <img src={close} onClick={() => handleRemoveItem(item.productId._id)} className='cursor-pointer clickable w-[5vw] md:w-[1.25vw] h-[5vw] md:h-[1.25vw]'/>
-                                        </div>
-                                    </div>
-                                    <div className='flex flex-col md:flex-row gap-between items-start gap-[2vw] md:gap-0'>
-                                    <div className='mb-[3vw] md:mb-[1.25vw]'>
-                                        <TransitionLink to={`/product/${item.productId._id}`}>
-                                        <p className='font-bold text-regularTextPhone md:text-regularText leading-[150%] mb-[1vw] md:mb-[.5vw] hover:underline cursor-pointer'>{item.productId.modelTitle}</p>
-                                        </TransitionLink>
+    useEffect(() => {
+        const fetchPrescription = async () => {
+            const response = await axios.get(`${baseURL}/api/user/prescription/${user._id}`);
+            setPrescription(response.data.prescriptions);
+        };
+        fetchPrescription();
+    }, [user._id]);
 
-                                        <TransitionLink to={`/product/${item.productId._id}`}>
-                                        <p className='text-smallTextPhone md:text-smallText leading-[150%] hover:underline cursor-pointer'>{item.productId.modelName}</p>
-                                        </TransitionLink>
-                                    </div>
-                                    <div className='md:ml-auto'>
-                                        <p className='font-bold text-regularTextPhone md:text-regularText'>{formatINR(item.productId.price)}</p>
-                                    </div>
-                                    </div>
-                                       
-                                    <p className='mb-[1vw] md:mb-[4px] text-regularTextPhone md:text-regularText leading-[150%] font-medium'>Total Amount:</p>
-                                    <p className='mb-[3vw] md:mb-[1.25vw] text-regularTextPhone md:text-regularText leading-[150%] font-medium'>{formatINR(item.totalAmount * item.quantity)}</p>
+    const filteredPrescription = prescription.filter(p => p._id === item.prescriptionId);
+    const product = item.productId;
 
-                                    <div className='gap-[2vw] md:gap-[.5vw]'>
-                                        <p className='text-tinyTextPhone md:text-tinyText leading-[150%]'>Quantity</p>
-                                    <div className='flex flex-row gap-[2vw] md:gap-[.5vw] mt-[1vw] md:mt-[.5vw] items-center'>
-                                        <img 
-                                            src={subtract} 
-                                            className='cursor-pointer w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]'
-                                            onClick={() => updateQuantity(item.productId._id, -1)}
-                                        />
-                                        <p className='w-[16vw] md:w-[4vw] text-smallTextPhone md:text-smallText py-[.4vw] md:py-[.1vw] text-center border-black border-[.25vw] md:border-[.1vw] rounded-[5vw] md:rounded-[1.25vw]'>{item.quantity}</p>
-                                        <img 
-                                            src={add} 
-                                            className='cursor-pointer max-w-none md:max-w-[30px] max-h-none md:max-h-[30px] w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]'
-                                            onClick={() => updateQuantity(item.productId._id, 1)}
-                                        />
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {
-                                item.productId.rx && (
-                                    <div className='flex flex-col md:flex-row pb-[5vw] md:pb-[1.25vw] gap-[3vw] md:gap-[1vw]'>
-                                        <div className='flex flex-row p-[2.5vw] md:p-[.625vw] border-black border-[.25vw] md:border-[.1vw] rounded-[2.5vw] md:rounded-[.625vw] gap-[2vw] md:gap-[.5vw]'>
-                                            <div className='w-[12.5vw] md:w-[3.125vw] h-[12.5vw] md:h-[3.125vw] rounded-[2.5vw] md:rounded-[.625vw] bg-gray-400'></div>
-                                            <div className='flex flex-col gap-[2vw] md:gap-[.5vw]'>
-                                                <div className='flex flex-row gap-[2vw] md:gap-[.5vw]'>
-                                                <p className='text-regularTextPhone md:text-regularText font-dyeLine leading-[150%] whitespace-nowrap font-bold'>Vision Type</p>
-                                                <TransitionLink to={`/lens/${item.productId._id}`}>
-                                                <img className='w-[5vw] md:w-[1.25vw] h-[5vw] md:h-[1.25vw] cursor-pointer' src={edit}/>
-                                                </TransitionLink>
-                                                </div>
-                                                <p className='text-smallTextPhone md:text-smallText font-roboto leading-[150%]'>{item.lensType?item.lensType:'No Lens Selected'}</p>
-                                            </div>
-                                        </div>
+    return (
+        <div className='flex flex-col gap-[4vw] md:gap-[1vw] border-b border-gray-200 py-[5vw] md:py-[1.25vw]'>
 
-                                        <div className='flex flex-row p-[2.5vw] md:p-[.625vw] border-black border-[.25vw] md:border-[.1vw] rounded-[2.5vw] md:rounded-[.625vw] gap-[2vw] md:gap-[.5vw]'>
-                                            <div className='w-[12.5vw] md:w-[3.125vw] h-[12.5vw] md:h-[3.125vw] rounded-[2.5vw] md:rounded-[.625vw] bg-gray-400'></div>
-                                            <div className='flex flex-col gap-[2vw] md:gap-[.5vw]'>
-                                                <div className='flex flex-row gap-[2vw] md:gap-[.5vw]'>
-                                                <p className='text-regularTextPhone md:text-regularText font-dyeLine leading-[150%] whitespace-nowrap font-bold'>Lens Coating</p>
-                                                <TransitionLink to={`/lens/${item.productId._id}`}> 
-                                                <img className='w-[5vw] md:w-[1.25vw] h-[5vw] md:h-[1.25vw] cursor-pointer' src={edit}/>
-                                                </TransitionLink>
-                                                </div>
-                                                <p className='text-smallTextPhone md:text-smallText font-roboto leading-[150%]'>{item.lensCoating?item.lensCoating:'No Lens Coating Selected'}</p>
-                                            </div>
-                                        </div>
+            {/* Main row: image + info */}
+            <div className='flex flex-row gap-[4vw] md:gap-[1.25vw] items-start'>
 
-                                        <div className='flex flex-row p-[2.5vw] md:p-[.625vw] border-black border-[.25vw] md:border-[.1vw] rounded-[2.5vw] md:rounded-[.625vw] gap-[2vw] md:gap-[.5vw]'>
-                                            <div className='w-[12.5vw] md:w-[3.125vw] h-[12.5vw] md:h-[3.125vw] rounded-[2.5vw] md:rounded-[.625vw] bg-gray-400'></div>
-                                            <div className='flex flex-col gap-[2vw] md:gap-[.5vw]'>
-                                                <div className='flex flex-row gap-[2vw] md:gap-[.5vw]'>
-                                                <p className='text-regularTextPhone md:text-regularText font-dyeLine leading-[150%] whitespace-nowrap font-bold'>Lens Thickness</p>
-                                                <TransitionLink to={`/lens/${item.productId._id}`}>
-                                                <img className='w-[5vw] md:w-[1.25vw] h-[5vw] md:h-[1.25vw] cursor-pointer' src={edit}/>
-                                                </TransitionLink>
-                                                </div>
-                                                <p className='text-smallTextPhone md:text-smallText font-roboto leading-[150%]'>{item.lensThickness?`Index: ${lensThicknessMap[item.lensThickness]}`:'No Lens Selected'}</p>
-                                            </div>
-                                        </div>
+                {/* Image with border */}
+                <TransitionLink to={`/product/${product._id}`} className='flex-shrink-0'>
+                    <div className='border border-gray-200 rounded-[3vw] md:rounded-xl overflow-hidden w-[28vw] h-[28vw] md:w-28 md:h-28 bg-gray-50'>
+                        <img
+                            src={product.images?.[0]}
+                            alt={product.modelTitle}
+                            className='w-full h-full object-cover hover:scale-105 transition-transform duration-300'
+                        />
+                    </div>
+                </TransitionLink>
 
-                                        <div className='flex flex-row p-[2.5vw] md:p-[.625vw] border-black border-[.25vw] md:border-[.1vw] rounded-[2.5vw] md:rounded-[.625vw] gap-[2vw] md:gap-[.5vw]'>
-                                            <div className='w-[12.5vw] md:w-[3.125vw] h-[12.5vw] md:h-[3.125vw] rounded-[2.5vw] md:rounded-[.625vw] bg-gray-400'></div>
-                                            <div className='flex flex-col gap-[2vw] md:gap-[.5vw]'>
-                                                <div className='flex flex-row gap-[2vw] md:gap-[.5vw]'>
-                                                <p className='text-regularTextPhone md:text-regularText font-dyeLine leading-[150%] font-bold'>Prescription</p>
-                                                <TransitionLink to={`/lens/${item.productId._id}`}>
-                                                <img className='w-[5vw] md:w-[1.25vw] h-[5vw] md:h-[1.25vw] cursor-pointer' src={edit}/>
-                                                </TransitionLink>
-                                                </div>
-                                                <p className='text-smallTextPhone md:text-smallText font-roboto leading-[150%]'>{item.prescriptionId?filteredPrescription[0]?.prescriptionName:'No Prescription Selected'}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )   
-                            }
+                {/* Info */}
+                <div className='flex-1 min-w-0 flex flex-col gap-[1.5vw] md:gap-[.3vw]'>
+
+                    {/* Brand + Remove */}
+                    <div className='flex items-start justify-between gap-[2vw] md:gap-2'>
+                        <p className='text-[2.8vw] md:text-xs text-gray-400 font-medium uppercase tracking-wide'>{product.brand}</p>
+                        <button
+                            onClick={() => handleRemoveItem(product._id)}
+                            className='text-[2.8vw] md:text-xs text-gray-400 hover:text-red-500 transition-colors font-medium flex-shrink-0'
+                        >
+                            Remove
+                        </button>
+                    </div>
+
+                    {/* Model title */}
+                    <TransitionLink to={`/product/${product._id}`}>
+                        <p className='font-bold text-smallTextPhone md:text-sm leading-tight hover:underline cursor-pointer text-gray-900 line-clamp-2'>
+                            {product.modelTitle}
+                        </p>
+                    </TransitionLink>
+
+                    {/* Model name */}
+                    <TransitionLink to={`/product/${product._id}`}>
+                        <p className='text-[2.8vw] md:text-xs text-gray-500 hover:underline cursor-pointer leading-tight'>
+                            {product.modelName}
+                        </p>
+                    </TransitionLink>
+
+                    {/* Model code */}
+                    {product.modelCode && (
+                        <p className='text-[2.5vw] md:text-[.65vw] text-gray-400'>{product.modelCode}</p>
+                    )}
+
+                    {/* Price per unit */}
+                    <p className='text-smallTextPhone md:text-sm font-bold text-gray-900 mt-[1vw] md:mt-[.25vw]'>
+                        {formatINR(product.price)}
+                    </p>
+
+                    {/* Total + quantity */}
+                    <div className='flex items-center justify-between gap-[2vw] md:gap-2 mt-[1.5vw] md:mt-[.4vw]'>
+                        <div className='flex items-center gap-[2vw] md:gap-[.5vw]'>
+                            <img
+                                src={subtract}
+                                className='cursor-pointer w-[5.5vw] md:w-5 h-[5.5vw] md:h-5'
+                                onClick={() => updateQuantity(product._id, -1)}
+                            />
+                            <p className='w-[10vw] md:w-8 text-smallTextPhone md:text-sm py-[.5vw] md:py-[.15vw] text-center border border-gray-300 rounded-[3vw] md:rounded-lg'>
+                                {item.quantity}
+                            </p>
+                            <img
+                                src={add}
+                                className='cursor-pointer w-[5.5vw] md:w-5 h-[5.5vw] md:h-5'
+                                onClick={() => updateQuantity(product._id, 1)}
+                            />
                         </div>
-  )
-}
+                        <p className='text-smallTextPhone md:text-sm font-semibold text-gray-700'>
+                            Total: {formatINR((item.totalAmount ?? product.price) * item.quantity)}
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-export default CartItem
+            {/* Lens info (only for Rx products) */}
+            {product.rx && (
+                <div className='flex flex-row flex-wrap gap-[2vw] md:gap-[.5vw] pb-[2vw] md:pb-[.5vw]'>
+
+                    <div className='flex flex-row items-center p-[2vw] md:p-[.5vw] border border-gray-200 rounded-[2vw] md:rounded-lg gap-[2vw] md:gap-[.5vw]'>
+                        <div className='flex flex-col gap-[.5vw] md:gap-[.1vw]'>
+                            <div className='flex flex-row items-center gap-[1.5vw] md:gap-[.4vw]'>
+                                <p className='text-[2.8vw] md:text-xs font-bold text-gray-700 whitespace-nowrap'>Vision Type</p>
+                                <TransitionLink to={`/lens/${product._id}`}>
+                                    <img className='w-[4vw] md:w-[.9vw] h-[4vw] md:h-[.9vw] cursor-pointer opacity-60 hover:opacity-100' src={edit} />
+                                </TransitionLink>
+                            </div>
+                            <p className='text-[2.5vw] md:text-[.65vw] text-gray-500'>{item.lensType || 'Not selected'}</p>
+                        </div>
+                    </div>
+
+                    <div className='flex flex-row items-center p-[2vw] md:p-[.5vw] border border-gray-200 rounded-[2vw] md:rounded-lg gap-[2vw] md:gap-[.5vw]'>
+                        <div className='flex flex-col gap-[.5vw] md:gap-[.1vw]'>
+                            <div className='flex flex-row items-center gap-[1.5vw] md:gap-[.4vw]'>
+                                <p className='text-[2.8vw] md:text-xs font-bold text-gray-700 whitespace-nowrap'>Lens Coating</p>
+                                <TransitionLink to={`/lens/${product._id}`}>
+                                    <img className='w-[4vw] md:w-[.9vw] h-[4vw] md:h-[.9vw] cursor-pointer opacity-60 hover:opacity-100' src={edit} />
+                                </TransitionLink>
+                            </div>
+                            <p className='text-[2.5vw] md:text-[.65vw] text-gray-500'>{item.lensCoating || 'Not selected'}</p>
+                        </div>
+                    </div>
+
+                    <div className='flex flex-row items-center p-[2vw] md:p-[.5vw] border border-gray-200 rounded-[2vw] md:rounded-lg gap-[2vw] md:gap-[.5vw]'>
+                        <div className='flex flex-col gap-[.5vw] md:gap-[.1vw]'>
+                            <div className='flex flex-row items-center gap-[1.5vw] md:gap-[.4vw]'>
+                                <p className='text-[2.8vw] md:text-xs font-bold text-gray-700 whitespace-nowrap'>Lens Thickness</p>
+                                <TransitionLink to={`/lens/${product._id}`}>
+                                    <img className='w-[4vw] md:w-[.9vw] h-[4vw] md:h-[.9vw] cursor-pointer opacity-60 hover:opacity-100' src={edit} />
+                                </TransitionLink>
+                            </div>
+                            <p className='text-[2.5vw] md:text-[.65vw] text-gray-500'>
+                                {item.lensThickness ? `Index ${lensThicknessMap[item.lensThickness]} (${item.lensThickness})` : 'Not selected'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className='flex flex-row items-center p-[2vw] md:p-[.5vw] border border-gray-200 rounded-[2vw] md:rounded-lg gap-[2vw] md:gap-[.5vw]'>
+                        <div className='flex flex-col gap-[.5vw] md:gap-[.1vw]'>
+                            <div className='flex flex-row items-center gap-[1.5vw] md:gap-[.4vw]'>
+                                <p className='text-[2.8vw] md:text-xs font-bold text-gray-700 whitespace-nowrap'>Prescription</p>
+                                <TransitionLink to={`/lens/${product._id}`}>
+                                    <img className='w-[4vw] md:w-[.9vw] h-[4vw] md:h-[.9vw] cursor-pointer opacity-60 hover:opacity-100' src={edit} />
+                                </TransitionLink>
+                            </div>
+                            <p className='text-[2.5vw] md:text-[.65vw] text-gray-500'>
+                                {item.prescriptionId ? (filteredPrescription[0]?.prescriptionName || 'Linked') : 'Not selected'}
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default CartItem;
