@@ -67,6 +67,11 @@ const LensIcon = () => (
     <circle cx="15" cy="12" r="5" />
   </svg>
 );
+const InfoIcon = () => (
+  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
 const TruckIcon = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -90,6 +95,8 @@ const OrderManagement = () => {
 
   const [drawer, setDrawer]               = useState(null);   // selected order for side panel
   const [lensModal, setLensModal]         = useState(null);   // order for lens options modal
+  const [specModal, setSpecModal]         = useState(null);   // { snap, productId, fetched }
+  const [specLoading, setSpecLoading]     = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);   // order id pending deletion
   const [deleting, setDeleting]           = useState(false);
   const [statusUpdating, setStatusUpdating] = useState(false);
@@ -102,6 +109,22 @@ const OrderManagement = () => {
 
   // Reset tracking whenever a different order is opened
   useEffect(() => { setTrackingData(null); }, [drawer?._id]);
+
+  const openSpecModal = async (item) => {
+    const snap = item.productSnapshot || {};
+    const pid  = item.productId?._id || item.productId;
+    setSpecModal({ snap, productId: pid, fetched: null });
+    if (!pid) return;
+    setSpecLoading(true);
+    try {
+      const { data } = await axios.get(`${baseURL}/api/product/${pid}`, { withCredentials: true });
+      setSpecModal(prev => prev ? { ...prev, fetched: data } : prev);
+    } catch {
+      // show snapshot-only if fetch fails
+    } finally {
+      setSpecLoading(false);
+    }
+  };
 
   const fetchTracking = async (orderId) => {
     setTrackingLoading(true);
@@ -432,7 +455,16 @@ const OrderManagement = () => {
                               <p className="text-xs text-gray-400">Size: <span className="font-medium text-gray-600">{item.size}</span></p>
                             )}
                           </div>
-                          <p className="text-sm font-semibold text-gray-700 shrink-0">{formatPrice(item.price * item.quantity)}</p>
+                          <div className="flex flex-col items-end gap-1.5 shrink-0">
+                            <p className="text-sm font-semibold text-gray-700">{formatPrice(item.price * item.quantity)}</p>
+                            <button
+                              onClick={() => openSpecModal(item)}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-full transition-colors"
+                              title="View product specifications"
+                            >
+                              <InfoIcon /> Specs
+                            </button>
+                          </div>
                         </div>
 
                         {/* Lens options */}
@@ -608,6 +640,118 @@ const OrderManagement = () => {
                 <TrashIcon />
                 Delete this order
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Product Spec Modal ─────────────────────────────────────────── */}
+      {specModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setSpecModal(null)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[85vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wider font-medium">Product Snapshot</p>
+                <p className="font-bold text-gray-800 text-base leading-tight">{specModal.snap.modelTitle || specModal.snap.modelName || 'Product'}</p>
+              </div>
+              <button onClick={() => setSpecModal(null)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
+                <XIcon />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
+              {/* Snapshot basics */}
+              <section>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Order Snapshot</p>
+                <div className="flex gap-4">
+                  {specModal.snap.images?.[0] && (
+                    <img src={specModal.snap.images[0]} alt="" className="w-20 h-20 rounded-xl object-cover shrink-0 border border-gray-100" />
+                  )}
+                  <div className="bg-gray-50 rounded-xl p-3 flex-1 space-y-1.5 text-xs">
+                    {specModal.snap.modelName  && <Row label="Model"    value={specModal.snap.modelName} />}
+                    {specModal.snap.modelCode  && <Row label="Code"     value={specModal.snap.modelCode} />}
+                    {specModal.snap.brand      && <Row label="Brand"    value={specModal.snap.brand} />}
+                    {specModal.snap.category   && <Row label="Category" value={<span className="capitalize">{specModal.snap.category}</span>} />}
+                    {specModal.snap.price != null && <Row label="Price at order" value={<span className="font-bold text-gray-900">{formatPrice(specModal.snap.price)}</span>} />}
+                  </div>
+                </div>
+              </section>
+
+              {/* Full product specs from live data */}
+              {specLoading && (
+                <div className="flex items-center gap-2 text-gray-400 text-xs py-2">
+                  <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+                  Loading full specifications…
+                </div>
+              )}
+
+              {specModal.fetched && (() => {
+                const p = specModal.fetched;
+                const hasFrame   = p.frameAttributes?.length   > 0;
+                const hasLens    = p.lensAttributes?.length    > 0;
+                const hasGeneral = p.generalAttributes?.length > 0;
+                return (
+                  <div className="space-y-4">
+                    {/* Core details */}
+                    <section>
+                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Details</p>
+                      <div className="bg-gray-50 rounded-xl p-3 space-y-1.5 text-xs">
+                        {p.gender      && <Row label="Gender"   value={p.gender} />}
+                        {p.rx != null  && <Row label="Rx"       value={p.rx ? 'Yes (prescription required)' : 'No'} />}
+                        {p.size?.length > 0 && <Row label="Sizes" value={p.size.join(', ')} />}
+                        {p.description && (
+                          <div className="pt-1.5 border-t border-gray-200 mt-1.5">
+                            <p className="text-gray-400 text-[10px] mb-0.5">Description</p>
+                            <p className="text-gray-700 leading-relaxed">{p.description}</p>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+
+                    {/* Frame attributes */}
+                    {hasFrame && (
+                      <section>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Frame Specifications</p>
+                        <div className="bg-gray-50 rounded-xl p-3 space-y-1.5 text-xs">
+                          {p.frameAttributes.map((a, i) => (
+                            <Row key={i} label={a.name} value={a.value} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+
+                    {/* Lens attributes */}
+                    {hasLens && (
+                      <section>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Lens Specifications</p>
+                        <div className="bg-gray-50 rounded-xl p-3 space-y-1.5 text-xs">
+                          {p.lensAttributes.map((a, i) => (
+                            <Row key={i} label={a.name} value={a.value} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+
+                    {/* General attributes */}
+                    {hasGeneral && (
+                      <section>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">General Specifications</p>
+                        <div className="bg-gray-50 rounded-xl p-3 space-y-1.5 text-xs">
+                          {p.generalAttributes.map((a, i) => (
+                            <Row key={i} label={a.name} value={a.value} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+
+                    {!hasFrame && !hasLens && !hasGeneral && (
+                      <p className="text-xs text-gray-400 italic">No additional specifications on record.</p>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
