@@ -15,7 +15,7 @@ import {toTitleCase} from '../../../shared/pipes/strFormatting';
 
 export default function ProductDescription({productToDisplay}){
     const [selectedSize, setSelectedSize] = useState('');
-    const [isInWishlist, setIsInWishlist] = useState(false);
+    const [wishlistIds, setWishlistIds] = useState(new Set());
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [similarProducts, setSimilarProducts] = useState([]);
@@ -138,7 +138,7 @@ export default function ProductDescription({productToDisplay}){
                     const response = await axios.get(`${baseURL}/api/user/wishlist/${user._id}`, {
                         withCredentials: true
                     });
-                    setIsInWishlist(response.data.wishlist.some(item => item._id === productToDisplay._id));
+                    setWishlistIds(new Set(response.data.wishlist.map(item => item._id)));
                 } catch (error) {
                     console.error('Error checking wishlist:', error);
                 }
@@ -215,37 +215,22 @@ export default function ProductDescription({productToDisplay}){
         }
     };
 
-    const handleWishlist = async () => {
+    const handleWishlist = async (productId = productToDisplay._id) => {
         if (!isAuthenticated) {
             navigate('/login');
             return;
         }
-
-        setLoading(true);
+        const inWishlist = wishlistIds.has(productId);
         try {
-            if (isInWishlist) {
-                // Remove from wishlist
-                await axios.post(`${baseURL}/api/user/wishlist/remove`, {
-                    userId: user._id,
-                    productId: productToDisplay._id
-                }, {
-                    withCredentials: true
-                });
-                setIsInWishlist(false);
+            if (inWishlist) {
+                await axios.post(`${baseURL}/api/user/wishlist/remove`, { userId: user._id, productId }, { withCredentials: true });
+                setWishlistIds(prev => { const next = new Set(prev); next.delete(productId); return next; });
             } else {
-                // Add to wishlist
-                await axios.post(`${baseURL}/api/user/wishlist/add`, {
-                    userId: user._id,
-                    productId: productToDisplay._id
-                }, {
-                    withCredentials: true
-                });
-                setIsInWishlist(true);
+                await axios.post(`${baseURL}/api/user/wishlist/add`, { userId: user._id, productId }, { withCredentials: true });
+                setWishlistIds(prev => new Set([...prev, productId]));
             }
         } catch (error) {
             console.error('Wishlist operation error:', error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -298,11 +283,11 @@ export default function ProductDescription({productToDisplay}){
                     <div className='px-[4vw] md:px-[16px] py-[2vw] md:py-[8px] rounded-[5vw] md:rounded-[1.25vw] text-center line-clamp-1 whitespace-nowrap md:min-w-[7.125vw] flex-shrink-0 border-[1px] border-black text-tinyTextPhone md:text-tinyText select-none font-medium' key={index}>{toTitleCase(tag)}</div>
                     ))}
                 </div>
-                <button onClick={handleWishlist} disabled={loading} className='flex-shrink-0'>
-                    <img 
-                        className='w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw]' 
-                        src={isInWishlist ? WishListIconFilled : WishListIcon}
-                        alt={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                <button onClick={() => handleWishlist()} className='flex-shrink-0'>
+                    <img
+                        className={`w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw] transition-all duration-200 ${!wishlistIds.has(productToDisplay._id) ? 'hover:brightness-0' : ''}`}
+                        src={wishlistIds.has(productToDisplay._id) ? WishListIconFilled : WishListIcon}
+                        alt={wishlistIds.has(productToDisplay._id) ? "Remove from Wishlist" : "Add to Wishlist"}
                     />
                 </button>
             </div>
@@ -625,54 +610,59 @@ export default function ProductDescription({productToDisplay}){
             <p className='text-regularTextPhone md:text-regularText'>You might like these products too....</p>
             
             <div className='grid grid-cols-2 md:grid-cols-4 gap-[3vw] md:gap-[1vw]'>
-                {similarProducts.map((product, index) => (
-                    <TransitionLink to={`/product/${product._id}`} key={product._id}>
-                        <div className='relative bg-white rounded-[2.5vw] md:rounded-[10px] overflow-hidden border border-gray-200'>
-                            <div className='relative aspect-w-1 aspect-h-1'>
-                                <img 
-                                    src={product.images[0]} 
-                                    alt={product.modelTitle}
-                                    className='w-full h-full object-cover clickable'
-                                />
-                                <button 
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        handleWishlist(product._id);
-                                    }}
-                                    className='absolute top-[2vw] md:top-2 right-[2vw] md:right-2'
-                                >
-                                    <img 
-                                        src={isInWishlist ? WishListIconFilled : WishListIcon}
-                                        alt="wishlist"
-                                        className='w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw]'
+                {similarProducts.map((product) => {
+                    const inWishlist = wishlistIds.has(product._id);
+                    return (
+                        <TransitionLink to={`/product/${product._id}`} key={product._id}>
+                            <div className='relative bg-white rounded-[2.5vw] md:rounded-[10px] overflow-hidden border border-gray-200'>
+                                <div className='relative aspect-w-1 aspect-h-1'>
+                                    <img
+                                        src={product.images[0]}
+                                        alt={product.modelTitle}
+                                        className='w-full h-full object-cover clickable'
                                     />
-                                </button>
-                            </div>
-                            <div className='p-[3vw] md:p-[1vw]'>
-                                <div className='flex items-center justify-between mb-[1vw] md:mb-1'>
-                                    <span className='font-medium text-smallTextPhone md:text-regularText'>{product.brand}</span>
-                                    <span className='text-tinyTextPhone md:text-sm'>{product.review?.length > 0 ? `${renderStars(product.review.reduce((acc, item) => acc + item.rating, 0) / product.review.length)} • ${product.review.length}` : "No Reviews"}</span>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleWishlist(product._id);
+                                        }}
+                                        className='absolute top-[2vw] md:top-2 right-[2vw] md:right-2'
+                                    >
+                                        <img
+                                            src={inWishlist ? WishListIconFilled : WishListIcon}
+                                            alt="wishlist"
+                                            className={`w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw] transition-all duration-200 ${!inWishlist ? 'hover:brightness-0' : ''}`}
+                                        />
+                                    </button>
                                 </div>
-                                <h3 className='font-bold text-h6TextPhone md:text-h6Text mb-[1vw] md:mb-1'>{product.modelTitle}</h3>
-                                <p className='text-tinyTextPhone md:text-sm text-gray-600'>{product.modelName}</p>
-                                <div className='mt-[2vw] md:mt-2'>
-                                    {product.discount > 0 ? (
-                                        <>
-                                            <span className='font-bold text-smallTextPhone md:text-regularText'>{formatINR(product.discount)}</span>
-                                            <span className='ml-2 text-tinyTextPhone md:text-sm line-through text-gray-500'>{formatINR(product.price)}</span>
-                                        </>
-                                    ) : (
-                                        <span className='font-bold text-smallTextPhone md:text-regularText'>{formatINR(product.price)}</span>
-                                    )}
+                                <div className='p-[3vw] md:p-[1vw]'>
+                                    <p className='text-tinyTextPhone md:text-xs text-gray-500 mb-[1vw] md:mb-0.5'>{product.brand}</p>
+                                    <h3 className='font-bold text-h6TextPhone md:text-h6Text mb-[0.5vw] md:mb-0.5 line-clamp-1'>{product.modelName}</h3>
+                                    <p className='text-tinyTextPhone md:text-xs text-gray-500 mb-[1vw] md:mb-1 line-clamp-1'>{product.modelTitle}</p>
+                                    <div className='flex items-center justify-between mb-[1vw] md:mb-1'>
+                                        <div>
+                                            {product.discount > 0 ? (
+                                                <>
+                                                    <span className='font-bold text-smallTextPhone md:text-regularText'>{formatINR(product.discount)}</span>
+                                                    <span className='ml-1 text-tinyTextPhone md:text-xs line-through text-gray-400'>{formatINR(product.price)}</span>
+                                                </>
+                                            ) : (
+                                                <span className='font-bold text-smallTextPhone md:text-regularText'>{formatINR(product.price)}</span>
+                                            )}
+                                        </div>
+                                        <span className='text-tinyTextPhone md:text-xs text-gray-400'>
+                                            {product.review?.length > 0 ? `${renderStars(product.review.reduce((acc, r) => acc + r.rating, 0) / product.review.length)} ${product.review.length}` : ''}
+                                        </span>
+                                    </div>
+                                    <button className='w-full py-[2vw] md:py-1.5 bg-btngrery rounded-[8vw] md:rounded-full text-smallTextPhone md:text-sm font-medium hover:bg-gray-200 transition-colors'>
+                                        Add To Cart
+                                    </button>
                                 </div>
-                                <button className='w-full mt-[2vw] md:mt-2 py-[2vw] md:py-2 bg-btngrery rounded-[8vw] md:rounded-full text-smallTextPhone md:text-sm font-medium hover:bg-gray-200 transition-colors'>
-                                    Add To Cart
-                                </button>
                             </div>
-                        </div>
-                    </TransitionLink>
-                ))}
+                        </TransitionLink>
+                    );
+                })}
             </div>
         </div>
         </div>

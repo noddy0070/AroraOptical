@@ -83,10 +83,10 @@ export default function Item({product}) {
                         className='absolute top-[2vw] right-[2vw] md:hidden bg-white/80 backdrop-blur-sm rounded-full p-[2vw] shadow-md z-10'
                         style={{ touchAction: 'manipulation' }}
                       >
-                        <img 
-                          src={isInWishlist ? wishListFilled : wishList} 
+                        <img
+                          src={isInWishlist ? wishListFilled : wishList}
                           alt='wishlist'
-                          className='w-[5vw] h-[5vw]'
+                          className={`w-[5vw] h-[5vw] transition-all duration-200 ${!isInWishlist ? 'hover:brightness-0' : ''}`}
                         />
                       </button>
                     </div>
@@ -104,10 +104,10 @@ export default function Item({product}) {
                           disabled={loading}
                           className='hidden md:block flex-shrink-0 ml-2'
                         >
-                          <img 
-                            src={isInWishlist ? wishListFilled : wishList} 
+                          <img
+                            src={isInWishlist ? wishListFilled : wishList}
                             alt='wishlist'
-                            className='w-5 h-5'
+                            className={`w-5 h-5 transition-all duration-200 ${!isInWishlist ? 'hover:brightness-0' : ''}`}
                           />
                         </button>
                       </div>
