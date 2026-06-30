@@ -452,32 +452,17 @@ export const createPhonepeOrder = async (req, res) => {
  
 
 
-    const mappedProducts = [];
-
+    // Validate each item before building
     for (const item of products) {
-      // Validate item structure
       if (!item.productId || !item.quantity || item.quantity <= 0) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Each product must have productId and valid quantity' 
+        return res.status(400).json({
+          success: false,
+          message: 'Each product must have productId and valid quantity'
         });
       }
-      // Map product to order model format
-      const mappedProduct = {
-        productId: item.productId?._id || item.productId || item._id,
-        quantity: item.quantity,
-        price: item.totalAmount,
-        prescriptionId: item.prescriptionId || null,
-        lensOptions: {
-          lensType: item.lensType=="None"? null : item.lensType,
-          lensCoating: item.lensCoating=="None"? null : item.lensCoating,
-          lensThickness: item.lensThickness=="None"? null : item.lensThickness,
-          lensTint:item.lensTint=="None"? null : item.lensTint
-        }
-      };
-
-      mappedProducts.push(mappedProduct);
     }
+
+    const mappedProducts = await buildOrderProducts(products);
 
     const finalAmountPaise = Math.round(Number(totalAmount));
     if (!Number.isFinite(finalAmountPaise) || finalAmountPaise < 100) {
@@ -616,16 +601,17 @@ export const getOrderStatus = async (req, res) => {
       // Find the user and update their cart and orders
       const user = await User.findById(order.userId);
       if (user) {
-        const cartItems = [...user.cart];
+        const enrichedItems = await attachProductSnapshots([...user.cart]);
         user.cart = [];
         user.orders.push({
           orderId: order._id,
           date: new Date(),
-          items: cartItems,
+          items: enrichedItems,
         });
         await user.save();
       }
 
+      reduceStockForOrder(order.products); // non-blocking
       const phonepeCustomerName = order.shippingAddress?.fullName || order.shippingAddress?.name || 'Customer';
       createOrderNotification(order, phonepeCustomerName); // non-blocking
       triggerDelhiveryForOrder(order); // non-blocking
@@ -730,27 +716,89 @@ const triggerDelhiveryForOrder = async (order) => {
   }
 };
 
-// --- Shared helper to build a cart snapshot from cart items ---
-const mapCartToProducts = (cartItems) =>
-  cartItems.map((item) => ({
-    productId: item.productId?._id || item.productId,
-    quantity: item.quantity,
-    price: item.totalAmount,
-    prescriptionId: item.prescriptionId || null,
-    lensOptions: {
-      lensType:      item.lensType      === 'None' ? null : item.lensType,
-      lensCoating:   item.lensCoating   === 'None' ? null : item.lensCoating,
-      lensThickness: item.lensThickness === 'None' ? null : item.lensThickness,
-      lensTint:      item.lensTint      === 'None' ? null : item.lensTint,
-    },
-  }));
+// --- Build a product snapshot from a Product document ---
+const makeProductSnapshot = (product) => ({
+  modelTitle: product.modelTitle,
+  modelName:  product.modelName,
+  modelCode:  product.modelCode  || null,
+  brand:      product.brand,
+  category:   product.category,
+  images:     product.images    || [],
+  price:      product.price,
+});
+
+// --- Build order products array, embedding a snapshot of each product at purchase time ---
+const buildOrderProducts = async (cartItems) => {
+  const products = [];
+  for (const item of cartItems) {
+    const productId = item.productId?._id || item.productId || item._id;
+    let productSnapshot = null;
+    try {
+      const product = await Product.findById(productId).lean();
+      if (product) productSnapshot = makeProductSnapshot(product);
+    } catch (err) {
+      console.error('[Snapshot] Failed to fetch product snapshot for', productId, ':', err.message);
+    }
+    products.push({
+      productId,
+      quantity: item.quantity,
+      price: item.totalAmount,
+      prescriptionId: item.prescriptionId || null,
+      size: item.size || null,
+      productSnapshot,
+      lensOptions: {
+        lensType:      item.lensType      === 'None' ? null : item.lensType,
+        lensCoating:   item.lensCoating   === 'None' ? null : item.lensCoating,
+        lensThickness: item.lensThickness === 'None' ? null : item.lensThickness,
+        lensTint:      item.lensTint      === 'None' ? null : item.lensTint,
+      },
+    });
+  }
+  return products;
+};
+
+// --- Enrich cart items with product snapshots before saving to user.orders.items ---
+const attachProductSnapshots = async (cartItems) => {
+  return Promise.all(
+    cartItems.map(async (item) => {
+      const productId = item.productId?._id || item.productId;
+      const plain = item.toObject ? item.toObject() : { ...item };
+      try {
+        const product = await Product.findById(productId).lean();
+        if (product) plain.productSnapshot = makeProductSnapshot(product);
+      } catch (err) {
+        console.error('[Snapshot] Failed to attach snapshot:', err.message);
+      }
+      return plain;
+    })
+  );
+};
+
+// --- Reduce per-size stock after a confirmed order (fire-and-forget) ---
+const reduceStockForOrder = async (products) => {
+  for (const item of products) {
+    if (!item.size) continue;
+    try {
+      const product = await Product.findById(item.productId);
+      if (!product) continue;
+      const sizeIndex = product.size.indexOf(item.size);
+      if (sizeIndex === -1) continue;
+      const current = Number(product.stock[sizeIndex]) || 0;
+      product.stock[sizeIndex] = Math.max(0, current - item.quantity);
+      product.markModified('stock');
+      await product.save();
+    } catch (err) {
+      console.error('[Stock] Failed to reduce stock for product', item.productId, ':', err.message);
+    }
+  }
+};
 
 const saveOrderToUser = async (userId, orderId) => {
   const user = await User.findById(userId);
   if (!user) return;
-  const cartSnapshot = [...user.cart];
+  const enrichedItems = await attachProductSnapshots([...user.cart]);
   user.cart = [];
-  user.orders.push({ orderId, date: new Date(), items: cartSnapshot });
+  user.orders.push({ orderId, date: new Date(), items: enrichedItems });
   await user.save();
 };
 
@@ -773,7 +821,7 @@ export const createCODOrder = async (req, res) => {
 
     const order = new Order({
       userId,
-      products: mapCartToProducts(cartItems),
+      products: await buildOrderProducts(cartItems),
       totalPrice: finalAmountRupees,
       finalAmount: finalAmountRupees,
       deliveryCharges: Number(deliveryCharges) || 0,
@@ -790,6 +838,7 @@ export const createCODOrder = async (req, res) => {
 
     await order.save();
     await saveOrderToUser(userId, order._id);
+    reduceStockForOrder(order.products); // non-blocking
 
     const customerName = shippingAddress.fullName || shippingAddress.name || 'Customer';
     createOrderNotification(order, customerName); // non-blocking
@@ -856,7 +905,7 @@ export const createMockOrder = async (req, res) => {
 
     const order = new Order({
       userId,
-      products: mapCartToProducts(cartItems),
+      products: await buildOrderProducts(cartItems),
       totalPrice: finalAmountRupees,
       finalAmount: finalAmountRupees,
       shippingAddress,
@@ -872,6 +921,7 @@ export const createMockOrder = async (req, res) => {
 
     await order.save();
     await saveOrderToUser(userId, order._id);
+    reduceStockForOrder(order.products); // non-blocking
 
     const mockCustomerName = shippingAddress.fullName || shippingAddress.name || 'Customer';
     createOrderNotification(order, mockCustomerName); // non-blocking

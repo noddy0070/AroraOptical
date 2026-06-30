@@ -107,7 +107,11 @@ const userSchema = new mongoose.Schema({
         totalAmount:{
           type: Number,
           required: true,
-        }
+        },
+        size: {
+          type: String,
+          required: false,
+        },
         },
     ],
     
@@ -169,7 +173,20 @@ const userSchema = new mongoose.Schema({
         totalAmount: {
           type: Number,
           required: true,
-        }
+        },
+        size: {
+          type: String,
+          required: false,
+        },
+        productSnapshot: {
+          modelTitle:  { type: String },
+          modelName:   { type: String },
+          modelCode:   { type: String },
+          brand:       { type: String },
+          category:    { type: String },
+          images:      [{ type: String }],
+          price:       { type: Number },
+        },
       }]
     },
   ],

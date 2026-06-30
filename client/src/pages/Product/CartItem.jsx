@@ -78,6 +78,11 @@ const CartItem = ({ item, handleRemoveItem, updateQuantity }) => {
                         <p className='text-[2.5vw] md:text-[.65vw] text-gray-400'>{product.modelCode}</p>
                     )}
 
+                    {/* Size */}
+                    {item.size && (
+                        <p className='text-[2.5vw] md:text-[.65vw] text-gray-500'>Size: <span className='font-medium'>{item.size}</span></p>
+                    )}
+
                     {/* Price per unit */}
                     <p className='text-smallTextPhone md:text-sm font-bold text-gray-900 mt-[1vw] md:mt-[.25vw]'>
                         {formatINR(product.price)}

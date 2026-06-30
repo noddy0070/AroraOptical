@@ -93,26 +93,29 @@ export const deleteUser = async (req, res, next) => {
 // Cart Controllers
 export const addToCart = async (req, res) => {
   try {
-    const { userId, productId, quantity = 1, lensType='None', lensCoating='None', lensThickness='None', prescriptionId, totalAmount} = req.body;
-    
+    const { userId, productId, quantity = 1, lensType='None', lensCoating='None', lensThickness='None', prescriptionId, totalAmount, size} = req.body;
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Check if product already exists in cart with same lens options
+    // Check if product already exists in cart with same lens options and size
     const existingCartItem = user.cart.find(item =>
-      item.productId.toString() === productId
+      item.productId.toString() === productId &&
+      item.lensType == lensType &&
+      item.lensCoating == lensCoating &&
+      item.lensThickness == lensThickness &&
+      item.size == size
     );
 
-    if (existingCartItem && existingCartItem.lensType==lensType && existingCartItem.lensCoating==lensCoating && existingCartItem.lensThickness==lensThickness) {
+    if (existingCartItem) {
       existingCartItem.quantity += quantity;
     } else {
-      if(prescriptionId){
-        user.cart.push({ productId, quantity, lensType, lensCoating, lensThickness, prescriptionId, totalAmount });
-      }else{
-        user.cart.push({ productId, quantity, lensType, lensCoating, lensThickness, totalAmount });
-      }
+      const cartEntry = { productId, quantity, lensType, lensCoating, lensThickness, totalAmount };
+      if (prescriptionId) cartEntry.prescriptionId = prescriptionId;
+      if (size) cartEntry.size = size;
+      user.cart.push(cartEntry);
     }
     await user.save();
     res.status(200).json({ success: true, message: 'Product added to cart successfully' });

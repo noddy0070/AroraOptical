@@ -26,6 +26,19 @@ const orderSchema = new mongoose.Schema({
         ref: 'Prescription', // Reference to the Prescription model
         required: false, // Optional - only required for Rx products
       },
+      size: {
+        type: String,
+        required: false,
+      },
+      productSnapshot: {
+        modelTitle:  { type: String },
+        modelName:   { type: String },
+        modelCode:   { type: String },
+        brand:       { type: String },
+        category:    { type: String },
+        images:      [{ type: String }],
+        price:       { type: Number },
+      },
       // Lens customization options (if applicable)
       lensOptions: {
         lensType: { type: String, required: false },

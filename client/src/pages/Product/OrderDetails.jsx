@@ -143,17 +143,21 @@ const OrderDetails = () => {
               <h2 className="text-h4TextPhone md:text-xl font-bold mb-[4vw] md:mb-4">Order Items</h2>
               <div className="space-y-[6vw] md:space-y-6">
                 {order.products.map((item, index) => {
+                  const snap = item.productSnapshot || {};
                   const lens = item.lensOptions || {};
                   const hasLens = lens.lensType && lens.lensType !== 'None';
                   const rx = item.prescriptionId;
+                  const modelName  = snap.modelName  || item.productId?.modelName;
+                  const modelCode  = snap.modelCode  || item.productId?.modelCode;
+                  const image      = snap.images?.[0] || item.productId?.images?.[0];
                   return (
                     <div key={index} className="border border-gray-100 rounded-[3vw] md:rounded-xl overflow-hidden">
                       {/* Product row */}
                       <div className="flex flex-row items-center gap-[3vw] md:gap-4 p-[3vw] md:p-4">
                         <Link to={`/product/${item.productId?._id}`} className="shrink-0" onClick={e => e.stopPropagation()}>
                           <img
-                            src={item.productId?.images?.[0]}
-                            alt={item.productId?.modelName}
+                            src={image}
+                            alt={modelName}
                             className="w-[18vw] h-[18vw] md:w-16 md:h-16 object-cover rounded-[2vw] md:rounded-lg hover:opacity-80 transition-opacity"
                           />
                         </Link>
@@ -162,10 +166,13 @@ const OrderDetails = () => {
                             to={`/product/${item.productId?._id}`}
                             className="font-semibold text-regularTextPhone md:text-regularText hover:text-indigo-600 hover:underline underline-offset-2 transition-colors"
                           >
-                            {item.productId?.modelName}
+                            {modelName}
                           </Link>
-                          <p className="text-smallTextPhone md:text-sm text-gray-500">{item.productId?.modelCode}</p>
+                          {modelCode && <p className="text-smallTextPhone md:text-sm text-gray-500">{modelCode}</p>}
                           <p className="text-tinyTextPhone md:text-xs text-gray-400 mt-[1vw] md:mt-0.5">Qty: {item.quantity}</p>
+                          {item.size && (
+                            <p className="text-tinyTextPhone md:text-xs text-gray-400">Size: {item.size}</p>
+                          )}
                         </div>
                         <p className="font-semibold text-regularTextPhone md:text-regularText shrink-0">₹{(item.price * item.quantity).toLocaleString()}</p>
                       </div>

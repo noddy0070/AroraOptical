@@ -94,7 +94,9 @@ export default function Orders() {
 
                     const firstItem = orderItem.items?.[0];
                     const extraCount = (orderItem.items?.length || 1) - 1;
-                    const image = firstItem?.productId?.images?.[0] || productPlaceholder;
+                    const snap = firstItem?.productSnapshot || {};
+                    const image = snap.images?.[0] || firstItem?.productId?.images?.[0] || productPlaceholder;
+                    const productTitle = snap.modelTitle || firstItem?.productId?.modelTitle || snap.modelName || firstItem?.productId?.modelName;
                     const statusStyle = STATUS_STYLES[order.status] || 'bg-gray-100 text-gray-600';
 
                     return (
@@ -122,10 +124,16 @@ export default function Orders() {
 
                                 <p className='text-[2.8vw] md:text-xs text-gray-400'>{formatDate(orderItem.date)}</p>
 
-                                {firstItem?.productId && (
+                                {productTitle && (
                                     <p className='text-smallTextPhone md:text-sm text-gray-700 line-clamp-1'>
-                                        {firstItem.productId.modelTitle || firstItem.productId.modelName}
+                                        {productTitle}
                                         {extraCount > 0 && <span className='text-gray-400'> +{extraCount} more</span>}
+                                    </p>
+                                )}
+
+                                {firstItem?.size && (
+                                    <p className='text-[2.5vw] md:text-xs text-gray-400'>
+                                        Size: {firstItem.size}
                                     </p>
                                 )}
 

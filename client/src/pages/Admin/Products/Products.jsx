@@ -211,11 +211,11 @@ const Products = () => {
                           )}
                           <div className="min-w-0">
                             <p className="font-semibold text-gray-800 truncate max-w-[12rem]">{product.modelName}</p>
-                            {product.modelCode && <p className="text-[11px] text-gray-400 mt-0.5">{product.modelCode}</p>}
+                            {product.modelCode && <p className="text-[11px] text-gray-400 mt-0.5">{product.modelTitle}</p>}
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-3.5 text-gray-500 text-xs whitespace-nowrap">{product.modelTitle || '—'}</td>
+                      <td className="px-5 py-3.5 text-gray-500 text-xs whitespace-nowrap">{product.modelCode || '—'}</td>
                       <td className="px-5 py-3.5 text-gray-700 text-xs font-medium whitespace-nowrap">{product.brand || '—'}</td>
                       <td className="px-5 py-3.5 whitespace-nowrap"><CategoryBadge cat={product.category} /></td>
                       <td className="px-5 py-3.5 whitespace-nowrap">

@@ -401,16 +401,20 @@ const OrderManagement = () => {
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Items</h4>
                 <div className="space-y-3">
                   {drawer.products.map((item, i) => {
+                    const snap = item.productSnapshot || {};
                     const lens = item.lensOptions || {};
                     const hasLens = lens.lensType && lens.lensType !== 'None';
                     const rx = item.prescriptionId;
+                    const modelName = snap.modelName || item.productId?.modelName || 'Product';
+                    const modelCode = snap.modelCode || item.productId?.modelCode;
+                    const image     = snap.images?.[0] || item.productId?.images?.[0];
                     return (
                       <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
                         {/* Product row */}
                         <div className="flex items-center gap-3 p-3 bg-gray-50">
-                          {item.productId?.images?.[0] && (
-                            <Link to={`/product/${item.productId._id}`} target="_blank" rel="noreferrer" className="shrink-0">
-                              <img src={item.productId.images[0]} alt="" className="w-12 h-12 rounded-lg object-cover hover:opacity-80 transition-opacity" />
+                          {image && (
+                            <Link to={`/product/${item.productId?._id}`} target="_blank" rel="noreferrer" className="shrink-0">
+                              <img src={image} alt="" className="w-12 h-12 rounded-lg object-cover hover:opacity-80 transition-opacity" />
                             </Link>
                           )}
                           <div className="flex-1 min-w-0">
@@ -420,10 +424,13 @@ const OrderManagement = () => {
                               rel="noreferrer"
                               className="font-semibold text-gray-800 text-sm truncate hover:text-indigo-600 hover:underline underline-offset-2 transition-colors"
                             >
-                              {item.productId?.modelName || 'Product'}
+                              {modelName}
                             </Link>
-                            <p className="text-xs text-gray-400">{item.productId?.modelCode}</p>
+                            {modelCode && <p className="text-xs text-gray-400">{modelCode}</p>}
                             <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
+                            {item.size && (
+                              <p className="text-xs text-gray-400">Size: <span className="font-medium text-gray-600">{item.size}</span></p>
+                            )}
                           </div>
                           <p className="text-sm font-semibold text-gray-700 shrink-0">{formatPrice(item.price * item.quantity)}</p>
                         </div>

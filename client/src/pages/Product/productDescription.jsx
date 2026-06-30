@@ -14,11 +14,7 @@ import { mapBrandToLogo, mapBrandToDescription } from '@/data/brandMap';
 import {toTitleCase} from '../../../shared/pipes/strFormatting';
 
 export default function ProductDescription({productToDisplay}){
-    // const [selectedSize, setSelectedSize] = useState('');
-    // const [isHovered, setIsHovered] = useState(false);
-    // const [isDetailClicked, setIsDetailClicked] = useState(true);
-    // const [isShipingClicked, setIsShipingClicked] = useState(true);
-    // const [isReturnClicked, setIsReturnClicked] = useState(true);
+    const [selectedSize, setSelectedSize] = useState('');
     const [isInWishlist, setIsInWishlist] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -80,9 +76,6 @@ export default function ProductDescription({productToDisplay}){
     const mainImageIndex = hoveredIndex !== null ? hoveredIndex : selectedIndex;
     const mainImage = images[mainImageIndex];
 
-    const handleSizeChange = (event) => {
-      setSelectedSize(event.target.value);
-    };
 
 
     const [reviews, setReviews] = useState(productToDisplay.reviews || []);
@@ -180,22 +173,31 @@ export default function ProductDescription({productToDisplay}){
         fetchSimilarProducts();
     }, [productToDisplay]);
 
+    const hasSizes = productToDisplay.size?.length > 0;
+
     const handleAddToCart = async () => {
         if (!isAuthenticated) {
             navigate('/login');
             return;
         }
 
+        if (hasSizes && !selectedSize) {
+            setError('Please select a size before adding to cart.');
+            return;
+        }
+
         setLoading(true);
         setError('');
-        console.log(productToDisplay);
         try {
-            const response = await axios.post(`${baseURL}/api/user/cart/add`, {
+            const payload = {
                 userId: user._id,
                 productId: productToDisplay._id,
                 quantity: 1,
-                totalAmount: productToDisplay.price
-            }, {
+                totalAmount: productToDisplay.price,
+            };
+            if (selectedSize) payload.size = selectedSize;
+
+            const response = await axios.post(`${baseURL}/api/user/cart/add`, payload, {
                 withCredentials: true
             });
 
@@ -330,53 +332,33 @@ export default function ProductDescription({productToDisplay}){
                 </div>
                 <p className='leading-[150%] text-regularTextPhone md:text-regularText'>{productToDisplay.description}</p>
                 {/* Size block */}
-                <div className='flex flex-col gap-[.5vw]'>
-                    {/* <div className='flex flex-row  '>
-                        <span>Size</span>
-                        <span className='ml-auto underline'>Size chart</span>
-                    </div> */}
-
-                    {/* Custom dropdown menu */}
-                    {/* <div className='relative w-full group ' onClick={()=>setIsHovered(!isHovered)}  >
-                    
-                    <div className="w-full appearance-none rounded-[2vw] focus:outline-none p-[.75vw] border-black border-[1px] cursor-pointer">
-                        <div className='flex flex-row items-center transition-transform ease-in-out '>
-                        <p>{selectedSize || 'Select a size'}</p>
-                        <div className="pointer-events-none absolute right-[1vw] transform transition-transform duration-300 rotate-180     " style={{ transform:isHovered? 'rotate(180deg)':'rotate(0deg)' }}  >
-                    <svg width=".8125vw" height=".5vw" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M7.39819 7.20296C7.17851 7.42263 6.82241 7.42263 6.60274 7.20296L0.867876 1.46808C0.648208 1.24841 0.648208 0.892307 0.867876 0.672632L1.13305 0.407432C1.35271 0.187757 1.70887 0.187757 1.92854 0.407432L7.00046 5.47938L12.0724 0.407432C12.2921 0.187757 12.6482 0.187757 12.8679 0.407432L13.1331 0.672632C13.3527 0.892307 13.3527 1.24841 13.1331 1.46808L7.39819 7.20296Z" fill="black"/>
-                            </svg>
-                    </div>
-                        </div>
-                        
-                        </div>
-
-                        
-                        {isHovered && (
-                            <div
-                            className="absolute w-full bg-white border border-black rounded-[.75vw] hide-scrollbar  z-10"
-                            style={{ maxHeight: '200px', overflowY: 'auto' }}
-                            >
-                            {product.sizes.map((size, index) => (
-                                <div
-                                key={index}
-                                className="p-[.75vw] hover:bg-gray-200 cursor-pointer"
-                                onClick={() => {    
-                                    setSelectedSize(size);
-                                    setIsHovered(false);
-                                    set
-                                }}
+                {hasSizes && (
+                <div className='flex flex-col gap-[2vw] md:gap-[.5vw]'>
+                    <p className='text-regularTextPhone md:text-regularText font-medium'>Select Size</p>
+                    <div className='flex flex-row flex-wrap gap-[2vw] md:gap-[.5vw]'>
+                        {productToDisplay.size.map((size, index) => {
+                            const stockCount = Number(productToDisplay.stock[index]) || 0;
+                            const isOutOfStock = stockCount === 0;
+                            const isSelected = selectedSize === size;
+                            return (
+                                <button
+                                    key={index}
+                                    disabled={isOutOfStock}
+                                    onClick={() => setSelectedSize(size)}
+                                    className={`px-[4vw] md:px-[1vw] py-[2vw] md:py-[.4vw] rounded-[2vw] md:rounded-[6px] border text-regularTextPhone md:text-regularText transition-colors
+                                        ${isOutOfStock ? 'border-gray-200 text-gray-300 bg-gray-50 cursor-not-allowed line-through' : ''}
+                                        ${isSelected && !isOutOfStock ? 'border-black bg-black text-white' : ''}
+                                        ${!isSelected && !isOutOfStock ? 'border-gray-300 text-gray-700 hover:border-black' : ''}
+                                    `}
                                 >
-                                {size}
-                                </div>
-                            ))}
-                            </div>
-                        )}
-
-                    
-                    </div> */}
-                    
+                                    {size}
+                                </button>
+                            );
+                        })}
+                    </div>
+                    {!selectedSize && <p className='text-[2.5vw] md:text-xs text-amber-600'>Please select a size to continue</p>}
                 </div>
+                )}
 
                 {/* Variant block */}
                 <div className='flex flex-col gap-[2vw] md:gap-[.5vw]'>
@@ -419,10 +401,10 @@ export default function ProductDescription({productToDisplay}){
 
                 {/* Buy and add to cart button */}
                 <div className='flex flex-col md:flex-row gap-[3vw] md:gap-[1vw] mx-auto w-full md:w-auto'>
-                     <button 
+                     <button
                         onClick={handleAddToCart}
-                        disabled={loading}
-                        className= {`rounded-[14vw] md:rounded-[3.5vw] h-[16vw] md:h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey disabled:bg-gray-400 text-regularTextPhone md:text-regularText ${productToDisplay.rx?"w-full md:w-[16vw]":"w-full md:w-[32vw]"}`}
+                        disabled={loading || (hasSizes && !selectedSize)}
+                        className= {`rounded-[14vw] md:rounded-[3.5vw] h-[16vw] md:h-[4.25vw] shadow-[0px_2px_4px_rgba(0,_0,_0,_0.25)] text-white bg-darkslategrey disabled:bg-gray-400 disabled:cursor-not-allowed text-regularTextPhone md:text-regularText ${productToDisplay.rx?"w-full md:w-[16vw]":"w-full md:w-[32vw]"}`}
                     >
                         {loading ? 'Adding...' : 'Add to Cart'}
                     </button>
