@@ -1,6 +1,4 @@
-import React from 'react';
 import { IconButton, TitleButton } from '../../../components/button';
-import CategoryPlaceholder from '../../../assets/images/CategoryPlaceholder.png';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import TrendingImg from '../../../assets/images/homePage/Trending.png';

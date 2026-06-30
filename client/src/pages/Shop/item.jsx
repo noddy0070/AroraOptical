@@ -86,7 +86,7 @@ export default function Item({product}) {
                         <img
                           src={isInWishlist ? wishListFilled : wishList}
                           alt='wishlist'
-                          className={`w-[5vw] h-[5vw] transition-all duration-200 ${!isInWishlist ? 'hover:brightness-0' : ''}`}
+                          className={`w-[5vw] h-[5vw] transition-all duration-200 ${!isInWishlist ? 'wishlist-hover' : ''}`}
                         />
                       </button>
                     </div>
@@ -107,7 +107,7 @@ export default function Item({product}) {
                           <img
                             src={isInWishlist ? wishListFilled : wishList}
                             alt='wishlist'
-                            className={`w-5 h-5 transition-all duration-200 ${!isInWishlist ? 'hover:brightness-0' : ''}`}
+                            className={`w-5 h-5 transition-all duration-200 ${!isInWishlist ? 'wishlist-hover' : ''}`}
                           />
                         </button>
                       </div>

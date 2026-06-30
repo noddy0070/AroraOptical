@@ -91,7 +91,7 @@ export default function AccessoriesItem({comapny, price, image, rating, title, c
                         src={isInWishlist ? wishListFilled : wishList}
                         alt='wishlist'
                         loading="lazy"
-                        className={`w-full h-auto transition-all duration-200 ${!isInWishlist ? 'hover:brightness-0' : ''}`}
+                        className={`w-full h-auto transition-all duration-200 ${!isInWishlist ? 'wishlist-hover' : ''}`}
                     />
                 </button>
             </div>

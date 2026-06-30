@@ -1,6 +1,6 @@
-import React,{useState,useEffect,useRef} from 'react';
+import {useState,useEffect,useRef} from 'react';
 import star from '../../../assets/images/star.png';
-import { IconButton, TitleButton } from '../../../components/button';
+import { IconButton } from '../../../components/button';
 import TestimonialImage1 from '../../../assets/images/homePage/testimonial1.png';
 import TestimonialImage2 from '../../../assets/images/homePage/testimonial2.png';
 import TestimonialImage3 from '../../../assets/images/homePage/testimonial3.png';
@@ -62,9 +62,7 @@ export default function Testimonial(){
         setIsMouseDown(false);
     };
     
-        const handleContextMenu = (e) => {
-            e.preventDefault(); // Prevent the right-click context menu      
-        }  
+        
     return (
         <div className='py-[6vw] md:py-[7vw] md:px-[4vw] flex flex-col md:flex-row gap-[6vw] md:gap-[1.5vw] w-full  md:h-[60.8125vw]  '>
              <div className='relative w-full h-[91vw] md:w-[46.6875vw] md:h-[46.8125vw] shadow-[0px_1.9439252614974976px_15.55px_rgba(0,_0,_0,_0.25)]  overflow-hidden rounded-[5.5vw] md:rounded-[3.125vw]'>

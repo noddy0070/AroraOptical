@@ -1,4 +1,4 @@
-import React,{useState,useRef} from 'react';
+import {useState,useRef} from 'react';
 import blog2 from '../../../assets/images/homePage/blog2.webp'
 import blog1 from '../../../assets/images/homePage/blog1.webp'
 import blog3 from '../../../assets/images/homePage/blog3.webp'

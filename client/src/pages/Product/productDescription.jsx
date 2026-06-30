@@ -285,7 +285,7 @@ export default function ProductDescription({productToDisplay}){
                 </div>
                 <button onClick={() => handleWishlist()} className='flex-shrink-0'>
                     <img
-                        className={`w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw] transition-all duration-200 ${!wishlistIds.has(productToDisplay._id) ? 'hover:brightness-0' : ''}`}
+                        className={`w-[8vw] md:w-[1.75vw] h-[8vw] md:h-[1.75vw] transition-all duration-200 ${!wishlistIds.has(productToDisplay._id) ? 'wishlist-hover' : ''}`}
                         src={wishlistIds.has(productToDisplay._id) ? WishListIconFilled : WishListIcon}
                         alt={wishlistIds.has(productToDisplay._id) ? "Remove from Wishlist" : "Add to Wishlist"}
                     />
@@ -632,14 +632,14 @@ export default function ProductDescription({productToDisplay}){
                                         <img
                                             src={inWishlist ? WishListIconFilled : WishListIcon}
                                             alt="wishlist"
-                                            className={`w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw] transition-all duration-200 ${!inWishlist ? 'hover:brightness-0' : ''}`}
+                                            className={`w-[6vw] md:w-[1.5vw] h-[6vw] md:h-[1.5vw] transition-all duration-200 ${!inWishlist ? 'wishlist-hover' : ''}`}
                                         />
                                     </button>
                                 </div>
                                 <div className='p-[3vw] md:p-[1vw]'>
                                     <p className='text-tinyTextPhone md:text-xs text-gray-500 mb-[1vw] md:mb-0.5'>{product.brand}</p>
                                     <h3 className='font-bold text-h6TextPhone md:text-h6Text mb-[0.5vw] md:mb-0.5 line-clamp-1'>{product.modelName}</h3>
-                                    <p className='text-tinyTextPhone md:text-xs text-gray-500 mb-[1vw] md:mb-1 line-clamp-1'>{product.modelTitle}</p>
+                                    <p className='text-tinyTextPhone md:text-xs text-gray-500 mb-[1vw] md:mb-1 line-clamp-1'>{[product.modelCode, product.modelTitle].filter(Boolean).join(' - ')}</p>
                                     <div className='flex items-center justify-between mb-[1vw] md:mb-1'>
                                         <div>
                                             {product.discount > 0 ? (

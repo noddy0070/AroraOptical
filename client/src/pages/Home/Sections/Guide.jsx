@@ -1,4 +1,3 @@
-import React from 'react';
 import stepsPlaceholder from '../../../assets/images/homePage/stepsPlaceholder.webp';
 import { IconButton, TitleButton } from '../../../components/button';
 import { TransitionLink } from '@/Routes/TransitionLink';

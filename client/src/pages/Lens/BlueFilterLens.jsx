@@ -1,4 +1,3 @@
-import React,{useState} from 'react';
 import { CartButton } from '../../components/button';
 import { LensFeatureBox, PriceBreakdown } from '../../components/lensFeatureBox';
 

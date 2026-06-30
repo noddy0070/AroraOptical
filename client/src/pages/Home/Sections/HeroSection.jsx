@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import heroSectionBanner from '../../../assets/images/homePage/homePageBanner.png';
 import heroSection from '../../../assets/images/heroBanner.png';
 import heroSectionBanner2 from '../../../assets/images/newHeader.png';
-import shopBanner1 from '../../../assets/images/shopBanner1.png';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { IconButton, TitleButton } from '../../../components/button';
@@ -33,15 +32,15 @@ const AUTOPLAY_DELAY = 5000;
 
 export default function HeroSection() {
     const [current, setCurrent] = useState(0);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    // const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [loadedSlides, setLoadedSlides] = useState({ 0: false });
     const timerRef = useRef(null);
 
-    useEffect(() => {
-        const handleResize = () => setScreenWidth(window.innerWidth);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    // useEffect(() => {
+    //     const handleResize = () => setScreenWidth(window.innerWidth);
+    //     window.addEventListener('resize', handleResize);
+    //     return () => window.removeEventListener('resize', handleResize);
+    // }, []);
 
     const goTo = useCallback((index) => {
         setCurrent((index + slides.length) % slides.length);
@@ -78,7 +77,6 @@ export default function HeroSection() {
         setLoadedSlides((prev) => ({ ...prev, [index]: true }));
     };
 
-    const isDesktop = screenWidth > 768;
 
     return (
         <div className='relative overflow-hidden mx-[-5vw] bg-offwhitebg md:mx-[-2vw]'>
@@ -99,7 +97,7 @@ export default function HeroSection() {
                                 src={slide.desktop}
                                 alt={`Hero Banner ${i + 1}`}
                                 loading={i === 0 ? 'eager' : 'lazy'}
-                                fetchpriority={i === 0 ? 'high' : 'low'}
+                                fetchPriority={i === 0 ? 'high' : 'low'}
                                 onLoad={() => markLoaded(i)}
                                 style={{ opacity: loadedSlides[i] ? 1 : 0, transition: 'opacity 0.3s', objectPosition: 'center' }}
                             />
@@ -198,7 +196,7 @@ export default function HeroSection() {
                                 src={slide.mobile}
                                 alt={`Hero Banner ${i + 1}`}
                                 loading={i === 0 ? 'eager' : 'lazy'}
-                                fetchpriority={i === 0 ? 'high' : 'low'}
+                                fetchPriority={i === 0 ? 'high' : 'low'}
                                 onLoad={() => markLoaded(i)}
                                 style={{ opacity: loadedSlides[i] ? 1 : 0, transition: 'opacity 0.3s', objectPosition: 'center' }}
                             />
