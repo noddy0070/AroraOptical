@@ -10,10 +10,10 @@
       -ms-overflow-style: none; /* Internet Explorer and Edge */
       scrollbar-width: none; /* Firefox */
   }
-  .wishlist-hover:hover {
-      filter: brightness(0);
-      transition: filter 0.2s ease;
-  }
+}
+
+.wishlist-hover:hover {
+    filter: brightness(0);
 }
 
 input::-webkit-outer-spin-button,

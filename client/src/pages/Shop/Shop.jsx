@@ -23,6 +23,8 @@ export default function Shop({category, audience}) {
     const [error, setError] = useState(null);
     const [activeFilters, setActiveFilters] = useState({Audience:[],Brands:[],Shapes:[],"Frame Type":[],"Frame Material":[],"Colors":[],"Sizes":[]});
     const [clearTrigger, setClearTrigger] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(20);
 
 
     useEffect(() => {
@@ -303,6 +305,11 @@ export default function Shop({category, audience}) {
         setFilteredProducts(filtered);
     }, [products, activeFilters]);
 
+    // Reset to page 1 whenever filters, sort, per-page, or route changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [activeFilters, selectedSort, itemsPerPage, category, audience]);
+
     function formatCategoryName(category) {
         return category
             .split('-')
@@ -449,27 +456,121 @@ export default function Shop({category, audience}) {
                         </div>
                     </div>
 
-                    {/* Product grid */}
-                    <div className='grid grid-cols-2 md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[3vw] md:gap-6'>
-                        {getSortedProducts().length > 0 ? (
-                            getSortedProducts().map((item, index) => (
-                                <div key={index} >
-                                    <Item 
-                                        product={item}
-                                    />
+                    {/* Count + per-page selector */}
+                    {(() => {
+                        const sortedProducts = getSortedProducts();
+                        const totalProducts = sortedProducts.length;
+                        const totalPages = Math.ceil(totalProducts / itemsPerPage);
+                        const startIndex = (currentPage - 1) * itemsPerPage;
+                        const paginatedProducts = sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+
+                        const getPageNumbers = () => {
+                            const pages = [];
+                            if (totalPages <= 7) {
+                                for (let i = 1; i <= totalPages; i++) pages.push(i);
+                            } else {
+                                pages.push(1);
+                                if (currentPage > 3) pages.push('...');
+                                const start = Math.max(2, currentPage - 1);
+                                const end = Math.min(totalPages - 1, currentPage + 1);
+                                for (let i = start; i <= end; i++) pages.push(i);
+                                if (currentPage < totalPages - 2) pages.push('...');
+                                pages.push(totalPages);
+                            }
+                            return pages;
+                        };
+
+                        return (
+                            <>
+                                {/* Showing X–Y of Z + per-page */}
+                                <div className='flex items-center justify-between mb-[3vw] md:mb-[1vw] text-smallTextPhone md:text-smallText text-gray-500'>
+                                    <span>
+                                        {totalProducts === 0
+                                            ? 'No products'
+                                            : `Showing ${startIndex + 1}–${Math.min(startIndex + itemsPerPage, totalProducts)} of ${totalProducts}`}
+                                    </span>
+                                    <div className='flex items-center gap-[2vw] md:gap-[.5vw]'>
+                                        <span className='text-gray-400'>Show:</span>
+                                        {[20, 50, 100].map(n => (
+                                            <button
+                                                key={n}
+                                                onClick={() => setItemsPerPage(n)}
+                                                className={`px-[3vw] md:px-[.6vw] py-[1vw] md:py-[.25vw] rounded-[3vw] md:rounded-[.5vw] border transition-colors ${
+                                                    itemsPerPage === n
+                                                        ? 'bg-black text-white border-black'
+                                                        : 'bg-white text-gray-700 border-gray-300 hover:border-black'
+                                                }`}
+                                            >
+                                                {n}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
-                            ))
-                        ) : (
-                            <div className="col-span-2 md:col-span-3 flex justify-center items-center h-[50vw] md:h-[20vw]">
-                                <div className="text-center">
-                                    <h4 className="text-h4TextPhone md:text-h4Text font-dyeLine font-bold mb-[2vw] md:mb-[1vw]">No Products Found</h4>
-                                    <p className="text-regularTextPhone md:text-regularText font-roboto text-gray-600">
-                                        We couldn't find any products matching your criteria.
-                                    </p>
+
+                                {/* Product grid */}
+                                <div className='grid grid-cols-2 md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[3vw] md:gap-6'>
+                                    {paginatedProducts.length > 0 ? (
+                                        paginatedProducts.map((item, index) => (
+                                            <div key={item._id || index}>
+                                                <Item product={item} />
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-2 md:col-span-3 flex justify-center items-center h-[50vw] md:h-[20vw]">
+                                            <div className="text-center">
+                                                <h4 className="text-h4TextPhone md:text-h4Text font-dyeLine font-bold mb-[2vw] md:mb-[1vw]">No Products Found</h4>
+                                                <p className="text-regularTextPhone md:text-regularText font-roboto text-gray-600">
+                                                    We couldn't find any products matching your criteria.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                        )}
-                    </div>
+
+                                {/* Pagination controls */}
+                                {totalPages > 1 && (
+                                    <div className='flex items-center justify-center gap-[2vw] md:gap-[.5vw] mt-[6vw] md:mt-[2vw] flex-wrap'>
+                                        {/* Prev */}
+                                        <button
+                                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                            disabled={currentPage === 1}
+                                            className='px-[3vw] md:px-[.75vw] py-[1.5vw] md:py-[.4vw] rounded-[3vw] md:rounded-[.5vw] border border-gray-300 text-smallTextPhone md:text-smallText disabled:opacity-40 disabled:cursor-not-allowed hover:border-black transition-colors'
+                                        >
+                                            ‹ Prev
+                                        </button>
+
+                                        {/* Page numbers */}
+                                        {getPageNumbers().map((page, i) =>
+                                            page === '...'
+                                                ? <span key={`ellipsis-${i}`} className='px-[2vw] md:px-[.5vw] text-gray-400 text-smallTextPhone md:text-smallText'>…</span>
+                                                : (
+                                                    <button
+                                                        key={page}
+                                                        onClick={() => setCurrentPage(page)}
+                                                        className={`min-w-[8vw] md:min-w-[2vw] px-[2.5vw] md:px-[.6vw] py-[1.5vw] md:py-[.4vw] rounded-[3vw] md:rounded-[.5vw] border text-smallTextPhone md:text-smallText transition-colors ${
+                                                            currentPage === page
+                                                                ? 'bg-black text-white border-black'
+                                                                : 'bg-white text-gray-700 border-gray-300 hover:border-black'
+                                                        }`}
+                                                    >
+                                                        {page}
+                                                    </button>
+                                                )
+                                        )}
+
+                                        {/* Next */}
+                                        <button
+                                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                            disabled={currentPage === totalPages}
+                                            className='px-[3vw] md:px-[.75vw] py-[1.5vw] md:py-[.4vw] rounded-[3vw] md:rounded-[.5vw] border border-gray-300 text-smallTextPhone md:text-smallText disabled:opacity-40 disabled:cursor-not-allowed hover:border-black transition-colors'
+                                        >
+                                            Next ›
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        );
+                    })()}
                 </div>
             </div>
         </div>
