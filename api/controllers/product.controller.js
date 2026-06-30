@@ -133,13 +133,10 @@ export const getAccessories = async (req, res, next) => {
 };
 
 export const getProductsColor = async (req, res, next) => {
-
-  const {modelName}=req.body;
+  const { modelCode } = req.body;
   try {
-    const products= await Product.find({modelName});
-    res.status(200).json({
-      success:true,message:products
-    });
+    const products = await Product.find({ modelCode });
+    res.status(200).json({ success: true, message: products });
   } catch (err) {
     console.error('Error fetching products:', err);
     res.status(500).json({ message: 'Server error fetching products' });

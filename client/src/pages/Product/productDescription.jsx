@@ -121,7 +121,7 @@ export default function ProductDescription({productToDisplay}){
     
     useEffect(()=>{
         axios
-          .post(`${baseURL}/api/product/get-color`, { modelName: productToDisplay.modelName })
+          .post(`${baseURL}/api/product/get-color`, { modelCode: productToDisplay.modelCode })
         .then((res) => {
             setProductsModel(res.data.message);
             })
