@@ -76,3 +76,23 @@ export const markNotificationsRead = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to mark notifications as read' });
   }
 };
+
+export const deleteNotification = async (req, res) => {
+  try {
+    await Notification.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('deleteNotification error:', err);
+    res.status(500).json({ success: false, message: 'Failed to delete notification' });
+  }
+};
+
+export const deleteAllNotifications = async (req, res) => {
+  try {
+    await Notification.deleteMany({});
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('deleteAllNotifications error:', err);
+    res.status(500).json({ success: false, message: 'Failed to delete notifications' });
+  }
+};

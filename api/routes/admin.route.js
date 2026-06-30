@@ -23,7 +23,7 @@ import {
   deleteUser,
 } from "../controllers/user.controller.js";
 import { addPolicy, updatePolicy, getPolicy } from "../controllers/policy.controller.js";
-import { getAdminStats, getNotifications, markNotificationsRead } from "../controllers/admin.controller.js";
+import { getAdminStats, getNotifications, markNotificationsRead, deleteNotification, deleteAllNotifications } from "../controllers/admin.controller.js";
 import { authMiddleware } from "../middleware/auth.js";
 import { verifyAdmin } from "../middleware/verifyAdmin.js";
 import { authorize } from "../middleware/authorize.js";
@@ -39,8 +39,10 @@ const superAdminOnly = ['admin', 'super-admin'];
 router.get("/stats", authMiddleware, authorize(...superAdminOnly), getAdminStats);
 
 // ── Notifications (super-admin only) ────────────────────────────────────────
-router.get("/notifications",           authMiddleware, authorize(...superAdminOnly), getNotifications);
-router.put("/notifications/mark-read", authMiddleware, authorize(...superAdminOnly), markNotificationsRead);
+router.get("/notifications",            authMiddleware, authorize(...superAdminOnly), getNotifications);
+router.put("/notifications/mark-read",  authMiddleware, authorize(...superAdminOnly), markNotificationsRead);
+router.delete("/notifications",         authMiddleware, authorize(...superAdminOnly), deleteAllNotifications);
+router.delete("/notifications/:id",     authMiddleware, authorize(...superAdminOnly), deleteNotification);
 
 // ── Products (product-manager + super-admin) ────────────────────────────────
 router.post("/add-product",              authMiddleware, authorize(...anyAdmin), addProduct);

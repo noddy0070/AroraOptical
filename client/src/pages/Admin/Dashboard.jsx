@@ -107,11 +107,21 @@ const timeAgo = (dateStr) => {
 };
 
 // ── NotificationPanel ─────────────────────────────────────────────────────────
-const NotificationPanel = ({ notifications, loading, onClose, navigate }) => (
+const NotificationPanel = ({ notifications, loading, onClose, onDelete, onDeleteAll, navigate }) => (
   <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50 overflow-hidden">
     <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
       <p className="text-sm font-bold text-gray-800">Notifications</p>
-      <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors"><XSmall /></button>
+      <div className="flex items-center gap-2">
+        {notifications.length > 0 && (
+          <button
+            onClick={onDeleteAll}
+            className="text-[10px] font-semibold text-red-400 hover:text-red-600 transition-colors"
+          >
+            Clear all
+          </button>
+        )}
+        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors"><XSmall /></button>
+      </div>
     </div>
 
     <div className="max-h-80 overflow-y-auto divide-y divide-gray-50">
@@ -122,13 +132,15 @@ const NotificationPanel = ({ notifications, loading, onClose, navigate }) => (
       ) : notifications.length === 0 ? (
         <div className="py-8 text-center text-xs text-gray-400">No notifications yet</div>
       ) : notifications.map((n) => (
-        <button
+        <div
           key={n._id}
-          onClick={() => { navigate('/Admin/order-management'); onClose(); }}
-          className={`w-full flex items-start gap-3 px-4 py-3 hover:bg-gray-50 text-left transition-colors ${!n.read ? 'bg-indigo-50/40' : ''}`}
+          className={`flex items-start gap-3 px-4 py-3 transition-colors group ${!n.read ? 'bg-indigo-50/40' : ''}`}
         >
           <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${!n.read ? 'bg-indigo-500' : 'bg-gray-300'}`} />
-          <div className="flex-1 min-w-0">
+          <button
+            className="flex-1 min-w-0 text-left hover:opacity-80 transition-opacity"
+            onClick={() => { navigate('/Admin/order-management'); onClose(); }}
+          >
             <p className="text-xs font-semibold text-gray-800 truncate">
               New order — {n.customerName}
             </p>
@@ -136,8 +148,15 @@ const NotificationPanel = ({ notifications, loading, onClose, navigate }) => (
               {n.paymentMethod} · {formatPrice(n.amount)}
             </p>
             <p className="text-[10px] text-gray-400 mt-0.5">{timeAgo(n.createdAt)}</p>
-          </div>
-        </button>
+          </button>
+          <button
+            onClick={() => onDelete(n._id)}
+            className="shrink-0 mt-0.5 p-1 rounded text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+            title="Delete"
+          >
+            <XSmall />
+          </button>
+        </div>
       ))}
     </div>
 
@@ -333,6 +352,21 @@ const DashBoard = () => {
     if (opening) openNotifications();
   };
 
+  const handleDeleteNotification = async (id) => {
+    setNotifications(prev => prev.filter(n => n._id !== id));
+    try {
+      await axios.delete(`${baseURL}/api/admin/notifications/${id}`, { withCredentials: true });
+    } catch { /* optimistic — revert not needed for delete */ }
+  };
+
+  const handleDeleteAllNotifications = async () => {
+    setNotifications([]);
+    setUnreadCount(0);
+    try {
+      await axios.delete(`${baseURL}/api/admin/notifications`, { withCredentials: true });
+    } catch { /* silent */ }
+  };
+
   // Close notification on outside click
   useEffect(() => {
     const handler = (e) => { if (notifRef.current && !notifRef.current.contains(e.target)) setNotifOpen(false); };
@@ -424,6 +458,8 @@ const DashBoard = () => {
                 notifications={notifications}
                 loading={notifLoading}
                 onClose={() => setNotifOpen(false)}
+                onDelete={handleDeleteNotification}
+                onDeleteAll={handleDeleteAllNotifications}
                 navigate={navigate}
               />
             )}
