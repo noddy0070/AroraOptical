@@ -149,6 +149,7 @@ const OrderDetails = () => {
                   const rx = item.prescriptionId;
                   const modelName  = snap.modelName  || item.productId?.modelName;
                   const modelCode  = snap.modelCode  || item.productId?.modelCode;
+                  const modelTitle = snap.modelTitle || item.productId?.modelTitle;
                   const image      = snap.images?.[0] || item.productId?.images?.[0];
                   return (
                     <div key={index} className="border border-gray-100 rounded-[3vw] md:rounded-xl overflow-hidden">
@@ -168,7 +169,11 @@ const OrderDetails = () => {
                           >
                             {modelName}
                           </Link>
-                          {modelCode && <p className="text-smallTextPhone md:text-sm text-gray-500">{modelCode}</p>}
+                          {(modelCode || modelTitle) && (
+                            <p className="text-smallTextPhone md:text-sm text-gray-500">
+                              {[modelCode, modelTitle].filter(Boolean).join(' · ')}
+                            </p>
+                          )}
                           <p className="text-tinyTextPhone md:text-xs text-gray-400 mt-[1vw] md:mt-0.5">Qty: {item.quantity}</p>
                           {item.size && (
                             <p className="text-tinyTextPhone md:text-xs text-gray-400">Size: {item.size}</p>

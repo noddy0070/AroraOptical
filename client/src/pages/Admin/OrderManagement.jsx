@@ -428,8 +428,9 @@ const OrderManagement = () => {
                     const lens = item.lensOptions || {};
                     const hasLens = lens.lensType && lens.lensType !== 'None';
                     const rx = item.prescriptionId;
-                    const modelName = snap.modelName || item.productId?.modelName || 'Product';
-                    const modelCode = snap.modelCode || item.productId?.modelCode;
+                    const modelName  = snap.modelName  || item.productId?.modelName  || 'Product';
+                    const modelTitle = snap.modelTitle || item.productId?.modelTitle;
+                    const modelCode  = snap.modelCode  || item.productId?.modelCode;
                     const image     = snap.images?.[0] || item.productId?.images?.[0];
                     return (
                       <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
@@ -449,7 +450,11 @@ const OrderManagement = () => {
                             >
                               {modelName}
                             </Link>
-                            {modelCode && <p className="text-xs text-gray-400">{modelCode}</p>}
+                            {(modelCode || modelTitle) && (
+                              <p className="text-xs text-gray-400">
+                                {[modelCode, modelTitle].filter(Boolean).join(' · ')}
+                              </p>
+                            )}
                             <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
                             {item.size && (
                               <p className="text-xs text-gray-400">Size: <span className="font-medium text-gray-600">{item.size}</span></p>
@@ -670,9 +675,10 @@ const OrderManagement = () => {
                     <img src={specModal.snap.images[0]} alt="" className="w-20 h-20 rounded-xl object-cover shrink-0 border border-gray-100" />
                   )}
                   <div className="bg-gray-50 rounded-xl p-3 flex-1 space-y-1.5 text-xs">
-                    {specModal.snap.modelName  && <Row label="Model"    value={specModal.snap.modelName} />}
-                    {specModal.snap.modelCode  && <Row label="Code"     value={specModal.snap.modelCode} />}
-                    {specModal.snap.brand      && <Row label="Brand"    value={specModal.snap.brand} />}
+                    {specModal.snap.modelName  && <Row label="Model"      value={specModal.snap.modelName} />}
+                    {specModal.snap.modelTitle && <Row label="Color/Variant" value={specModal.snap.modelTitle} />}
+                    {specModal.snap.modelCode  && <Row label="Code"      value={specModal.snap.modelCode} />}
+                    {specModal.snap.brand      && <Row label="Brand"     value={specModal.snap.brand} />}
                     {specModal.snap.category   && <Row label="Category" value={<span className="capitalize">{specModal.snap.category}</span>} />}
                     {specModal.snap.price != null && <Row label="Price at order" value={<span className="font-bold text-gray-900">{formatPrice(specModal.snap.price)}</span>} />}
                   </div>

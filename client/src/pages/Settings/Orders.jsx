@@ -48,10 +48,15 @@ export default function Orders() {
 
     const filteredOrders = validOrders.filter(orderItem => {
         if (!searchQuery) return true;
-        return orderItem.items?.some(item =>
-            (item.productId?.modelTitle || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (item.productId?.modelCode  || '').toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        const q = searchQuery.toLowerCase();
+        return orderItem.items?.some(item => {
+            const snap = item.productSnapshot || {};
+            return (
+                (snap.modelName  || item.productId?.modelName  || '').toLowerCase().includes(q) ||
+                (snap.modelTitle || item.productId?.modelTitle || '').toLowerCase().includes(q) ||
+                (snap.modelCode  || item.productId?.modelCode  || '').toLowerCase().includes(q)
+            );
+        });
     });
 
     return (
@@ -96,7 +101,9 @@ export default function Orders() {
                     const extraCount = (orderItem.items?.length || 1) - 1;
                     const snap = firstItem?.productSnapshot || {};
                     const image = snap.images?.[0] || firstItem?.productId?.images?.[0] || productPlaceholder;
-                    const productTitle = snap.modelTitle || firstItem?.productId?.modelTitle || snap.modelName || firstItem?.productId?.modelName;
+                    const modelName  = snap.modelName  || firstItem?.productId?.modelName;
+                    const modelTitle = snap.modelTitle || firstItem?.productId?.modelTitle;
+                    const modelCode  = snap.modelCode  || firstItem?.productId?.modelCode;
                     const statusStyle = STATUS_STYLES[order.status] || 'bg-gray-100 text-gray-600';
 
                     return (
@@ -124,10 +131,15 @@ export default function Orders() {
 
                                 <p className='text-[2.8vw] md:text-xs text-gray-400'>{formatDate(orderItem.date)}</p>
 
-                                {productTitle && (
-                                    <p className='text-smallTextPhone md:text-sm text-gray-700 line-clamp-1'>
-                                        {productTitle}
-                                        {extraCount > 0 && <span className='text-gray-400'> +{extraCount} more</span>}
+                                {modelName && (
+                                    <p className='text-smallTextPhone md:text-sm text-gray-700 font-medium line-clamp-1'>
+                                        {modelName}
+                                        {extraCount > 0 && <span className='text-gray-400 font-normal'> +{extraCount} more</span>}
+                                    </p>
+                                )}
+                                {(modelCode || modelTitle) && (
+                                    <p className='text-[2.5vw] md:text-xs text-gray-400 line-clamp-1'>
+                                        {[modelCode, modelTitle].filter(Boolean).join(' · ')}
                                     </p>
                                 )}
 
