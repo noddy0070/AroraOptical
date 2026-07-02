@@ -11,12 +11,13 @@ import { api } from '@/lib/axios';
 import navbarDropdown from '../assets/images/navbarDropDown.png'
 import { useNavigate } from 'react-router-dom';
 import { toTitleCase } from '../../shared/pipes/strFormatting';
-import { 
-  ChevronDown, 
-  ChevronUp, 
-  ShoppingBag, 
-  Eye, 
-  Glasses  
+import {
+  ChevronDown,
+  ChevronUp,
+  ShoppingBag,
+  Eye,
+  Glasses,
+  LayoutDashboard
 } from "lucide-react";
 
 export default function SecondaryNavbar() {
@@ -427,14 +428,26 @@ export default function SecondaryNavbar() {
               </div>
 
               {isAuthenticated ? (
-                <TransitionLink to='/settings'>
-                  <div className='hidden md:flex flex-row gap-[.5vw] items-center'>
-                    {/* <img className='w-[2vw] h-[2vw]' src={profilePlaceholder} alt="Profile"/> */}
-                    <span className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
-                      {toTitleCase(user?.name)}
-                    </span>
-                  </div>
-                </TransitionLink>
+                <div className='hidden md:flex flex-row gap-[1vw] items-center'>
+                  {user?.role && user.role !== 'user' && (
+                    <div className='relative group flex items-center'>
+                      <TransitionLink to='/admin'>
+                        <LayoutDashboard className='w-[1.5vw] h-[1.5vw] text-regularText hover:text-gray-500 transition-colors cursor-pointer' />
+                      </TransitionLink>
+                      <span className='pointer-events-none absolute top-full mt-[.5vw] right-0 whitespace-nowrap rounded-[.5vw] bg-darkslategrey text-white text-[12px] px-[.75vw] py-[.375vw] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50'>
+                        Go to Admin Panel
+                      </span>
+                    </div>
+                  )}
+                  <TransitionLink to='/settings'>
+                    <div className='flex flex-row gap-[.5vw] items-center'>
+                      {/* <img className='w-[2vw] h-[2vw]' src={profilePlaceholder} alt="Profile"/> */}
+                      <span className="text-regularText py-[.75vw] focus:outline-none hover:underline hover:text-gray-500">
+                        {toTitleCase(user?.name)}
+                      </span>
+                    </div>
+                  </TransitionLink>
+                </div>
               ) : (
                 <div className='hidden md:flex flex-row gap-[.5vw] items-center'>
                   <TransitionLink to='/login'>
@@ -585,11 +598,21 @@ export default function SecondaryNavbar() {
       {/* -------------------- USER SECTION -------------------- */}
       <div className="mt-[5vw] pt-[4vw] border-t border-gray-200">
         {isAuthenticated ? (
-          <TransitionLink to="/settings" onClick={() => setIsMobileMenuOpen(false)}>
-            <div className="flex items-center gap-[2vw] py-[2vw]">
-              <span className="text-regularTextPhone font-bold">{toTitleCase(user?.name)}</span>
-            </div>
-          </TransitionLink>
+          <div className="flex flex-col">
+            <TransitionLink to="/settings" onClick={() => setIsMobileMenuOpen(false)}>
+              <div className="flex items-center gap-[2vw] py-[2vw]">
+                <span className="text-regularTextPhone font-bold">{toTitleCase(user?.name)}</span>
+              </div>
+            </TransitionLink>
+            {user?.role && user.role !== 'user' && (
+              <TransitionLink to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
+                <div className="flex items-center gap-[2vw] sidebar-link">
+                  <LayoutDashboard size={16} />
+                  <p>Admin Panel</p>
+                </div>
+              </TransitionLink>
+            )}
+          </div>
         ) : (
           <div className="flex flex-col gap-[2vw]">
             <TransitionLink to="/login" onClick={() => setIsMobileMenuOpen(false)}>

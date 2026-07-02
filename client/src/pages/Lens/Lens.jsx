@@ -137,6 +137,31 @@ export default function Lens() {
     };
   }, [isResizing]);
 
+  const isBackAvailable = () => {
+    if (focused === "lensCoating" && (subFocusedCoating === "lensTint" || subFocusedCoating === "blueFilter")) {
+      return true;
+    }
+    if (focused === "prescription" && subFocusedPrescription !== "") {
+      return true;
+    }
+    return lensData.findIndex((item) => item.id === focused) > 0;
+  };
+
+  const handleBack = () => {
+    if (focused === "lensCoating" && (subFocusedCoating === "lensTint" || subFocusedCoating === "blueFilter")) {
+      setSubFocusedCoating("");
+      return;
+    }
+    if (focused === "prescription" && subFocusedPrescription !== "") {
+      setSubFocusedPrescription("");
+      return;
+    }
+    const currentIndex = lensData.findIndex((item) => item.id === focused);
+    if (currentIndex > 0) {
+      handleFocus(lensData[currentIndex - 1].id);
+    }
+  };
+
   const isDisabled = (id) => {
     if(id==="lensType"){
       return false;
@@ -235,7 +260,18 @@ export default function Lens() {
             </div>
 
             <div className="relative w-full md:w-[83.8125vw] flex flex-col items-center">
-              <button 
+              {isBackAvailable() && (
+                <button
+                  onClick={handleBack}
+                  className='w-[10vw] md:w-[2.5vw] h-[10vw] md:h-[2.5vw] absolute z-[100] top-[3vw] md:top-[2.8125vw] right-[17vw] md:right-[5.5vw] cursor-pointer shadow-[0px_1vw_1vw_rgba(0,_0,_0,_0.25)] md:shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] border-[1px] border-white bg-[#CECECE] rounded-full flex items-center justify-center'
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[5vw] h-[5vw] md:w-[1.25vw] md:h-[1.25vw] text-white">
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+              )}
+              <button
                 onClick={() => navigate(-1)}
                 className='w-[10vw] md:w-[2.5vw] h-[10vw] md:h-[2.5vw] absolute z-[100] top-[3vw] md:top-[2.8125vw] right-[5vw] md:right-[2.1875vw] cursor-pointer shadow-[0px_1vw_1vw_rgba(0,_0,_0,_0.25)] md:shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] border-[1px] border-white bg-[#CECECE] rounded-full'
               >

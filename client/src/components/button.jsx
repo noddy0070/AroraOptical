@@ -87,12 +87,12 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
   };
 
 
-  export const CartButton = ({ onClick=()=>{} }) => {
+  export const CartButton = ({ onClick=()=>{}, disabled=false }) => {
     const [isHoveringCartButton, setIsHoveringCartButton] = useState(false);
       return (
-        <button onClick={onClick} className='flex flex-row gap-[.3125vw] items-center justify-center shadow-[0px_.25vw_.3125vw_rgba(0,_0,_0,_0.4)]   rounded-[4vw]  ml-auto px-[2vw] py-[.75vw] transition-colors transform duration-700'
-                 style={{backgroundColor:isHoveringCartButton? "#f3e9d2":"darkslategrey"}} onMouseEnter={() => setIsHoveringCartButton(true)} onMouseLeave={() => setIsHoveringCartButton(false)}>
-                  <h5 className='text-h5Text font-dyeLine font-bold transition-colors transform duration-500' style={{color:isHoveringCartButton?"black":"#f3e9d2"}}>Move To Cart</h5>
+        <button onClick={onClick} disabled={disabled} className={`flex flex-row gap-[.3125vw] items-center justify-center shadow-[0px_.25vw_.3125vw_rgba(0,_0,_0,_0.4)]   rounded-[4vw]  ml-auto px-[2vw] py-[.75vw] transition-colors transform duration-700 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                 style={{backgroundColor:isHoveringCartButton && !disabled? "#f3e9d2":"darkslategrey"}} onMouseEnter={() => !disabled && setIsHoveringCartButton(true)} onMouseLeave={() => setIsHoveringCartButton(false)}>
+                  <h5 className='text-h5Text font-dyeLine font-bold transition-colors transform duration-500' style={{color:isHoveringCartButton && !disabled?"black":"#f3e9d2"}}>Move To Cart</h5>
                   <div className='relative w-[2.25vw] h-[2.25vw]   items-center overflow-hidden '>
                   <svg className='absolute text-black my-auto mx-auto min-w-[2.25vw] min-h-[2.25vw] transition-all transform duration-500' width="2.25vw" height="2.25vw" viewBox="0 0 47 49" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{left:isHoveringCartButton?"-2.5vw":"0"}}>
                     <path d="M10.0006 24.5627H38.0006M38.0006 24.5627L24.0006 10.5627M38.0006 24.5627L24.0006 38.5627" stroke="#F3E9D2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
@@ -104,12 +104,14 @@ export const IconButton = ({ onClick = () => {}, className = '', iconWidth, btnS
       )
   }
 
-  export const ContactUsButton = ({ href }) => {
+  export const ContactUsButton = ({ href, disabled=false }) => {
     const [isHoveringContactButton, setIsHoveringContactButton] = useState(false);
       return (
-        <a href={href} target="_blank" rel="noopener noreferrer"
-           className='flex flex-row gap-[.3125vw] items-center justify-center shadow-[0px_.25vw_.3125vw_rgba(0,_0,_0,_0.4)] rounded-[4vw] ml-auto px-[2vw] py-[.75vw] transition-colors transform duration-700'
-                 style={{backgroundColor:isHoveringContactButton? "#1EBE57":"#25D366"}} onMouseEnter={() => setIsHoveringContactButton(true)} onMouseLeave={() => setIsHoveringContactButton(false)}>
+        <a href={disabled ? undefined : href} target="_blank" rel="noopener noreferrer"
+           onClick={(e) => { if (disabled) e.preventDefault(); }}
+           aria-disabled={disabled}
+           className={`flex flex-row gap-[.3125vw] items-center justify-center shadow-[0px_.25vw_.3125vw_rgba(0,_0,_0,_0.4)] rounded-[4vw] ml-auto px-[2vw] py-[.75vw] transition-colors transform duration-700 ${disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
+                 style={{backgroundColor:isHoveringContactButton && !disabled? "#1EBE57":"#25D366"}} onMouseEnter={() => !disabled && setIsHoveringContactButton(true)} onMouseLeave={() => setIsHoveringContactButton(false)}>
                   <h5 className='text-h5Text font-dyeLine font-bold text-white'>Contact Us</h5>
                   <svg className='w-[2.25vw] h-[2.25vw]' viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
