@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { toast } from 'react-toastify';
-import { baseURL } from '@/url';
 import { formatINR } from '@/components/IntToPrice';
 
 const productTemplateHref = new URL(
@@ -56,7 +55,7 @@ const Products = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`${baseURL}/api/admin/get-products`, { withCredentials: true });
+      const { data } = await api.get('/api/admin/get-products');
       setProducts(data.products ?? []);
     } catch {
       toast.error('Failed to load products');
@@ -69,7 +68,7 @@ const Products = () => {
     if (!confirmDelete) return;
     setDeleting(true);
     try {
-      await axios.delete(`${baseURL}/api/admin/delete-product/${confirmDelete}`, { withCredentials: true });
+      await api.delete(`/api/admin/delete-product/${confirmDelete}`);
       toast.success('Product deleted');
       setProducts((prev) => prev.filter((p) => p._id !== confirmDelete));
       setConfirmDelete(null);

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IconButton } from '../../components/button';
 import Item from './item';
 import Filters from '../../components/Filters.jsx';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { TransitionLink } from '@/Routes/TransitionLink';
 import shopBanner1 from '../../assets/images/shopBanner1.png'
 const sortOptions = [
@@ -41,7 +40,7 @@ export default function Shop({category, audience}) {
                 const isAccessories = audience.toLowerCase() === "accessories";
                 
                 // Public shop listing should use public product API (admin routes require auth)
-                const response = await axios.get(`${baseURL}/api/product/get`, {
+                const response = await api.get('/api/product/get', {
                     params: {
                         category: category,
                         gender: isNewArrivals || isBestsellers ? "" : genderParam,

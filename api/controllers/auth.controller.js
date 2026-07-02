@@ -3,6 +3,7 @@ import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import crypto from 'node:crypto';
+import { AUTH_COOKIE_NAME, AUTH_TOKEN_EXPIRES_IN, getAuthCookieOptions, getClearAuthCookieOptions } from '../utils/authCookie.js';
 
 
 let otpStore = {"no":{otp:33,expires:123}}; // Simple in-memory store (use Redis or DB in prod)
@@ -99,9 +100,9 @@ export const login= async (req,res,next)=>{
         if(!validPassword) return res.status(400).json({ success: false, message: "Invalid Credentials" })
 
         
-        const token= jwt.sign({id:validUser._id},process.env.JWT_SECRET,{expiresIn:'7d'});
+        const token= jwt.sign({id:validUser._id},process.env.JWT_SECRET,{expiresIn:AUTH_TOKEN_EXPIRES_IN});
         const {password:pass,...rest}=validUser._doc;
-        res.cookie('token',token,{ httpOnly: true, secure: true, sameSite: "None",maxAge:7*24*60*60*1000, });
+        res.cookie(AUTH_COOKIE_NAME,token,getAuthCookieOptions());
         res.status(200).json({success:true,message:rest});
     }
     catch(error){
@@ -112,11 +113,7 @@ export const login= async (req,res,next)=>{
 // POST /api/auth/logout  
 export const logout=async(req,res)=>{
   try {
-    res.clearCookie('token', { 
-      httpOnly: true, 
-      sameSite: 'None', 
-      secure: process.env.NODE_ENV === 'production' 
-    });
+    res.clearCookie(AUTH_COOKIE_NAME, getClearAuthCookieOptions());
     res.status(200).json({ success: true, message: 'Logged out successfully' });
   } catch (error) {
     console.error("Logout error:", error);
@@ -237,14 +234,9 @@ export const resetPassword = async (req, res, next) => {
 // GET /api/google/callback
 export const googleCallback = async (req, res) => {
     // Set JWT cookie
-    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: AUTH_TOKEN_EXPIRES_IN });
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'None',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie(AUTH_COOKIE_NAME, token, getAuthCookieOptions());
 
     // Redirect back to frontend
     res.redirect(process.env.GOOGLE_CALLBACK_REDIRECT);

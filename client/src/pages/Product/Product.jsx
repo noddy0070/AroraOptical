@@ -3,8 +3,7 @@ import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import ProductDescription from './productDescription';
 import CustomerReview from './CustomerReview';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 
 import {
   Breadcrumb,
@@ -21,7 +20,7 @@ export default function Product(){
     const navigate = useNavigate();
 
     useEffect(()=>{
-        axios.get(`${baseURL}/api/product/${id}`)
+        api.get(`/api/product/${id}`)
         .then((res) => {
           setProduct(res.data);
         })

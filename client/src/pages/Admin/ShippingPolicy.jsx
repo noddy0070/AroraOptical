@@ -1,9 +1,8 @@
 import {useState,useEffect} from "react";
 import { Categories } from './../../data/glassesInformationData'
-import axios from "axios";
+import { api } from '@/lib/axios';
 import { State, City } from "country-state-city";
 import { ArrayInputField, ArrayInputFieldPolicies, FormField } from "@/components/ProductFields";
-import { baseURL } from "@/url";
 
 const defaultForm = {
   introduction: '',
@@ -20,8 +19,7 @@ const ShippingPolicyAdmin=()=>{
         const [policy,setPolicy]=useState(null);
     
      useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-policy/682e6724fb2ffba94269d8cc`, {
-          withCredentials: true
+        api.get('/api/admin/get-policy/682e6724fb2ffba94269d8cc', {
         })
             .then((res) => {
             setPolicy(res.data.message);
@@ -61,8 +59,7 @@ const ShippingPolicyAdmin=()=>{
         e.preventDefault();
       
         try {
-          const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6724fb2ffba94269d8cc`, form, {
-            withCredentials: true
+          const response = await api.post('/api/admin/update-policy/682e6724fb2ffba94269d8cc', form, {
           });
           if (response.status === 200 || response.status === 201) {
             alert('Shipping Policy Updated successfully!');

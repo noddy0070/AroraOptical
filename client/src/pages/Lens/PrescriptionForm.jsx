@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { useSelector,useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { loginSuccess } from '@/redux/slice/authSlice';
@@ -62,10 +61,9 @@ export default function PrescriptionForm({form,setSubFocusedPrescription,onPresc
         setError("");
         
         try{
-            const response = await axios.post(`${baseURL}/api/user/prescription/add`, {
+            const response = await api.post('/api/user/prescription/add', {
                 ...prescriptionForm,
             }, {
-                withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -104,7 +102,7 @@ export default function PrescriptionForm({form,setSubFocusedPrescription,onPresc
         }
 
         const updateUser = async () => {
-            const userRes = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
+            const userRes = await api.get('/api/auth/me', {  });
             dispatch(loginSuccess({ user: userRes.data.user }));
             
         }

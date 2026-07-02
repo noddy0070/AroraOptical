@@ -11,8 +11,7 @@ import WishList from './Wishlist';
 import Orders from './Orders';
 import Prescriptions from './Prescriptions';
 import Addresses from './Addresses';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { useNavigate } from 'react-router';
 import { logout } from '@/redux/slice/authSlice';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
@@ -35,8 +34,7 @@ export default function Settings(){
     const handleLogOut=async ()=>{
         setLoading(true);
         try{
-            const res=await axios.post(`${baseURL}/api/auth/logout`, {}, {
-                withCredentials: true,
+            const res=await api.post('/api/auth/logout', {}, {
                 headers: {
                     'Content-Type': 'application/json',
                 }

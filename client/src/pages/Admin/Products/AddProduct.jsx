@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { toast } from 'react-toastify';
-import axios from "axios";
+import { api } from '@/lib/axios';
 import {
   Categories, GlassesBrand, Classification, AccessoriesType,
   LensBrand, AccessoriesBrand, SmartGlassesBrand
 } from './../../../data/glassesInformationData';
 import ImageUpload from "@/components/ImageFunctionality";
 import { ArrayInputField, AttributeSection, FormField } from "@/components/ProductFields";
-import { baseURL } from "@/url";
 
 const defaultForm = {
   modelName: '',
@@ -119,7 +118,7 @@ const AddProduct = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      const response = await axios.post(`${baseURL}/api/admin/add-product`, form, { withCredentials: true });
+      const response = await api.post('/api/admin/add-product', form);
       if (response.status === 200 || response.status === 201) {
         toast.success('Product added successfully!');
         setForm(defaultForm);
@@ -137,7 +136,7 @@ const AddProduct = () => {
   }, [uploadedImages]);
 
   useEffect(() => {
-    axios.get(`${baseURL}/api/admin/get-attributes`, { withCredentials: true })
+    api.get('/api/admin/get-attributes')
       .then(({ data }) => {
         setFrameAttributes(data.filter((a) => a.attributeType === 'Frame'));
         setLensAttributes(data.filter((a) => a.attributeType === 'Lens'));

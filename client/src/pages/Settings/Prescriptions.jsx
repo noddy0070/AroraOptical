@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 
 const fmtRx = (v) => {
   if (v == null) return '—';
@@ -20,7 +19,7 @@ export default function Prescriptions() {
   useEffect(() => {
     if (!user) return;
     setLoading(true);
-    axios.get(`${baseURL}/api/user/prescription/${user._id}`, { withCredentials: true })
+    api.get(`/api/user/prescription/${user._id}`, {})
       .then(res => { if (res.data.success) setPrescriptions(res.data.prescriptions || []); })
       .catch(console.error)
       .finally(() => setLoading(false));

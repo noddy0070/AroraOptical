@@ -1,10 +1,9 @@
 import {useState,useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
-import axios from "axios";
+import { api } from '@/lib/axios';
 import LoginImg from '../../assets/images/LoginImg.png'
 import { TransitionLink } from '../../Routes/TransitionLink';
 import { State, City } from "country-state-city";
-import { baseURL } from '@/url';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -107,10 +106,9 @@ export default function SignUp(){
 
         setLoading(true);
         try {
-            const response = await axios.post(`${baseURL}/api/auth/send-otp`, {
+            const response = await api.post('/api/auth/send-otp', {
                 email: formData.email,
             }, {
-                withCredentials: true
               });
 
             if (response.data.success) {
@@ -154,11 +152,10 @@ export default function SignUp(){
 
         setLoading(true);
         try {
-            const response = await axios.post(`${baseURL}/api/auth/verify-otp`, {
+            const response = await api.post('/api/auth/verify-otp', {
                 email: formData.email,
                 otp: otp,
             }, {
-                withCredentials: true
               });
 
             if (response.data.success) {
@@ -186,10 +183,9 @@ export default function SignUp(){
         
         setLoading(true);
         try {
-            const response = await axios.post(`${baseURL}/api/auth/send-otp`, {
+            const response = await api.post('/api/auth/send-otp', {
                 email: formData.email,
             }, {
-                withCredentials: true
               });
 
             if (response.data.success) {
@@ -253,8 +249,7 @@ export default function SignUp(){
     const createUser = async () => {
         setLoading(true);
         try {
-            const response = await axios.post(`${baseURL}/api/auth/signup`, formData, {
-                withCredentials: true
+            const response = await api.post('/api/auth/signup', formData, {
               });
             if (response.status === 201) {
                 toast.success("Account created successfully!", {

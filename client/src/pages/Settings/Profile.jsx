@@ -1,7 +1,6 @@
 import React,{useState,useMemo} from 'react';
 import EditIcon from '../../assets/images/icons/Edit.svg';
-import { baseURL } from '@/url';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '@/redux/slice/authSlice';
 
@@ -66,8 +65,7 @@ export default function Profile({user}){
         setDisableEdit(true);
         setLoading(true);
         try{
-            const response = await axios.post(`${baseURL}/api/user/update/${user._id}`, formData, {
-                withCredentials: true
+            const response = await api.post(`/api/user/update/${user._id}`, formData, {
               });
 
             if (response.data.success) {

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { toast } from 'react-toastify';
-import { baseURL } from '@/url';
 import { toTitleCase } from '../../../../shared/pipes/strFormatting';
 
 // ── Icons ────────────────────────────────────────────────────────────────────
@@ -125,7 +124,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`${baseURL}/api/admin/get-users`, { withCredentials: true });
+      const { data } = await api.get('/api/admin/get-users');
       setUsers(data.users ?? []);
     } catch {
       toast.error('Failed to load users');
@@ -137,10 +136,9 @@ const UserManagement = () => {
   const handleToggleBlock = async (userId, currentBlocked) => {
     setBlocking(true);
     try {
-      const { data } = await axios.post(
-        `${baseURL}/api/admin/toggle-block-user/${userId}`,
-        {},
-        { withCredentials: true }
+      const { data } = await api.post(
+        `/api/admin/toggle-block-user/${userId}`,
+        {}
       );
       if (data.success) {
         const newBlocked = currentBlocked === 'true' ? 'false' : 'true';
@@ -159,9 +157,8 @@ const UserManagement = () => {
     if (!confirmDelete) return;
     setDeleting(true);
     try {
-      const { data } = await axios.delete(
-        `${baseURL}/api/admin/delete-user/${confirmDelete}`,
-        { withCredentials: true }
+      const { data } = await api.delete(
+        `/api/admin/delete-user/${confirmDelete}`
       );
       if (data.success) {
         toast.success('User deleted');
@@ -214,10 +211,9 @@ const UserManagement = () => {
 
     setEditSaving(true);
     try {
-      const { data } = await axios.put(
-        `${baseURL}/api/admin/update-user/${editUser._id}`,
-        editForm,
-        { withCredentials: true }
+      const { data } = await api.put(
+        `/api/admin/update-user/${editUser._id}`,
+        editForm
       );
       if (data.success) {
         toast.success('User updated successfully');

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IconButton } from '../../components/button';
 import AccessoriesItem from './accessoriesItem';
 import Filters from '../../components/Filters.jsx';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { TransitionLink } from '@/Routes/TransitionLink';
 import shopBanner1 from '../../assets/images/shopBanner1.png'
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -42,7 +41,7 @@ export default function Accessories({category, audience}) {
                 setLoading(true);
     
                 // Use public accessories endpoint
-                const response = await axios.get(`${baseURL}/api/product/accessories`);
+                const response = await api.get('/api/product/accessories');
 
                 if (response.data.success) {
                     if(response.data.products.length > 0){

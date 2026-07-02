@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, format } from 'date-fns';
 
 // ── Icons ─────────────────────────────────────────────────────────────────────
@@ -101,7 +100,7 @@ const EyeTestManagement = () => {
       if (end instanceof Date && !isNaN(end)) params.append('endDate', end.toISOString().split('T')[0]);
       if (filterStatus) params.append('status', filterStatus);
 
-      const { data } = await axios.get(`${baseURL}/api/eye-test/all?${params}`, { withCredentials: true });
+      const { data } = await api.get(`/api/eye-test/all?${params}`, {});
       setEyeTests(Array.isArray(data) ? data : []);
     } catch {
       toast.error('Failed to fetch eye tests');
@@ -113,10 +112,10 @@ const EyeTestManagement = () => {
   const updateTestStatus = async (testId, newStatus) => {
     setUpdatingId(testId);
     try {
-      await axios.put(
-        `${baseURL}/api/eye-test/status/${testId}`,
+      await api.put(
+        `/api/eye-test/status/${testId}`,
         { status: newStatus },
-        { withCredentials: true }
+        {}
       );
       toast.success(`Marked as ${newStatus}`);
       setEyeTests((prev) => prev.map((t) => t._id === testId ? { ...t, status: newStatus } : t));

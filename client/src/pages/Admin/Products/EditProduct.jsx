@@ -3,9 +3,8 @@ import { useNavigate } from "react-router";
 import { Size,Shape,Type,Colors  ,Categories,Material,GlassesBrand,Classification,LensBrand,AccessoriesType } from './../../../data/glassesInformationData'
 import ImageUpload from "@/components/ImageFunctionality";
 import { ArrayInputField, AttributeSection, FormField } from "@/components/ProductFields";
-import axios from "axios";
+import { api } from '@/lib/axios';
 import { useParams } from 'react-router';
-import { baseURL } from "@/url";
 
 
 const defaultForm = {
@@ -47,9 +46,7 @@ const EditProduct=()=>{
 
     // Fetching current product details
     useEffect(()=>{
-        axios.get(`${baseURL}/api/admin/get-single-product/${id}`, {
-          withCredentials: true
-        })
+        api.get(`/api/admin/get-single-product/${id}`)
         .then((res) => {
           setProduct(res.data);
         })
@@ -114,9 +111,7 @@ const EditProduct=()=>{
 
     // Gets attributes from server to show in add products
     useEffect(() => {
-      axios.get(`${baseURL}/api/admin/get-attributes`, {
-        withCredentials: true
-      })
+      api.get('/api/admin/get-attributes')
       .then((res) => {
         setAttributes(res.data);
         distributeAttributes(res.data);
@@ -228,9 +223,7 @@ const EditProduct=()=>{
       setLoading(true);      
       try {
         // First update the product
-        const response = await axios.post(`${baseURL}/api/admin/update-product/${form._id}`, form, {
-          withCredentials: true
-        });
+        const response = await api.post(`/api/admin/update-product/${form._id}`, form);
         
         if (response.status === 200 || response.status === 201) {
           // If product update was successful, delete the images from cloud
@@ -239,10 +232,8 @@ const EditProduct=()=>{
               await Promise.all(deletedImages.map(async imageUrl => {
                 const publicId = extractPublicIdFromUrl(imageUrl);
                 if (publicId) {
-                  await axios.post(`${baseURL}/api/image/delete-image`, { 
-                    public_id: publicId 
-                  }, {
-                    withCredentials: true
+                  await api.post('/api/image/delete-image', {
+                    public_id: publicId
                   });
                 }
               }));

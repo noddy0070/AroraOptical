@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { baseURL } from '@/url';
 import { loginSuccess } from '@/redux/slice/authSlice';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
 import AddressDialougeBox from '@/components/AddressDialougeBox';
@@ -17,7 +16,7 @@ export default function Addresses() {
     const [removingIndex, setRemovingIndex] = useState(null);
 
     const refreshUser = async () => {
-        const userRes = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
+        const userRes = await api.get('/api/auth/me', {});
         dispatch(loginSuccess({ user: userRes.data.user }));
     };
 
@@ -25,9 +24,9 @@ export default function Addresses() {
         if (!user?._id) return;
         try {
             if (isEditAddress) {
-                await axios.post(`${baseURL}/api/user/address/edit/${user._id}`, { index: editIndex, address: formData }, { withCredentials: true });
+                await api.post(`/api/user/address/edit/${user._id}`, { index: editIndex, address: formData }, {});
             } else {
-                await axios.post(`${baseURL}/api/user/address/add/${user._id}`, { address: formData }, { withCredentials: true });
+                await api.post(`/api/user/address/add/${user._id}`, { address: formData }, {});
             }
             await refreshUser();
         } catch (error) {
@@ -53,7 +52,7 @@ export default function Addresses() {
         if (!user?._id) return;
         setRemovingIndex(index);
         try {
-            await axios.post(`${baseURL}/api/user/address/remove/${user._id}`, { index }, { withCredentials: true });
+            await api.post(`/api/user/address/remove/${user._id}`, { index }, {});
             await refreshUser();
         } catch (error) {
             console.error('Error removing address:', error);

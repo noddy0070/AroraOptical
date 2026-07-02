@@ -1,6 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { baseURL } from '@/url';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 
 const ShippingPolicy = () => {
     const [policy,setPolicy]=useState(null);
@@ -8,7 +7,7 @@ const ShippingPolicy = () => {
     
      useEffect(() => {
     	// Public shipping policy fetch (read-only)
-    	axios.get(`${baseURL}/api/policy/682e6724fb2ffba94269d8cc`)
+    	api.get('/api/policy/682e6724fb2ffba94269d8cc')
             .then((res) => {
             setPolicy(res.data.message);
             setDate(new Date(res.data.message.updatedAt));

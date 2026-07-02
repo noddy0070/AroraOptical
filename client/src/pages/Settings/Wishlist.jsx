@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from '../../assets/images/icons/SearchIcon.svg';
 import wishListFilled from '../../assets/images/icons/WishlistIconFilled.svg';
 import productPlaceholder from '../../assets/images/productPlaceholder.png';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 
 export default function WishList() {
     const [wishlistItems, setWishlistItems] = useState([]);
@@ -20,7 +19,7 @@ export default function WishList() {
     const fetchWishlistItems = async () => {
         if (!user) return;
         try {
-            const res = await axios.get(`${baseURL}/api/user/wishlist/${user._id}`, { withCredentials: true });
+            const res = await api.get(`/api/user/wishlist/${user._id}`, {});
             if (res.data.success) setWishlistItems(res.data.wishlist);
         } catch (err) {
             console.error('Error fetching wishlist items:', err);
@@ -33,7 +32,7 @@ export default function WishList() {
         if (!user || loading) return;
         setLoading(true);
         try {
-            const res = await axios.post(`${baseURL}/api/user/wishlist/remove`, { userId: user._id, productId }, { withCredentials: true });
+            const res = await api.post('/api/user/wishlist/remove', { userId: user._id, productId }, {});
             if (res.data.success) setWishlistItems(prev => prev.filter(item => item._id !== productId));
         } catch (err) {
             console.error('Error removing from wishlist:', err);

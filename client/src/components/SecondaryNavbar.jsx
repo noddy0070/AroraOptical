@@ -7,8 +7,7 @@ import MenuIcon from "../assets/images/icons/MenuIcon.png"
 import logo from '../assets/images/AroraOpticalLogo.png';
 import { TransitionLink } from '../Routes/TransitionLink';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import navbarDropdown from '../assets/images/navbarDropDown.png'
 import { useNavigate } from 'react-router-dom';
 import { toTitleCase } from '../../shared/pipes/strFormatting';
@@ -66,8 +65,7 @@ export default function SecondaryNavbar() {
 
   const fetchCartCount = async () => {
     try {
-      const response = await axios.get(`${baseURL}/api/user/cart/${user._id}`, {
-        withCredentials: true
+      const response = await api.get(`/api/user/cart/${user._id}`, {
       });
       
       if (response.data.success) {
@@ -89,9 +87,8 @@ export default function SecondaryNavbar() {
 
     setIsSearching(true);
     try {
-      const response = await axios.get(`${baseURL}/api/product/search`, {
+      const response = await api.get('/api/product/search', {
         params: { q: searchTerm, limit: 8 },
-        withCredentials: true
       });
 
 

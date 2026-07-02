@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
-import axios from "axios";
+import { api } from '@/lib/axios';
 import * as XLSX from "xlsx";
-import { baseURL } from "@/url";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -128,10 +127,9 @@ const BulkUploadProducts = () => {
         const products = rows.map(normalizeRowToProduct);
         setPreviewCount(products.length);
 
-        const response = await axios.post(
-          `${baseURL}/api/admin/bulk-add-products`,
-          { products },
-          { withCredentials: true }
+        const response = await api.post(
+          '/api/admin/bulk-add-products',
+          { products }
         );
 
         if (response.data?.success) {

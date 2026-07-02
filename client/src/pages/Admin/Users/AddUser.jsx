@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { api } from '@/lib/axios';
 import { State, City } from "country-state-city";
-import { baseURL } from "@/url";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -146,7 +145,7 @@ const AddUser = () => {
 
     setSubmitting(true);
     try {
-      await axios.post(`${baseURL}/api/admin/add-user`, form, { withCredentials: true });
+      await api.post('/api/admin/add-user', form);
       toast.success('User created successfully!');
       navigate('/Admin/user');
     } catch (err) {

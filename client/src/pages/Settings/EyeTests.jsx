@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { useSelector } from 'react-redux';
-import { baseURL } from '@/url';
 
 const TABS = ['Upcoming', 'Missed', 'Completed', 'Cancelled'];
 
@@ -30,7 +29,7 @@ export default function EyeTests() {
     if (!user) return;
     setLoading(true);
     try {
-      const res = await axios.get(`${baseURL}/api/eye-test/user-tests`, { withCredentials: true });
+      const res = await api.get('/api/eye-test/user-tests', {});
       setTests(res.data || []);
     } catch (err) {
       console.error('Failed to load eye tests', err);
@@ -54,7 +53,7 @@ export default function EyeTests() {
   const handleCancel = async (testId) => {
     setCancelling(testId);
     try {
-      await axios.put(`${baseURL}/api/eye-test/cancel/${testId}`, {}, { withCredentials: true });
+      await api.put(`/api/eye-test/cancel/${testId}`, {}, {});
       setConfirmCancel(null);
       await fetchTests();
     } catch (err) {

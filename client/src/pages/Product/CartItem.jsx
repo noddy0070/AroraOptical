@@ -4,8 +4,7 @@ import subtract from '../../assets/images/icons/subtract.svg';
 import add from '../../assets/images/icons/add.svg';
 import edit from '../../assets/images/icons/Edit.svg';
 import { TransitionLink } from '@/Routes/TransitionLink';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { useSelector } from 'react-redux';
 
 const lensThicknessMap = {
@@ -19,7 +18,7 @@ const CartItem = ({ item, handleRemoveItem, updateQuantity }) => {
 
     useEffect(() => {
         const fetchPrescription = async () => {
-            const response = await axios.get(`${baseURL}/api/user/prescription/${user._id}`);
+            const response = await api.get(`/api/user/prescription/${user._id}`);
             setPrescription(response.data.prescriptions);
         };
         fetchPrescription();

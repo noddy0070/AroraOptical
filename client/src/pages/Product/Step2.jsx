@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { TitleButton2 } from '@/components/button';
 import { formatINR } from '@/components/IntToPrice';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { useSelector } from 'react-redux';
 
 const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -21,8 +20,8 @@ const Step2 = ({ cartItems, shippingAddress, deliveryPrice }) => {
     const handleCODOrder = async () => {
         setLoading(true);
         try {
-            const response = await axios.post(
-                `${baseURL}/api/order/create-cod`,
+            const response = await api.post(
+                '/api/order/create-cod',
                 {
                     cartItems,
                     totalAmount,        // rupees — includes delivery + COD charges
@@ -32,7 +31,7 @@ const Step2 = ({ cartItems, shippingAddress, deliveryPrice }) => {
                     userId: user._id,
                     notes: 'None for now',
                 },
-                { withCredentials: true }
+                {  }
             );
             if (response.data.success) {
                 window.location.href = '/thank-you';
@@ -61,12 +60,12 @@ const Step2 = ({ cartItems, shippingAddress, deliveryPrice }) => {
         try {
             if (isLocalhost) {
                 // Use mock endpoint on localhost — avoids PhonePe redirect loop
-                const response = await axios.post(`${baseURL}/api/order/create-mock`, data, { withCredentials: true });
+                const response = await api.post('/api/order/create-mock', data, {  });
                 if (response.data.success) {
                     window.location.href = '/thank-you';
                 }
             } else {
-                const response = await axios.post(`${baseURL}/api/order/create-phonepe`, data, { withCredentials: true });
+                const response = await api.post('/api/order/create-phonepe', data, {  });
                 if (response.data?.checkoutPageUrl) {
                     window.location.assign(response.data.checkoutPageUrl);
                 }

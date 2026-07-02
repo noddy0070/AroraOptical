@@ -1,13 +1,12 @@
 import React,{useState,useEffect} from 'react'
-import { baseURL } from '@/url';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 const PrivacyPolicy = () => {
     const [policy,setPolicy]=useState(null);
      const [date,setDate] = useState(new Date(null));
     
      useEffect(() => {
     	// Public privacy policy fetch (read-only)
-    	axios.get(`${baseURL}/api/policy/682e6778fb2ffba94269d8ce`)
+    	api.get('/api/policy/682e6778fb2ffba94269d8ce')
             .then((res) => {
             setPolicy(res.data.message);
             setDate(new Date(res.data.message.updatedAt));

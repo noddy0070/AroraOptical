@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { toast } from 'react-toastify';
-import { baseURL } from '@/url';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -73,7 +72,7 @@ const AdminHome = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const { data } = await axios.get(`${baseURL}/api/admin/stats`, { withCredentials: true });
+        const { data } = await api.get('/api/admin/stats', {});
         if (data.success) {
           setStats(data.stats);
           setRecentOrders(data.recentOrders ?? []);

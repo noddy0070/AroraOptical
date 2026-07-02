@@ -2,8 +2,7 @@ import React,{useState,useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import replacementPolicyIcon from '../../assets/images/icons/replacementPolicy.svg';
 import deliveryTimeIcon from '../../assets/images/icons/deliveryTime.svg';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { useNavigate } from 'react-router-dom';
 import CartOrderSummary from './CartOrderSummary';
 import CartItem from './CartItem';
@@ -29,8 +28,7 @@ export default function Cart(){
         if (!user) return;
 
         try {
-            const response = await axios.get(`${baseURL}/api/user/cart/${user._id}`, {
-                withCredentials: true
+            const response = await api.get(`/api/user/cart/${user._id}`, {
             });
             
             if (response.data.success) {
@@ -59,11 +57,10 @@ export default function Cart(){
 
         setLoading(true);
         try {
-            const response = await axios.post(`${baseURL}/api/user/cart/remove`, {
+            const response = await api.post('/api/user/cart/remove', {
                 userId: user._id,
                 productId
             }, {
-                withCredentials: true
             });
 
             if (response.data.success) {
@@ -93,12 +90,11 @@ export default function Cart(){
 
         setLoading(true);
         try {
-            const response = await axios.post(`${baseURL}/api/user/cart/update-quantity`, {
+            const response = await api.post('/api/user/cart/update-quantity', {
                 userId: user._id,
                 productId,
                 quantity: newQuantity
             }, {
-                withCredentials: true
             });
 
             if (response.data.success) {

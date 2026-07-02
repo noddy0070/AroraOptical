@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { PriceBreakdown, formatCoatingLabel } from '@/components/lensFeatureBox';
@@ -43,10 +43,10 @@ export default function UploadPrescription({ form, addProductToCart, amount, bas
     }
     setAdding(true);
     try {
-      const res = await axios.post(`${baseURL}/api/user/prescription/add-photo`, {
+      const res = await api.post('/api/user/prescription/add-photo', {
         userId: user._id,
         prescriptionImage: imageUrl,
-      }, { withCredentials: true });
+      }, {  });
       if (res.data.success) {
         const updatedForm = { ...form, prescriptionId: res.data.prescriptionId };
         await addProductToCart(updatedForm, amount);

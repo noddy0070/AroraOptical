@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import { baseURL } from '@/url';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
 
 // ── Icons ────────────────────────────────────────────────────────────────────
@@ -117,7 +116,7 @@ const OrderManagement = () => {
     if (!pid) return;
     setSpecLoading(true);
     try {
-      const { data } = await axios.get(`${baseURL}/api/product/${pid}`, { withCredentials: true });
+      const { data } = await api.get(`/api/product/${pid}`, {});
       setSpecModal(prev => prev ? { ...prev, fetched: data } : prev);
     } catch {
       // show snapshot-only if fetch fails
@@ -129,7 +128,7 @@ const OrderManagement = () => {
   const fetchTracking = async (orderId) => {
     setTrackingLoading(true);
     try {
-      const { data } = await axios.get(`${baseURL}/api/order/${orderId}/track`, { withCredentials: true });
+      const { data } = await api.get(`/api/order/${orderId}/track`, {});
       setTrackingData(data);
     } catch {
       toast.error('Failed to fetch tracking info');
@@ -144,7 +143,7 @@ const OrderManagement = () => {
       const params = { page: currentPage, limit: 10 };
       if (selectedStatus) params.status = selectedStatus;
 
-      const { data } = await axios.get(`${baseURL}/api/order/admin/all`, { params, withCredentials: true });
+      const { data } = await api.get('/api/order/admin/all', { params });
       if (data.success) {
         setOrders(data.orders);
         setTotalPages(data.totalPages);
@@ -160,10 +159,10 @@ const OrderManagement = () => {
   const handleStatusUpdate = async (orderId, newStatus) => {
     setStatusUpdating(true);
     try {
-      const { data } = await axios.put(
-        `${baseURL}/api/order/admin/${orderId}/status`,
+      const { data } = await api.put(
+        `/api/order/admin/${orderId}/status`,
         { status: newStatus },
-        { withCredentials: true }
+        {}
       );
       if (data.success) {
         toast.success('Order status updated');
@@ -182,9 +181,9 @@ const OrderManagement = () => {
     if (!confirmDelete) return;
     setDeleting(true);
     try {
-      const { data } = await axios.delete(
-        `${baseURL}/api/order/admin/${confirmDelete}`,
-        { withCredentials: true }
+      const { data } = await api.delete(
+        `/api/order/admin/${confirmDelete}`,
+        {}
       );
       if (data.success) {
         toast.success('Order deleted');

@@ -1,16 +1,14 @@
 import { formatINR } from '@/components/IntToPrice';
 import { TransitionLink } from '@/Routes/TransitionLink';
 import { useState } from 'react';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 
 const Table = ({tableData, itemsPerPage, currentPage, setCurrentPage}) => {
   const totalPages = Math.ceil(tableData.length / itemsPerPage);
 
   const handleBlockUser = async (userId, currentlyBlocked) => {
     try {
-      const response = await axios.post(`${baseURL}/api/admin/toggle-block-user/${userId}`, {
-        withCredentials: true
+      const response = await api.post(`/api/admin/toggle-block-user/${userId}`, {
       });
       if (response.data.success) {
         // Refresh the page to update the table

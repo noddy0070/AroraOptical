@@ -4,8 +4,7 @@ import close from '@/assets/images/checkout/close.svg';
 import edit from '@/assets/images/checkout/edit.svg';
 import AddressDialougeBox from '@/components/AddressDialougeBox';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
 import { loginSuccess } from '@/redux/slice/authSlice';
 import { formatINR } from '@/components/IntToPrice';
@@ -48,7 +47,7 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
       try {
         const totalQuantity = cartItems.reduce((total, item) => total + (Number(item.quantity) || 1), 0);
         const weight = 0.5 * totalQuantity;
-        const response = await axios.get(`${baseURL}/api/order/serviceability`, {
+        const response = await api.get('/api/order/serviceability', {
           params: { deliveryPincode: address.pincode, weight, cod: 1 },
         });
         if (cancelled) return;
@@ -73,9 +72,9 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
     if (!user || !user._id) return;
     if (isEditAddress) {
       try {
-        const response = await axios.post(`${baseURL}/api/user/address/edit/${user._id}`, { index: selectedAddressIndex, address: addressData }, { withCredentials: true });
+        const response = await api.post(`/api/user/address/edit/${user._id}`, { index: selectedAddressIndex, address: addressData }, {  });
         if (response.data.success) {
-          const userRes = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
+          const userRes = await api.get('/api/auth/me', {  });
           dispatch(loginSuccess({ user: userRes.data.user }));
           setIsAddressDialogOpen(false);
         }
@@ -84,9 +83,9 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
       }
     } else {
       try {
-        const response = await axios.post(`${baseURL}/api/user/address/add/${user._id}`, { address: addressData }, { withCredentials: true });
+        const response = await api.post(`/api/user/address/add/${user._id}`, { address: addressData }, {  });
         if (response.data.success) {
-          const userRes = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
+          const userRes = await api.get('/api/auth/me', {  });
           dispatch(loginSuccess({ user: userRes.data.user }));
           setIsAddressDialogOpen(false);
         }
@@ -99,9 +98,9 @@ const Step1 = ({ cartItems, setStep, setShippingAddress, setDeliveryPrice }) => 
   const handleRemoveAddress = async (index) => {
     if (!user || !user._id) return;
     try {
-      const response = await axios.post(`${baseURL}/api/user/address/remove/${user._id}`, { index }, { withCredentials: true });
+      const response = await api.post(`/api/user/address/remove/${user._id}`, { index }, {  });
       if (response.data.success) {
-        const userRes = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
+        const userRes = await api.get('/api/auth/me', {  });
         dispatch(loginSuccess({ user: userRes.data.user }));
       }
     } catch (error) {

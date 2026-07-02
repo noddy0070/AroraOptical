@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { baseURL } from '@/url';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 
 const TermsAndConditions = () => {
   const [policy, setPolicy] = useState({
@@ -31,8 +30,7 @@ const TermsAndConditions = () => {
 
   const fetchPolicy = async () => {
     try {
-      const response = await axios.get(`${baseURL}/api/admin/get-policy/682e6780fb2ffba94269d8cf`, {
-        withCredentials: true
+      const response = await api.get('/api/admin/get-policy/682e6780fb2ffba94269d8cf', {
       });
       if (response.data.message) {
         setPolicy(response.data.message);
@@ -49,8 +47,7 @@ const TermsAndConditions = () => {
     
     try {
       // First try to update the existing policy
-      const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6780fb2ffba94269d8cf`, policy, {
-        withCredentials: true
+      const response = await api.post('/api/admin/update-policy/682e6780fb2ffba94269d8cf', policy, {
       });
       
       setMessage('Terms and Conditions updated successfully!');
@@ -64,11 +61,10 @@ const TermsAndConditions = () => {
       // If update fails, try to create a new policy
       if (error.response?.status === 404 || error.response?.status === 400) {
         try {
-          const createResponse = await axios.post(`${baseURL}/api/admin/add-cancellation-policy`, {
+          const createResponse = await api.post('/api/admin/add-cancellation-policy', {
             ...policy,
             name: "TermsAndConditions"
           }, {
-            withCredentials: true
           });
           setMessage('Terms and Conditions created successfully!');
           setIsEditing(false);

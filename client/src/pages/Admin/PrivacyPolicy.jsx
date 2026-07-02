@@ -1,9 +1,8 @@
 import {useState,useEffect} from "react";
 import { Categories } from './../../data/glassesInformationData'
-import axios from "axios";
+import { api } from '@/lib/axios';
 import { State, City } from "country-state-city";
 import { ArrayInputField, ArrayInputFieldPolicies, FormField } from "@/components/ProductFields";
-import { baseURL } from "@/url";
 
 const defaultForm = {
   introduction: '',
@@ -20,8 +19,7 @@ const PrivacyPolicyAdmin=()=>{
         const [policy,setPolicy]=useState(null);
     
      useEffect(() => {
-        axios.get(`${baseURL}/api/admin/get-policy/682e6778fb2ffba94269d8ce`, {
-          withCredentials: true
+        api.get('/api/admin/get-policy/682e6778fb2ffba94269d8ce', {
         })
             .then((res) => {
             setPolicy(res.data.message);
@@ -61,8 +59,7 @@ const PrivacyPolicyAdmin=()=>{
         e.preventDefault();
       
         try {
-          const response = await axios.post(`${baseURL}/api/admin/update-policy/682e6778fb2ffba94269d8ce`, form, {
-            withCredentials: true
+          const response = await api.post('/api/admin/update-policy/682e6778fb2ffba94269d8ce', form, {
           });
           if (response.status === 200 || response.status === 201) {
             alert('Privacy Policy Updated successfully!');

@@ -6,9 +6,8 @@ import WishListIconFilled from '../../assets/images/icons/WishlistIconFilled.svg
 import './product.css';
 import { renderStars } from '@/components/RenderStarts';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { formatINR } from '@/components/IntToPrice';
-import { baseURL } from '@/url';
 import { TransitionLink } from '@/Routes/TransitionLink';
 import { mapBrandToLogo, mapBrandToDescription } from '@/data/brandMap';
 import {toTitleCase} from '../../../shared/pipes/strFormatting';
@@ -101,10 +100,10 @@ export default function ProductDescription({productToDisplay}){
         setReviewSubmitting(true);
         setReviewError('');
         try {
-            const response = await axios.post(
-                `${baseURL}/api/product/${productToDisplay._id}/review`,
+            const response = await api.post(
+                `/api/product/${productToDisplay._id}/review`,
                 { userId: user._id, rating: newReviewRating, comment: newReviewComment },
-                { withCredentials: true }
+                {  }
             );
             setReviews(prev => [...prev, response.data.review]);
             setNewReviewRating(0);
@@ -120,8 +119,8 @@ export default function ProductDescription({productToDisplay}){
     const [productsModel,setProductsModel] =useState([]);
     
     useEffect(()=>{
-        axios
-          .post(`${baseURL}/api/product/get-color`, { modelCode: productToDisplay.modelCode })
+        api
+          .post('/api/product/get-color', { modelCode: productToDisplay.modelCode })
         .then((res) => {
             setProductsModel(res.data.message);
             })
@@ -135,8 +134,7 @@ export default function ProductDescription({productToDisplay}){
         if (isAuthenticated && user) {
             const checkWishlist = async () => {
                 try {
-                    const response = await axios.get(`${baseURL}/api/user/wishlist/${user._id}`, {
-                        withCredentials: true
+                    const response = await api.get(`/api/user/wishlist/${user._id}`, {
                     });
                     setWishlistIds(new Set(response.data.wishlist.map(item => item._id)));
                 } catch (error) {
@@ -151,7 +149,7 @@ export default function ProductDescription({productToDisplay}){
         // Fetch similar products based on category and brand
         const fetchSimilarProducts = async () => {
             try {
-                const response = await axios.get(`${baseURL}/api/product/get`, {
+                const response = await api.get('/api/product/get', {
                     params: {
                         category: productToDisplay.category,
                         brand: productToDisplay.brand,
@@ -203,8 +201,7 @@ export default function ProductDescription({productToDisplay}){
             };
             if (selectedSize) payload.size = selectedSize;
 
-            const response = await axios.post(`${baseURL}/api/user/cart/add`, payload, {
-                withCredentials: true
+            const response = await api.post('/api/user/cart/add', payload, {
             });
 
             if (response.data.success) {
@@ -229,10 +226,10 @@ export default function ProductDescription({productToDisplay}){
         const inWishlist = wishlistIds.has(productId);
         try {
             if (inWishlist) {
-                await axios.post(`${baseURL}/api/user/wishlist/remove`, { userId: user._id, productId }, { withCredentials: true });
+                await api.post('/api/user/wishlist/remove', { userId: user._id, productId }, {  });
                 setWishlistIds(prev => { const next = new Set(prev); next.delete(productId); return next; });
             } else {
-                await axios.post(`${baseURL}/api/user/wishlist/add`, { userId: user._id, productId }, { withCredentials: true });
+                await api.post('/api/user/wishlist/add', { userId: user._id, productId }, {  });
                 setWishlistIds(prev => new Set([...prev, productId]));
             }
         } catch (error) {

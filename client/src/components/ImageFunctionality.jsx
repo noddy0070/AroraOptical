@@ -1,5 +1,6 @@
 import React, { useState,useEffect} from 'react';
 import axios from 'axios';
+import { api } from '@/lib/axios';
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dohfbsepn/image/upload';
 const CLOUDINARY_UPLOAD_PRESET = 'AroraOpticals'; // Set this in your Cloudinary dashboard.
@@ -7,7 +8,6 @@ const CLOUDINARY_UPLOAD_PRESET = 'AroraOpticals'; // Set this in your Cloudinary
 // const CLOUDINARY_API_SECRET = "mGc4mgrnhkCrBuvXaN2vFnt5f_s";
 // const CLOUDINARY_API_KEY = '192436767777992';
 import CollectionSvg from '../assets/images/icons/collectionSvg.svg'
-import { baseURL } from '@/url';
 
 const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -51,17 +51,16 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       const timestamp = Math.floor(Date.now() / 1000);
       const publicId= extractPublicIdFromUrl(image_url);
       // 🔍 Check if the server is reachable
-      await axios.get(`${baseURL}/api/image/health`).catch(() => {
+      await api.get('/api/image/health').catch(() => {
         throw new Error('⚠️ Backend server is not running. Start the server before making requests.');
       });
       
       // 🔑 Fetch signature from your backend
       
-      const signatureResponse = await axios.post(`${baseURL}/api/image/generate-signature`, {
+      const signatureResponse = await api.post('/api/image/generate-signature', {
         public_id: publicId,
         timestamp,
       }, {
-        withCredentials: true
       });
   
       const { signature, api_key } = signatureResponse.data;
@@ -78,8 +77,7 @@ const ImageUpload = ({uploadedImages, setUploadedImages, onImageRemove}) => {
       formData.append('signature', signature);
       formData.append('api_key', api_key);
   
-      const deleteResponse =await axios.post(`${baseURL}/api/image/delete-image`, { public_id: publicId }, {
-        withCredentials: true
+      const deleteResponse =await api.post('/api/image/delete-image', { public_id: publicId }, {
       });
 
       if (deleteResponse.data.result === 'ok') {

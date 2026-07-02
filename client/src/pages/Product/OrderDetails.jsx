@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { toast } from 'react-toastify';
-import { baseURL } from '@/url';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
 
 const fmtRx = (v) => {
@@ -27,8 +26,7 @@ const OrderDetails = () => {
 
   const fetchOrderDetails = async () => {
     try {
-      const response = await axios.get(`${baseURL}/api/order/${orderId}`, {
-        withCredentials: true
+      const response = await api.get(`/api/order/${orderId}`, {
       });
 
       if (response.data.success) {
@@ -45,8 +43,7 @@ const OrderDetails = () => {
   const fetchTrackingInfo = async () => {
     setTrackingLoading(true);
     try {
-      const response = await axios.get(`${baseURL}/api/order/${orderId}/track`, {
-        withCredentials: true
+      const response = await api.get(`/api/order/${orderId}/track`, {
       });
 
       if (response.data.success) {

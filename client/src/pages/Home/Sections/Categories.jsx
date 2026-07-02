@@ -4,8 +4,7 @@ import { TransitionLink } from "@/Routes/TransitionLink";
 import PropTypes from "prop-types";
 import categoriesData from "@/data/home/categories.json";
 import Item from "@/pages/Shop/item";
-import axios from "axios";
-import { baseURL } from "@/url";
+import { api } from '@/lib/axios';
 
 const CategoryCard = ({ category, index }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -73,7 +72,7 @@ export default function Categories() {
         const fetchProducts = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${baseURL}/api/product/get`, {
+                const response = await api.get('/api/product/get', {
                     params: {
                         category: 'glasses',
                         gender:  "men" ,

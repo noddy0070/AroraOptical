@@ -12,8 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import './Dashboard.css';
 import { TransitionLink } from '@/Routes/TransitionLink';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { logout } from '@/redux/slice/authSlice';
 
 // ── Sidebar data ──────────────────────────────────────────────────────────────
@@ -276,7 +275,7 @@ const DashBoard = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${baseURL}/api/auth/logout`, {}, { withCredentials: true });
+      await api.post('/api/auth/logout', {}, {});
     } catch { /* proceed to clear client state regardless */ }
     dispatch(logout());
     navigate('/');
@@ -308,7 +307,7 @@ const DashBoard = () => {
 
   // Fetch products once for local filtering
   useEffect(() => {
-    axios.get(`${baseURL}/api/admin/get-products`, { withCredentials: true })
+    api.get('/api/admin/get-products', {})
       .then(({ data }) => setProducts(data.products ?? []))
       .catch(() => {});
   }, []);
@@ -337,7 +336,7 @@ const DashBoard = () => {
   // Poll unread count every 30 s
   const fetchUnreadCount = useCallback(async () => {
     try {
-      const { data } = await axios.get(`${baseURL}/api/admin/notifications`, { withCredentials: true });
+      const { data } = await api.get('/api/admin/notifications', {});
       if (data.success) setUnreadCount(data.unreadCount ?? 0);
     } catch { /* silent */ }
   }, []);
@@ -352,9 +351,9 @@ const DashBoard = () => {
   const openNotifications = async () => {
     setNotifLoading(true);
     try {
-      const { data } = await axios.get(`${baseURL}/api/admin/notifications`, { withCredentials: true });
+      const { data } = await api.get('/api/admin/notifications', {});
       if (data.success) setNotifications(data.notifications ?? []);
-      await axios.put(`${baseURL}/api/admin/notifications/mark-read`, {}, { withCredentials: true });
+      await api.put('/api/admin/notifications/mark-read', {}, {});
       setUnreadCount(0);
     } catch { /* silent */ }
     finally { setNotifLoading(false); }
@@ -370,7 +369,7 @@ const DashBoard = () => {
   const handleDeleteNotification = async (id) => {
     setNotifications(prev => prev.filter(n => n._id !== id));
     try {
-      await axios.delete(`${baseURL}/api/admin/notifications/${id}`, { withCredentials: true });
+      await api.delete(`/api/admin/notifications/${id}`, {});
     } catch { /* optimistic — revert not needed for delete */ }
   };
 
@@ -378,7 +377,7 @@ const DashBoard = () => {
     setNotifications([]);
     setUnreadCount(0);
     try {
-      await axios.delete(`${baseURL}/api/admin/notifications`, { withCredentials: true });
+      await api.delete('/api/admin/notifications', {});
     } catch { /* silent */ }
   };
 

@@ -4,8 +4,7 @@ import wishListFilled from '../../assets/images/icons/WishlistIconFilled.svg';
 import star from '../../assets/images/star.png';
 import { formatINR } from '@/components/IntToPrice';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function AccessoriesItem({comapny, price, image, rating, title, colour, productId}) {
@@ -20,8 +19,7 @@ export default function AccessoriesItem({comapny, price, image, rating, title, c
         const checkWishlist = async () => {
             if (isAuthenticated && user) {
                 try {
-                    const response = await axios.get(`${baseURL}/api/user/wishlist/${user._id}`, {
-                        withCredentials: true
+                    const response = await api.get(`/api/user/wishlist/${user._id}`, {
                     });
                     if (response.data.success) {
                         const isInList = response.data.wishlist.some(item => item._id === productId);
@@ -47,11 +45,10 @@ export default function AccessoriesItem({comapny, price, image, rating, title, c
         try {
             setLoading(true);
             const endpoint = isInWishlist ? 'remove' : 'add';
-            const response = await axios.post(`${baseURL}/api/user/wishlist/${endpoint}`, {
+            const response = await api.post(`/api/user/wishlist/${endpoint}`, {
                 userId: user._id,
                 productId: productId
             }, {
-                withCredentials: true
             });
 
             if (response.data.success) {

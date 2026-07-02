@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import { toast } from 'react-toastify';
-import { baseURL } from '@/url';
 
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const PlusIcon = () => (
@@ -222,7 +221,7 @@ export default function AttributesPage() {
   const fetchAttributes = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`${baseURL}/api/admin/get-attributes`, { withCredentials: true });
+      const { data } = await api.get('/api/admin/get-attributes', {});
       setAttributes(Array.isArray(data) ? data : []);
     } catch {
       toast.error('Failed to load attributes');
@@ -234,7 +233,7 @@ export default function AttributesPage() {
   const handleAdd = async () => {
     setAddSaving(true);
     try {
-      await axios.post(`${baseURL}/api/admin/add-attributes`, addForm, { withCredentials: true });
+      await api.post('/api/admin/add-attributes', addForm, {});
       toast.success('Attribute added');
       setAddOpen(false);
       setAddForm(EMPTY_FORM);
@@ -249,7 +248,7 @@ export default function AttributesPage() {
   const handleEdit = async () => {
     setEditSaving(true);
     try {
-      await axios.put(`${baseURL}/api/admin/edit-attributes`, editForm, { withCredentials: true });
+      await api.put('/api/admin/edit-attributes', editForm, {});
       toast.success('Attribute updated');
       setEditOpen(false);
       fetchAttributes();
@@ -264,7 +263,7 @@ export default function AttributesPage() {
     if (!confirmDelete) return;
     setDeleting(true);
     try {
-      await axios.delete(`${baseURL}/api/admin/delete-attributes/${confirmDelete}`, { withCredentials: true });
+      await api.delete(`/api/admin/delete-attributes/${confirmDelete}`, {});
       toast.success('Attribute deleted');
       setAttributes((prev) => prev.filter((a) => a._id !== confirmDelete));
       setConfirmDelete(null);

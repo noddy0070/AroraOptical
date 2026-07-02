@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import { useSelector,useDispatch } from 'react-redux';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { loginSuccess } from '@/redux/slice/authSlice';
 import { TitleButton2, CartButton, ContactUsButton } from '@/components/button';
 import { PriceBreakdown, formatCoatingLabel } from '@/components/lensFeatureBox';
@@ -17,12 +16,12 @@ const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,set
 
     },[refreshKey]);
     const updateUser = async () => {
-        const userRes = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
+        const userRes = await api.get('/api/auth/me', {  });
         dispatch(loginSuccess({ user: userRes.data.user }));
-        
+
     }
     const getPrescriptions = async () => {
-        const prescriptionsRes = await axios.get(`${baseURL}/api/user/prescription/${user._id}`, { withCredentials: true });
+        const prescriptionsRes = await api.get(`/api/user/prescription/${user._id}`, {  });
         setPrescriptions(prescriptionsRes.data.prescriptions);
     }
 

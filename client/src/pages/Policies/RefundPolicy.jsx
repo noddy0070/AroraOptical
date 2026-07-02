@@ -1,13 +1,12 @@
 import React,{useState,useEffect} from 'react'
-import { baseURL } from '@/url';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 const RefundPolicy = () => {
     const [policy,setPolicy]=useState(null);
      const [date,setDate] = useState(new Date(null));
     
      useEffect(() => {
     	// Public refund policy fetch (read-only)
-    	axios.get(`${baseURL}/api/policy/682e66a5424de8081226383e`)
+    	api.get('/api/policy/682e66a5424de8081226383e')
             .then((res) => {
             setPolicy(res.data.message);
             setDate(new Date(res.data.message.updatedAt));

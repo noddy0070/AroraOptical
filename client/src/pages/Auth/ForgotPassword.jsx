@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import LoginImg from '../../assets/images/LoginImg.png';
 import { TransitionLink } from '../../Routes/TransitionLink';
-import { baseURL } from '@/url';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -32,8 +31,8 @@ export default function ForgotPassword() {
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${baseURL}/api/auth/forgot-password`,
+      const res = await api.post(
+        '/api/auth/forgot-password',
         { email: email.trim() },
         { headers: { 'Content-Type': 'application/json' } }
       );

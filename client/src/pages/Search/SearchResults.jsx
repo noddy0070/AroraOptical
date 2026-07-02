@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { TransitionLink } from '../../Routes/TransitionLink';
 import SearchIcon from '../../assets/images/icons/SearchIcon.svg';
 import Filters from '../../components/Filters.jsx';
@@ -45,9 +44,8 @@ export default function SearchResults() {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`${baseURL}/api/product/search`, {
+            const response = await api.get('/api/product/search', {
                 params: { q: query, limit: 50 },
-                withCredentials: true
             });
 
             if (response.data.success) {

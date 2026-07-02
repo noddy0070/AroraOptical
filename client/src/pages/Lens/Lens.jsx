@@ -13,8 +13,7 @@ import SavedPrescription from './SavedPrescription';
 import BlueFilterLens from './BlueFilterLens';
 import LensTint from './LensTint';
 import UploadPrescription from './UploadPrescription';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -61,7 +60,7 @@ export default function Lens() {
   },[]);
   const fetchProductDetails = async () => {
     // Lens flow should use public product details endpoint
-    const response = await axios.get(`${baseURL}/api/product/${productId}`);
+    const response = await api.get(`/api/product/${productId}`);
     setProduct(response.data);
     setAmount(response.data.price);
   }
@@ -156,7 +155,7 @@ export default function Lens() {
 
   const addProductToCart = async (updatedFormData = form, updatedAmount = amount) => {
     try {
-      const response = await axios.post(`${baseURL}/api/user/cart/add`, {
+      const response = await api.post('/api/user/cart/add', {
           userId: user._id,
           productId: productId,
           quantity: 1,
@@ -166,7 +165,6 @@ export default function Lens() {
           prescriptionId: updatedFormData.prescriptionId,
           totalAmount: updatedAmount
       }, {
-          withCredentials: true
       });
 
       if (response.data.success) {

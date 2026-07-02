@@ -2,12 +2,13 @@ import React,{useState,useEffect} from 'react';
 import {useNavigate, useLocation} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '@/redux/slice/authSlice';
-import axios from "axios";
+import { api } from '@/lib/axios';
 import LoginImg from '../../assets/images/LoginImg.png'
 import google from '../../assets/images/Google.png';
 import { TransitionLink } from '../../Routes/TransitionLink';
-import { baseURL } from '@/url';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+const baseURL = import.meta.env.VITE_BASE_URL || '';
 
 export default function Login(){
     const [formData,setFormData]=useState({
@@ -70,8 +71,7 @@ export default function Login(){
 
         setLoading(true);
         try {
-            const res = await axios.post(`${baseURL}/api/auth/signin`, formData, {
-                withCredentials: true,
+            const res = await api.post('/api/auth/signin', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '@/lib/axios';
 import LoginImg from '../../assets/images/LoginImg.png';
 import { TransitionLink } from '../../Routes/TransitionLink';
-import { baseURL } from '@/url';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function ResetPassword() {
@@ -47,8 +46,8 @@ export default function ResetPassword() {
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${baseURL}/api/auth/reset-password`,
+      const res = await api.post(
+        '/api/auth/reset-password',
         { token, password },
         { headers: { 'Content-Type': 'application/json' } }
       );

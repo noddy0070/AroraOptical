@@ -1,7 +1,6 @@
 import { useState,useEffect } from "react";
-import axios from "axios";
+import { api } from '@/lib/axios';
 import { useParams } from 'react-router';
-import { baseURL } from "@/url";
 import { FormField } from "@/components/ProductFields";
 
 const ViewUser = () => {
@@ -10,9 +9,7 @@ const ViewUser = () => {
      
      useEffect(()=>{
         if (!id) return; 
-        axios.get(`${baseURL}/api/admin/get-user/${id}`, {
-          withCredentials: true
-        })
+        api.get(`/api/admin/get-user/${id}`)
         .then((res) => {
           setUserDetails(res.data.message);
             })

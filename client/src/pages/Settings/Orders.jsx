@@ -3,8 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '../../assets/images/icons/SearchIcon.svg';
 import productPlaceholder from '../../assets/images/productPlaceholder.png';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 
 const STATUS_STYLES = {
     Confirmed:  'bg-blue-100 text-blue-700',
@@ -34,7 +33,7 @@ export default function Orders() {
         if (!user) return;
         setLoading(true);
         try {
-            const res = await axios.get(`${baseURL}/api/user/orders/${user._id}`, { withCredentials: true });
+            const res = await api.get(`/api/user/orders/${user._id}`, {});
             if (res.data.success) setOrders(res.data.orders || []);
         } catch (err) {
             console.error('Error fetching orders:', err);

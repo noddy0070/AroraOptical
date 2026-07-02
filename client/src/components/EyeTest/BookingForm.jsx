@@ -3,8 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import eyeTestBanner from '../../assets/images/eyeTestBanner.png';
-import axios from 'axios';
-import { baseURL } from '@/url';
+import { api } from '@/lib/axios';
 import CalendarComponent from './CalendarComponent';
 
 // ── Icons ─────────────────────────────────────────────────────────────────────
@@ -100,9 +99,8 @@ const BookingForm = () => {
         String(date.getMonth() + 1).padStart(2, '0'),
         String(date.getDate()).padStart(2, '0'),
       ].join('-');
-      const res  = await fetch(`${baseURL}/api/eye-test/available-slots?date=${formattedDate}`);
-      const data = await res.json();
-      setAvailableSlots(data);
+      const res = await api.get(`/api/eye-test/available-slots?date=${formattedDate}`);
+      setAvailableSlots(res.data);
     } catch {
       toast.error('Failed to fetch available time slots');
     }
@@ -129,10 +127,10 @@ const BookingForm = () => {
       const selectedSlot = availableSlots.find((s) => s.value === formData.timeSlot);
       if (!selectedSlot) throw new Error('Invalid time slot selected');
 
-      const response = await axios.post(
-        `${baseURL}/api/eye-test/book`,
+      const response = await api.post(
+        '/api/eye-test/book',
         { data: { ...formData, timeSlot: selectedSlot.value } },
-        { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
       if (response.status !== 201) throw new Error(response.data?.message || 'Failed to book appointment');
