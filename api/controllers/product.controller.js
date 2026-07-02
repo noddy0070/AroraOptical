@@ -78,8 +78,13 @@ export const getProducts = async (req, res, next) => {
         'kids': 'Kids'
       };
       
-      // Include both specific gender and Unisex products for all gender selections
-      query.gender = { $in: [genderMap[gender.toLowerCase()], 'Unisex'] };
+      // Kids is a distinct catalog — don't leak Unisex/adult products into it.
+      // Men/Women still include Unisex products.
+      if (gender.toLowerCase() === 'kids') {
+        query.gender = genderMap.kids;
+      } else {
+        query.gender = { $in: [genderMap[gender.toLowerCase()], 'Unisex'] };
+      }
     }
 
     // Optional brand filter
