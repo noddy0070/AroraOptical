@@ -79,9 +79,12 @@ export const getProducts = async (req, res, next) => {
       };
       
       // Kids is a distinct catalog — don't leak Unisex/adult products into it.
-      // Men/Women still include Unisex products.
+      // Men/Women still include Unisex products. "unisex" itself means
+      // Men + Women + Unisex, i.e. everything except Kids.
       if (gender.toLowerCase() === 'kids') {
         query.gender = genderMap.kids;
+      } else if (gender.toLowerCase() === 'unisex') {
+        query.gender = { $in: ['Men', 'Women', 'Unisex'] };
       } else {
         query.gender = { $in: [genderMap[gender.toLowerCase()], 'Unisex'] };
       }

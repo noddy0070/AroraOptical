@@ -10,6 +10,7 @@ export default function ShopURL () {
         men: <Shop category={category} audience={"Men"} />,
         women: <Shop category={category} audience={"Women"} />,
         kids: <Shop category={category} audience={"Kids"} />,
+        unisex: <Shop category={category} audience={"Unisex"} />,
         "new-arrivals": <Shop category={category} audience={"new-arrivals"} />,
         "bestsellers": <Shop category={category} audience={"bestsellers"} />,
         "accessories": <Shop category={category} audience={"accessories"} />,    

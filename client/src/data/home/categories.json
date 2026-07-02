@@ -4,13 +4,13 @@
       "src": "/assets/images/home/categories/sunglasses.png",
       "alt": "Sunglasses",
       "title": "Sunglasses",
-      "link": "/shop/glasses/men"
+      "link": "/shop/sunglasses/unisex"
     },
     {
       "src": "/assets/images/home/categories/eyeglasses.png",
       "alt": "Eyeglasses",
       "title": "Eyeglasses",
-      "link": "/shop/glasses/men"
+      "link": "/shop/eyeglasses/unisex"
     },
     {
       "src": "/assets/images/home/categories/computer-glasses.png",
