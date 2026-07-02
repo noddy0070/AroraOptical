@@ -1,4 +1,4 @@
-import React,{useEffect, useState,useMemo} from 'react';
+import React,{useState,useMemo} from 'react';
 import EditIcon from '../../assets/images/icons/Edit.svg';
 import { baseURL } from '@/url';
 import axios from 'axios';
@@ -117,54 +117,6 @@ export default function Profile({user}){
                         <h6 className='text-h6TextPhone md:text-h6Text font-bold mb-[5vw] md:mb-[1.25vw]'>Contact Number</h6>
                         <input disabled={disableEdit} id='number' onChange={handleFormChange} type='number' value={formData.number!=null?formData.number:undefined} placeholder='Enter Number' className={`w-full md:w-[17.3125vw] p-[3vw] md:p-[.75vw] text-regularTextPhone md:text-regularText border-black border-[1px] rounded-[15vw] md:rounded-[3.75vw] placeholder-[rgba(80,80,80,1)] ${disableEdit?" border-gray-500 border-[1px]":"border-black border-[1px]"}`} ></input>
                     </div>
-                    <div>
-                        <div className='flex flex-row w-full'>
-                        <h6 className='text-h6TextPhone md:text-h6Text font-bold mb-[5vw] md:mb-[1.25vw]'>State</h6>
-                        <h6 className='text-h6TextPhone md:text-h6Text font-bold ml-auto mb-[5vw] md:mb-[1.25vw] mr-[2vw] md:mr-[.5vw]'>City</h6>
-                        </div>
-                        <div className='flex flex-col md:flex-row gap-[3vw] md:gap-[1.25vw]'>
-
-                           <div className="relative w-full md:w-[33.875vw]">
-                                <select className={`appearance-none w-full p-[3vw] md:p-[.75vw] pr-[10vw] md:pr-[2.5vw] text-regularTextPhone md:text-regularText border-[1px] rounded-[15vw] md:rounded-[3.75vw] placeholder-[rgba(80,80,80,1)] ${ disableEdit ? "border-gray-500" : "border-black" }`}
-                                    disabled={disableEdit} id="state" value={selectedState}
-                                    onChange={(e) => { setSelectedState(e.target.value); handleFormChange(e); }} >
-                                    <option value="">Select State</option>
-                                    {states.map((state,index) => (
-                                    <option key={index} value={state.isoCode}>
-                                        {state.name}
-                                    </option>
-                                    ))}
-                                </select>
-
-                            <div className="pointer-events-none absolute right-[4vw] md:right-[1vw] top-1/2 -translate-y-1/2">
-                                <svg className="w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw] text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                            </div>
-
-                            <div className="relative w-full md:w-[25vw]">
-                                <select className={`appearance-none w-full p-[3vw] md:p-[.75vw] pr-[10vw] md:pr-[2.5vw] text-regularTextPhone md:text-regularText border-[1px] rounded-[15vw] md:rounded-[3.75vw] placeholder-[rgba(80,80,80,1)] ${
-                                    disableEdit ? "border-gray-500" : "border-black"}`} value={selectedCity} id="city"
-                                    onChange={(e) => { setSelectedCity(e.target.value); handleFormChange(e);}}
-                                    disabled={disableEdit || !selectedState }>
-                                    <option value="">Select City</option>
-                                    {cities.map((city, idx) => (
-                                    <option key={idx} value={city.name}>
-                                        {city.name}
-                                    </option>
-                                    ))}
-                                </select>
-
-                                {/* Custom Arrow Icon */}
-                                <div className="pointer-events-none absolute right-[4vw] md:right-[1vw] top-1/2 -translate-y-1/2">
-                                    <svg className="w-[4vw] md:w-[1vw] h-[4vw] md:h-[1vw] text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
                     <button onClick={handleSubmit} className='ml-auto py-[2vw] md:py-[.5vw] px-[3.5vw] md:px-[.875vw] w-full md:w-[13.125vw] h-[14vw] md:h-[3.5vw] text-regularTextPhone md:text-regularText rounded-[14vw] md:rounded-[3.5vw] bg-white shadow-[0px_4px_10px_rgba(0,_0,_0,_0.5)]'>
                         Apply Changes
                     </button>
