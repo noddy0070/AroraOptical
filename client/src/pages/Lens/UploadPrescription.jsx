@@ -4,12 +4,12 @@ import { baseURL } from '@/url';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { PriceBreakdown, formatCoatingLabel } from '@/components/lensFeatureBox';
-import { CartButton } from '@/components/button';
+import { CartButton, ContactUsButton } from '@/components/button';
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dohfbsepn/image/upload';
 const CLOUDINARY_UPLOAD_PRESET = 'AroraOpticals';
 
-export default function UploadPrescription({ form, addProductToCart, amount, basePrice=0, coatingPrice=null, thicknessPrice=null }) {
+export default function UploadPrescription({ form, addProductToCart, amount, basePrice=0, coatingPrice=null, thicknessPrice=null, isSellable=true, getContactUrl }) {
   const { user } = useSelector(state => state.auth);
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -108,7 +108,11 @@ export default function UploadPrescription({ form, addProductToCart, amount, bas
             thicknessLabel={form.lensThickness || null}
             thicknessPrice={form.lensThickness ? thicknessPrice : null}
           />
-          <CartButton onClick={handleAddToCart} />
+          {isSellable ? (
+            <CartButton onClick={handleAddToCart} />
+          ) : (
+            <ContactUsButton href={getContactUrl(form, amount)} />
+          )}
         </div>
       </div>
     </div>

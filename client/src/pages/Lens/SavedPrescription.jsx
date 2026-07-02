@@ -3,10 +3,10 @@ import { useSelector,useDispatch } from 'react-redux';
 import axios from 'axios';
 import { baseURL } from '@/url';
 import { loginSuccess } from '@/redux/slice/authSlice';
-import { TitleButton2, CartButton } from '@/components/button';
+import { TitleButton2, CartButton, ContactUsButton } from '@/components/button';
 import { PriceBreakdown, formatCoatingLabel } from '@/components/lensFeatureBox';
 
-const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,setForm,amount,refreshKey=0,basePrice=0,coatingPrice=null,thicknessPrice=null} ) => {
+const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,setForm,amount,refreshKey=0,basePrice=0,coatingPrice=null,thicknessPrice=null,isSellable=true,getContactUrl} ) => {
     const [prescriptions,setPrescriptions]=useState([]);
     const [selectedPrescription, setSelectedPrescription] = useState('');
     const dispatch = useDispatch();
@@ -61,11 +61,15 @@ const SavedPrescription = ( {setSubFocusedPrescription,addProductToCart,form,set
                             thicknessLabel={form.lensThickness || null}
                             thicknessPrice={form.lensThickness ? thicknessPrice : null}
                         />
-                        <CartButton onClick={() => {
-                            const updatedForm = {...form, prescriptionId:selectedPrescription};
-                            setForm(updatedForm);
-                            setTimeout(() => addProductToCart(updatedForm), 0);
-                        }} />
+                        {isSellable ? (
+                            <CartButton onClick={() => {
+                                const updatedForm = {...form, prescriptionId:selectedPrescription};
+                                setForm(updatedForm);
+                                setTimeout(() => addProductToCart(updatedForm), 0);
+                            }} />
+                        ) : (
+                            <ContactUsButton href={getContactUrl({...form, prescriptionId:selectedPrescription}, amount)} />
+                        )}
                       </div>
                </>:<p className='text-mediumTextPhone md:text-mediumText text-center leading-[150%] font-roboto font-bold'>No prescriptions found</p>  }
             </div>

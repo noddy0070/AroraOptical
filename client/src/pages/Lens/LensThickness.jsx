@@ -1,9 +1,17 @@
 import React,{useState} from 'react';
 import {LensFeatureBox, PriceBreakdown, formatCoatingLabel} from '../../components/lensFeatureBox';
-import { CartButton } from '../../components/button';
+import { CartButton, ContactUsButton } from '../../components/button';
 
 
-export default function LensThickness({amount,form,setForm,handleFocus,addProductToCart,setAmount,basePrice=0,coatingPrice=null,setThicknessPrice}) {
+export default function LensThickness({amount,form,setForm,handleFocus,addProductToCart,setAmount,basePrice=0,coatingPrice=null,setThicknessPrice,isSellable=true,getContactUrl}) {
+    const proceedOrContact = (updatedForm, updatedAmount) => {
+        if (isSellable) {
+            setTimeout(() => addProductToCart(updatedForm, updatedAmount), 0);
+        } else {
+            window.open(getContactUrl(updatedForm, updatedAmount), '_blank');
+        }
+    };
+
     return (
         <div id='lensThicknessMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0'>
             <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Lens Thickness</h1>
@@ -13,7 +21,7 @@ export default function LensThickness({amount,form,setForm,handleFocus,addProduc
                         setForm(updatedForm);
                         if(setThicknessPrice) setThicknessPrice(0);
                         if(updatedForm.lensType==="Zero Power"){
-                            setTimeout(() => addProductToCart(updatedForm), 0);
+                            proceedOrContact(updatedForm, amount);
                         } else {
                             handleFocus("prescription");
                         }
@@ -27,7 +35,7 @@ export default function LensThickness({amount,form,setForm,handleFocus,addProduc
                         setAmount(newAmount);
                         if(setThicknessPrice) setThicknessPrice(thickPrice);
                         if(updatedForm.lensType==="Zero Power"){
-                            setTimeout(() => addProductToCart(updatedForm, newAmount), 0);
+                            proceedOrContact(updatedForm, newAmount);
                         } else {
                             handleFocus("prescription");
                         }
@@ -40,7 +48,11 @@ export default function LensThickness({amount,form,setForm,handleFocus,addProduc
                     coatingLabel={form.lensCoating ? formatCoatingLabel(form.lensCoating) : null}
                     coatingPrice={form.lensCoating ? coatingPrice : null}
                 />
-                <CartButton/>
+                {form.lensType==="Zero Power" && !isSellable ? (
+                    <ContactUsButton href={getContactUrl(form, amount)} />
+                ) : (
+                    <CartButton/>
+                )}
             </div>
         </div>
     )

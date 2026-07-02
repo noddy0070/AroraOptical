@@ -65,6 +65,19 @@ export default function Lens() {
     setProduct(response.data);
     setAmount(response.data.price);
   }
+
+  // isSellable is stored as the string "true"/"false" on the Product model, not a boolean
+  const isSellable = product ? String(product.isSellable).toLowerCase() !== 'false' : true;
+
+  const getLensContactUrl = (formData = form, totalAmount = amount) => {
+    const productLink = `${window.location.origin}/product/${productId}`;
+    const lines = [`I want to buy this product ${productLink}`];
+    if (formData.lensType) lines.push(`Lens Type: ${formData.lensType}`);
+    if (formData.lensCoating) lines.push(`Lens Coating: ${formData.lensCoating}`);
+    if (formData.lensThickness) lines.push(`Lens Thickness: ${formData.lensThickness}`);
+    lines.push(`Total Amount: Rs. ${totalAmount}`);
+    return `https://wa.me/919415031678?text=${encodeURIComponent(lines.join('\n'))}`;
+  };
   // Set the initial position of #focused
   useEffect(() => {
     const initialPosition = calculatePosition("lensType");
@@ -251,7 +264,7 @@ export default function Lens() {
                 <BlueFilterLens form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} basePrice={product?.price || 0} setCoatingPrice={setCoatingPrice} />
               )}
               {focused === "lensThickness" && (
-                <LensThickness form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} addProductToCart={addProductToCart} basePrice={product?.price || 0} coatingPrice={coatingPrice} setThicknessPrice={setThicknessPrice} />
+                <LensThickness form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} addProductToCart={addProductToCart} basePrice={product?.price || 0} coatingPrice={coatingPrice} setThicknessPrice={setThicknessPrice} isSellable={isSellable} getContactUrl={getLensContactUrl} />
               )}
               {focused === "prescription" && subFocusedPrescription === "" && (
                 <Prescription form={form} setForm={setForm} handleFocus={handleFocus} setSubFocusedPrescription={setSubFocusedPrescription} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} />
@@ -260,10 +273,10 @@ export default function Lens() {
                 <PrescriptionForm form={form} setForm={setForm} handleFocus={handleFocus} setSubFocusedPrescription={setSubFocusedPrescription} onPrescriptionAdded={() => setPrescriptionRefreshKey(k => k + 1)} />
               )}
               {focused === "prescription" && subFocusedPrescription === "savedPrescription" && (
-                <SavedPrescription form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} addProductToCart={addProductToCart} setSubFocusedPrescription={setSubFocusedPrescription} refreshKey={prescriptionRefreshKey} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} />
+                <SavedPrescription form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} addProductToCart={addProductToCart} setSubFocusedPrescription={setSubFocusedPrescription} refreshKey={prescriptionRefreshKey} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} isSellable={isSellable} getContactUrl={getLensContactUrl} />
               )}
               {focused === "prescription" && subFocusedPrescription === "uploadPrescription" && (
-                <UploadPrescription form={form} addProductToCart={addProductToCart} amount={amount} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} />
+                <UploadPrescription form={form} addProductToCart={addProductToCart} amount={amount} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} isSellable={isSellable} getContactUrl={getLensContactUrl} />
               )}
             </div>
 
@@ -296,7 +309,7 @@ export default function Lens() {
                 <BlueFilterLens form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} basePrice={product?.price || 0} setCoatingPrice={setCoatingPrice} />
               </div>
               <div className="absolute w-full h-[100vh] top-[200vh]">
-                <LensThickness form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} addProductToCart={addProductToCart} basePrice={product?.price || 0} coatingPrice={coatingPrice} setThicknessPrice={setThicknessPrice} />
+                <LensThickness form={form} setForm={setForm} handleFocus={handleFocus} amount={amount} setAmount={setAmount} addProductToCart={addProductToCart} basePrice={product?.price || 0} coatingPrice={coatingPrice} setThicknessPrice={setThicknessPrice} isSellable={isSellable} getContactUrl={getLensContactUrl} />
               </div>
 
               <div className="absolute w-full h-[100vh] top-[300vh]  left-0  transform transition-all duration-700"  style={{left:subFocusedPrescription=="newPrescription"||subFocusedPrescription=="savedPrescription"||subFocusedPrescription=="uploadPrescription"?"-100vw":"0vw"}}>
@@ -308,10 +321,10 @@ export default function Lens() {
               </div>
               <div className="absolute w-full h-[100vh] top-[300vh]  transform transition-all duration-700" style={{left:subFocusedPrescription=="savedPrescription"?"-0vw":"100vw"}}>
               <SavedPrescription form={form} setForm={setForm} handleFocus={handleFocus} amount={amount}
-              addProductToCart={addProductToCart} setSubFocusedPrescription={setSubFocusedPrescription} refreshKey={prescriptionRefreshKey} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} />
+              addProductToCart={addProductToCart} setSubFocusedPrescription={setSubFocusedPrescription} refreshKey={prescriptionRefreshKey} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} isSellable={isSellable} getContactUrl={getLensContactUrl} />
                 </div>
               <div className="absolute w-full h-[100vh] top-[300vh] transform transition-all duration-700" style={{left:subFocusedPrescription=="uploadPrescription"?"-0vw":"100vw"}}>
-                <UploadPrescription form={form} addProductToCart={addProductToCart} amount={amount} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} />
+                <UploadPrescription form={form} addProductToCart={addProductToCart} amount={amount} basePrice={product?.price || 0} coatingPrice={coatingPrice} thicknessPrice={thicknessPrice} isSellable={isSellable} getContactUrl={getLensContactUrl} />
               </div>
             </div>
           </div>
