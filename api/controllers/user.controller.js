@@ -90,6 +90,32 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
+// Admin: update a user's profile/role data
+export const adminUpdateUser = async (req, res, next) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ success: false, message: "Invalid user ID" });
+  }
+  const { name, email, number, gender, role, address, city, state, zipcode } = req.body;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: { name, email, number, gender, role, address, city, state, zipcode } },
+      { new: true, runValidators: true }
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, user: updatedUser });
+  } catch (err) {
+    console.error('Error updating user:', err);
+    if (err.code === 11000) {
+      return res.status(409).json({ success: false, message: 'An account with this email already exists.' });
+    }
+    res.status(500).json({ success: false, message: 'Server error updating user' });
+  }
+};
+
 // Cart Controllers
 export const addToCart = async (req, res) => {
   try {

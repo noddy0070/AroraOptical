@@ -1,6 +1,5 @@
 import React,{useEffect, useState,useMemo} from 'react';
 import EditIcon from '../../assets/images/icons/Edit.svg';
-import { State, City } from "country-state-city";
 import { baseURL } from '@/url';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -9,21 +8,12 @@ import { loginSuccess } from '@/redux/slice/authSlice';
 
 export default function Profile({user}){
 
-    const defaultCountryCode = "IN"; // India
-    const [states, setStates] = useState([user?.state||'']);
-    const [cities, setCities] = useState([user?.city||'']);
-    const [selectedState, setSelectedState] = useState(user?.state||"");
-    const [selectedCity, setSelectedCity] = useState(user?.city||"");
     const [formData,setFormData]=useState({
         id:user._id,
         name:user.name,
         gender:user?.gender || 'Male',
         email:user.email,
         number:user?.number,
-        city:selectedCity,
-        state:selectedState,
-        address:user?.address,
-        zipcode:user?.zipcode,
     })
 
 
@@ -68,20 +58,7 @@ export default function Profile({user}){
         }
         }
 
-       
-   
-     useEffect(() => {
-       setStates(State.getStatesOfCountry(defaultCountryCode));
-     }, []);
-   
-     useEffect(() => {
-       if (selectedState) {
-         setCities(City.getCitiesOfState(defaultCountryCode, selectedState));
-         setSelectedCity(user?.city||'');
-       }
-     }, [selectedState]);
-
-    const [disableEdit, setDisableEdit] =useState(true);  
+    const [disableEdit, setDisableEdit] =useState(true);
     const dispatch=useDispatch();  
     
     const handleSubmit=async(e)=>{
@@ -188,19 +165,6 @@ export default function Profile({user}){
                                 </div>
                             </div>
                         </div>
-                    <div>
-                        <div className='flex flex-row w-full'>
-                        <h6 className='text-h6TextPhone md:text-h6Text font-bold mb-[5vw] md:mb-[1.25vw]'>Street Address</h6>
-                        <h6 className='text-h6TextPhone md:text-h6Text font-bold ml-auto mb-[5vw] md:mb-[1.25vw] mr-[2vw] md:mr-[.5vw]'>Zip Code</h6>
-                        </div>
-                        
-                        <div className='flex flex-col md:flex-row gap-[3vw] md:gap-[1.25vw]'>
-                            <input disabled={disableEdit} id='address' value={formData.address!=null?formData.address:undefined} onChange={handleFormChange} type='text' className={`w-full md:w-[33.875vw] p-[3vw] md:p-[.75vw] text-regularTextPhone md:text-regularText border-black border-[1px] rounded-[15vw] md:rounded-[3.75vw] placeholder-[rgba(80,80,80,1)] ${disableEdit?" border-gray-500 border-[1px]":"border-black border-[1px]"}`} placeholder='Enter Your Address'></input>
-                            <input disabled={disableEdit} id='zipcode' value={formData.zipcode!=null?formData.zipcode:undefined} onChange={handleFormChange} type='number' className={`w-full md:w-[25vw] p-[3vw] md:p-[.75vw] text-regularTextPhone md:text-regularText border-black border-[1px] rounded-[15vw] md:rounded-[3.75vw] placeholder-[rgba(80,80,80,1)] ${disableEdit?" border-gray-500 border-[1px]":"border-black border-[1px]"}`} placeholder='XXXXXX'></input>
-                        </div>
-
-                        
-                    </div>
                     <button onClick={handleSubmit} className='ml-auto py-[2vw] md:py-[.5vw] px-[3.5vw] md:px-[.875vw] w-full md:w-[13.125vw] h-[14vw] md:h-[3.5vw] text-regularTextPhone md:text-regularText rounded-[14vw] md:rounded-[3.5vw] bg-white shadow-[0px_4px_10px_rgba(0,_0,_0,_0.5)]'>
                         Apply Changes
                     </button>

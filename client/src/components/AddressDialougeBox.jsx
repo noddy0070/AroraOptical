@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom';
 import { State, City } from 'country-state-city';
 
 const AddressDialougeBox = ({ isOpen, onClose, handleAddressSubmit, isEditAddress, addressData }) => {
@@ -139,12 +140,12 @@ const AddressDialougeBox = ({ isOpen, onClose, handleAddressSubmit, isEditAddres
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black font-roboto pt-[200px] bg-opacity-50 flex items-center justify-center z-50 min-h-screen overflow-y-auto p-[2vw]" onClick={onClose}>
-      <div className="bg-white rounded-[.5vw] w-[600px] " onClick={(e) => e.stopPropagation()}>
-        <div className="bg-[#F5F5F5] rounded-t-[.5vw]  flex justify-between px-[1.5vw] py-[1vw] items-center mb-[1vw] border-b border-gray-300">
+  return createPortal(
+    <div className="fixed inset-0 bg-black font-roboto bg-opacity-50 flex items-center justify-center z-50 px-[4vw] py-[6vh] md:px-[2vw]" onClick={onClose}>
+      <div className="bg-white rounded-[.5vw] w-[600px] max-w-full max-h-[80vh] flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        <div className="bg-[#F5F5F5] rounded-t-[.5vw] flex justify-between px-[1.5vw] py-[1vw] items-center border-b border-gray-300 shrink-0">
           <h2 className="text-smallText  font-bold">Add New Address</h2>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-900 text-regularText font-bold"
           >
@@ -152,8 +153,8 @@ const AddressDialougeBox = ({ isOpen, onClose, handleAddressSubmit, isEditAddres
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-[1vw] px-[2vw] pb-[2vw]">
-          <div className="grid grid-cols-1 gap-[1vw] ">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="grid grid-cols-1 gap-[1vw] flex-1 min-h-0 overflow-y-auto px-[2vw] py-[1vw]">
             {/* Full Name */}
             <div>
               <label className="block text-smallText font-roboto font-medium mb-[8px]">
@@ -310,7 +311,7 @@ const AddressDialougeBox = ({ isOpen, onClose, handleAddressSubmit, isEditAddres
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-[1vw] pt-[1vw]">
+          <div className="flex gap-[1vw] px-[2vw] py-[1vw] border-t border-gray-200 shrink-0">
             <button
               type="submit"
               className="w-[16.125vw] p-[0.75vw] bg-white text-black rounded-[3.125vw] py-[1vw] shadow-[0px_4px_10px_rgba(0,_0,_0,_0.5)] px-[3.5vw] text-smallText font-roboto duration-300
@@ -321,7 +322,8 @@ const AddressDialougeBox = ({ isOpen, onClose, handleAddressSubmit, isEditAddres
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

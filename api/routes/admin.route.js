@@ -21,6 +21,7 @@ import {
   getUser,
   toggleBlockUser,
   deleteUser,
+  adminUpdateUser,
 } from "../controllers/user.controller.js";
 import { addPolicy, updatePolicy, getPolicy } from "../controllers/policy.controller.js";
 import { getAdminStats, getNotifications, markNotificationsRead, deleteNotification, deleteAllNotifications } from "../controllers/admin.controller.js";
@@ -66,6 +67,7 @@ router.get("/get-users",                 authMiddleware, authorize(...superAdmin
 router.post("/add-user",                 authMiddleware, authorize(...superAdminOnly), addUser);
 router.get("/get-user/:id",              authMiddleware, authorize(...superAdminOnly), getUser);
 router.post("/toggle-block-user/:id",    authMiddleware, authorize(...superAdminOnly), toggleBlockUser);
+router.put("/update-user/:id",           authMiddleware, authorize(...superAdminOnly), adminUpdateUser);
 router.delete("/delete-user/:id",        authMiddleware, authorize(...superAdminOnly), deleteUser);
 
 // ── Policies (super-admin only) ─────────────────────────────────────────────

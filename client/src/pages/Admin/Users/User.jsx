@@ -17,6 +17,11 @@ const TrashIcon = () => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
   </svg>
 );
+const PencilIcon = () => (
+  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+  </svg>
+);
 const XIcon = () => (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -85,6 +90,17 @@ const PAGE_SIZE = 10;
 const ROLE_FILTERS = ['', 'user', 'product-manager', 'super-admin', 'admin'];
 const ROLE_FILTER_LABELS = { '': 'All', 'user': 'Customers', 'product-manager': 'Product Manager', 'super-admin': 'Super Admin', 'admin': 'Admin' };
 
+const EDIT_ROLE_OPTIONS = [
+  { value: 'user',            label: 'Customer' },
+  { value: 'product-manager', label: 'Product Manager' },
+  { value: 'admin',           label: 'Admin' },
+  { value: 'super-admin',     label: 'Super Admin' },
+];
+const GENDER_OPTIONS = ['Male', 'Female', 'Other'];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const emptyEditForm = { name: '', email: '', number: '', gender: '', role: '', address: '', city: '', state: '', zipcode: '' };
+
 // ── Main Component ────────────────────────────────────────────────────────────
 const UserManagement = () => {
   const navigate = useNavigate();
@@ -98,6 +114,11 @@ const UserManagement = () => {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [deleting, setDeleting]         = useState(false);
   const [blocking, setBlocking]         = useState(false);
+
+  const [editUser, setEditUser]         = useState(null);
+  const [editForm, setEditForm]         = useState(emptyEditForm);
+  const [editErrors, setEditErrors]     = useState({});
+  const [editSaving, setEditSaving]     = useState(false);
 
   useEffect(() => { fetchUsers(); }, []);
 
@@ -152,6 +173,67 @@ const UserManagement = () => {
       toast.error('Failed to delete user');
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleOpenEdit = (user) => {
+    setEditUser(user);
+    setEditForm({
+      name: user.name || '',
+      email: user.email || '',
+      number: user.number || '',
+      gender: user.gender || '',
+      role: user.role || 'user',
+      address: user.address || '',
+      city: user.city || '',
+      state: user.state || '',
+      zipcode: user.zipcode || '',
+    });
+    setEditErrors({});
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const validateEdit = (form) => {
+    const errors = {};
+    if (!form.name.trim()) errors.name = 'Name is required.';
+    if (!form.email.trim()) errors.email = 'Email is required.';
+    else if (!EMAIL_RE.test(form.email.trim())) errors.email = 'Enter a valid email address.';
+    if (!form.role) errors.role = 'Please select a role.';
+    return errors;
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const validationErrors = validateEdit(editForm);
+    setEditErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
+
+    setEditSaving(true);
+    try {
+      const { data } = await axios.put(
+        `${baseURL}/api/admin/update-user/${editUser._id}`,
+        editForm,
+        { withCredentials: true }
+      );
+      if (data.success) {
+        toast.success('User updated successfully');
+        setUsers((prev) => prev.map((u) => u._id === editUser._id ? data.user : u));
+        setDrawer((prev) => prev && prev._id === editUser._id ? data.user : prev);
+        setEditUser(null);
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Failed to update user.';
+      if (msg.toLowerCase().includes('email')) {
+        setEditErrors((prev) => ({ ...prev, email: msg }));
+      } else {
+        toast.error(msg);
+      }
+    } finally {
+      setEditSaving(false);
     }
   };
 
@@ -291,6 +373,13 @@ const UserManagement = () => {
                           <EyeIcon />
                         </button>
                         <button
+                          title="Edit user"
+                          onClick={() => handleOpenEdit(user)}
+                          className="p-2 rounded-lg text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                        >
+                          <PencilIcon />
+                        </button>
+                        <button
                           title="Delete user"
                           onClick={() => setConfirmDelete(user._id)}
                           className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
@@ -405,14 +494,21 @@ const UserManagement = () => {
               </section>
             </div>
 
-            {/* Panel footer — delete */}
-            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/60">
+            {/* Panel footer — edit / delete */}
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/60 flex gap-3">
+              <button
+                onClick={() => handleOpenEdit(drawer)}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-semibold text-sm rounded-lg transition-colors border border-indigo-100"
+              >
+                <PencilIcon />
+                Edit user
+              </button>
               <button
                 onClick={() => setConfirmDelete(drawer._id)}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-sm rounded-lg transition-colors border border-red-100"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-sm rounded-lg transition-colors border border-red-100"
               >
                 <TrashIcon />
-                Delete this user
+                Delete
               </button>
             </div>
           </div>
@@ -449,9 +545,110 @@ const UserManagement = () => {
           </div>
         </div>
       )}
+
+      {/* ── Edit User Modal ─────────────────────────────────────────────── */}
+      {editUser && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setEditUser(null)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900">Edit User</h3>
+              <button onClick={() => setEditUser(null)} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-gray-500">
+                <XIcon />
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="px-6 py-5 space-y-4" noValidate>
+              <div className="grid grid-cols-2 gap-4">
+                <EditField label="Full Name" required error={editErrors.name}>
+                  <EditInput name="name" value={editForm.name} onChange={handleEditChange} error={editErrors.name} />
+                </EditField>
+                <EditField label="Email" required error={editErrors.email}>
+                  <EditInput name="email" type="email" value={editForm.email} onChange={handleEditChange} error={editErrors.email} />
+                </EditField>
+                <EditField label="Phone">
+                  <EditInput name="number" value={editForm.number} onChange={handleEditChange} maxLength={10} />
+                </EditField>
+                <EditField label="Gender">
+                  <EditSelect name="gender" value={editForm.gender} onChange={handleEditChange}>
+                    <option value="">Select gender</option>
+                    {GENDER_OPTIONS.map((g) => <option key={g} value={g}>{g}</option>)}
+                  </EditSelect>
+                </EditField>
+                <EditField label="Role" required error={editErrors.role}>
+                  <EditSelect name="role" value={editForm.role} onChange={handleEditChange} error={editErrors.role}>
+                    {EDIT_ROLE_OPTIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+                  </EditSelect>
+                </EditField>
+                <EditField label="Pincode">
+                  <EditInput name="zipcode" value={editForm.zipcode} onChange={handleEditChange} maxLength={6} />
+                </EditField>
+                <div className="col-span-2">
+                  <EditField label="Address">
+                    <EditInput name="address" value={editForm.address} onChange={handleEditChange} />
+                  </EditField>
+                </div>
+                <EditField label="State">
+                  <EditInput name="state" value={editForm.state} onChange={handleEditChange} />
+                </EditField>
+                <EditField label="City">
+                  <EditInput name="city" value={editForm.city} onChange={handleEditChange} />
+                </EditField>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditUser(null)}
+                  className="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={editSaving}
+                  className="flex-1 px-4 py-2.5 bg-gray-900 hover:bg-gray-800 disabled:opacity-60 text-white rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                >
+                  {editSaving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+const EditField = ({ label, required, error, children }) => (
+  <div className="flex flex-col gap-1">
+    <label className="text-xs font-semibold text-gray-700">
+      {label}{required && <span className="text-red-500 ml-0.5">*</span>}
+    </label>
+    {children}
+    {error && <p className="text-xs text-red-500">{error}</p>}
+  </div>
+);
+
+const EditInput = ({ error, ...props }) => (
+  <input
+    {...props}
+    className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors ${
+      error ? 'border-red-300 focus:ring-red-200 bg-red-50/30' : 'border-gray-200 focus:ring-gray-900 bg-white'
+    }`}
+  />
+);
+
+const EditSelect = ({ error, children, ...props }) => (
+  <select
+    {...props}
+    className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors bg-white ${
+      error ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-gray-900'
+    }`}
+  >
+    {children}
+  </select>
+);
 
 const Row = ({ label, value }) => (
   <div className="flex items-start justify-between gap-4">

@@ -8,12 +8,13 @@ import {
   TermsAndConditionIcon, UserIcon,
 } from './Icons';
 import logo from '../../assets/images/AroraOpticalLogo.png';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import './Dashboard.css';
 import { TransitionLink } from '@/Routes/TransitionLink';
 import { toTitleCase } from '../../../shared/pipes/strFormatting';
 import axios from 'axios';
 import { baseURL } from '@/url';
+import { logout } from '@/redux/slice/authSlice';
 
 // ── Sidebar data ──────────────────────────────────────────────────────────────
 const ecommerceSection  = [{ id: 'Product List' }, { id: 'Add Product' }, { id: 'Bulk Upload' }];
@@ -94,6 +95,11 @@ const SearchIcon = () => (
 const XSmall = () => (
   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+const LogoutIcon = () => (
+  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
   </svg>
 );
 
@@ -263,9 +269,18 @@ const SearchDropdown = ({ query, products, navigate, onSelect }) => {
 const DashBoard = () => {
   const navigate  = useNavigate();
   const location  = useLocation();
+  const dispatch  = useDispatch();
   const user      = useSelector((state) => state.auth.user);
 
   const mainSections = buildSections(user?.role);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${baseURL}/api/auth/logout`, {}, { withCredentials: true });
+    } catch { /* proceed to clear client state regardless */ }
+    dispatch(logout());
+    navigate('/');
+  };
 
   // ── Active sidebar state ──────────────────────────────────────────────────
   const getActiveSections = useCallback(() => {
@@ -478,6 +493,19 @@ const DashBoard = () => {
               <p className="text-[11px] text-gray-400">{ROLE_LABELS[user?.role] ?? 'Admin'}</p>
             </div>
           </div>
+
+          {/* Divider */}
+          <div className="h-6 w-px bg-gray-200" />
+
+          {/* Logout */}
+          <button
+            onClick={handleLogout}
+            title="Logout"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+          >
+            <LogoutIcon />
+            <span className="hidden lg:inline">Logout</span>
+          </button>
         </div>
       </header>
 

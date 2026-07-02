@@ -14,7 +14,9 @@ const AuthProvider = ({ children }) => {
         const res = await axios.get(`${baseURL}/api/auth/me`, { withCredentials: true });
         dispatch(loginSuccess({ user: res.data.user }));
       } catch (err) {
-        console.log(err);
+        if (err?.response?.status !== 401) {
+          console.log(err);
+        }
         dispatch(logout());
       } finally {
         setLoading(false);
