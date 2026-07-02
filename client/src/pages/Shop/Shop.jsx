@@ -373,23 +373,25 @@ export default function Shop({category, audience}) {
                 }
             </h3>
             <div className='flex flex-col md:flex-row mx-[5vw] md:mx-[2vw] gap-[6vw] md:gap-0'>
-                <div className='w-full md:w-[24.1875vw] pr-0 md:pr-[1vw] flex flex-col gap-[4vw] md:gap-[1.5vw]'>
-                    <div className='flex flex-row'>
-                        <h6 className='font-roboto font-bold text-h5TextPhone md:text-h5Text'>Filters</h6>
-                        <button 
-                            onClick={handleClearAllFilters}
-                            className='leading-[150%] font-roboto text-regularTextPhone md:text-regularText ml-auto hover:text-blue-600 transition-colors'
-                        >
-                            Clear All
-                        </button>
+                <div className='w-full md:w-[24.1875vw] pr-0 md:pr-[1vw] md:sticky md:top-[5.5vw] md:self-start md:max-h-[calc(100vh-7vw)] md:overflow-y-auto hide-scrollbar'>
+                    <div className='flex flex-col gap-[4vw] md:gap-[1.25vw] bg-white border border-gray-200 rounded-[3vw] md:rounded-[.75vw] shadow-[0px_2px_10px_rgba(0,_0,_0,_0.05)] px-[4vw] md:px-[1.5vw] py-[4vw] md:py-[1.5vw]'>
+                        <div className='flex flex-row items-center'>
+                            <h6 className='font-roboto font-bold text-h5TextPhone md:text-h5Text'>Filters</h6>
+                            <button
+                                onClick={handleClearAllFilters}
+                                className='leading-[150%] font-roboto text-regularTextPhone md:text-regularText ml-auto text-gray-500 hover:text-black transition-colors'
+                            >
+                                Clear All
+                            </button>
+                        </div>
+                        <Filters
+                            productCategory={category}
+                            audienceShop={audience}
+                            onFiltersChange={handleFiltersChange}
+                            onClearAll={handleClearAllFilters}
+                            clearTrigger={clearTrigger}
+                        />
                     </div>
-                    <Filters 
-                        productCategory={category} 
-                        audienceShop={audience}
-                        onFiltersChange={handleFiltersChange}
-                        onClearAll={handleClearAllFilters}
-                        clearTrigger={clearTrigger}
-                    />
                 </div>
 
                 <div className='flex flex-col flex-1'>

@@ -70,70 +70,70 @@ import {Size as size, Colors as color, Material as frameMaterial, Type as frameT
     const isOpen = showFilterOptions.includes(id);
     
     return (
-      <div id={id} className="font-roboto flex flex-col  border-black border-b-[1px] transition-all duration-200 ease-in-out">
-        <div className='flex flex-row items-center  transition-colors duration-200 cursor-pointer' onClick={() => {
-              setShowFilterOptions((prev) => 
-                prev.includes(id) 
+      <div id={id} className="font-roboto flex flex-col border-b border-gray-200 last:border-b-0 transition-all duration-200 ease-in-out">
+        <div className='flex flex-row items-center transition-colors duration-200 cursor-pointer group -mx-[.5vw] px-[.5vw] rounded-md hover:bg-gray-50' onClick={() => {
+              setShowFilterOptions((prev) =>
+                prev.includes(id)
                   ? [] // Close all if clicking on open section
                   : [id] // Open only this section
               );
             }}>
-          <p className='mr-auto font-semibold text-smallTextPhone md:text-mediumText py-[1.25vw]'>{id}</p>
-          <svg 
-            className={`w-4 h-4 transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-180' : ''}`} 
-            viewBox="0 0 12 7" 
-            fill="none" 
+          <p className={`mr-auto font-semibold text-smallTextPhone md:text-mediumText py-[3vw] md:py-[.9vw] transition-colors ${isOpen ? 'text-black' : 'text-gray-800'}`}>{id}</p>
+          <svg
+            className={`w-[3.2vw] h-[1.9vw] md:w-4 md:h-4 shrink-0 text-gray-500 group-hover:text-black transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-180 text-black' : ''}`}
+            viewBox="0 0 12 7"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path fillRule="evenodd" clipRule="evenodd" d="M6.32702 6.47135C6.1464 6.65197 5.85361 6.65197 5.67299 6.47135L0.957725 1.75608C0.777112 1.57546 0.777112 1.28267 0.957725 1.10205L1.17575 0.884C1.35636 0.70338 1.6492 0.70338 1.82982 0.884L6 5.05421L10.1702 0.884C10.3508 0.70338 10.6436 0.70338 10.8242 0.884L11.0423 1.10205C11.2229 1.28267 11.2229 1.57546 11.0423 1.75608L6.32702 6.47135Z" fill="black"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M6.32702 6.47135C6.1464 6.65197 5.85361 6.65197 5.67299 6.47135L0.957725 1.75608C0.777112 1.57546 0.777112 1.28267 0.957725 1.10205L1.17575 0.884C1.35636 0.70338 1.6492 0.70338 1.82982 0.884L6 5.05421L10.1702 0.884C10.3508 0.70338 10.6436 0.70338 10.8242 0.884L11.0423 1.10205C11.2229 1.28267 11.2229 1.57546 11.0423 1.75608L6.32702 6.47135Z" fill="currentColor"/>
           </svg>
         </div>
         <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
           isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
         }`}>
-          <div className="flex flex-row flex-wrap gap-[8px] py-2 mb-[1vw]">
+          <div className="flex flex-row flex-wrap gap-[2vw] md:gap-[.5vw] pb-[3vw] md:pb-[1vw]">
             {options.map((option, index) => (
               id === 'Colors' ? (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   onClick={() => {
                     setFiltersSelected((prev) => ({
                       ...prev,
-                      [id]: prev[id].includes(option.colorName) 
+                      [id]: prev[id].includes(option.colorName)
                         ? prev[id].filter((item) => item !== option.colorName)
                         : [...prev[id], option.colorName]
                     }));
-                  }} 
-                  className={`pl-[2vw] flex flex-row gap-[.75vw] items-center cursor-pointer hover:bg-gray-100 transition-colors duration-200 rounded-md py-1 ${options.length-1 === index ? 'mb-[1.5vw]' : ''}`}
+                  }}
+                  className='flex flex-row gap-[1.5vw] md:gap-[.6vw] items-center cursor-pointer hover:bg-gray-50 transition-colors duration-200 rounded-md px-[1vw] md:px-[.5vw] py-[1.25vw] md:py-[.4vw] w-full'
                 >
                   <input
                     type="checkbox"
-                    checked={filtersSelected[id].includes(option.colorName)} 
+                    checked={filtersSelected[id].includes(option.colorName)}
                     onChange={() => {}}
-                    className="w-[1.125vw] h-[1.125vw]"
+                    className="accent-black w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw] cursor-pointer shrink-0"
                   />
-                  <p className="text-regularText">{option.colorName}</p>
+                  <p className="text-smallTextPhone md:text-regularText text-gray-700">{option.colorName}</p>
                 </div>
               ) : (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   onClick={() => {
                     setFiltersSelected((prev) => ({
                       ...prev,
-                      [id]: prev[id].includes(option) 
+                      [id]: prev[id].includes(option)
                         ? prev[id].filter((item) => item !== option)
                         : [...prev[id], option]
                     }));
-                  }} 
-                  className={` flex flex-row gap-[.75vw] items-center cursor-pointer hover:bg-gray-100 transition-colors duration-200 rounded-md px-2 py-1 `}
+                  }}
+                  className='flex flex-row gap-[1.5vw] md:gap-[.6vw] items-center cursor-pointer hover:bg-gray-50 transition-colors duration-200 rounded-md px-[1vw] md:px-[.5vw] py-[1.25vw] md:py-[.4vw] w-full'
                 >
                   <input
                     type="checkbox"
-                    checked={filtersSelected[id].includes(option)} 
+                    checked={filtersSelected[id].includes(option)}
                     onChange={() => {}}
-                    className="w-[1.125vw] h-[1.125vw]"
+                    className="accent-black w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw] cursor-pointer shrink-0"
                   />
-                  <p className="text-regularText">{option}</p>
+                  <p className="text-smallTextPhone md:text-regularText text-gray-700">{option}</p>
                 </div>
               )
             ))}
