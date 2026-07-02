@@ -6,7 +6,7 @@ export default function LensCoating({amount,form,setForm,handleFocus, subFocused
     return (
         <div id='lensCoatingMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0'>
             <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Lens Coating</h1>
-            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min overflow-x-auto hide-scrollbar md:overflow-visible'>
+            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-col md:flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min'>
                     <LensFeatureBox onclick={()=>{
                         setForm({...form,lensCoating:"Clear-Vision"});
                         const price = form.lensType=='Bifocal'?1290:550;

@@ -49,7 +49,7 @@ export const PriceBreakdown = ({ base = 0, coatingLabel = '', coatingPrice = nul
 export const LensFeatureBox=({ img=placeholder, title, description,price,classNameLearnMore='',onclick = () => {} })=> {
     const [hover, setHover] = useState(false);
     return (
-        <div onClick={onclick} className='cursor-pointer relative w-[64.75vw] md:w-[16.1875vw] h-[79.286vw] md:h-[19.8215vw] rounded-[4.47vw] md:rounded-[1.1175vw] shadow-[0px_1vw_1vw_rgba(0,_0,_0,_0.25)] md:shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] overflow-hidden' onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+        <div onClick={onclick} className='cursor-pointer relative w-full md:w-[16.1875vw] h-auto md:h-[19.8215vw] rounded-[4.47vw] md:rounded-[1.1175vw] shadow-[0px_1vw_1vw_rgba(0,_0,_0,_0.25)] md:shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] overflow-hidden' onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
             <div className='relative m-[1vw] md:m-[.25vw] flex flex-col gap-[1vw] md:gap-[.25vw] transition-transform transform duration-700' style={{ transform: `scale(${hover ? 0.975 : 1})` }}>
                 <img src={img} className='w-full h-[37.5vw] md:h-[9.375vw] rounded-t-[4.25vw] md:rounded-t-[1.0625vw] clickable' />
                 <div className={`absolute right-0 mt-[1.8vw] md:mt-[.45vw] mr-[1.8vw] md:mr-[.45vw] top-0 flex flex-row gap-[1.5vw] md:gap-[.375vw] justify-center items-center ${classNameLearnMore}`}>
@@ -75,9 +75,9 @@ export const  LensTintBox=({form,setForm, handleFocus, img=placeholder, title, d
     const [selectedColor,setSelectedColor]=useState('Grey');
     const [selectedTitle,setSelectedTitle]=useState(title=='Solid Tint'?'Solid-Tinted-Lens/':'Gradient-Tinted-Lens/');
     return (
-        <div onClick={onclick} className='relative h-[79.286vw] md:h-[19.8215vw] rounded-[4.47vw] md:rounded-[1.1175vw] shadow-[0px_1vw_1vw_rgba(0,_0,_0,_0.25)] md:shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] transform transition-all duration-700 overflow-hidden flex flex-col md:flex-row' 
-        style={{width: hover ? (window.innerWidth > 768 ? "36.625vw" : "100%") : (window.innerWidth > 768 ? "16.1875vw" : "64.75vw")}} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-            <div className='relative w-full md:w-[16.1875vw] shadow-[0px_1vw_1vw_rgba(0,_0,_0,_0.25)] md:shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] rounded-[4.47vw] md:rounded-[1.1175vw] h-full'>
+        <div onClick={onclick} className='relative h-auto md:h-[19.8215vw] rounded-[4.47vw] md:rounded-[1.1175vw] shadow-[0px_1vw_1vw_rgba(0,_0,_0,_0.25)] md:shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] transform transition-all duration-700 overflow-hidden flex flex-col md:flex-row w-full'
+        style={{width: window.innerWidth > 768 ? (hover ? "36.625vw" : "16.1875vw") : "100%"}} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+            <div className='relative w-full md:w-[16.1875vw] shadow-[0px_1vw_1vw_rgba(0,_0,_0,_0.25)] md:shadow-[0px_.25vw_.25vw_rgba(0,_0,_0,_0.25)] rounded-[4.47vw] md:rounded-[1.1175vw] h-auto md:h-full'>
             <div className='relative m-[1vw] md:m-[.25vw] flex flex-col gap-[1vw] md:gap-[.25vw] transition-transform transform duration-700' style={{ transform: `scale(${hover ? 0.95 : 1})` }}>
                 <img src={img} className='w-full h-[37.5vw] md:h-[9.375vw] rounded-t-[4.25vw] md:rounded-t-[1.0625vw] clickable' />
                 <div className={`absolute right-0 mt-[1.8vw] md:mt-[.45vw] mr-[1.8vw] md:mr-[.45vw] top-0 flex flex-row gap-[1.5vw] md:gap-[.375vw] justify-center items-center ${classNameLearnMore}`}>

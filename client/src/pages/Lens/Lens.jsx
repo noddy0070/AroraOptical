@@ -213,7 +213,7 @@ export default function Lens() {
                   <button
                     key={item.id}
                     id={item.id}
-                    className={`z-[2] w-[20vw] h-[20vw] min-w-[20vw] flex flex-col items-center justify-center bg-white rounded-full ${focused === item.id ? 'ring-4 ring-darkslategrey' : ''}`}
+                    className={`z-[2] w-[20vw] h-[20vw] min-w-[20vw] flex flex-col items-center justify-center bg-white rounded-full transition-all ${focused === item.id ? 'ring-[.6vw] ring-white ring-offset-[.6vw] ring-offset-darkslategrey' : ''}`}
                     disabled={isDisabled(item.id)}
                     onClick={() =>{handleFocus(item.id);
                       if(item.id==="lensType"){

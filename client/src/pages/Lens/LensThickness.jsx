@@ -15,7 +15,7 @@ export default function LensThickness({amount,form,setForm,handleFocus,addProduc
     return (
         <div id='lensThicknessMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0'>
             <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Lens Thickness</h1>
-            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min overflow-x-auto hide-scrollbar md:overflow-visible'>
+            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-col md:flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min'>
                     <LensFeatureBox onclick={()=>{
                         const updatedForm = {...form, lensThickness:"Medium"};
                         setForm(updatedForm);

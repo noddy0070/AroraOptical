@@ -6,7 +6,7 @@ export default function LensTint({amount,form,setForm,handleFocus,setAmount,base
     return (
         <div id='lensTintMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0'>
             <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Tinted Lenses</h1>
-            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min overflow-x-auto hide-scrollbar md:overflow-visible'>
+            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-col md:flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min'>
                     <LensTintBox handleFocus={handleFocus} form={form} setForm={setForm} title={"Solid Tint"} description={"Uniform color throughout the lens for a bold, consistent look and UV protection."} price={form.lensType=='Bifocal'?1490:1200} setAmount={setAmount} amount={amount} setCoatingPrice={setCoatingPrice} />
                     <LensTintBox handleFocus={handleFocus} form={form} setForm={setForm} title={"Gradient Tint"} description={"A stylish fade from dark to light, offering sun protection with a modern touch."} price={form.lensType=='Bifocal'?1590:1300} setAmount={setAmount} amount={amount} setCoatingPrice={setCoatingPrice} />
             </div>

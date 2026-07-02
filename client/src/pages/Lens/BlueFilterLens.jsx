@@ -5,7 +5,7 @@ export default function BlueFilterLens({form,setForm,handleFocus,amount,setAmoun
     return (
         <div id='blueFilterLensMain' className='px-[5vw] md:px-0 py-[6vw] md:py-0'>
             <h1 className='font-bold font-dyeLine text-h2TextPhone md:text-h1Text text-center mb-[6vw] md:mb-0'>Blue Filter Lenses</h1>
-            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min overflow-x-auto hide-scrollbar md:overflow-visible'>
+            <div className='mx-auto py-[6vw] md:py-[1.5vw] px-[5vw] md:px-[1vw] flex flex-col md:flex-row gap-[6vw] md:gap-[1.5vw] w-full md:w-min'>
                     <LensFeatureBox onclick={()=>{
                         setForm({...form,lensCoating:"Blue-Filter/Green"});
                         const price = form.lensType=='Bifocal'?1950:1090;
