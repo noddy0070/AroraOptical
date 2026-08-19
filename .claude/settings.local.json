@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Remove-Item \"d:\\\\Work\\\\AroraOptical\\\\api\\\\utils\\\\shiprocket.js\" -Force)",
+      "Bash(Remove-Item \"d:\\\\Work\\\\AroraOptical\\\\api\\\\utils\\\\shippingCalculator.js\" -Force)",
+      "Bash(Remove-Item \"d:\\\\Work\\\\AroraOptical\\\\api\\\\test-shiprocket.js\" -Force)",
+      "Bash(Write-Output \"Deleted\")",
+      "Bash(xargs grep -l \"sidebar\\\\|Sidebar\\\\|navigation\\\\|Navigation\")"
+    ]
+  }
+}
