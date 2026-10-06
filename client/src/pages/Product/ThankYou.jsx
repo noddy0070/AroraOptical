@@ -9,6 +9,14 @@ const ThankYou = () => {
     }, 10000);
     return () => clearTimeout(timer);
   }, [navigate]);
+  
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-355092816/LvdTCNT1sIMYENCSqakB",
+      });
+    }
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-[5vw] md:px-0">
