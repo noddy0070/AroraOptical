@@ -24,7 +24,11 @@ export default {
   			roboto: [
   				'Roboto',
   				'sans-serif'
-  			]
+  			],
+			instrumentSans:[
+				'InstrumentSans'
+			]
+
   		},
   		fontSize: {
 			aboutUsText: 'clamp(50px,5.75vw,92px)',

@@ -324,7 +324,9 @@ export default function SecondaryNavbar() {
             </button>
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
+            <TransitionLink to="/blog">
               Blog
+            </TransitionLink>
             </button>
 
             <button className="text-regularText px-[1vw] focus:outline-none hover:text-gray-500">
@@ -588,7 +590,9 @@ export default function SecondaryNavbar() {
       </TransitionLink>
 
       {/* -------------------- BLOG -------------------- */}
-      <p className="sidebar-link">Blog</p>
+      <TransitionLink to="/blog" onClick={() => setIsMobileMenuOpen(false)}>
+        <p className="sidebar-link">Blog</p>
+      </TransitionLink>
 
       {/* -------------------- ABOUT US -------------------- */}
       <TransitionLink to="/about-us" onClick={() => setIsMobileMenuOpen(false)}>

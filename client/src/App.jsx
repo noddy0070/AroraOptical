@@ -17,7 +17,8 @@ import Footer from "./components/footer.jsx";
 // ========== PUBLIC PAGES ==========
 import Home from "./pages/Home/Home";
 import Product from "./pages/Product/Product";
-import Blog from "./pages/Home/Sections/Blog";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import FeeEyeTest from "./pages/Home/Sections/FreeEyeTest";
 import AboutUs from "./pages/About-us.jsx";
 import ThankYou from "./pages/Product/ThankYou";
@@ -318,6 +319,14 @@ export default function App() {
         element={
           <Page title="Arora Opticals | Blog">
             <Blog />
+          </Page>
+        }
+      />
+      <Route
+        path="/blog/:slug"
+        element={
+          <Page title="Arora Opticals | Blog">
+            <BlogPost />
           </Page>
         }
       />
