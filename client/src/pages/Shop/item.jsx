@@ -71,7 +71,7 @@ export default function Item({product}) {
                       <img
                         src={product.images[0] || productPlaceholder}
                         alt={product.modelTitle}
-                        className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
+                        className='w-full h-full object-contain group-hover:scale-105 transition-transform duration-300'
                       />
                       {/* Wishlist button for mobile */}
                       <button

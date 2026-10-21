@@ -352,7 +352,7 @@ export default function ProductDescription({productToDisplay}){
                 <div className='flex flex-col gap-[2vw] md:gap-[.5vw]'>
                         <div className='flex flex-row gap-[2vw] md:gap-[.5vw] overflow-x-auto hide-scrollbar'>
                             {productsModel.map((variant,index)=>{
-                                const colorAttribute = variant.frameAttributes.find(attr => attr.name === "Color");
+                                const colorAttribute = variant.frameAttributes.find(attr => (attr.name === "Color") || (attr.name === "Frame Color"));
                                 const colorValue = colorAttribute ? colorAttribute.value : null;
 
                                 const lensColorAttribute = variant.lensAttributes.find(attr => attr.name === "Lens Color");
@@ -361,26 +361,36 @@ export default function ProductDescription({productToDisplay}){
                                 variant._id==productToDisplay._id?
                                 <div key={index} className={`rounded-[2vw] md:rounded-[8px] w-[50vw] md:w-[12.5vw] p-[3vw] md:p-[12px] bg-white border-[1px] flex-shrink-0 ${variant._id==productToDisplay._id?"border-black":""}`}>
                                    <img className='w-full md:w-[10vw] h-[30vw] md:h-[6vw] object-cover mx-auto mb-[2vw] md:mb-[8px]' src={variant.images[0]} />
-                                   {colorAttribute && <div className='w-full flex justify-between mb-[2vw] md:mb-[8px] text-smallTextPhone md:text-smallText'>
-                                    <span>Color</span>
-                                    <span>{colorValue}</span>
-                                   </div>}
-                                   {lensColorAttribute && <div className='w-full flex justify-between text-smallTextPhone md:text-smallText'>
-                                    <span>Lens Color</span>
-                                    <span>{lensColorValue}</span>
-                                   </div>}
+                                   {colorAttribute && (
+                                        <div className='w-full flex justify-between items-start gap-[2vw] md:gap-[8px] mb-[2vw] md:mb-[8px] text-smallTextPhone md:text-smallText'>
+                                            <span className='whitespace-nowrap flex-shrink-0'>Color</span>
+                                            <span className='text-right break-words min-w-0'>{colorValue}</span>
+                                        </div>
+                                        )}
+
+                                        {lensColorAttribute && (
+                                        <div className='w-full flex justify-between items-start gap-[2vw] md:gap-[8px] text-smallTextPhone md:text-smallText'>
+                                            <span className='whitespace-nowrap flex-shrink-0'>Lens Color</span>
+                                            <span className='text-right break-words min-w-0'>{lensColorValue}</span>
+                                        </div>
+                                        )}
                                 </div>
                                 :<TransitionLink to={`/product/${variant._id}`}>
                                 <div className={`rounded-[2vw] md:rounded-[8px] w-[50vw] md:w-[12.5vw] p-[3vw] md:p-[12px] border-[1px] bg-white flex-shrink-0`}>
                                    <img className='w-full md:w-[10vw] h-[30vw] md:h-[6vw] object-cover mx-auto mb-[2vw] md:mb-[8px]' src={variant.images[0]} />
-                                   {colorAttribute && <div className='w-full flex justify-between mb-[2vw] md:mb-[8px] text-smallTextPhone md:text-smallText'>
-                                    <span>Color</span>
-                                    <span>{colorValue}</span>
-                                   </div>}
-                                   {lensColorAttribute && <div className='w-full flex justify-between text-smallTextPhone md:text-smallText'>
-                                    <span>Lens Color</span>
-                                    <span>{lensColorValue}</span>
-                                   </div>}
+                                   {colorAttribute && (
+                                    <div className='w-full flex justify-between items-start gap-[2vw] md:gap-[8px] mb-[2vw] md:mb-[8px] text-smallTextPhone md:text-smallText'>
+                                        <span className='whitespace-nowrap flex-shrink-0'>Color</span>
+                                        <span className='text-right break-words min-w-0'>{colorValue}</span>
+                                    </div>
+                                    )}
+
+                                    {lensColorAttribute && (
+                                    <div className='w-full flex justify-between items-start gap-[2vw] md:gap-[8px] text-smallTextPhone md:text-smallText'>
+                                        <span className='whitespace-nowrap flex-shrink-0'>Lens Color</span>
+                                        <span className='text-right break-words min-w-0'>{lensColorValue}</span>
+                                    </div>
+                                    )}
                                 </div>
                                 </TransitionLink>
                             )})}
