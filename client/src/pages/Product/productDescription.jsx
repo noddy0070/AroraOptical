@@ -283,6 +283,7 @@ export default function ProductDescription({productToDisplay}){
                     onTouchEnd={handleTagsTouchEnd}
                 >
                     {tags.slice(0, 3).map((tag, index) => (
+                        (tag.length>0) && 
                     <div className='px-[4vw] md:px-[16px] py-[2vw] md:py-[8px] rounded-[5vw] md:rounded-[1.25vw] text-center line-clamp-1 whitespace-nowrap md:min-w-[7.125vw] flex-shrink-0 border-[1px] border-black text-tinyTextPhone md:text-tinyText select-none font-medium' key={index}>{toTitleCase(tag)}</div>
                     ))}
                 </div>
