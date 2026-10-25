@@ -48,7 +48,7 @@ const productSchema = new mongoose.Schema({
     },
     hashtags:{
         type: String,
-        required: true,
+        default: "",
     },
     size:{
         type: Array,

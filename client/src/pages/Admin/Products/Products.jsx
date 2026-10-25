@@ -204,7 +204,7 @@ const Products = () => {
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
                           {product.images?.[0] ? (
-                            <img src={product.images[0]} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0 bg-gray-100" />
+                            <img src={product.images[0]} alt="" className="w-10 h-10 rounded-lg object-contain shrink-0 bg-gray-100" />
                           ) : (
                             <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-xs shrink-0">📷</div>
                           )}
